@@ -24,6 +24,7 @@
 using Catalyst.Core.Lib.Extensions;
 using Google.Protobuf;
 using MultiFormats;
+using System;
 
 namespace Catalyst.Core.Lib.Util
 {
@@ -32,12 +33,12 @@ namespace Catalyst.Core.Lib.Util
     {
         public static string KeyToString(this byte[] keyAsBytes)
         {
-            return Base32.ToBase32(keyAsBytes).ToLowerInvariant(); ///@TODO get from hashlib
+            return Convert.ToBase64String(keyAsBytes); ///@TODO get from hashlib
         }
 
         public static byte[] KeyToBytes(this string keyAsString)
         {
-            return keyAsString.FromBase32();
+            return Convert.FromBase64String(keyAsString);
         }
 
         public static ByteString KeyToByteString(this string keyAsString)

@@ -37,6 +37,7 @@ using Catalyst.Core.Lib.Cryptography.Proto;
 using Catalyst.Core.Lib.FileSystem;
 using Common.Logging;
 using MultiFormats;
+using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.EdEC;
 using Org.BouncyCastle.Asn1.Pkcs;
 using Org.BouncyCastle.Asn1.Sec;
@@ -383,7 +384,7 @@ namespace Catalyst.Core.Modules.Keystore
         ///     a type and the DER encoding of the PKCS Subject Public Key Info.
         /// </remarks>
         /// <seealso href="https://tools.ietf.org/html/rfc5280#section-4.1.2.7" />
-        public async Task<string> GetPublicKeyAsync(string name, CancellationToken cancel = default)
+        public async Task<string> GetSubjectPublicKeyInfoAsync(string name, CancellationToken cancel = default)
         {
             // TODO: Rename to GetIpfsPublicKeyAsync
             string result = null;
@@ -394,7 +395,6 @@ namespace Catalyst.Core.Modules.Keystore
                 {
                     var kp = GetKeyPairFromPrivateKey(key);
                     var spki = SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(kp.Public).GetDerEncoded();
-
                     // Add protobuf cruft.
                     var publicKey = new PublicKey
                     {
@@ -691,6 +691,7 @@ namespace Catalyst.Core.Modules.Keystore
                 var alg = ms.Length <= 48 ? "identity" : "sha2-256";
 
                 ms.Position = 0;
+
                 return MultiHash.ComputeHash(ms, alg);
             }
         }

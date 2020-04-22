@@ -65,7 +65,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Helpers
             commandContext.CertificateStore.Returns(certificateStore);
 
             commandContext.PeerId.Returns(
-                "hv6vvbt2u567syz5labuqnfabsc3zobfwekl4cy3c574n6vkj7sq".BuildPeerIdFromBase32Key(IPAddress.Any, 9010));
+                "hv6vvbt2u567syz5labuqnfabsc3zobfwekl4cy3c574n6vkj7sq".BuildPeerIdFromBase58Key(IPAddress.Any, 9010));
 
             var nodeRpcClient = MockNodeRpcClient();
             MockRpcNodeConfig(commandContext);

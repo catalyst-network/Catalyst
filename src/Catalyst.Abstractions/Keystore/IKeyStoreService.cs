@@ -76,7 +76,7 @@ namespace Catalyst.Abstractions.Keystore
         ///   a type and the DER encoding of the PKCS Subject Public Key Info.
         /// </remarks>
         /// <seealso href="https://tools.ietf.org/html/rfc5280#section-4.1.2.7"/>
-        Task<string> GetPublicKeyAsync(string name, CancellationToken cancel = default);
+        Task<string> GetSubjectPublicKeyInfoAsync(string name, CancellationToken cancel = default);
 
         /// <summary>
         ///   Find a key by its name.

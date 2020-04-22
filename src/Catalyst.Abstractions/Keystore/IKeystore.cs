@@ -34,6 +34,6 @@ namespace Catalyst.Abstractions.Keystore
 
         Task<IPrivateKey> KeyStoreGenerateAsync(NetworkType networkType, KeyRegistryTypes keyIdentifier);
 
-        Task KeyStoreEncryptAsync(IPrivateKey privateKey, NetworkType networkType, KeyRegistryTypes keyIdentifier);
+        //Task KeyStoreEncryptAsync(IPrivateKey privateKey, NetworkType networkType, KeyRegistryTypes keyIdentifier);
     }
 }

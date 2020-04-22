@@ -126,22 +126,22 @@ namespace Catalyst.Core.Modules.Dfs
             {
                 var keyStoreService = x.Resolve<IKeyStoreService>();
                 var keyApi = x.Resolve<IKeyApi>();
-                var passwordManager = x.Resolve<IPasswordManager>();
+                //var passwordManager = x.Resolve<IPasswordManager>();
 
-                var passphrase = passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(
-                    PasswordRegistryTypes.IpfsPassword,
-                    "Please provide your IPFS password");
+                //var passphrase = passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(
+                //    PasswordRegistryTypes.IpfsPassword,
+                //    "Please provide your IPFS password");
 
-                keyApi.SetPassphraseAsync(passphrase).ConfigureAwait(false).GetAwaiter().GetResult();
+                //keyApi.SetPassphraseAsync(passphrase).ConfigureAwait(false).GetAwaiter().GetResult();
 
-                var self = keyApi.GetPublicKeyAsync("self").ConfigureAwait(false).GetAwaiter().GetResult()
-                 ?? keyApi.CreateAsync("self", "rsa", 0).ConfigureAwait(false).GetAwaiter().GetResult();
+                var self = keyApi.GetPublicKeyAsync("self").ConfigureAwait(false).GetAwaiter().GetResult();
+                // ?? keyApi.CreateAsync("self", "rsa", 0).ConfigureAwait(false).GetAwaiter().GetResult();
 
                 var localPeer = new Peer
                 {
                     Id = self.Id,
                     PublicKey =
-                        keyStoreService.GetPublicKeyAsync("self").ConfigureAwait(false).GetAwaiter().GetResult(),
+                        keyStoreService.GetSubjectPublicKeyInfoAsync("self").ConfigureAwait(false).GetAwaiter().GetResult(),
                     ProtocolVersion = "ipfs/0.1.0"
                 };
 
@@ -181,7 +181,7 @@ namespace Catalyst.Core.Modules.Dfs
                .WithParameter("dfsDirectory", Constants.DfsDataSubDir);
             //Disable Mdns in dfs as it causes a memoryleak/outofmemory exception
             builder.RegisterType<DiscoveryOptions>().SingleInstance().WithProperty("DisableMdns", true);
-            builder.RegisterType<KeyChainOptions>().SingleInstance().WithProperty("DefaultKeyType", "rsa");
+            builder.RegisterType<KeyChainOptions>().SingleInstance().WithProperty("DefaultKeyType", "ed25519");
             builder.RegisterType<SwarmOptions>().SingleInstance();
         }
     }

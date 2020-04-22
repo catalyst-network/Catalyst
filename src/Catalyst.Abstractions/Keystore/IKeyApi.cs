@@ -131,6 +131,7 @@ namespace Catalyst.Abstractions.Keystore
         Task<IKey> ImportAsync(string name, string pem, char[] password, CancellationToken cancel = default);
         
         Task<IKey> GetPublicKeyAsync(string self);
+        Task<string> GetSubjectPublicKeyInfoAsync(string name, CancellationToken cancel = default);
         Task<AsymmetricKeyParameter> GetPrivateKeyAsync(string self);
         
         Task<byte[]> CreateProtectedDataAsync(string keyName,

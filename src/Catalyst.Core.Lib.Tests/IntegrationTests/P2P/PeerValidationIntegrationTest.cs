@@ -44,6 +44,7 @@ using Catalyst.Core.Modules.KeySigner;
 using Catalyst.Core.Modules.Keystore;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using Lib.P2P;
 using NSubstitute;
 using NUnit.Framework;
 using Serilog;
@@ -71,7 +72,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             ContainerProvider.ContainerBuilder.RegisterModule(new HashingModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new BulletProofsModule());
 
-            _peerSettings = new PeerSettings(ContainerProvider.ConfigurationRoot);
+            _peerSettings = new PeerSettings(ContainerProvider.ConfigurationRoot, Substitute.For<Peer>());
 
             var peerSettings =
                 PeerIdHelper.GetPeerId("sender", _peerSettings.BindAddress, _peerSettings.Port)
@@ -142,7 +143,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             TestContext.WriteLine(ip.ToString());
             TestContext.WriteLine(port.ToString());
 
-            var recipient = publicKey.BuildPeerIdFromBase32Key(ip, port);
+            var recipient = publicKey.BuildPeerIdFromBase58Key(ip, port);
 
             return await _peerChallengeRequest.ChallengePeerAsync(recipient);
         }

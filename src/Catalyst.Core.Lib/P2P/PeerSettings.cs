@@ -31,6 +31,7 @@ using Catalyst.Core.Lib.Network;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Peer;
 using Dawn;
+using Lib.P2P;
 using Microsoft.Extensions.Configuration;
 
 namespace Catalyst.Core.Lib.P2P
@@ -54,14 +55,15 @@ namespace Catalyst.Core.Lib.P2P
         ///     Set attributes
         /// </summary>
         /// <param name="rootSection"></param>
-        public PeerSettings(IConfigurationRoot rootSection)
+        public PeerSettings(IConfigurationRoot rootSection, Peer localPeer)
         {
             Guard.Argument(rootSection, nameof(rootSection)).NotNull();
             
             var section = rootSection.GetSection("CatalystNodeConfiguration").GetSection("Peer");
             Enum.TryParse(section.GetSection("Network").Value, out _networkType);
 
-            PublicKey = section.GetSection("PublicKey").Value;
+            //PublicKey = section.GetSection("PublicKey").Value;
+            PublicKey = localPeer.PublicKey;
             Port = int.Parse(section.GetSection("Port").Value);
             PayoutAddress = section.GetSection("PayoutAddress").Value;
             BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value);
@@ -71,7 +73,7 @@ namespace Catalyst.Core.Lib.P2P
                .Select(p => EndpointBuilder.BuildNewEndPoint(p.Value)).ToArray();
 
             var publicIpAddress = IPAddress.Parse(section.GetSection("PublicIpAddress").Value);
-            PeerId = PublicKey.BuildPeerIdFromBase32Key(publicIpAddress, Port);
+            PeerId = PublicKey.BuildPeerIdFromBase58Key(publicIpAddress, Port);
         }
     }
 }
