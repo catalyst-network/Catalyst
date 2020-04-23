@@ -44,25 +44,22 @@ using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Abstractions.P2P.Repository;
-using Catalyst.Core.Modules.Dfs;
-using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Core.Modules.Mempool;
 using Catalyst.Core.Modules.Mempool.Repositories;
-using Catalyst.Core.Modules.Rpc.Server;
-using Catalyst.Core.Modules.Web3;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Peer;
-using Catalyst.TestUtils;
 using NSubstitute;
 using NUnit.Framework;
 using SharpRepository.InMemoryRepository;
 using Catalyst.Core.Lib.P2P.Repository;
 using Nethermind.Db;
 using Catalyst.Core.Lib.DAO.Ledger;
+using Catalyst.Core.Modules.Rpc.Server;
+using Catalyst.Core.Modules.Web3;
 using SharpRepository.Repository;
 
-namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
+namespace Catalyst.TestUtils
 {
     public class PoaTestNode : ICatalystNode, IDisposable
     {

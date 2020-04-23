@@ -29,6 +29,5 @@
         <ProjectReference Include="..\Catalyst.Protocol\Catalyst.Protocol.csproj" />
         <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
         <ProjectReference Include="..\Catalyst.Node.POA.CE\Catalyst.Node.POA.CE.csproj" />
-        <ProjectReference Include="..\..\submodules\nethermind\src\rocksdb-sharp\RocksDbNative\RocksDbNative.csproj" />
     </ItemGroup>
 </Project>
