@@ -38,9 +38,9 @@ using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
 
-
 namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 {
+    [TestFixture]
     public sealed class PoaConsensusTests : FileSystemBasedTest
     {
         private CancellationTokenSource _endOfTestCancellationSource;
