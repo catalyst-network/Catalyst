@@ -59,8 +59,8 @@ steps:
     
   - script: |
       sudo apt-get install libsnappy-dev
-      displayName: Install snappy
-      condition: eq( variables['Agent.OS'], 'Linux' )
+    displayName: Install snappy
+    condition: eq( variables['Agent.OS'], 'Linux' )
 
   - task: DotNetCoreCLI@2
     displayName: 'Build solution'
