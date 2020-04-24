@@ -61,6 +61,11 @@ steps:
       sudo apt-get install libsnappy-dev
     displayName: Install snappy
     condition: eq( variables['Agent.OS'], 'Linux' )
+    
+  - script: |
+      brew install snappy
+    displayName: Install snappy
+    condition: eq( variables['Agent.OS'], 'Darwin' )
 
   - task: DotNetCoreCLI@2
     displayName: 'Build solution'
