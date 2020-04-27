@@ -25,6 +25,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Autofac;
+using Catalyst.Abstractions.Cli;
+using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
@@ -33,6 +35,8 @@ using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
 using Catalyst.Abstractions.P2P.Protocols;
+using Catalyst.Abstractions.Types;
+using Catalyst.Core.Lib.Cli;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.EventLoop;
 using Catalyst.Core.Lib.P2P;
@@ -67,24 +71,35 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             var keyRegistry = TestKeyRegistry.MockKeyRegistry();
             ContainerProvider.ContainerBuilder.RegisterInstance(keyRegistry).As<IKeyRegistry>();
 
+            ContainerProvider.ContainerBuilder.RegisterModule(new CoreLibProvider());
             ContainerProvider.ContainerBuilder.RegisterModule(new KeystoreModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new KeySignerModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new HashingModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new BulletProofsModule());
 
-            _peerSettings = new PeerSettings(ContainerProvider.ConfigurationRoot, Substitute.For<Peer>());
+            ContainerProvider.ContainerBuilder.RegisterType<ConsoleUserOutput>().As<IUserOutput>();
+            ContainerProvider.ContainerBuilder.RegisterType<ConsoleUserInput>().As<IUserInput>();
 
-            var peerSettings =
-                PeerIdHelper.GetPeerId("sender", _peerSettings.BindAddress, _peerSettings.Port)
-                   .ToSubstitutedPeerSettings();
+            var passwordManager = Substitute.For<IPasswordManager>();
+            passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(Arg.Is(PasswordRegistryTypes.IpfsPassword), Arg.Any<string>()).Returns(TestPasswordReader.BuildSecureStringPassword("test"));
+            ContainerProvider.ContainerBuilder.RegisterInstance(passwordManager).As<IPasswordManager>();
+
+           //_peerSettings = new PeerSettings(ContainerProvider.ConfigurationRoot, Substitute.For<Peer>());
+
+           //var peerSettings =
+           //    PeerIdHelper.GetPeerId("sender", _peerSettings.BindAddress, _peerSettings.Port)
+           //       .ToSubstitutedPeerSettings();
+
+           _peerSettings = (PeerSettings) ContainerProvider.Container.Resolve<IPeerSettings>();
 
             ContainerProvider.ContainerBuilder.Register(c =>
             {
                 var peerClient = c.Resolve<IPeerClient>();
                 peerClient.StartAsync().ConfigureAwait(false).GetAwaiter().GetResult();
-                return new PeerChallengeRequest(logger, peerClient, peerSettings, 10);
+                return new PeerChallengeRequest(logger, peerClient, _peerSettings, 10);
             }).As<IPeerChallengeRequest>().SingleInstance();
 
+            
             _peerChallengeRequest = ContainerProvider.Container.Resolve<IPeerChallengeRequest>();
 
             var eventLoopGroupFactoryConfiguration = new EventLoopGroupFactoryConfiguration
@@ -126,8 +141,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 
         [Theory]
         [Property(Traits.TestType, Traits.IntegrationTest)]
-        [TestCase("ftqm5kpzpo7bvl6e53q5j6mmrjwupbbiuszpsopxvjodkkqqiusa", "92.207.178.198", 1574)]
-        [TestCase("fzqm5kpzpo7bvl5e53q5j6mmrjwupbbiuszpsopxvjodkkqqiusd", "198.51.100.3", 2524)]
+        [TestCase("CAESLDAqMAUGAytlcAMhADyXIeZUUBKx3OiDdhDb5GGrDUPOhhzJWPf80Iqam3lr", "92.207.178.198", 1574)]
+        [TestCase("CAESLDAqMAUGAytlcAMhADyXIeZUUBKx3OiDdhDb5GGrDUPOhhzJWPf80Iqam3lr", "198.51.100.3", 2524)]
         public async Task PeerChallenge_PeerIdentifiers_Expect_To_Fail_IP_Port_PublicKey(string publicKey,
             string ip,
             int port)

@@ -39,7 +39,7 @@ using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
-
+using Catalyst.Abstractions.Keystore;
 
 namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
 {
@@ -59,10 +59,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.NetworkType.Returns(NetworkType.Devnet);
 
-            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
-
-            var keystore = new LocalKeyStore(passwordManager, cryptoContext, FileSystem, hashProvider,
-                logger);
+            var keystore = new LocalKeyStore(passwordManager, cryptoContext, Substitute.For<IKeyApi>(), logger);
 
             var keyRegistry = new KeyRegistry();
 

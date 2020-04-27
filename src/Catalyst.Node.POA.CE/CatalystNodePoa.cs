@@ -113,8 +113,8 @@ namespace Catalyst.Node.POA.CE
         public async Task RunAsync(CancellationToken ct)
         {
             _logger.Information("Starting the Catalyst Node");
-            var publicKey = await _keyApi.GetPublicKeyAsync("self").ConfigureAwait(false);
-            var peerId = publicKey.Id;
+            var key = await _keyApi.GetKeyAsync("self").ConfigureAwait(false);
+            var peerId = key.Id;
             var pk = peerId.Digest.GetPublicKeyBytesFromPeerId();
 
             _logger.Information($"***** using PeerId: {peerId} *****");

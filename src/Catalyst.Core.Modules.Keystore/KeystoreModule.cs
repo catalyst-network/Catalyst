@@ -24,6 +24,7 @@
 using Autofac;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Core.Lib.Cryptography;
+using Catalyst.Core.Lib.FileSystem;
 
 namespace Catalyst.Core.Modules.Keystore
 {
@@ -35,6 +36,7 @@ namespace Catalyst.Core.Modules.Keystore
             builder.RegisterType<LocalKeyStore>().As<IKeyStore>().SingleInstance();
             builder.RegisterType<KeyRegistry>().As<IKeyRegistry>().SingleInstance();
             builder.RegisterType<KeyStoreService>().As<IKeyStoreService>().SingleInstance();
+            builder.RegisterType<KeyFileStore>().As<IStore<string, EncryptedKey>>().SingleInstance();
         }  
     }
 }

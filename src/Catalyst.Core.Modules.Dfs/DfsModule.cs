@@ -85,11 +85,8 @@ namespace Catalyst.Core.Modules.Dfs
                .As<BitSwapService>()
                .SingleInstance();
 
-            builder.RegisterBuildCallback(async x =>
+            builder.RegisterBuildCallback(x =>
             {
-                //Log.Debug("Building bitswap service");
-                //Log.Debug("Built bitswap service");
-
                 var localPeer = x.Resolve<Peer>();
                 var swarmService = x.Resolve<SwarmService>();
 
@@ -103,53 +100,7 @@ namespace Catalyst.Core.Modules.Dfs
                 {
                     SwarmService = swarmService
                 });
-
-                //var keyApi = x.Resolve<IKeyApi>();
-                //var swarmOptions = x.Resolve<SwarmOptions>();
-                //swarmService.LocalPeer = localPeer;
-                //swarmService.LocalPeerKey =
-                //    Key.CreatePrivateKey(await keyApi.GetPrivateKeyAsync("self").ConfigureAwait(false));
-                //swarmService.NetworkProtector = swarmOptions.PrivateNetworkKey == null
-                //    ? null
-                //    : new Psk1Protector
-                //    {
-                //        Key = swarmOptions.PrivateNetworkKey
-                //    };
-
-                //if (swarmOptions.PrivateNetworkKey != null)
-                //{
-                //    Log.Debug($"Private network {swarmOptions.PrivateNetworkKey.Fingerprint().ToHexString()}");
-                //}
             });
-
-            builder.Register(x =>
-            {
-                var keyStoreService = x.Resolve<IKeyStoreService>();
-                var keyApi = x.Resolve<IKeyApi>();
-                //var passwordManager = x.Resolve<IPasswordManager>();
-
-                //var passphrase = passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(
-                //    PasswordRegistryTypes.IpfsPassword,
-                //    "Please provide your IPFS password");
-
-                //keyApi.SetPassphraseAsync(passphrase).ConfigureAwait(false).GetAwaiter().GetResult();
-
-                var self = keyApi.GetPublicKeyAsync("self").ConfigureAwait(false).GetAwaiter().GetResult();
-                // ?? keyApi.CreateAsync("self", "rsa", 0).ConfigureAwait(false).GetAwaiter().GetResult();
-
-                var localPeer = new Peer
-                {
-                    Id = self.Id,
-                    PublicKey =
-                        keyStoreService.GetSubjectPublicKeyInfoAsync("self").ConfigureAwait(false).GetAwaiter().GetResult(),
-                    ProtocolVersion = "ipfs/0.1.0"
-                };
-
-                var version = typeof(DfsService).GetTypeInfo().Assembly.GetName().Version;
-                localPeer.AgentVersion = $"net-ipfs/{version.Major}.{version.Minor}.{version.Revision}";
-
-                return localPeer;
-            }).As<Peer>();
 
             builder.RegisterType<SwarmService>()
                .As<SwarmService>()

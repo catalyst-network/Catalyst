@@ -25,13 +25,17 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Security;
 using Autofac;
 using Autofac.Configuration;
 using AutofacSerilogIntegration;
+using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Core.Lib;
+using Catalyst.Core.Lib.Cryptography;
+using Catalyst.Core.Lib.FileSystem;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.Hashing;
@@ -54,7 +58,7 @@ namespace Catalyst.TestUtils
     {
         private readonly IEnumerable<string> _configFilesUsed;
         private readonly IFileSystem _fileSystem;
-        private readonly TestContext  _output;
+        private readonly TestContext _output;
         private IConfigurationRoot _configRoot;
         public ContainerBuilder ContainerBuilder { get; } = new ContainerBuilder();
         private IContainer _container;
@@ -123,6 +127,24 @@ namespace Catalyst.TestUtils
             ContainerBuilder.RegisterModule(new KeystoreModule());
             ContainerBuilder.RegisterModule(new KeySignerModule());
             ContainerBuilder.RegisterModule(new HashingModule());
+
+            //var keyStore = TestKeyRegistry.MockKeyFileStore();
+            //ContainerBuilder.RegisterInstance(keyStore).As<IStore<string, EncryptedKey>>().SingleInstance();
+
+            var inMemoryStore = new InMemoryStore<string, EncryptedKey>();
+            ContainerBuilder.RegisterInstance(inMemoryStore).As<IStore<string, EncryptedKey>>().SingleInstance();
+
+            //ContainerBuilder.RegisterBuildCallback(async x =>
+            //{
+            //    var keyApi = x.Resolve<IKeyApi>();
+            //    await keyApi.SetPassphraseAsync(new SecureString());
+            //    var key = await keyApi.GetKeyAsync("self");
+            //    if (key == null)
+            //    {
+            //        await keyApi.CreateAsync("self", "ed25519", 0);
+            //    }
+            //});
+            
 
             ConfigureLogging(writeLogsToTestOutput, writeLogsToFile, logDotNettyTraffic);
         }

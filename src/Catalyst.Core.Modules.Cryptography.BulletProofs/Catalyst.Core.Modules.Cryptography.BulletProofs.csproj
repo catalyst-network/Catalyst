@@ -27,17 +27,17 @@
         </None>
     </ItemGroup>
     <ItemGroup>
-        <None Include="./Runtimes/osx-x64/*/libcatalyst_ffi.dylib" Link="libcatalystffi.dylib">
+        <None Include="./Runtimes/osx-x64/*/libcatalyst_ffi.dylib" Link="libcatalyst_ffi.dylib">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
     <ItemGroup>
-        <None Include="./Runtimes/win-x64/*/catalyst_ffi.dll" Link="catalystffi.dll">
+        <None Include="./Runtimes/win-x64/*/catalyst_ffi.dll" Link="catalyst_ffi.dll">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>
     <ItemGroup>
-        <None Include="./Runtimes/linux-x64/*/libcatalyst_ffi.so" Link="libcatalystffi.so">
+        <None Include="./Runtimes/linux-x64/*/libcatalyst_ffi.so" Link="libcatalyst_ffi.so">
             <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
         </None>
     </ItemGroup>

@@ -132,9 +132,9 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             keyRegistry.RemoveItemFromRegistry(KeyRegistryTypes.DefaultKey);
             keyRegistry.AddItemToRegistry(KeyRegistryTypes.DefaultKey, privateKey);
 
-            keyStore.KeyStoreEncryptAsync(privateKey, nodeSettings.NetworkType, KeyRegistryTypes.DefaultKey)
-               .ConfigureAwait(false).GetAwaiter()
-               .GetResult();
+            //keyStore.KeyStoreEncryptAsync(privateKey, KeyRegistryTypes.DefaultKey)
+            //   .ConfigureAwait(false).GetAwaiter()
+            //   .GetResult();
         }
 
         public string Name { get; }

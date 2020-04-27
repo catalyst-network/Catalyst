@@ -27,19 +27,12 @@ using System.Security;
 using System.Security.Authentication;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.Enumerator;
-using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
-using Catalyst.Core.Lib.Config;
-using Catalyst.Core.Lib.Extensions;
-using Catalyst.Protocol.Account;
 using Catalyst.Protocol.Network;
-using MultiFormats;
 using Nethereum.KeyStore.Crypto;
 using Org.BouncyCastle.Crypto.Parameters;
-using Org.BouncyCastle.Pkcs;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Keystore
@@ -47,10 +40,8 @@ namespace Catalyst.Core.Modules.Keystore
     public sealed class LocalKeyStore : IKeyStore
     {
         private readonly ILogger _logger;
-        private readonly IFileSystem _fileSystem;
         private readonly ICryptoContext _cryptoContext;
         private readonly IPasswordManager _passwordManager;
-        private readonly IHashProvider _hashProvider;
         private readonly IKeyApi _keyApi;
         private readonly PasswordRegistryTypes _defaultNodePassword = PasswordRegistryTypes.DefaultNodePassword;
 
@@ -58,48 +49,25 @@ namespace Catalyst.Core.Modules.Keystore
 
         public LocalKeyStore(IPasswordManager passwordManager,
             ICryptoContext cryptoContext,
-            IFileSystem fileSystem,
-            IHashProvider hashProvider,
             IKeyApi keyApi,
             ILogger logger)
         {
             _passwordManager = passwordManager;
             _cryptoContext = cryptoContext;
-            _fileSystem = fileSystem;
-            _hashProvider = hashProvider;
             _keyApi = keyApi;
             _logger = logger;
         }
 
         public IPrivateKey KeyStoreDecrypt(KeyRegistryTypes keyIdentifier)
         {
-            var keyGenerated = _keyApi.GetPublicKeyAsync("self").ConfigureAwait(false).GetAwaiter().GetResult();
+            var keyGenerated = _keyApi.GetKeyAsync("self").ConfigureAwait(false).GetAwaiter().GetResult();
             if (keyGenerated == null)
             {
                 return null;
             }
 
-            return _cryptoContext.GetPrivateKeyFromBytes(KeyStoreDecrypt(PasswordRegistryTypes.DefaultNodePassword));
-
-            //var json = GetJsonFromKeyStore(keyIdentifier);
-            //if (string.IsNullOrEmpty(json))
-            //{
-            //    _logger.Error("No keystore exists for the given key");
-            //    return null;
-            //}
-
-            //var keyBytes = KeyStoreDecrypt(_defaultNodePassword, json);
-            //IPrivateKey privateKey = null;
-            //try
-            //{
-            //    privateKey = _cryptoContext.GetPrivateKeyFromBytes(keyBytes);
-            //}
-            //catch (ArgumentException)
-            //{
-            //    _logger.Error("Keystore did not contain a valid key");
-            //}
-
-            //return privateKey;
+            var privateKeyBytes = KeyStoreDecrypt(PasswordRegistryTypes.DefaultNodePassword);
+            return _cryptoContext.GetPrivateKeyFromBytes(privateKeyBytes);
         }
 
         private byte[] KeyStoreDecrypt(PasswordRegistryTypes passwordIdentifier)
@@ -108,7 +76,10 @@ namespace Catalyst.Core.Modules.Keystore
 
             while (tries < MaxTries)
             {
-                var securePassword = _passwordManager.RetrieveOrPromptPassword(passwordIdentifier, "Please provide your node password");
+                //var securePassword = _passwordManager.RetrieveOrPromptPassword(passwordIdentifier, "Please provide your node password");
+
+                var passphrase = _passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.IpfsPassword, "Please provide your DFS password");
+                _keyApi.SetPassphraseAsync(passphrase).ConfigureAwait(false).GetAwaiter().GetResult();
 
                 try
                 {
@@ -117,13 +88,13 @@ namespace Catalyst.Core.Modules.Keystore
 
                     if (privateKeyBytes != null && privateKeyBytes.Length > 0)
                     {
-                        _passwordManager.AddPasswordToRegistry(passwordIdentifier, securePassword);
+                        _passwordManager.AddPasswordToRegistry(passwordIdentifier, passphrase);
                         return privateKeyBytes;
                     }
                 }
                 catch (DecryptionException)
                 {
-                    securePassword.Dispose();
+                    passphrase.Dispose();
                     _logger.Error("Error decrypting keystore");
                 }
 
@@ -133,7 +104,7 @@ namespace Catalyst.Core.Modules.Keystore
             throw new AuthenticationException("Password incorrect for keystore.");
         }
 
-        public async Task<IPrivateKey> KeyStoreGenerateAsync(NetworkType networkType, KeyRegistryTypes keyIdentifier)
+        public async Task<IPrivateKey> KeyStoreGenerateAsync(KeyRegistryTypes keyIdentifier)
         {
             //var privateKey = _cryptoContext.GeneratePrivateKey();
             var passphrase = _passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.IpfsPassword, "Please provide your DFS password");
@@ -149,45 +120,40 @@ namespace Catalyst.Core.Modules.Keystore
             return privateKey;
         }
 
-        //public async Task KeyStoreEncryptAsync(IPrivateKey privateKey,
-        //    NetworkType networkType,
-        //    KeyRegistryTypes keyIdentifier)
-        //{
-        //    try
-        //    {
-        //        var publicKeyHash = _hashProvider.ComputeMultiHash(privateKey.GetPublicKey().Bytes).ToArray()
-        //           .ToByteString();
-        //        var address = new Address
-        //        {
-        //            PublicKeyHash = publicKeyHash,
-        //            AccountType = AccountType.PublicAccount,
-        //            NetworkType = networkType
-        //        };
-
-        //        var securePassword = _passwordManager.RetrieveOrPromptPassword(_defaultNodePassword,
-        //            "Please create a password for this node");
-
-        //        var password = StringFromSecureString(securePassword);
-
-        //        var json = EncryptAndGenerateDefaultKeyStoreAsJson(
-        //            password,
-        //            _cryptoContext.ExportPrivateKey(privateKey),
-        //            address.RawBytes.ToBase32());
-
-        //        _passwordManager.AddPasswordToRegistry(_defaultNodePassword, securePassword);
-
-        //        await _fileSystem.WriteTextFileToCddSubDirectoryAsync(keyIdentifier.Name, Constants.KeyStoreDataSubDir,
-        //            json);
-        //    }
-        //    catch (Exception e)
-        //    {
-        //        _logger.Error(e.Message);
-        //    }
-        //}
-
-        private string GetJsonFromKeyStore(IEnumeration keyIdentifier)
+        public async Task KeyStoreEncryptAsync(IPrivateKey privateKey,
+            NetworkType networkType,
+            KeyRegistryTypes keyIdentifier)
         {
-            return _fileSystem.ReadTextFromCddSubDirectoryFile(keyIdentifier.Name, Constants.KeyStoreDataSubDir);
+            try
+            {
+                //var publicKeyHash = _hashProvider.ComputeMultiHash(privateKey.GetPublicKey().Bytes).ToArray()
+                //   .ToByteString();
+                //var address = new Address
+                //{
+                //    PublicKeyHash = publicKeyHash,
+                //    AccountType = AccountType.PublicAccount,
+                //    NetworkType = networkType
+                //};
+
+                //var securePassword = _passwordManager.RetrieveOrPromptPassword(_defaultNodePassword,
+                //    "Please create a password for this node");
+
+                //var password = StringFromSecureString(securePassword);
+
+                //var json = EncryptAndGenerateDefaultKeyStoreAsJson(
+                //    password,
+                //    _cryptoContext.ExportPrivateKey(privateKey),
+                //    address.RawBytes.ToBase32());
+
+                //_passwordManager.AddPasswordToRegistry(_defaultNodePassword, securePassword);
+
+                //await _fileSystem.WriteTextFileToCddSubDirectoryAsync(keyIdentifier.Name, Constants.KeyStoreDataSubDir,
+                //    json);
+            }
+            catch (Exception e)
+            {
+                _logger.Error(e.Message);
+            }
         }
 
         private static string StringFromSecureString(SecureString secureString)

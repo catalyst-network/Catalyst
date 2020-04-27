@@ -29,6 +29,8 @@ using Catalyst.Abstractions.Dfs.Migration;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Keystore;
+using Catalyst.Abstractions.Options;
+using Catalyst.Core.Lib;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Modules.Dfs.Migration;
 using Catalyst.Core.Modules.Hashing;
@@ -46,7 +48,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.Utils
         {
         }
 
-        public static IDfsService GetTestDfs(IFileSystem fileSystem = default, string hashName = "keccak-256")
+        public static IDfsService GetTestDfs(IFileSystem fileSystem = default, string hashName = "keccak-256", string keyType = null)
         {
             var nodeGuid = Guid.NewGuid();
             var containerBuilder = new ContainerBuilder();
@@ -58,6 +60,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.Utils
                 fileSystem = testFileSystem.FileSystem;
             }
 
+            containerBuilder.RegisterModule<CoreLibProvider>();
+            containerBuilder.RegisterModule<KeystoreModule>();
             containerBuilder.RegisterInstance(new PasswordManager(new TestPasswordReader(), new PasswordRegistry())).As<IPasswordManager>().SingleInstance();
             containerBuilder.RegisterInstance(fileSystem).As<IFileSystem>();
             containerBuilder.RegisterType<MigrationManager>().As<IMigrationManager>();
@@ -65,6 +69,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.Utils
             containerBuilder.RegisterInstance(new HashProvider(HashingAlgorithm.GetAlgorithmMetadata(hashName))).As<IHashProvider>();
             containerBuilder.RegisterType<KeyStoreService>().As<IKeyStoreService>().SingleInstance();
             containerBuilder.RegisterModule(new DfsModule());
+            if (keyType != null)
+            {
+                containerBuilder.RegisterType<KeyChainOptions>().SingleInstance().WithProperty("DefaultKeyType", keyType);
+            }
 
             var container = containerBuilder.Build();
             var scope = container.BeginLifetimeScope(nodeGuid);

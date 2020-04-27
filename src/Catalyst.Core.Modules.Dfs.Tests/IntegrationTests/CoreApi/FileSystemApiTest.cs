@@ -49,7 +49,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         [SetUp]
         public void Init()
         {
-            ipfs = TestDfs.GetTestDfs(null, "sha2-256");
+            ipfs = TestDfs.GetTestDfs(null, "sha2-256", "rsa");
         }
         
         [Test]

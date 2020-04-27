@@ -29,6 +29,7 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Cli;
@@ -78,19 +79,15 @@ namespace Catalyst.Simulator.RpcClients
             _logger = logger;
             _certificate = certificate;
 
-            var fileSystem = new FileSystem();
-
             var consolePasswordReader = new ConsolePasswordReader(userOutput, new ConsoleUserInput());
             var passwordManager = new PasswordManager(consolePasswordReader, passwordRegistry);
 
             var cryptoContext = new FfiWrapper();
 
-            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
-
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.NetworkType.Returns(signingContextProvider.NetworkType);
 
-            var localKeyStore = new LocalKeyStore(passwordManager, cryptoContext, fileSystem, hashProvider, _logger);
+            var localKeyStore = new LocalKeyStore(passwordManager, cryptoContext, Substitute.For<IKeyApi>(), _logger);
 
             var keyRegistry = new KeyRegistry();
             var keySigner = new KeySigner(localKeyStore, cryptoContext, keyRegistry);

@@ -57,39 +57,39 @@ namespace Catalyst.Tools.KeyGenerator.Commands
 
         public void ParseOption(NetworkType networkType, object option)
         {
-            var generateKeyStoreOption = (GenerateKeyStoreOption) option;
+            //var generateKeyStoreOption = (GenerateKeyStoreOption) option;
 
-            if (!_fileSystem.SetCurrentPath(generateKeyStoreOption.Path))
-            {
-                _userOutput.WriteLine("Invalid path.");
-                return;
-            }
+            //if (!_fileSystem.SetCurrentPath(generateKeyStoreOption.Path))
+            //{
+            //    _userOutput.WriteLine("Invalid path.");
+            //    return;
+            //}
 
-            var secureStr = _passwordLoader.PreloadPassword(generateKeyStoreOption.Password);
-            Exception error = null;
+            //var secureStr = _passwordLoader.PreloadPassword(generateKeyStoreOption.Password);
+            //Exception error = null;
 
-            try
-            {
-                var privateKey = _keyStore.KeyStoreGenerateAsync(networkType, KeyRegistryTypes.DefaultKey).ConfigureAwait(false)
-                   .GetAwaiter().GetResult();
-                var publicKey = privateKey.GetPublicKey().Bytes.KeyToString();
+            //try
+            //{
+            //    var privateKey = _keyStore.KeyStoreGenerateAsync(networkType, KeyRegistryTypes.DefaultKey).ConfigureAwait(false)
+            //       .GetAwaiter().GetResult();
+            //    var publicKey = privateKey.GetPublicKey().Bytes.KeyToString();
 
-                _userOutput.WriteLine($"Generated key store at path: {Path.GetFullPath(generateKeyStoreOption.Path)}");
-                _userOutput.WriteLine($"Public Key: {publicKey}");
-            }
-            catch (Exception e)
-            {
-                _userOutput.WriteLine($"Error generating keystore at path {generateKeyStoreOption.Path}");
-                error = e;
-            }
-            finally
-            {
-                secureStr?.Dispose();
-                if (error != null)
-                {
-                    throw error;
-                }
-            }
+            //    _userOutput.WriteLine($"Generated key store at path: {Path.GetFullPath(generateKeyStoreOption.Path)}");
+            //    _userOutput.WriteLine($"Public Key: {publicKey}");
+            //}
+            //catch (Exception e)
+            //{
+            //    _userOutput.WriteLine($"Error generating keystore at path {generateKeyStoreOption.Path}");
+            //    error = e;
+            //}
+            //finally
+            //{
+            //    secureStr?.Dispose();
+            //    if (error != null)
+            //    {
+            //        throw error;
+            //    }
+            //}
         }
 
         public string CommandName => "generate";

@@ -25,6 +25,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Reflection;
+using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
@@ -58,11 +61,10 @@ namespace Catalyst.Core.Lib.P2P
         public PeerSettings(IConfigurationRoot rootSection, Peer localPeer)
         {
             Guard.Argument(rootSection, nameof(rootSection)).NotNull();
-            
+
             var section = rootSection.GetSection("CatalystNodeConfiguration").GetSection("Peer");
             Enum.TryParse(section.GetSection("Network").Value, out _networkType);
 
-            //PublicKey = section.GetSection("PublicKey").Value;
             PublicKey = localPeer.PublicKey;
             Port = int.Parse(section.GetSection("Port").Value);
             PayoutAddress = section.GetSection("PayoutAddress").Value;

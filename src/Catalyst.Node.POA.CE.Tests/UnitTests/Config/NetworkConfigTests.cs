@@ -76,7 +76,11 @@ namespace Catalyst.Node.POA.CE.Tests.UnitTests.Config
             containerBuilder.RegisterModule(configModule);
             containerBuilder.RegisterInstance(configRoot).As<IConfigurationRoot>();
 
-            var peerSettings = new PeerSettings(configRoot, Substitute.For<Peer>());
+            var peer = new Peer
+            {
+                PublicKey = "CAESLDAqMAUGAytlcAMhADyXIeZUUBKx3OiDdhDb5GGrDUPOhhzJWPf80Iqam3lr"
+            };
+            var peerSettings = new PeerSettings(configRoot, peer);
 
             peerSettings.Should().NotBeNull();
             peerSettings.NetworkType.Should().NotBeNull();

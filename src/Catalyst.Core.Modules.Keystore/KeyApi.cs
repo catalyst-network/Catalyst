@@ -60,14 +60,19 @@ namespace Catalyst.Core.Modules.Keystore
             return await _keyStoreService.ImportAsync(name, pem, password, cancel).ConfigureAwait(false);   
         }
 
-        public async Task<IKey> GetPublicKeyAsync(string publicKeyName)
+        public async Task<IKey> GetKeyAsync(string keyName)
         {
-            return await _keyStoreService.FindKeyByNameAsync(publicKeyName).ConfigureAwait(false);
+            return await _keyStoreService.FindKeyByNameAsync(keyName).ConfigureAwait(false);
         }
 
-        public async Task<string> GetSubjectPublicKeyInfoAsync(string name, CancellationToken cancel = default)
+        public async Task<string> GetIpfsPublicKeyAsync(string name, CancellationToken cancel = default)
         {
-            return await _keyStoreService.GetSubjectPublicKeyInfoAsync(name, cancel).ConfigureAwait(false);
+            return await _keyStoreService.GetIpfsPublicKeyAsync(name, cancel).ConfigureAwait(false);
+        }
+
+        public async Task<AsymmetricKeyParameter> GetPublicKeyAsync(string publicKeyName)
+        {
+            return await _keyStoreService.GetPublicKeyAsync(publicKeyName).ConfigureAwait(false);
         }
 
         public async Task<AsymmetricKeyParameter> GetPrivateKeyAsync(string privateKeyName)

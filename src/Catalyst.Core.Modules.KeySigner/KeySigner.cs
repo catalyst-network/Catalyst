@@ -36,28 +36,22 @@ namespace Catalyst.Core.Modules.KeySigner
 {
     public sealed class KeySigner : IKeySigner
     {
-        private readonly IKeyApi _keyApi;
         private readonly IKeyStore _keyStore;
         private readonly ICryptoContext _cryptoContext;
         private readonly IKeyRegistry _keyRegistry;
-        private readonly IPasswordManager _passwordManager;
         private readonly KeyRegistryTypes _defaultKey = KeyRegistryTypes.DefaultKey;
 
         /// <summary>Initializes a new instance of the <see cref="KeySigner"/> class.</summary>
         /// <param name="keyStore">The key store.</param>
         /// <param name="cryptoContext">The crypto context.</param>
         /// /// <param name="keyRegistry">The key registry.</param>
-        public KeySigner(IKeyApi keyApi,
-            IKeyStore keyStore,
+        public KeySigner(IKeyStore keyStore,
             ICryptoContext cryptoContext,
-            IKeyRegistry keyRegistry,
-            IPasswordManager passwordManager)
+            IKeyRegistry keyRegistry)
         {
-            _keyApi = keyApi;
             _keyStore = keyStore;
             _cryptoContext = cryptoContext;
             _keyRegistry = keyRegistry;
-            _passwordManager = passwordManager;
             InitialiseKeyRegistry();
         }
 
@@ -71,24 +65,11 @@ namespace Catalyst.Core.Modules.KeySigner
 
         private async Task GenerateKeyAndPopulateRegistryWithDefaultAsync()
         {
-            var privateKey = await _keyStore.KeyStoreGenerateAsync(NetworkType.Devnet, _defaultKey).ConfigureAwait(false);
+            var privateKey = await _keyStore.KeyStoreGenerateAsync(_defaultKey).ConfigureAwait(false);
             if (privateKey != null)
             {
                 _keyRegistry.AddItemToRegistry(_defaultKey, privateKey);
             }
-
-            //var passphrase = _passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.IpfsPassword, "Please provide your DFS password");
-
-            //_keyApi.SetPassphraseAsync(passphrase).ConfigureAwait(false).GetAwaiter().GetResult();
-
-            //var self = await _keyApi.GetPublicKeyAsync("self").ConfigureAwait(false) ?? await _keyApi.CreateAsync("self", "rsa", 0).ConfigureAwait(false);
-            //var privateKey = await _keyApi.GetPrivateKeyAsync("self").ConfigureAwait(false);
-            //if (privateKey != null)
-            //{
-            //    var privateKeyBytes = Org.BouncyCastle.Pkcs.PrivateKeyInfoFactory.CreatePrivateKeyInfo(privateKey).ParsePrivateKey().GetDerEncoded();
-            //    var ffiPrivateKey = _cryptoContext.GetPrivateKeyFromBytes(privateKeyBytes);
-            //    _keyRegistry.AddItemToRegistry(_defaultKey, ffiPrivateKey);
-            //}
         }
 
         /// <inheritdoc/>

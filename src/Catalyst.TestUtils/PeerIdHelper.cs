@@ -21,28 +21,66 @@
 
 #endregion
 
+using System;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Lib.Cryptography.Proto;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 using NSubstitute;
+using Org.BouncyCastle.Crypto;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Security;
+using Org.BouncyCastle.X509;
+using ProtoBuf;
 
 namespace Catalyst.TestUtils
 {
     public static class PeerIdHelper
     {
+        private static string AddPublicKeySubjectInfo(byte[] publicKeyBytes)
+        {
+            var publicKey = new Ed25519PublicKeyParameters(publicKeyBytes, 0);
+            var pksi = SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(publicKey).GetDerEncoded();
+            var pk = new PublicKey
+            {
+                Type = KeyType.Ed25519,
+                Data = pksi
+            };
+            using var ms = new MemoryStream();
+            Serializer.Serialize(ms, pk);
+            return Convert.ToBase64String(ms.ToArray());
+        }
+
+        private static string AddPublicKeySubjectInfo(AsymmetricKeyParameter publicKey)
+        {
+            var publicKeyBytes = (Ed25519PublicKeyParameters) publicKey;
+            return AddPublicKeySubjectInfo(publicKeyBytes.GetEncoded());
+        }
+
         public static PeerId GetPeerId(byte[] publicKey = null,
             IPAddress ipAddress = null,
             int port = 12345)
         {
+            if (publicKey == null)
+            {
+                var g = GeneratorUtilities.GetKeyPairGenerator("Ed25519");
+                g.Init(new Ed25519KeyGenerationParameters(new SecureRandom()));
+                var keyPair = g.GenerateKeyPair();
+                publicKey = ((Ed25519PublicKeyParameters) keyPair.Public).GetEncoded();
+            }
+
+            var publicKey64 = AddPublicKeySubjectInfo(publicKey);
             var peerIdentifier = new PeerId
             {
-                PublicKey = (publicKey ?? new byte[32]).ToByteString(),
+                PublicKey = publicKey64.KeyToByteString(),
                 Ip = (ipAddress ?? IPAddress.Loopback).To16Bytes().ToByteString(),
                 Port = (ushort) port
             };
@@ -53,9 +91,14 @@ namespace Catalyst.TestUtils
             IPAddress ipAddress = null,
             int port = 12345)
         {
-            var publicKeyBytes = Encoding.UTF8.GetBytes(publicKeySeed)
-               .Concat(Enumerable.Repeat(default(byte), new FfiWrapper().PublicKeyLength))
-               .Take(new FfiWrapper().PublicKeyLength).ToArray();
+            var g = GeneratorUtilities.GetKeyPairGenerator("Ed25519");
+            g.Init(new Ed25519KeyGenerationParameters(new SecureRandom(Encoding.UTF8.GetBytes(publicKeySeed))));
+            var keyPair = g.GenerateKeyPair();
+            var publicKeyBytes = ((Ed25519PublicKeyParameters) keyPair.Public).GetEncoded();
+            //AddPublicKeySubjectInfo(keyPair.Public);
+            //var publicKeyBytes = Encoding.UTF8.GetBytes(publicKeySeed)
+            //   .Concat(Enumerable.Repeat(default(byte), new FfiWrapper().PublicKeyLength))
+            //   .Take(new FfiWrapper().PublicKeyLength).ToArray();
             return GetPeerId(publicKeyBytes, ipAddress, port);
         }
 
