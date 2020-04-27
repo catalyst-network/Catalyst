@@ -81,7 +81,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             ContainerProvider.ContainerBuilder.RegisterType<ConsoleUserInput>().As<IUserInput>();
 
             var passwordManager = Substitute.For<IPasswordManager>();
-            passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(Arg.Is(PasswordRegistryTypes.IpfsPassword), Arg.Any<string>()).Returns(TestPasswordReader.BuildSecureStringPassword("test"));
+            passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(Arg.Is(PasswordRegistryTypes.DefaultNodePassword), Arg.Any<string>()).Returns(TestPasswordReader.BuildSecureStringPassword("test"));
             ContainerProvider.ContainerBuilder.RegisterInstance(passwordManager).As<IPasswordManager>();
 
            //_peerSettings = new PeerSettings(ContainerProvider.ConfigurationRoot, Substitute.For<Peer>());

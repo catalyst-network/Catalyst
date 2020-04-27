@@ -35,7 +35,7 @@ using MultiFormats;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
-
+using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
 {
@@ -43,6 +43,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
     {
         private IPeerQueryTipRequest _peerQueryTipRequest;
         private IPeerSettings _testSettings;
+        private PeerId _recipientPeerId;
         private CancellationTokenProvider _cancellationProvider;
 
         [SetUp]
@@ -52,6 +53,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
 
             var subbedPeerClient = Substitute.For<IPeerClient>();
             _testSettings = PeerSettingsHelper.TestPeerSettings();
+            _recipientPeerId = _testSettings.PeerId;
+
             _cancellationProvider = new CancellationTokenProvider(TimeSpan.FromSeconds(10));
 
             _peerQueryTipRequest = new PeerQueryTipRequestRequest(
@@ -65,10 +68,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
         [Test]
         public async Task Can_Query_Expected_Peer()
         {
-            var recipientPeerId = PeerIdHelper.GetPeerId();
-            await _peerQueryTipRequest.QueryPeerTipAsync(recipientPeerId).ConfigureAwait(false);
+            await _peerQueryTipRequest.QueryPeerTipAsync(_recipientPeerId).ConfigureAwait(false);
             var expectedDto = Substitute.For<IMessageDto<ProtocolMessage>>();
-            expectedDto.RecipientPeerIdentifier.Returns(recipientPeerId);
+            expectedDto.RecipientPeerIdentifier.Returns(_recipientPeerId);
             expectedDto.SenderPeerIdentifier.Returns(_testSettings.PeerId);
             _peerQueryTipRequest.PeerClient.ReceivedWithAnyArgs(1).SendMessage(Arg.Is(expectedDto));
         }
@@ -76,13 +78,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
         [Test]
         public async Task Can_Receive_Query_Response_On_Observer()
         {
-            var recipientPeerId = PeerIdHelper.GetPeerId();
-            var tipQueryResponse = new PeerQueryTipResponse(PeerIdHelper.GetPeerId(),
+            var tipQueryResponse = new PeerQueryTipResponse(_recipientPeerId,
                 MultiHash.ComputeHash(ByteUtil.GenerateRandomByteArray(32))
             );
 
             _peerQueryTipRequest.QueryTipResponseMessageStreamer.OnNext(tipQueryResponse);
-            var response = await _peerQueryTipRequest.QueryPeerTipAsync(recipientPeerId).ConfigureAwait(false);
+            var response = await _peerQueryTipRequest.QueryPeerTipAsync(_recipientPeerId).ConfigureAwait(false);
             response.Should().BeTrue();
         }
 

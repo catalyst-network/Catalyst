@@ -76,9 +76,7 @@ namespace Catalyst.Core.Modules.Keystore
 
             while (tries < MaxTries)
             {
-                //var securePassword = _passwordManager.RetrieveOrPromptPassword(passwordIdentifier, "Please provide your node password");
-
-                var passphrase = _passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.IpfsPassword, "Please provide your DFS password");
+                var passphrase = _passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.DefaultNodePassword, "Please provide your DFS password");
                 _keyApi.SetPassphraseAsync(passphrase).ConfigureAwait(false).GetAwaiter().GetResult();
 
                 try
@@ -107,7 +105,7 @@ namespace Catalyst.Core.Modules.Keystore
         public async Task<IPrivateKey> KeyStoreGenerateAsync(KeyRegistryTypes keyIdentifier)
         {
             //var privateKey = _cryptoContext.GeneratePrivateKey();
-            var passphrase = _passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.IpfsPassword, "Please provide your DFS password");
+            var passphrase = _passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.DefaultNodePassword, "Please provide your DFS password");
 
             _keyApi.SetPassphraseAsync(passphrase).ConfigureAwait(false).GetAwaiter().GetResult();
 

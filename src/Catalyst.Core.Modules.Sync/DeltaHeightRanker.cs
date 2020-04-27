@@ -77,7 +77,9 @@ namespace Catalyst.Core.Modules.Sync
         {
             while (_maxPeersInStore < _messages.Count())
             {
-                _messages.Values.Remove(mostPopularMessages.Last().Item);
+                var lastGroup = _messages.Where(kvp => kvp.Value == mostPopularMessages.Last().Item);
+                var lastItem = lastGroup.Last();
+                _messages.Remove(lastItem);
             }
         }
 

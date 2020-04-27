@@ -36,7 +36,7 @@ namespace Catalyst.Core.Lib.P2P
     {
         public LocalPeer(IKeyApi keyApi, KeyChainOptions keyChainOptions, IPasswordManager passwordManager)
         {
-            var passphrase = passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.IpfsPassword, "Please provide your DFS password");
+            var passphrase = passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.DefaultNodePassword, "Please provide your node password");
             keyApi.SetPassphraseAsync(passphrase).ConfigureAwait(false).GetAwaiter().GetResult();
 
             var self = keyApi.GetKeyAsync("self").ConfigureAwait(false).GetAwaiter().GetResult() ??

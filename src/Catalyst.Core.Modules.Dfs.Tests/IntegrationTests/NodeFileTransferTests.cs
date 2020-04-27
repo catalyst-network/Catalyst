@@ -85,7 +85,7 @@
 //
 //             var passwordManager = Substitute.For<IPasswordManager>();
 //             passwordManager
-//                .RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.IpfsPassword, Arg.Any<string>())
+//                .RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.DefaultNodePassword, Arg.Any<string>())
 //                .Returns(TestPasswordReader.BuildSecureStringPassword("abcd"));
 //
 //             var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));

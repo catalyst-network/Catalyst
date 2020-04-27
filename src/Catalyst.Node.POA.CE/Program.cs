@@ -202,7 +202,7 @@ namespace Catalyst.Node.POA.CE
                    .WithPersistenceConfiguration()
                    .BuildKernel(options.OverwriteConfig)
                    .WithPassword(PasswordRegistryTypes.DefaultNodePassword, options.NodePassword)
-                   .WithPassword(PasswordRegistryTypes.IpfsPassword, options.IpfsPassword)
+                   .WithPassword(PasswordRegistryTypes.DefaultNodePassword, options.IpfsPassword)
                    .WithPassword(PasswordRegistryTypes.CertificatePassword, options.SslCertPassword)
                    .Reset(options.Reset)
                    .StartCustomAsync(CustomBootLogicAsync);

@@ -26,6 +26,7 @@ using System.Security;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
+using Catalyst.Abstractions.Types;
 using Org.BouncyCastle.Crypto;
 
 namespace Catalyst.Abstractions.Keystore
@@ -60,7 +61,7 @@ namespace Catalyst.Abstractions.Keystore
         ///   A task that represents the asynchronous operation. The task's result is
         ///   the key that was created.
         /// </returns>
-        Task<IKey> CreateAsync(string name,
+        Task<IKey> CreateAsync(KeyRegistryTypes keyRegistryType,
             string keyType,
             int size,
             CancellationToken cancel = default);
@@ -90,7 +91,7 @@ namespace Catalyst.Abstractions.Keystore
         ///   A task that represents the asynchronous operation. The task's result is
         ///   the key that was deleted.
         /// </returns>
-        Task<IKey> RemoveAsync(string name, CancellationToken cancel = default);
+        Task<IKey> RemoveAsync(KeyRegistryTypes keyRegistryType, CancellationToken cancel = default);
 
         /// <summary>
         ///   Rename the specified key.
@@ -126,17 +127,17 @@ namespace Catalyst.Abstractions.Keystore
         ///    A task that represents the asynchronous operation. The task's result is
         ///    the password protected PEM string.
         /// </returns>
-        Task<string> ExportAsync(string name, char[] password, CancellationToken cancel = default);
+        Task<string> ExportAsync(KeyRegistryTypes keyRegistryType, char[] password, CancellationToken cancel = default);
 
-        Task<IKey> ImportAsync(string name, string pem, char[] password, CancellationToken cancel = default);
+        Task<IKey> ImportAsync(KeyRegistryTypes keyRegistryType, string pem, char[] password, CancellationToken cancel = default);
         
-        Task<IKey> GetKeyAsync(string self);
-        Task<string> GetIpfsPublicKeyAsync(string name, CancellationToken cancel = default);
+        Task<IKey> GetKeyAsync(KeyRegistryTypes keyRegistryType);
+        Task<string> GetIpfsPublicKeyAsync(KeyRegistryTypes keyRegistryType, CancellationToken cancel = default);
 
-        Task<AsymmetricKeyParameter> GetPublicKeyAsync(string self);
-        Task<AsymmetricKeyParameter> GetPrivateKeyAsync(string self);
+        Task<AsymmetricKeyParameter> GetPublicKeyAsync(KeyRegistryTypes keyRegistryType);
+        Task<AsymmetricKeyParameter> GetPrivateKeyAsync(KeyRegistryTypes keyRegistryType);
         
-        Task<byte[]> CreateProtectedDataAsync(string keyName,
+        Task<byte[]> CreateProtectedDataAsync(KeyRegistryTypes keyRegistryType,
             byte[] plainText,
             CancellationToken cancel = default);
 
