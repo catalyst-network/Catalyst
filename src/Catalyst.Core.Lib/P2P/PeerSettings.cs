@@ -36,6 +36,7 @@ using Catalyst.Protocol.Peer;
 using Dawn;
 using Lib.P2P;
 using Microsoft.Extensions.Configuration;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.P2P
 {
@@ -65,7 +66,9 @@ namespace Catalyst.Core.Lib.P2P
             var section = rootSection.GetSection("CatalystNodeConfiguration").GetSection("Peer");
             Enum.TryParse(section.GetSection("Network").Value, out _networkType);
 
-            PublicKey = localPeer.PublicKey;
+            var pksi = Convert.FromBase64String(localPeer.PublicKey);
+            PublicKey = pksi.GetPublicKeyBytesFromPeerId().ToBase58();
+
             Port = int.Parse(section.GetSection("Port").Value);
             PayoutAddress = section.GetSection("PayoutAddress").Value;
             BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value);

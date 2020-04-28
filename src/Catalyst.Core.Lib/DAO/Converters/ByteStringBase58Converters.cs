@@ -21,34 +21,26 @@
 
 #endregion
 
+using AutoMapper;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Util;
 using Google.Protobuf;
-using MultiFormats;
-using System;
 
-namespace Catalyst.Core.Lib.Util
+namespace Catalyst.Core.Lib.DAO.Converters
 {
-    // https://github.com/catalyst-network/Catalyst.Node/issues/847
-    public static class KeyUtil
+    public class ByteStringToBase58Converter : IValueConverter<ByteString, string>
     {
-        public static string KeyToString(this byte[] keyAsBytes)
+        public string Convert(ByteString sourceMember, ResolutionContext context)
         {
-            return keyAsBytes.ToBase58();
+            return sourceMember.ToByteArray().KeyToString();
         }
+    }
 
-        public static byte[] KeyToBytes(this string keyAsString)
+    public class Base58ToByteStringFormatter : IValueConverter<string, ByteString>
+    {
+        public ByteString Convert(string sourceMember, ResolutionContext context)
         {
-            return keyAsString.FromBase58();
-        }
-
-        public static ByteString KeyToByteString(this string keyAsString)
-        {
-            return KeyToBytes(keyAsString).ToByteString();
-        }
-
-        public static string KeyToString(this ByteString keyAsString)
-        {
-            return KeyToString(keyAsString.ToByteArray());
+            return sourceMember.KeyToBytes().ToByteString();
         }
     }
 }

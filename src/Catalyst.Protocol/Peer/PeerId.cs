@@ -47,9 +47,9 @@ namespace Catalyst.Protocol.Peer
 
         public bool IsValid()
         {
-            if (Id == null || Id.IsEmpty)
+            if (PublicKey == null || PublicKey.IsEmpty)
             {
-                Logger.Debug("{field} cannot be null or empty", nameof(Id));
+                Logger.Debug("{field} cannot be null or empty", nameof(PublicKey));
                 return false;
             }
 

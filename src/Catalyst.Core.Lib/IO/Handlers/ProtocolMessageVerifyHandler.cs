@@ -21,7 +21,6 @@
 
 #endregion
 
-using System.IO;
 using System.Reflection;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Core.Lib.Extensions;
@@ -65,29 +64,21 @@ namespace Catalyst.Core.Lib.IO.Handlers
 
         private bool Verify(ProtocolMessage signedMessage)
         {
-            try
+            if (signedMessage.Signature == null)
             {
-                if (signedMessage.Signature == null)
-                {
-                    return false;
-                }
-
-                var sig = signedMessage.Signature.RawBytes.ToByteArray();
-                var pub = signedMessage.PeerId.PublicKey.ToByteArray().GetPublicKeyBytesFromPeerId();
-
-                var signature = _keySigner.CryptoContext.GetSignatureFromBytes(sig, pub);
-                var messageWithoutSig = signedMessage.Clone();
-                messageWithoutSig.Signature = null;
-
-                var verified = _keySigner.Verify(signature, messageWithoutSig, signedMessage.Signature.SigningContext);
-
-                return verified;
-            }
-            catch(PublicKeyExtractionException pkee)
-            {
-                Logger.Error(pkee.Message, pkee);
                 return false;
             }
+
+            var sig = signedMessage.Signature.RawBytes.ToByteArray();
+            var pub = signedMessage.PeerId.PublicKey.ToByteArray();
+
+            var signature = _keySigner.CryptoContext.GetSignatureFromBytes(sig, pub);
+            var messageWithoutSig = signedMessage.Clone();
+            messageWithoutSig.Signature = null;
+
+            var verified = _keySigner.Verify(signature, messageWithoutSig, signedMessage.Signature.SigningContext);
+
+            return verified;
         }
     }
 }

@@ -49,6 +49,7 @@ using Catalyst.Core.Modules.Keystore;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Lib.P2P;
+using MultiFormats;
 using NSubstitute;
 using NUnit.Framework;
 using Serilog;
@@ -135,8 +136,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 
         [Theory]
         [Property(Traits.TestType, Traits.IntegrationTest)]
-        [TestCase("CAESLDAqMAUGAytlcAMhADyXIeZUUBKx3OiDdhDb5GGrDUPOhhzJWPf80Iqam3lr", "92.207.178.198", 1574)]
-        [TestCase("CAESLDAqMAUGAytlcAMhADyXIeZUUBKx3OiDdhDb5GGrDUPOhhzJWPf80Iqam3lr", "198.51.100.3", 2524)]
+        [TestCase("42Bm3dA9xKjnMYp5CztnUYqEme4Y46suNCvKx6ueDhz", "92.207.178.198", 1574)]
+        [TestCase("483NWsFHJ5UrTRf8q6Ew3E8mD89i9cXyaxxFM1sSn4q1", "198.51.100.3", 2524)]
         public async Task PeerChallenge_PeerIdentifiers_Expect_To_Fail_IP_Port_PublicKey(string publicKey,
             string ip,
             int port)

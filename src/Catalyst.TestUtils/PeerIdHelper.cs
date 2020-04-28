@@ -77,10 +77,10 @@ namespace Catalyst.TestUtils
                 publicKey = ((Ed25519PublicKeyParameters) keyPair.Public).GetEncoded();
             }
 
-            var publicKey64 = AddPublicKeySubjectInfo(publicKey);
+            //var publicKey64 = AddPublicKeySubjectInfo(publicKey);
             var peerIdentifier = new PeerId
             {
-                PublicKey = publicKey64.KeyToByteString(),
+                PublicKey = publicKey.ToByteString(),
                 Ip = (ipAddress ?? IPAddress.Loopback).To16Bytes().ToByteString(),
                 Port = (ushort) port
             };
