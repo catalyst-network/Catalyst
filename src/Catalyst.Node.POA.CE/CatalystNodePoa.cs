@@ -115,7 +115,6 @@ namespace Catalyst.Node.POA.CE
             _logger.Information("Starting the Catalyst Node");
             var key = await _keyApi.GetKeyAsync("self").ConfigureAwait(false);
             var peerId = key.Id;
-            var pk = peerId.Digest.GetPublicKeyBytesFromPeerId();
 
             _logger.Information($"***** using PeerId: {peerId} *****");
             _logger.Information($"***** using PublicKey: {_publicKey.Bytes.ToBase58()} *****");
