@@ -36,6 +36,7 @@ namespace Catalyst.Core.Lib.P2P
     /// </summary>
     public sealed class PeerIdValidator : IPeerIdValidator
     {
+        private const int PeerIdKeyLength = 48;
         private readonly ICryptoContext _cryptoContext;
 
         public PeerIdValidator(ICryptoContext cryptoContext)
@@ -46,11 +47,10 @@ namespace Catalyst.Core.Lib.P2P
         /// <inheritdoc cref="Catalyst.Abstractions.P2P.IPeerIdValidator"/>
         public bool ValidatePeerIdFormat(PeerId peerId)
         {
-            var publicKeyLength = 48;
             Guard.Argument(peerId, nameof(peerId)).NotNull()
                .Require(p => p.Ip.Length == 16 && ValidateIp(p.Ip.ToByteArray()), _ => "Ip should be 16 bytes")
                .Require(p => ValidatePort(p.Port), _ => "Port should be between 1025 and 65535")
-               .Require(p => p.PublicKey.Length == publicKeyLength, p => $"PublicKey should be {publicKeyLength} bytes but was {p.PublicKey.Length}");
+               .Require(p => p.PublicKey.Length == PeerIdKeyLength, p => $"PublicKey should be {PeerIdKeyLength} bytes but was {p.PublicKey.Length}");
 
             return true;
         }

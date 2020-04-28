@@ -35,7 +35,6 @@ namespace Catalyst.TestUtils.Fakes
     /// </summary>
     public abstract class FakeKeySigner : IKeySigner
     {
-        public abstract IKeyStore KeyStore { get; }
         public abstract ICryptoContext CryptoContext { get; }
         
         // The reimplemented span-based method
@@ -46,14 +45,8 @@ namespace Catalyst.TestUtils.Fakes
         bool IKeySigner.Verify(ISignature signature, ReadOnlySpan<byte> data, SigningContext signingContext) => Verify(signature, data.ToArray(), signingContext);
         public abstract bool Verify(ISignature signature, byte[] data, SigningContext signingContext);
 
-        public IPrivateKey GetPrivateKey(KeyRegistryTypes keyIdentifier)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract IPrivateKey GetPrivateKey(KeyRegistryTypes keyIdentifier);
 
-        public IPublicKey GetPublicKey(KeyRegistryTypes keyIdentifier)
-        {
-            throw new NotImplementedException();
-        }
+        public abstract IPublicKey GetPublicKey(KeyRegistryTypes keyIdentifier);
     }
 }

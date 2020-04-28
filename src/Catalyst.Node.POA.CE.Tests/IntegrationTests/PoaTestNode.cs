@@ -128,15 +128,6 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 
             _scope = ContainerProvider.Container.BeginLifetimeScope(Name);
             _node = _scope.Resolve<ICatalystNode>();
-
-            //var keyStore = _scope.Resolve<IKeyStore>();
-            var keyRegistry = _scope.Resolve<IKeyRegistry>();
-            keyRegistry.RemoveItemFromRegistry(KeyRegistryTypes.DefaultKey);
-            keyRegistry.AddItemToRegistry(KeyRegistryTypes.DefaultKey, privateKey);
-
-            //keyStore.KeyStoreEncryptAsync(privateKey, KeyRegistryTypes.DefaultKey)
-            //   .ConfigureAwait(false).GetAwaiter()
-            //   .GetResult();
         }
 
         public string Name { get; }

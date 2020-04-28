@@ -45,9 +45,9 @@ namespace Catalyst.Core.Lib.Extensions
 
         public static byte[] ToUtf8Bytes(this string @string) { return Encoding.UTF8.GetBytes(@string); }
 
-        public static PeerId BuildPeerIdFromBase58Key(this string base32Key, IPEndPoint ipEndPoint)
+        public static PeerId BuildPeerIdFromBase58Key(this string base58Key, IPEndPoint ipEndPoint)
         {
-            return BuildPeerIdFromBase58Key(base32Key, ipEndPoint.Address, ipEndPoint.Port);
+            return BuildPeerIdFromBase58Key(base58Key, ipEndPoint.Address, ipEndPoint.Port);
         }
 
         public static PeerId BuildPeerIdFromBase58Key(this string base58Key,

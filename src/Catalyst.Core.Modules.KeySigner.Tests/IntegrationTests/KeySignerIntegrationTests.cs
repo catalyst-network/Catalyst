@@ -52,16 +52,10 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
         {
             this.Setup(TestContext.CurrentContext);
 
-            var logger = Substitute.For<ILogger>();
-
-            var passwordManager = Substitute.For<IPasswordManager>();
-
             var cryptoContext = new FfiWrapper();
 
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.NetworkType.Returns(NetworkType.Devnet);
-
-            //var keystore = new LocalKeyStore(passwordManager, cryptoContext, Substitute.For<IKeyApi>(), logger);
 
             var keyRegistry = new KeyRegistry();
 

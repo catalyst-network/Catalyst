@@ -128,23 +128,8 @@ namespace Catalyst.TestUtils
             ContainerBuilder.RegisterModule(new KeySignerModule());
             ContainerBuilder.RegisterModule(new HashingModule());
 
-            //var keyStore = TestKeyRegistry.MockKeyFileStore();
-            //ContainerBuilder.RegisterInstance(keyStore).As<IStore<string, EncryptedKey>>().SingleInstance();
-
             var inMemoryStore = new InMemoryStore<string, EncryptedKey>();
             ContainerBuilder.RegisterInstance(inMemoryStore).As<IStore<string, EncryptedKey>>().SingleInstance();
-
-            //ContainerBuilder.RegisterBuildCallback(async x =>
-            //{
-            //    var keyApi = x.Resolve<IKeyApi>();
-            //    await keyApi.SetPassphraseAsync(new SecureString());
-            //    var key = await keyApi.GetKeyAsync(KeyRegistryTypes.DefaultKey);
-            //    if (key == null)
-            //    {
-            //        await keyApi.CreateAsync(KeyRegistryTypes.DefaultKey, "ed25519", 0);
-            //    }
-            //});
-            
 
             ConfigureLogging(writeLogsToTestOutput, writeLogsToFile, logDotNettyTraffic);
         }
