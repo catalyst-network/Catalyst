@@ -87,10 +87,10 @@ namespace Catalyst.Simulator.RpcClients
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.NetworkType.Returns(signingContextProvider.NetworkType);
 
-            var localKeyStore = new LocalKeyStore(passwordManager, cryptoContext, Substitute.For<IKeyApi>(), _logger);
-
+            //var localKeyStore = new LocalKeyStore(passwordManager, cryptoContext, Substitute.For<IKeyApi>(), _logger);
+            //localKeyStore
             var keyRegistry = new KeyRegistry();
-            var keySigner = new KeySigner(localKeyStore, cryptoContext, keyRegistry);
+            var keySigner = new KeySigner(cryptoContext, Substitute.For<IKeyApi>(), keyRegistry);
 
             var memoryCacheOptions = new MemoryCacheOptions();
             var memoryCache = new MemoryCache(memoryCacheOptions);

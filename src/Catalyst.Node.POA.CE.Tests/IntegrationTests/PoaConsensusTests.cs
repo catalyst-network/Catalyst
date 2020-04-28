@@ -37,7 +37,7 @@ using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
-
+using Org.BouncyCastle.Crypto.Parameters;
 
 namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 {
@@ -65,12 +65,16 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
                 var path = Path.Combine(FileSystem.GetCatalystDataDir().FullName, $"producer{i}");
                 fileSystem.GetCatalystDataDir().Returns(new DirectoryInfo(path));
 
-                var privateKey = context.GeneratePrivateKey();
+                var dfs = TestDfs.GetTestDfs(fileSystem);
+
+                var privateKeyParameters = ((Ed25519PrivateKeyParameters) dfs.KeyApi.GetPrivateKeyAsync("self").GetAwaiter().GetResult());
+                var privateKey = context.GetPrivateKeyFromBytes(privateKeyParameters.GetEncoded());
                 var publicKey = privateKey.GetPublicKey();
+
                 var nodeSettings = PeerSettingsHelper.TestPeerSettings(publicKey.Bytes, 2000 + i);
                 var peerIdentifier = nodeSettings.PeerId;
                 var name = $"producer{i.ToString()}";
-                var dfs = TestDfs.GetTestDfs(fileSystem);
+
                 return new { index = i, name, privateKey, nodeSettings, peerIdentifier, dfs, fileSystem };
             }
             ).ToList();

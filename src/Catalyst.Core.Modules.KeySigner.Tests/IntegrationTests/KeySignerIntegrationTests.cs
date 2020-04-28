@@ -40,6 +40,8 @@ using NSubstitute;
 using Serilog;
 using NUnit.Framework;
 using Catalyst.Abstractions.Keystore;
+using Catalyst.Abstractions.Options;
+using Catalyst.Core.Lib.FileSystem;
 
 namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
 {
@@ -59,11 +61,19 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.NetworkType.Returns(NetworkType.Devnet);
 
-            var keystore = new LocalKeyStore(passwordManager, cryptoContext, Substitute.For<IKeyApi>(), logger);
+            //var keystore = new LocalKeyStore(passwordManager, cryptoContext, Substitute.For<IKeyApi>(), logger);
 
             var keyRegistry = new KeyRegistry();
 
-            _keySigner = new KeySigner(keystore, cryptoContext, keyRegistry);
+            var inMemoryStore = new InMemoryStore<string, EncryptedKey>();
+            var keyStoreService = new KeyStoreService(new KeyChainOptions { DefaultKeyType = "ed25519" }, inMemoryStore);
+            var keyApi = new KeyApi(keyStoreService);
+
+            var secureString = TestPasswordReader.BuildSecureStringPassword("password");
+            keyApi.SetPassphraseAsync(secureString).GetAwaiter().GetResult();
+            keyApi.CreateAsync("self", "ed25519", 0).GetAwaiter().GetResult();
+
+            _keySigner = new KeySigner(cryptoContext, keyApi, keyRegistry);
         }
 
         private IKeySigner _keySigner;

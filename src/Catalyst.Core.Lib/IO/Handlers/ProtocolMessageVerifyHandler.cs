@@ -24,14 +24,9 @@
 using System.IO;
 using System.Reflection;
 using Catalyst.Abstractions.KeySigner;
-using Catalyst.Core.Lib.Cryptography.Proto;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
-using MultiFormats;
-using Org.BouncyCastle.Asn1;
-using Org.BouncyCastle.Asn1.X509;
-using ProtoBuf;
 using Serilog;
 
 namespace Catalyst.Core.Lib.IO.Handlers
@@ -51,7 +46,7 @@ namespace Catalyst.Core.Lib.IO.Handlers
             Logger.Verbose("Received {msg}", signedMessage);
             if (!Verify(signedMessage))
             {
-                // Logger.Warning("Failed to verify {msg} signature.", signedMessage);
+                Logger.Warning("Failed to verify {msg} signature.", signedMessage);
                 return;
             }
 

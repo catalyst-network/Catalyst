@@ -100,7 +100,7 @@ namespace Catalyst.Node.POA.CE
             _peerRepository = peerRepository;
             _keyApi = keyApi;
 
-            var privateKey = keySigner.KeyStore.KeyStoreDecrypt(KeyRegistryTypes.DefaultKey);
+            var privateKey = keySigner.GetPrivateKey(KeyRegistryTypes.DefaultKey);
             _publicKey = keySigner.CryptoContext.GetPublicKeyFromPrivateKey(privateKey);
         }
 

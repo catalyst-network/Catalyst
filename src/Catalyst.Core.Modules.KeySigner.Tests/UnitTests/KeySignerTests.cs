@@ -61,75 +61,75 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
             _signingContext = new SigningContext();
         }
 
-        [Test]
-        public void On_Init_KeySigner_Can_Retrieve_Key_From_KeyStore_If_Key_Doesnt_Initially_Exist_In_Registry()
-        {
-            _keyRegistry.GetItemFromRegistry(default).ReturnsForAnyArgs((IPrivateKey) null);
-            _keyRegistry.RegistryContainsKey(default).ReturnsForAnyArgs(false);
-            _keyRegistry.AddItemToRegistry(default, default).ReturnsForAnyArgs(true);
+        //[Test]
+        //public void On_Init_KeySigner_Can_Retrieve_Key_From_KeyStore_If_Key_Doesnt_Initially_Exist_In_Registry()
+        //{
+        //    _keyRegistry.GetItemFromRegistry(default).ReturnsForAnyArgs((IPrivateKey) null);
+        //    _keyRegistry.RegistryContainsKey(default).ReturnsForAnyArgs(false);
+        //    _keyRegistry.AddItemToRegistry(default, default).ReturnsForAnyArgs(true);
 
-            var keySigner = new KeySigner(_keystore, _cryptoContext, _keyRegistry);
-            _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryTypes>());
-            _keyRegistry.ReceivedWithAnyArgs(1).AddItemToRegistry(default, default);
-            keySigner.Should().NotBe(null);
-        }
+        //    var keySigner = new KeySigner(_keystore, _cryptoContext, _keyRegistry);
+        //    _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryTypes>());
+        //    _keyRegistry.ReceivedWithAnyArgs(1).AddItemToRegistry(default, default);
+        //    keySigner.Should().NotBe(null);
+        //}
 
-        [Test]
-        public void On_Init_KeySigner_Can_Generate_Default_Key_If_Key_No_KeyStore_File_Exists()
-        {
-            _keyRegistry.GetItemFromRegistry(default).ReturnsForAnyArgs((IPrivateKey) null);
-            _keyRegistry.RegistryContainsKey(default).ReturnsForAnyArgs(false);
-            _keyRegistry.AddItemToRegistry(default, default).ReturnsForAnyArgs(true);
+        //[Test]
+        //public void On_Init_KeySigner_Can_Generate_Default_Key_If_Key_No_KeyStore_File_Exists()
+        //{
+        //    _keyRegistry.GetItemFromRegistry(default).ReturnsForAnyArgs((IPrivateKey) null);
+        //    _keyRegistry.RegistryContainsKey(default).ReturnsForAnyArgs(false);
+        //    _keyRegistry.AddItemToRegistry(default, default).ReturnsForAnyArgs(true);
 
-            _keystore.KeyStoreDecrypt(default).ReturnsForAnyArgs((IPrivateKey) null);
+        //    _keystore.KeyStoreDecrypt(default).ReturnsForAnyArgs((IPrivateKey) null);
 
-            var keySigner = new KeySigner(_keystore, _cryptoContext, _keyRegistry);
-            _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryTypes>());
-            _keystore.Received(1)?.KeyStoreGenerateAsync(Arg.Any<KeyRegistryTypes>());
-            _keyRegistry.ReceivedWithAnyArgs(1).AddItemToRegistry(default, default);
-            keySigner.Should().NotBe(null);
-        }
+        //    var keySigner = new KeySigner(_keystore, _cryptoContext, _keyRegistry);
+        //    _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryTypes>());
+        //    _keystore.Received(1)?.KeyStoreGenerateAsync(Arg.Any<KeyRegistryTypes>());
+        //    _keyRegistry.ReceivedWithAnyArgs(1).AddItemToRegistry(default, default);
+        //    keySigner.Should().NotBe(null);
+        //}
 
-        [Test] 
-        public void KeySigner_Can_Sign_If_Key_Exists_In_Registry()
-        {
-            _keyRegistry.GetItemFromRegistry(default).ReturnsForAnyArgs(_privateKey);
-            _keyRegistry.RegistryContainsKey(default).ReturnsForAnyArgs(true);
-            _keyRegistry.AddItemToRegistry(default, default).ReturnsForAnyArgs(true);
+        //[Test] 
+        //public void KeySigner_Can_Sign_If_Key_Exists_In_Registry()
+        //{
+        //    _keyRegistry.GetItemFromRegistry(default).ReturnsForAnyArgs(_privateKey);
+        //    _keyRegistry.RegistryContainsKey(default).ReturnsForAnyArgs(true);
+        //    _keyRegistry.AddItemToRegistry(default, default).ReturnsForAnyArgs(true);
 
-            var keySigner = new KeySigner(_keystore, _cryptoContext, _keyRegistry);
+        //    var keySigner = new KeySigner(_keystore, _cryptoContext, _keyRegistry);
 
-            _keyRegistry.ReceivedWithAnyArgs(0).AddItemToRegistry(default, default);
-            _keystore.ClearReceivedCalls();
-            _keyRegistry.ClearReceivedCalls();
+        //    _keyRegistry.ReceivedWithAnyArgs(0).AddItemToRegistry(default, default);
+        //    _keystore.ClearReceivedCalls();
+        //    _keyRegistry.ClearReceivedCalls();
 
-            var actualSignature = keySigner.Sign(Encoding.UTF8.GetBytes("sign this please"), _signingContext);
+        //    var actualSignature = keySigner.Sign(Encoding.UTF8.GetBytes("sign this please"), _signingContext);
 
-            _keyRegistry.ReceivedWithAnyArgs(1).GetItemFromRegistry(default);
-            _keystore.Received(0).KeyStoreDecrypt(Arg.Any<KeyRegistryTypes>());
-            _keystore.Received(0)?.KeyStoreGenerateAsync(Arg.Any<KeyRegistryTypes>());
-            _keyRegistry.ReceivedWithAnyArgs(0).AddItemToRegistry(default, default);
+        //    _keyRegistry.ReceivedWithAnyArgs(1).GetItemFromRegistry(default);
+        //    _keystore.Received(0).KeyStoreDecrypt(Arg.Any<KeyRegistryTypes>());
+        //    _keystore.Received(0)?.KeyStoreGenerateAsync(Arg.Any<KeyRegistryTypes>());
+        //    _keyRegistry.ReceivedWithAnyArgs(0).AddItemToRegistry(default, default);
             
-            Assert.AreEqual(_signature, actualSignature);
-        }
+        //    Assert.AreEqual(_signature, actualSignature);
+        //}
 
-        [Test] 
-        public void KeySigner_Can_Sign_If_Key_Doesnt_Exists_In_Registry_But_There_Is_A_Keystore_File()
-        {            
-            var keySigner = new KeySigner(_keystore, _cryptoContext, _keyRegistry);            
-            _keystore.ClearReceivedCalls();
-            _keyRegistry.ClearReceivedCalls();
+        //[Test] 
+        //public void KeySigner_Can_Sign_If_Key_Doesnt_Exists_In_Registry_But_There_Is_A_Keystore_File()
+        //{            
+        //    var keySigner = new KeySigner(_keystore, _cryptoContext, _keyRegistry);            
+        //    _keystore.ClearReceivedCalls();
+        //    _keyRegistry.ClearReceivedCalls();
 
-            _keyRegistry.GetItemFromRegistry(default).ReturnsForAnyArgs(null, _privateKey);
-            _keyRegistry.RegistryContainsKey(default).ReturnsForAnyArgs(true);
-            _keyRegistry.AddItemToRegistry(default, default).ReturnsForAnyArgs(true);
+        //    _keyRegistry.GetItemFromRegistry(default).ReturnsForAnyArgs(null, _privateKey);
+        //    _keyRegistry.RegistryContainsKey(default).ReturnsForAnyArgs(true);
+        //    _keyRegistry.AddItemToRegistry(default, default).ReturnsForAnyArgs(true);
             
-            var actualSignature = keySigner.Sign(Encoding.UTF8.GetBytes("sign this please"), _signingContext);
+        //    var actualSignature = keySigner.Sign(Encoding.UTF8.GetBytes("sign this please"), _signingContext);
 
-            _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryTypes>());
+        //    _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryTypes>());
 
-            Assert.AreEqual(_signature, actualSignature);
-        }
+        //    Assert.AreEqual(_signature, actualSignature);
+        //}
 
         private sealed class CryptoContext : ICryptoContext
         {

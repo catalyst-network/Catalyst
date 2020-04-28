@@ -61,6 +61,8 @@ using Catalyst.Core.Lib.P2P.Repository;
 using Nethermind.Db;
 using Catalyst.Core.Lib.DAO.Ledger;
 using SharpRepository.Repository;
+using Catalyst.Core.Lib.Cryptography;
+using Catalyst.Core.Lib.FileSystem;
 
 namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 {
@@ -127,7 +129,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             _scope = ContainerProvider.Container.BeginLifetimeScope(Name);
             _node = _scope.Resolve<ICatalystNode>();
 
-            var keyStore = _scope.Resolve<IKeyStore>();
+            //var keyStore = _scope.Resolve<IKeyStore>();
             var keyRegistry = _scope.Resolve<IKeyRegistry>();
             keyRegistry.RemoveItemFromRegistry(KeyRegistryTypes.DefaultKey);
             keyRegistry.AddItemToRegistry(KeyRegistryTypes.DefaultKey, privateKey);
@@ -163,6 +165,8 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
                .AsImplementedInterfaces();
             builder.RegisterInstance(new InMemoryRepository<TransactionToDelta, string>())
                .AsImplementedInterfaces();
+
+            builder.RegisterInstance(_dfsService.KeyApi).As<IKeyApi>().SingleInstance();
 
             ContainerProvider.ContainerBuilder.RegisterInstance(new TestPasswordReader()).As<IPasswordReader>();
             ContainerProvider.ContainerBuilder.RegisterInstance(_nodeSettings).As<IPeerSettings>();

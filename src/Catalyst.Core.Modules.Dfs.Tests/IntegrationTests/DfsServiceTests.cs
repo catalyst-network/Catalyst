@@ -218,7 +218,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         //public async Task KeyChain_GetKey()
         //{
         //    var keyChain = await _dfs1.KeyChainAsync();
-        //    var key = await keyChain.GetPrivateKeyAsync("self");
+        //    var key = await keyChain.GetPrivateKeyAsync(KeyRegistryTypes.DefaultKey);
         //    Assert.NotNull(key);
         //    Assert.True(key.IsPrivate);
         //}

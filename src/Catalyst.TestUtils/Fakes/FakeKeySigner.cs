@@ -25,6 +25,7 @@ using System;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
+using Catalyst.Abstractions.Types;
 using Catalyst.Protocol.Cryptography;
 
 namespace Catalyst.TestUtils.Fakes
@@ -44,5 +45,15 @@ namespace Catalyst.TestUtils.Fakes
         // The reimplemented span-based method
         bool IKeySigner.Verify(ISignature signature, ReadOnlySpan<byte> data, SigningContext signingContext) => Verify(signature, data.ToArray(), signingContext);
         public abstract bool Verify(ISignature signature, byte[] data, SigningContext signingContext);
+
+        public IPrivateKey GetPrivateKey(KeyRegistryTypes keyIdentifier)
+        {
+            throw new NotImplementedException();
+        }
+
+        public IPublicKey GetPublicKey(KeyRegistryTypes keyIdentifier)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

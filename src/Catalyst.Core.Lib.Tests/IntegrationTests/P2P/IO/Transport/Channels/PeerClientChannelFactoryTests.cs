@@ -49,18 +49,19 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
 {
     public sealed class PeerClientChannelFactoryTests
     {
-        private readonly TestScheduler _testScheduler;
-        private readonly UnitTests.P2P.IO.Transport.Channels.PeerClientChannelFactoryTests.TestPeerClientChannelFactory _clientFactory;
-        private readonly EmbeddedChannel _serverChannel;
-        private readonly EmbeddedChannel _clientChannel;
-        private readonly IPeerMessageCorrelationManager _clientCorrelationManager;
-        private readonly FakeKeySigner _clientKeySigner;
-        private readonly IPeerIdValidator _peerIdValidator;
-        private readonly FakeKeySigner _serverKeySigner;
-        private readonly IPeerMessageCorrelationManager _serverCorrelationManager;
-        private readonly ISignature _signature;
+        private TestScheduler _testScheduler;
+        private UnitTests.P2P.IO.Transport.Channels.PeerClientChannelFactoryTests.TestPeerClientChannelFactory _clientFactory;
+        private EmbeddedChannel _serverChannel;
+        private EmbeddedChannel _clientChannel;
+        private IPeerMessageCorrelationManager _clientCorrelationManager;
+        private FakeKeySigner _clientKeySigner;
+        private IPeerIdValidator _peerIdValidator;
+        private FakeKeySigner _serverKeySigner;
+        private IPeerMessageCorrelationManager _serverCorrelationManager;
+        private ISignature _signature;
 
-        public PeerClientChannelFactoryTests()
+        [SetUp]
+        public void Init()
         {
             _testScheduler = new TestScheduler();
             _serverCorrelationManager = Substitute.For<IPeerMessageCorrelationManager>();
@@ -72,7 +73,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
 
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.NetworkType.Returns(NetworkType.Devnet);
-            
+
             var serverFactory = new UnitTests.P2P.IO.Transport.Channels.PeerServerChannelFactoryTests.TestPeerServerChannelFactory(
                 _serverCorrelationManager,
                 broadcastManager,
@@ -88,7 +89,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
             _clientKeySigner.CryptoContext.SignatureLength.Returns(64);
 
             _clientFactory = new UnitTests.P2P.IO.Transport.Channels.PeerClientChannelFactoryTests.TestPeerClientChannelFactory(
-                _clientKeySigner, 
+                _clientKeySigner,
                 _clientCorrelationManager,
                 _peerIdValidator,
                 peerSettings,
@@ -96,11 +97,11 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
 
             _serverChannel =
                 new EmbeddedChannel("server".ToChannelId(), true, serverFactory.InheritedHandlers.ToArray());
-            
+
             _clientChannel =
                 new EmbeddedChannel("client".ToChannelId(), true, _clientFactory.InheritedHandlers.ToArray());
         }
-        
+
         [Test]
         [Property(Traits.TestType, Traits.IntegrationTest)]
         public async Task
@@ -111,33 +112,33 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
             _peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
 
             _serverKeySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(_signature);
-            
+
             var correlationId = CorrelationId.GenerateCorrelationId();
 
             var protocolMessage = new PingRequest().ToProtocolMessage(sender, correlationId);
             var dto = new MessageDto(protocolMessage, recipient);
 
             _clientCorrelationManager.TryMatchResponse(Arg.Any<ProtocolMessage>()).Returns(true);
-            
+
             _serverChannel.WriteOutbound(dto);
             var sentBytes = _serverChannel.ReadOutbound<DatagramPacket>();
 
             _serverCorrelationManager.ReceivedWithAnyArgs(1)
                .AddPendingRequest(Arg.Any<CorrelatableMessage<ProtocolMessage>>());
-            
+
             _serverKeySigner.ReceivedWithAnyArgs(1).Sign(Arg.Any<byte[]>(), default);
-            
+
             _clientKeySigner.Verify(
                     Arg.Any<ISignature>(),
-                    Arg.Any<byte[]>(), 
+                    Arg.Any<byte[]>(),
                     default
                 )
                .ReturnsForAnyArgs(true);
-            
+
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
 
             var messageStream = _clientFactory.InheritedHandlers.OfType<ObservableServiceHandler>().Single().MessageStream;
-            
+
             using (messageStream.Subscribe(observer))
             {
                 _clientChannel.WriteInbound(sentBytes);
@@ -151,7 +152,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
                 observer.Received.Count.Should().Be(1);
                 observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);
             }
-            
+
             await _serverChannel.DisconnectAsync();
             await _clientChannel.DisconnectAsync();
         }

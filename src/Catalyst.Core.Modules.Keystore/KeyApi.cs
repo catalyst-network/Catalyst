@@ -27,7 +27,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Keystore;
-using Catalyst.Abstractions.Types;
 using Org.BouncyCastle.Crypto;
 
 namespace Catalyst.Core.Modules.Keystore
@@ -41,51 +40,51 @@ namespace Catalyst.Core.Modules.Keystore
             _keyStoreService = keyStoreService;
         }
 
-        public async Task<IKey> CreateAsync(KeyRegistryTypes keyRegistryType,
+        public async Task<IKey> CreateAsync(string name,
             string keyType,
             int size,
             CancellationToken cancel = default)
         {
-            return await _keyStoreService.CreateAsync(keyRegistryType.Name, keyType, size, cancel).ConfigureAwait(false);
+            return await _keyStoreService.CreateAsync(name, keyType, size, cancel).ConfigureAwait(false);
         }
 
-        public async Task<string> ExportAsync(KeyRegistryTypes keyRegistryType,
+        public async Task<string> ExportAsync(string name,
             char[] password,
             CancellationToken cancel = default)
         {
-            return await _keyStoreService.ExportAsync(keyRegistryType.Name, password, cancel).ConfigureAwait(false);
+            return await _keyStoreService.ExportAsync(name, password, cancel).ConfigureAwait(false);
         }
 
-        public async Task<IKey> ImportAsync(KeyRegistryTypes keyRegistryType, string pem, char[] password, CancellationToken cancel)
+        public async Task<IKey> ImportAsync(string name, string pem, char[] password, CancellationToken cancel)
         {
-            return await _keyStoreService.ImportAsync(keyRegistryType.Name, pem, password, cancel).ConfigureAwait(false);   
+            return await _keyStoreService.ImportAsync(name, pem, password, cancel).ConfigureAwait(false);   
         }
 
-        public async Task<IKey> GetKeyAsync(KeyRegistryTypes keyRegistryType)
+        public async Task<IKey> GetKeyAsync(string keyName)
         {
-            return await _keyStoreService.FindKeyByNameAsync(keyRegistryType.Name).ConfigureAwait(false);
+            return await _keyStoreService.FindKeyByNameAsync(keyName).ConfigureAwait(false);
         }
 
-        public async Task<string> GetIpfsPublicKeyAsync(KeyRegistryTypes keyRegistryType, CancellationToken cancel = default)
+        public async Task<string> GetIpfsPublicKeyAsync(string name, CancellationToken cancel = default)
         {
-            return await _keyStoreService.GetIpfsPublicKeyAsync(keyRegistryType.Name, cancel).ConfigureAwait(false);
+            return await _keyStoreService.GetIpfsPublicKeyAsync(name, cancel).ConfigureAwait(false);
         }
 
-        public async Task<AsymmetricKeyParameter> GetPublicKeyAsync(KeyRegistryTypes keyRegistryType)
+        public async Task<AsymmetricKeyParameter> GetPublicKeyAsync(string publicKeyName)
         {
-            return await _keyStoreService.GetPublicKeyAsync(keyRegistryType.Name).ConfigureAwait(false);
+            return await _keyStoreService.GetPublicKeyAsync(publicKeyName).ConfigureAwait(false);
         }
 
-        public async Task<AsymmetricKeyParameter> GetPrivateKeyAsync(KeyRegistryTypes keyRegistryType)
+        public async Task<AsymmetricKeyParameter> GetPrivateKeyAsync(string privateKeyName)
         {
-            return await _keyStoreService.GetPrivateKeyAsync(keyRegistryType.Name).ConfigureAwait(false);
+            return await _keyStoreService.GetPrivateKeyAsync(privateKeyName).ConfigureAwait(false);
         }
 
-        public async Task<byte[]> CreateProtectedDataAsync(KeyRegistryTypes keyRegistryType,
+        public async Task<byte[]> CreateProtectedDataAsync(string keyName,
             byte[] plainText,
             CancellationToken cancel = default)
         {
-            return await _keyStoreService.CreateProtectedDataAsync(keyRegistryType.Name, plainText, cancel);
+            return await _keyStoreService.CreateProtectedDataAsync(keyName, plainText, cancel);
         }
 
         public async Task<byte[]> ReadProtectedDataAsync(byte[] cipherText,
@@ -99,9 +98,9 @@ namespace Catalyst.Core.Modules.Keystore
             return await _keyStoreService.ListAsync(cancel).ConfigureAwait(false);
         }
 
-        public async Task<IKey> RemoveAsync(KeyRegistryTypes keyRegistryType, CancellationToken cancel = default)
+        public async Task<IKey> RemoveAsync(string name, CancellationToken cancel = default)
         {
-            return await _keyStoreService.RemoveAsync(keyRegistryType.Name, cancel).ConfigureAwait(false);
+            return await _keyStoreService.RemoveAsync(name, cancel).ConfigureAwait(false);
         }
 
         public async Task<IKey> RenameAsync(string oldName,

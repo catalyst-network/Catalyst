@@ -138,10 +138,10 @@ namespace Catalyst.TestUtils
             //{
             //    var keyApi = x.Resolve<IKeyApi>();
             //    await keyApi.SetPassphraseAsync(new SecureString());
-            //    var key = await keyApi.GetKeyAsync("self");
+            //    var key = await keyApi.GetKeyAsync(KeyRegistryTypes.DefaultKey);
             //    if (key == null)
             //    {
-            //        await keyApi.CreateAsync("self", "ed25519", 0);
+            //        await keyApi.CreateAsync(KeyRegistryTypes.DefaultKey, "ed25519", 0);
             //    }
             //});
             

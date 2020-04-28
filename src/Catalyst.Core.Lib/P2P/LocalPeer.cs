@@ -23,9 +23,12 @@
 
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
 using Catalyst.Abstractions.Types;
+using Catalyst.Core.Lib.Extensions;
+using System;
 using System.Reflection;
 using System.Security;
 using LibP2P = Lib.P2P;

@@ -99,7 +99,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Valid_Message_Signature_Can_Return_True_Response()
         {
-            var privateKey = _keySigner.KeyStore.KeyStoreDecrypt(KeyRegistryTypes.DefaultKey);
+            var privateKey = _keySigner.GetPrivateKey(KeyRegistryTypes.DefaultKey);
 
             var signingContext = new SigningContext
             {
