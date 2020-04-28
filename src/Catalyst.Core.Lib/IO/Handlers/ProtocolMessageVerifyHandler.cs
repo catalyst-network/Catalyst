@@ -79,7 +79,9 @@ namespace Catalyst.Core.Lib.IO.Handlers
                 var messageWithoutSig = signedMessage.Clone();
                 messageWithoutSig.Signature = null;
 
-                return _keySigner.Verify(signature, messageWithoutSig, signedMessage.Signature.SigningContext);
+                var verified = _keySigner.Verify(signature, messageWithoutSig, signedMessage.Signature.SigningContext);
+
+                return verified;
             }
             catch(PublicKeyExtractionException pkee)
             {

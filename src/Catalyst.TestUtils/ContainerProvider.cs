@@ -25,11 +25,9 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Security;
 using Autofac;
 using Autofac.Configuration;
 using AutofacSerilogIntegration;
-using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Keystore;
@@ -43,6 +41,7 @@ using Catalyst.Core.Modules.KeySigner;
 using Catalyst.Core.Modules.Keystore;
 using DotNetty.Common.Internal.Logging;
 using Microsoft.Extensions.Configuration;
+using Nethermind.Db;
 using NUnit.Framework;
 using Serilog;
 using Serilog.Core;
@@ -127,6 +126,9 @@ namespace Catalyst.TestUtils
             ContainerBuilder.RegisterModule(new KeystoreModule());
             ContainerBuilder.RegisterModule(new KeySignerModule());
             ContainerBuilder.RegisterModule(new HashingModule());
+
+            ContainerBuilder.RegisterInstance(new MemDb()).As<IDb>().SingleInstance();
+            ContainerBuilder.RegisterInstance(new StateDb()).As<ISnapshotableDb>().SingleInstance();
 
             var inMemoryStore = new InMemoryStore<string, EncryptedKey>();
             ContainerBuilder.RegisterInstance(inMemoryStore).As<IStore<string, EncryptedKey>>().SingleInstance();
