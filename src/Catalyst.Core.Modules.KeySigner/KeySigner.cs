@@ -37,7 +37,6 @@ namespace Catalyst.Core.Modules.KeySigner
         private readonly ICryptoContext _cryptoContext;
         private readonly IKeyApi _keyApi;
         private readonly IKeyRegistry _keyRegistry;
-        private readonly KeyRegistryTypes _defaultKey = KeyRegistryTypes.DefaultKey;
 
         /// <summary>Initializes a new instance of the <see cref="KeySigner"/> class.</summary>
         /// <param name="keyStore">The key store.</param>
@@ -55,18 +54,18 @@ namespace Catalyst.Core.Modules.KeySigner
         /// <inheritdoc/>
         ICryptoContext IKeySigner.CryptoContext => _cryptoContext;
 
-        public IPublicKey GetPublicKey(KeyRegistryTypes keyIdentifier)
-        {
-            var publicKey = (Ed25519PublicKeyParameters) _keyApi.GetPublicKeyAsync("self").GetAwaiter().GetResult();
-            var publicKeyBytes = publicKey.GetEncoded();
-            return _cryptoContext.GetPublicKeyFromBytes(publicKeyBytes);
-        }
-
         public IPrivateKey GetPrivateKey(KeyRegistryTypes keyIdentifier)
         {
-            var privateKey = (Ed25519PrivateKeyParameters) _keyApi.GetPrivateKeyAsync("self").GetAwaiter().GetResult();
-            var privateKeyBytes = privateKey.GetEncoded();
-            return _cryptoContext.GetPrivateKeyFromBytes(privateKeyBytes);
+            if (_keyRegistry.RegistryContainsKey(keyIdentifier))
+            {
+                return _keyRegistry.GetItemFromRegistry(keyIdentifier);
+            }
+
+            var privateKeyParameters = (Ed25519PrivateKeyParameters) _keyApi.GetPrivateKeyAsync(keyIdentifier.Name).GetAwaiter().GetResult();
+            var privateKeyBytes = privateKeyParameters.GetEncoded();
+            var privateKey = _cryptoContext.GetPrivateKeyFromBytes(privateKeyBytes);
+
+            return privateKey;
         }
 
         public ISignature Sign(ReadOnlySpan<byte> data, SigningContext signingContext)
