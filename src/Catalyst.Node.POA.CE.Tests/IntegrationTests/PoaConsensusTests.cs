@@ -32,7 +32,6 @@ using Autofac;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Core.Modules.Consensus.Cycle;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Core.Modules.Dfs.Tests.Utils;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
@@ -44,7 +43,6 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
     public sealed class PoaConsensusTests : FileSystemBasedTest
     {
         private CancellationTokenSource _endOfTestCancellationSource;
-        private ILifetimeScope _scope;
         private List<PoaTestNode> _nodes;
 
         [SetUp]
@@ -53,7 +51,6 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             this.Setup(TestContext.CurrentContext);
 
             ContainerProvider.ConfigureContainerBuilder(true, true, true);
-            _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);
 
             var context = new FfiWrapper();
 
