@@ -126,23 +126,5 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             _endOfTestCancellationSource.CancelAfter(TimeSpan.FromMinutes(3));
         }
         
-        [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
-        public async Task Run_ConsensusAsync_Simplified()
-        {
-            _nodes.AsParallel()
-                .ForAll(n =>
-                {
-                    n?.RunAsync(_endOfTestCancellationSource.Token);
-                    n?.Consensus.StartProducing();
-                });
-
-            await Task.Delay(Debugger.IsAttached
-                    ? TimeSpan.FromMinutes(1)
-                    : CycleConfiguration.Default.CycleDuration.Multiply(2.3))
-                .ConfigureAwait(false);
-            
-            _endOfTestCancellationSource.CancelAfter(TimeSpan.FromMinutes(3));
-        }
     }
 }
