@@ -144,20 +144,5 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             
             _endOfTestCancellationSource.CancelAfter(TimeSpan.FromMinutes(3));
         }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-            if (!disposing) return;
-
-            if (_endOfTestCancellationSource.Token.IsCancellationRequested
-             && _endOfTestCancellationSource.Token.CanBeCanceled)
-                _endOfTestCancellationSource.Cancel();
-
-            _endOfTestCancellationSource.Dispose();
-            _nodes.AsParallel().ForAll(n => n.Dispose());
-
-            _scope.Dispose();
-        }
     }
 }
