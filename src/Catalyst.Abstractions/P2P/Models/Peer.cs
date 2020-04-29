@@ -40,8 +40,6 @@ namespace Catalyst.Core.Lib.P2P.Models
         /// <inheritdoc />
         public PeerId PeerId { get; set; }
 
-        public string PublicKey { set; get; }
-
         public bool IsPoaNode { set; get; }
 
         /// <inheritdoc />

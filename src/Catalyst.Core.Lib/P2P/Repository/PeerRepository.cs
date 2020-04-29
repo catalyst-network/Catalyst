@@ -65,8 +65,7 @@ namespace Catalyst.Core.Lib.P2P.Repository
 
         public IEnumerable<Peer> GetPeersByIpAndPublicKey(ByteString ip, ByteString publicKey)
         {
-            return _repository.FindAll(m =>
-                m.PeerId.Ip == ip && (publicKey.IsEmpty || m.PeerId.PublicKey == publicKey));
+            return _repository.FindAll(m =>m.PeerId.Ip == ip &&  m.PeerId.PublicKey == publicKey);
         }
 
         public IEnumerable<Peer> TakeHighestReputationPeers(int page, int count)
