@@ -41,6 +41,7 @@ using Org.BouncyCastle.Crypto.Parameters;
 
 namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 {
+    [TestFixture]
     public sealed class PoaConsensusTests : FileSystemBasedTest
     {
         private CancellationTokenSource _endOfTestCancellationSource;
@@ -97,6 +98,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
         }
 
         [Test]
+        [Property(Traits.TestType, Traits.IntegrationTest)]
         public async Task Run_ConsensusAsync()
         {
             _nodes.AsParallel()
