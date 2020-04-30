@@ -56,7 +56,6 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Config
         }
 
         [TestCaseSource(nameof(Networks))]
-       
         public void Registering_All_Configs_Should_Allow_Resolving_ICatalystCli(NetworkType network)
         {
             var configFilesUsed = new[]
