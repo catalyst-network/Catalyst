@@ -47,6 +47,8 @@ using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class PeerClientChannelFactoryTests
     {
         private readonly TestScheduler _testScheduler;

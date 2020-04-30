@@ -26,10 +26,13 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Core.Modules.Dfs.Migration;
 using Catalyst.Core.Modules.Dfs.Tests.Utils;
+using Catalyst.TestUtils;
 using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.Migration
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class MigrationManagerTest
     {
         private readonly IDfsService _dfs;

@@ -33,6 +33,8 @@ using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Cryptography
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class CertificateStoreTests : FileSystemBasedTest
     {
         [SetUp]

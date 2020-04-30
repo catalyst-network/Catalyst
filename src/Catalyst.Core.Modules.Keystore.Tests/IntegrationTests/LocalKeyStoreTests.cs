@@ -40,6 +40,8 @@ using Serilog;
 
 namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class LocalKeyStoreTests : FileSystemBasedTest
     {
         private IFileSystem _fileSystem;

@@ -41,6 +41,8 @@ using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.IntegrationTests.Config
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class GlobalConfigTests : FileSystemBasedTest
     {
         public static readonly List<object[]> Networks =

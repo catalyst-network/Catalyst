@@ -48,6 +48,8 @@ using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class GetFileFromDfsObserverHandlerTests : FileSystemBasedTest
     {
         private ILogger _logger;

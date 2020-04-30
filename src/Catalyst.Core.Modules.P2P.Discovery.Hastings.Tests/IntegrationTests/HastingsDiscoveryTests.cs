@@ -52,6 +52,8 @@ using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class HastingsDiscoveryTests : FileSystemBasedTest
     {
         [SetUp]

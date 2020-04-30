@@ -42,6 +42,8 @@ using SharpRepository.Repository;
 
 namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class TransactionRepositoryTests : FileSystemBasedTest
     {
         private IMapperProvider _mapperProvider;

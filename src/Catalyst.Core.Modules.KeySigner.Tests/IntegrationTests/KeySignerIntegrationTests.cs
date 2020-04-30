@@ -43,6 +43,8 @@ using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class KeySignerIntegrationTests : FileSystemBasedTest
     {
         [SetUp]

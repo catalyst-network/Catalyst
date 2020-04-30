@@ -23,12 +23,15 @@
 
 using System.IO;
 using Catalyst.Core.Lib.Dag;
+using Catalyst.TestUtils;
 using Google.Protobuf;
 using MultiFormats;
 using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class DagLinkTest
     {
         [Test]

@@ -34,6 +34,8 @@ using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class ReputationManagerTests : FileSystemBasedTest
     {
         private IReputationManager _reputationManager;

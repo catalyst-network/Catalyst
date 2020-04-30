@@ -52,6 +52,8 @@ using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class SignMessageRequestObserverTests : FileSystemBasedTest
     {
         private TestScheduler _testScheduler;

@@ -46,6 +46,8 @@ using Serilog;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class DfsServiceTests : FileSystemBasedTest
     {
         private IDfsService _dfs1;

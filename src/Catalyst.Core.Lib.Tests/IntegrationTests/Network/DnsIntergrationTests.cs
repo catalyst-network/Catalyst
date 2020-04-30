@@ -32,6 +32,8 @@ using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Network
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class DnsIntegrationTests
     {
         [Test]

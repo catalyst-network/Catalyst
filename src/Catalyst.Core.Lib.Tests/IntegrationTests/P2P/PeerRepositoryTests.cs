@@ -33,10 +33,13 @@ using SharpRepository.Repository;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Catalyst.TestUtils.Repository;
+using Microsoft.VisualStudio.TestPlatform.ObjectModel;
 using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class PeerRepositoryTests : FileSystemBasedTest
     {
         private TestMapperProvider _mapperProvider;

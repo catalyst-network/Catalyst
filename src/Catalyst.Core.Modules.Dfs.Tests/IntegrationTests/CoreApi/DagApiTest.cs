@@ -26,11 +26,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Core.Modules.Dfs.Tests.Utils;
+using Catalyst.TestUtils;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class DagApiTest
     {
         private readonly byte[] _blob = Encoding.UTF8.GetBytes("blorb");
