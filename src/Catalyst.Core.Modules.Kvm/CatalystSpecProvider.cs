@@ -33,5 +33,6 @@ namespace Catalyst.Core.Modules.Kvm
 
         public long? DaoBlockNumber => null;
         public int ChainId => NetworkTypes.Dev.Id; // @TODO should we not be using protocol.common.network?
+        public long[] TransitionBlocks { get; } = {0};
     }
 }
