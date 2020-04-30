@@ -64,6 +64,7 @@ namespace Catalyst.Core.Modules.KeySigner
             var privateKeyParameters = (Ed25519PrivateKeyParameters) _keyApi.GetPrivateKeyAsync(keyIdentifier.Name).GetAwaiter().GetResult();
             var privateKeyBytes = privateKeyParameters.GetEncoded();
             var privateKey = _cryptoContext.GetPrivateKeyFromBytes(privateKeyBytes);
+            _keyRegistry.AddItemToRegistry(keyIdentifier, privateKey);
 
             return privateKey;
         }
