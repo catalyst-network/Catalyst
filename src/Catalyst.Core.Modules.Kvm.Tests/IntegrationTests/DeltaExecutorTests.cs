@@ -47,7 +47,6 @@ using ILogger = Serilog.ILogger;
 namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
 {
     [TestFixture]
-    [TestFixture]
     [Category(Traits.IntegrationTest)] 
     public sealed class DeltaExecutorTests
     {
