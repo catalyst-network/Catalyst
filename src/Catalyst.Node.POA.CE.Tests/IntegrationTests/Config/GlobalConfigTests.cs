@@ -54,6 +54,7 @@ using SharpRepository.Repository;
 
 namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.Config
 {
+    [Parallelizable(ParallelScope.None)]
     public class GlobalConfigTests : FileSystemBasedTest
     {
         public static readonly List<object[]> Networks =
@@ -113,6 +114,8 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.Config
             {
                 _ = scope.Resolve<ICatalystNode>();
             }
+            
+            _containerProvider?.Dispose();
         }
 
         protected override void Dispose(bool disposing)
@@ -122,8 +125,6 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.Config
             {
                 return;
             }
-
-            _containerProvider?.Dispose();
         }
     }
 }
