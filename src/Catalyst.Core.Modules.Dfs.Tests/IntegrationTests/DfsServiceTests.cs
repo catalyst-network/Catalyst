@@ -102,7 +102,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         }
 
         [Ignore("waiting for Dns seed fix: https://github.com/catalyst-network/Catalyst.Framework/issues/1075")]
-       
         public async Task DFS_should_connect_to_a_seednode()
         {
             var seeds = (await _dfs1.BootstrapApi.ListAsync().ConfigureAwait(false))
