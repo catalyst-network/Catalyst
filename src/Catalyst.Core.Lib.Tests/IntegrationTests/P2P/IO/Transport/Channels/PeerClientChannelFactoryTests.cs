@@ -104,8 +104,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
         }
         
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
-        public async Task
+public async Task
             PeerClientChannelFactory_Pipeline_Should_Produce_Request_Object_PeerClientChannelFactory_Can_Process()
         {
             var recipient = PeerIdHelper.GetPeerId("recipient");

@@ -37,22 +37,22 @@ using NUnit.Framework;
 public class XunitTraitsRegister
 {
     [Test]
-    [Property(Traits.TestType, Traits.IntegrationTest)]
+   
     public void IntegrationTest() { true.Should().BeTrue(); }
 
     [Test]
-    [Property(Traits.TestType, Traits.EmbeddedChannelTest)]
+    [TestCategory(Traits.EmbeddedChannelTest)]
     public void EmbeddedChannelTest() { true.Should().BeTrue(); }
 
     [Test]
-    [Property(Traits.TestType, Traits.E2ECosmosDb)]
+    [TestCategory(Traits.E2ECosmosDb)]
     public void E2E_CosmosDB() { true.Should().BeTrue(); }
 
     [Test]
-    [Property(Traits.TestType, Traits.E2EMongoDb)]
+    [TestCategory(Traits.E2EMongoDb)]
     public void E2E_MongoDB() { true.Should().BeTrue(); }
 
     [Test]
-    [Property(Traits.TestType, Traits.E2EMssql)]
+    [TestCategory(Traits.E2EMssql)]
     public void E2E_MSSQL() { true.Should().BeTrue(); }
 }

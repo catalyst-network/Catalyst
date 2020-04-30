@@ -86,14 +86,12 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void KeySigner_Can_Sign_If_There_Is_No_Keystore_File()
         {
             _keySigner.Sign(Encoding.UTF8.GetBytes("sign this plz"), new SigningContext());
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void KeySigner_Can_Sign_If_There_Is_An_Existing_Keystore_File()
         {
             Ensure_A_KeyStore_File_Exists();
@@ -101,7 +99,6 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void KeySigner_Can_Verify_A_Signature()
         {
             var toSign = Encoding.UTF8.GetBytes("sign this plz");
@@ -111,7 +108,6 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void KeySigner_Cant_Verify_An_Incorrect_Signature()
         {
             var toSign = Encoding.UTF8.GetBytes("sign this plz");
@@ -126,7 +122,6 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void KeySigner_Can_Verify_A_Signature_With_Non_Default_Context()
         {
             var toSign = Encoding.UTF8.GetBytes("sign this plz");

@@ -94,7 +94,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         [TestCase("Hello Catalyst")]
         [TestCase("")]
         [TestCase("Hello&?!1253Catalyst")]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
+       
         public async Task RpcServer_Can_Handle_SignMessageRequest(string message)
         {
             var sender = PeerIdHelper.GetPeerId("sender");

@@ -52,7 +52,6 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
     public sealed class CatalystVirtualMachineTests
     {
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Run_Smoke_test()
         {
             var code = Bytes.FromHexString("0x600060000100");
@@ -63,7 +62,6 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Invoke_Range_Proof_Precompile()
         {
             var code = Bytes.FromHexString("0x60008080806201000062050000F400");
@@ -77,7 +75,6 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Invoke_Origin()
         {
             var code = Bytes.FromHexString("0x3200");
@@ -91,7 +88,6 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Invoke_Address()
         {
             var code = Bytes.FromHexString("0x3000");
@@ -105,7 +101,6 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Invoke_Blockhash()
         {
             var code = Bytes.FromHexString("0x60014000");
@@ -113,7 +108,6 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Invoke_Coinbase()
         {
             var code = Bytes.FromHexString("0x4100");
@@ -127,7 +121,6 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Invoke_Timestamp()
         {
             var code = Bytes.FromHexString("0x4200");
@@ -141,7 +134,6 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Invoke_Number()
         {
             var code = Bytes.FromHexString("0x4300");
@@ -155,7 +147,6 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Invoke_Difficulty()
         {
             var code = Bytes.FromHexString("0x4400");
@@ -169,7 +160,6 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Invoke_Gas_Limit()
         {
             var code = Bytes.FromHexString("0x4500");
@@ -183,7 +173,6 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Invoke_Chain_Id()
         {
             var code = Bytes.FromHexString("0x4600");
@@ -197,7 +186,6 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Blake_precompile()
         {
             Address blakeAddress = Address.FromNumber(1 + KatVirtualMachine.CatalystPrecompilesAddressingSpace);
@@ -212,7 +200,6 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Ed25519_precompile_can_verify_correct_sig()
         {
             HashProvider hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
@@ -232,7 +219,6 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         }
         
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Ed25519_precompile_can_verify_incorrect_sig()
         {
             HashProvider hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
@@ -252,7 +238,6 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         }
         
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Ed25519_precompile_can_report_too_short_input()
         {
             var byteCode = Bytes.FromHexString(
@@ -273,7 +258,6 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         }
         
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Ed25519_precompile_can_report_too_long_input()
         {
             var byteCode = Bytes.FromHexString(

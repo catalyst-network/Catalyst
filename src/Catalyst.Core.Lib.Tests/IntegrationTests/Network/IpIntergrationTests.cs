@@ -39,7 +39,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Network
     public sealed class IpIntegrationTests
     {
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public async Task GetPublicIp_should_not_wait_for_longest_response()
         {
             var delayedObservable = Ip.DefaultIpEchoUrls
@@ -61,7 +60,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Network
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public async Task GetPublicIp_should_tolerate_echo_failure()
         {
             var echoUrlWithFailure = new[] {"https://this.will.fail.for.sure"}
@@ -71,7 +69,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Network
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public async Task GetPublicIp_should_usually_return_a_valid_ip()
         {
             var myIp = await Ip.GetPublicIpAsync();

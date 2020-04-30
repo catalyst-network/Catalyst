@@ -94,7 +94,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Cryptography
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void CertificateStore_CanReadAndWriteCertFiles_WithPassword()
         {
             if (Environment.OSVersion.Platform == PlatformID.Unix)

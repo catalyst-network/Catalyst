@@ -95,7 +95,6 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public async Task Run_ConsensusAsync()
         {
             _nodes.AsParallel()
