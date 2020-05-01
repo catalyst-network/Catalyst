@@ -33,7 +33,6 @@ using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
-using Catalyst.Core.Modules.Dfs.Tests.Utils;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Lib.P2P;

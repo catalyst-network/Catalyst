@@ -24,7 +24,6 @@
 using System.IO;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
-using Catalyst.Core.Modules.Dfs.Tests.Utils;
 using Catalyst.TestUtils;
 using NUnit.Framework;
 
