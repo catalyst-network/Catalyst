@@ -965,7 +965,7 @@ namespace Lib.P2P.Tests
         }
 
         [TestMethod]
-        [Category("IPv6")]
+        [TestCategory("IPv6")]
         public async Task Listening_IPv6Any()
         {
             var peerA = new Peer
