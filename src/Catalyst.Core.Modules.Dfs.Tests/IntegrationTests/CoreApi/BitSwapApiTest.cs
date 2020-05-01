@@ -33,7 +33,7 @@ using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.Dag;
 using Catalyst.Core.Modules.Dfs.BlockExchange.Protocols;
-using Catalyst.Core.Modules.Dfs.Tests.Utils;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using Lib.P2P;
 using MultiFormats;

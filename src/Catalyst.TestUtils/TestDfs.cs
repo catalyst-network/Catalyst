@@ -32,6 +32,7 @@ using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib;
 using Catalyst.Core.Lib.Cryptography;
+using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.Dfs.Migration;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Keystore;
@@ -40,7 +41,7 @@ using MultiFormats.Registry;
 using Newtonsoft.Json.Linq;
 using NUnit.Framework;
 
-namespace Catalyst.Core.Modules.Dfs.Tests.Utils
+namespace Catalyst.TestUtils
 {
     public class TestDfs
     {
