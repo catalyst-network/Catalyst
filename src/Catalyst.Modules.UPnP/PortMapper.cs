@@ -11,7 +11,7 @@ namespace Catalyst.Modules.UPnP
         public bool TryAddPortMapping(int port)
         {
 
-            NatUtility.DeviceFound += (sender, args) => DeviceFound(sender, args, port);
+            NatUtility.DeviceFound += (sender, args) => TryAddPort(sender, args, port);
             
             NatUtility.StartDiscovery();
             
@@ -37,22 +37,11 @@ namespace Catalyst.Modules.UPnP
                 // Try to retrieve confirmation on the port map we just created:
                 try 
                 {
-                    var mapping = await device.GetSpecificMappingAsync(Protocol.Tcp, port);
+                    var map = await device.GetSpecificMappingAsync(Protocol.Tcp, port);
                 } 
                 catch 
                 {
                     Console.WriteLine("Couldn't get specific mapping");
-                }
-
-                // Try deleting the port we opened before:
-                try
-                {
-                    await device.DeletePortMapAsync(mapping);
-                    Console.WriteLine("Deleting Mapping: protocol={0}, public={1}, private={2}", mapping.Protocol, mapping.PublicPort, mapping.PrivatePort);
-                } 
-                catch 
-                {
-                    Console.WriteLine("Couldn't delete specific mapping");
                 }
             } 
             finally 
@@ -75,7 +64,7 @@ namespace Catalyst.Modules.UPnP
                 // Try to retrieve confirmation on the port map we just created:
                 try 
                 {
-                    var mapping = await device.GetSpecificMappingAsync(Protocol.Tcp, port);
+                    var map = await device.GetSpecificMappingAsync(Protocol.Tcp, port);
                 } 
                 catch 
                 {
@@ -85,8 +74,8 @@ namespace Catalyst.Modules.UPnP
                 // Try deleting the port we opened before:
                 try
                 {
-                    await device.DeletePortMapAsync(mapping);
-                    Console.WriteLine("Deleting Mapping: protocol={0}, public={1}, private={2}", mapping.Protocol, mapping.PublicPort, mapping.PrivatePort);
+                    var map = await device.DeletePortMapAsync(mapping);
+                    Console.WriteLine("Deleting Mapping: protocol={0}, public={1}, private={2}", map.Protocol, map.PublicPort, map.PrivatePort);
                 } 
                 catch 
                 {

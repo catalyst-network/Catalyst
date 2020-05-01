@@ -37,7 +37,7 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
 {
     public class PMPTests
     {
-        private readonly IContainer _container;
+       /* private readonly IContainer _container;
         private readonly PortMapper _portMapper;
         private readonly INatDevice _device;
         private readonly int _port;
@@ -76,5 +76,6 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
         {
             //_portMapper.MapPort(_config, _port);
         }
+        */
     }
 }
