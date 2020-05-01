@@ -8,9 +8,10 @@ namespace Catalyst.Modules.UPnP
     {
         public TimeSpan Timeout { get; } = TimeSpan.FromMilliseconds(100000);  
        
-        public bool Run()
+        public bool TryAddPortMapping(int port)
         {
-            NatUtility.DeviceFound += DeviceFound;
+
+            NatUtility.DeviceFound += (sender, args) => DeviceFound(sender, args, port);
             
             NatUtility.StartDiscovery();
             
@@ -19,12 +20,10 @@ namespace Catalyst.Modules.UPnP
             NatUtility.StopDiscovery();
             return true;
         }
-        
-        public 
 
-        readonly SemaphoreSlim _locker = new SemaphoreSlim(1, 1);
+        private readonly SemaphoreSlim _locker = new SemaphoreSlim(1, 1);
      
-        private async void DeviceFound(object sender, DeviceEventArgs args)
+        private async void TryAddPort(object sender, DeviceEventArgs args, int port)
         { 
             await _locker.WaitAsync();
             try
@@ -32,15 +31,13 @@ namespace Catalyst.Modules.UPnP
                 INatDevice device = args.Device;
 
                 // Try to create a new port map:
-                var mapping = new Mapping(Protocol.Tcp, 6001, 6001);
+                var mapping = new Mapping(Protocol.Tcp, port, port);
                 await device.CreatePortMapAsync(mapping);
                 
                 // Try to retrieve confirmation on the port map we just created:
                 try 
                 {
-                    Mapping m = await device.GetSpecificMappingAsync(Protocol.Tcp, 6001);
-                    Console.WriteLine("Specific Mapping: protocol={0}, public={1}, private={2}", m.Protocol, m.PublicPort,
-                        m.PrivatePort);
+                    var mapping = await device.GetSpecificMappingAsync(Protocol.Tcp, port);
                 } 
                 catch 
                 {
@@ -57,23 +54,44 @@ namespace Catalyst.Modules.UPnP
                 {
                     Console.WriteLine("Couldn't delete specific mapping");
                 }
-     
-                // Try retrieving all port maps:
+            } 
+            finally 
+            {
+                _locker.Release();
+            }
+        }
+        
+        private async void TryDeletePort(object sender, DeviceEventArgs args, int port)
+        { 
+            await _locker.WaitAsync();
+            try
+            {
+                INatDevice device = args.Device;
+
+                // Try to create a new port map:
+                var mapping = new Mapping(Protocol.Tcp, port, port);
+                await device.CreatePortMapAsync(mapping);
+                
+                // Try to retrieve confirmation on the port map we just created:
+                try 
+                {
+                    var mapping = await device.GetSpecificMappingAsync(Protocol.Tcp, port);
+                } 
+                catch 
+                {
+                    Console.WriteLine("Couldn't get specific mapping");
+                }
+
+                // Try deleting the port we opened before:
                 try
                 {
-                    var mappings = await device.GetAllMappingsAsync();
-                    if (mappings.Length == 0)
-                        Console.WriteLine("No existing uPnP mappings found.");
-                    foreach (Mapping mp in mappings)
-                        Console.WriteLine("Existing Mapping: protocol={0}, public={1}, private={2}", mp.Protocol, mp.PublicPort, mp.PrivatePort);
+                    await device.DeletePortMapAsync(mapping);
+                    Console.WriteLine("Deleting Mapping: protocol={0}, public={1}, private={2}", mapping.Protocol, mapping.PublicPort, mapping.PrivatePort);
                 } 
-                catch
+                catch 
                 {
-                    Console.WriteLine("Couldn't get all mappings");
+                    Console.WriteLine("Couldn't delete specific mapping");
                 }
-     
-                Console.WriteLine("External IP: {0}", await device.GetExternalIPAsync());
-                Console.WriteLine("Done...");
             } 
             finally 
             {
