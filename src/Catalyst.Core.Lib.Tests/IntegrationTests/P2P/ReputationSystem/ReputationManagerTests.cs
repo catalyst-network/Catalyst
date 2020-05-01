@@ -34,6 +34,8 @@ using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class ReputationManagerTests : FileSystemBasedTest
     {
         private IReputationManager _reputationManager;
@@ -61,7 +63,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Save_Increased_Peer()
         {
             var pid = PeerIdHelper.GetPeerId("some_peer");
@@ -77,7 +78,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
         }
         
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Save_Decreased_Peer()
         {
             var pid = PeerIdHelper.GetPeerId("some_peer");
@@ -93,7 +93,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
         }
         
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Save_Decreased_Peer_To_Negative_Number()
         {
             var pid = PeerIdHelper.GetPeerId("some_peer");
@@ -109,7 +108,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Can_Save_Increased_Peer_From_Negative_Number_To_Positive_Number()
         {
             var pid = PeerIdHelper.GetPeerId("some_peer");

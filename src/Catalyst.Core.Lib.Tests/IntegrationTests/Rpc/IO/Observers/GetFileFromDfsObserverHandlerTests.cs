@@ -48,6 +48,8 @@ using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class GetFileFromDfsObserverHandlerTests : FileSystemBasedTest
     {
         private ILogger _logger;
@@ -73,7 +75,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         [TestCase(82000L)]
         [TestCase(100000L)]
         [TestCase(800000L)]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public async Task Get_File_Rpc(long byteSize)
         {
             var addedIpfsHash = AddFileToDfs(byteSize, out var crcValue, out var stream);

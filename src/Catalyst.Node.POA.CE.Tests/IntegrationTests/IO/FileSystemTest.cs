@@ -36,7 +36,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.IO
     ///     A base test class that can be used to offer inheriting tests a folder on which
     ///     to create files, logs, etc.
     /// </summary>
-    [Property(Traits.TestType, Traits.IntegrationTest)]
+   
     public sealed class FileSystemTest : FileSystemBasedTest
     {
         private FileSystem _fileSystem;
@@ -68,7 +68,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.IO
                .Equals(path.ToLower(CultureInfo.InvariantCulture));
         }
 
-        [Property(Traits.TestType, Traits.IntegrationTest)]
+       
         [TestCase("'\0'")]
         [TestCase("'xxx://gan\0'dolf\\treasu\re*&+'")]
         [TestCase("'q*Pen\0'cilL:\\123\\fak/e'")]
@@ -80,7 +80,6 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.IO
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Save_Existent_Data_Directory_Must_Succeed()
         {
             _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();
@@ -89,7 +88,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.IO
         }
 
         [Ignore("TODO: Data directory logic has been removed")]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
+       
         public void Save_Data_Directory_Several_Times_New_Instance_Must_Load_With_New_Data_Directory()
         {
             _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();

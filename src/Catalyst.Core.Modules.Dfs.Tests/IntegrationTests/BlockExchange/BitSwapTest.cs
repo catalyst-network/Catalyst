@@ -27,6 +27,7 @@ using System.Threading;
 using Catalyst.Core.Lib.Dag;
 using Catalyst.Core.Modules.Dfs.BlockExchange;
 using Catalyst.Core.Modules.Hashing;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using Lib.P2P;
 using MultiFormats.Registry;
@@ -34,6 +35,8 @@ using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.BlockExchange
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class BitSwapTest
     {
         private readonly Peer _self = new Peer

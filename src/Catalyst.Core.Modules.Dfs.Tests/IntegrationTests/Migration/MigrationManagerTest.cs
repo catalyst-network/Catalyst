@@ -30,6 +30,8 @@ using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.Migration
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class MigrationManagerTest
     {
         private readonly IDfsService _dfs;

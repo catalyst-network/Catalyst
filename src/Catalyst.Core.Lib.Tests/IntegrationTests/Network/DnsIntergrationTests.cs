@@ -32,10 +32,11 @@ using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Network
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class DnsIntegrationTests
     {
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public async Task GetTxtRecords_should_return_seeds()
         {
             var trueClient = new LookupClient(new IPEndPoint(IPAddress.Parse("9.9.9.9"), 53));

@@ -31,6 +31,8 @@ using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class DagApiTest
     {
         private readonly byte[] _blob = Encoding.UTF8.GetBytes("blorb");

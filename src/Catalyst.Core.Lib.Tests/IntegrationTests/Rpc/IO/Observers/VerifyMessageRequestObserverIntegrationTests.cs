@@ -96,7 +96,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Valid_Message_Signature_Can_Return_True_Response()
         {
             var privateKey = _keySigner.KeyStore.KeyStoreDecrypt(KeyRegistryTypes.DefaultKey);
@@ -122,7 +121,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Invalid_Message_Signature_Can_Return_False_Response()
         {
             var requestMessage = new VerifyMessageRequest

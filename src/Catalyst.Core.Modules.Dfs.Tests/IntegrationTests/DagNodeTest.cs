@@ -27,6 +27,7 @@ using System.Text;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Core.Lib.Dag;
 using Catalyst.Core.Modules.Hashing;
+using Catalyst.TestUtils;
 using Google.Protobuf;
 using MultiFormats;
 using MultiFormats.Registry;
@@ -34,6 +35,8 @@ using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class DagNodeTest
     {
         public DagNodeTest()

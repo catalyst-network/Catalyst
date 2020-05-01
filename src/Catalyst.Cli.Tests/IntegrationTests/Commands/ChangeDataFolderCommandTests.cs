@@ -25,11 +25,14 @@ using System;
 using System.IO;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class ChangeDataFolderCommandTests : CliCommandTestsBase
     {
         [SetUp]

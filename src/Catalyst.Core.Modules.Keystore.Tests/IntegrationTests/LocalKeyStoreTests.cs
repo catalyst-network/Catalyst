@@ -40,6 +40,8 @@ using Serilog;
 
 namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class LocalKeyStoreTests : FileSystemBasedTest
     {
         private IFileSystem _fileSystem;
@@ -70,7 +72,6 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void KeyStore_Can_Generate_Key_And_Create_Keystore_File()
         {
             var privateKey = _keystore.KeyStoreGenerateAsync(NetworkType.Devnet, KeyRegistryTypes.DefaultKey);
@@ -78,7 +79,6 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void KeyStore_Throws_Exception_On_Invalid_KeyStore_File()
         {
             _fileSystem.ReadTextFromCddSubDirectoryFile(Arg.Any<string>(), Arg.Any<string>())
@@ -87,7 +87,6 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public async Task Keystore_Can_Create_Keystore_File_From_Provided_Key()
         {
             string jsonKeyStore = null;
@@ -104,7 +103,6 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public async Task Keystore_Can_Create_Keystore_File_From_Key_It_Generates()
         {
             string jsonKeyStore = null;
@@ -124,7 +122,6 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public async Task Keystore_Throws_Exception_If_Password_Incorrect()
         {
             string jsonKeyStore = null;
@@ -144,7 +141,6 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Keystore_Returns_Null_If_Key_File_Doesnt_Exist()
         {
             _keystore.KeyStoreDecrypt(KeyRegistryTypes.DefaultKey).Should().Be(null);

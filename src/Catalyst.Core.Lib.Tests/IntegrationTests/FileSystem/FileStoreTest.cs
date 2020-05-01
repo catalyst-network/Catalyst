@@ -34,6 +34,8 @@ using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.FileSystem
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class FileStoreTest : FileSystemBasedTest
     {
         [SetUp]
