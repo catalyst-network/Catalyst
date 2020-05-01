@@ -28,7 +28,7 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
-using Catalyst.Core.Modules.Dfs.Tests.Utils;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using Lib.P2P.PubSub;
 using NUnit.Framework;
