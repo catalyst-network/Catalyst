@@ -42,6 +42,8 @@ using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class BitSwapApiTest
     {
         private IDfsService _dfsService;

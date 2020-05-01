@@ -56,6 +56,8 @@ using Serilog;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class PeerValidationIntegrationTest : FileSystemBasedTest
     {
         private IPeerService _peerService;
@@ -124,7 +126,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         }
 
         // [Fact(Skip = "this wont work as it tries to connect to a real node!! We need to instantiate two sockets here")]
-        // [Property(Traits.TestType, Traits.IntegrationTest)]
         // public async Task PeerChallenge_PeerIdentifiers_Expect_To_Succeed_Valid_IP_Port_PublicKey()
         // {
         //     // await Setup().ConfigureAwait(false);
@@ -135,7 +136,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         // }
 
         [Theory]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         [TestCase("42Bm3dA9xKjnMYp5CztnUYqEme4Y46suNCvKx6ueDhz", "92.207.178.198", 1574)]
         [TestCase("483NWsFHJ5UrTRf8q6Ew3E8mD89i9cXyaxxFM1sSn4q1", "198.51.100.3", 2524)]
         public async Task PeerChallenge_PeerIdentifiers_Expect_To_Fail_IP_Port_PublicKey(string publicKey,

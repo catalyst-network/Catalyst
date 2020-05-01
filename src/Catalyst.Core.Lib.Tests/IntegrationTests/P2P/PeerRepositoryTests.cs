@@ -37,6 +37,8 @@ using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class PeerRepositoryTests : FileSystemBasedTest
     {
         private TestMapperProvider _mapperProvider;
@@ -112,7 +114,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         }
         
         [Ignore("Setup to run in pipeline only")]
-        [Property(Traits.TestType, Traits.E2EMongoDb)]
+        [Category(Traits.E2EMongoDb)]
         [TestCase(nameof(ModulesList))]
         public void PeerRepo_All_Dbs_Can_Update_And_Retrieve(Module dbModule)
         {
@@ -122,7 +124,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         }
 
         [Ignore("Setup to run in pipeline only")]
-        [Property(Traits.TestType, Traits.E2EMongoDb)]
+        [Category(Traits.E2EMongoDb)]
         [TestCase(nameof(ModulesList))]
         public void PeerRepo_All_Dbs_Can_Save_And_Retrieve(Module dbModule)
         {
@@ -132,7 +134,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         }
 
         [Ignore("Microsoft DBs yet to be completed")]
-        [Property(Traits.TestType, Traits.E2EMssql)]
+        [Category(Traits.E2EMssql)]
         public void PeerRepo_EfCore_Dbs_Update_And_Retrieve()
         {
             var connectionStr = ContainerProvider.ConfigurationRoot
@@ -146,7 +148,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         }
 
         [Ignore("Microsoft DBs yet to be completed")]
-        [Property(Traits.TestType, Traits.E2EMssql)]
+        [Category(Traits.E2EMssql)]
         public void PeerRepo_EfCore_Dbs_Can_Save_And_Retrieve()
         {
             var connectionStr = ContainerProvider.ConfigurationRoot

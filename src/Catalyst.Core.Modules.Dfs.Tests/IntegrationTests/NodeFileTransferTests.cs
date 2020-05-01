@@ -94,7 +94,7 @@
 //         }
 //
 //         [Test]
-//         [Property(Traits.TestType, Traits.IntegrationTest)]
+//        
 //         public async Task Cancel_File_Transfer()
 //         {
 //             var sender = PeerIdHelper.GetPeerId("sender");
@@ -125,7 +125,7 @@
 //         }
 //
 //         [Theory]
-//         [Property(Traits.TestType, Traits.IntegrationTest)]
+//        
 //         [TestCase(1000L)]
 //         [TestCase(82000L)]
 //         [TestCase(100000L)]

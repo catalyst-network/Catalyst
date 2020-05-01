@@ -42,7 +42,7 @@
 //        }
 
 //        [Theory]
-//        [Property(Traits.TestType, Traits.IntegrationTest)]
+//       
 //        [TestCase("Expected content str")]
 //        [TestCase("Expected @!�:!$!%(")]
 //        public async Task Should_have_a_URL_for_content(string expectedText)
@@ -53,7 +53,7 @@
 //        }
 
 //        [Theory]
-//        [Property(Traits.TestType, Traits.IntegrationTest)]
+//       
 //        [TestCase("Expected content str")]
 //        [TestCase("Expected @!�:!$!%(")]
 //        public async Task Should_serve_the_content(string expectedText)

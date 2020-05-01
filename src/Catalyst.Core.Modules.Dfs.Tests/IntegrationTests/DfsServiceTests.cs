@@ -45,6 +45,8 @@ using Serilog;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class DfsServiceTests : FileSystemBasedTest
     {
         private IDfsService _dfs1;
@@ -67,7 +69,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public async Task DFS_should_add_and_read_text()
         {
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(15));
@@ -81,7 +82,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public async Task DFS_should_add_and_read_binary()
         {
             var cts = new CancellationTokenSource(TimeSpan.FromSeconds(15));
@@ -101,7 +101,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         }
 
         [Ignore("waiting for Dns seed fix: https://github.com/catalyst-network/Catalyst.Framework/issues/1075")]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public async Task DFS_should_connect_to_a_seednode()
         {
             var seeds = (await _dfs1.BootstrapApi.ListAsync().ConfigureAwait(false))

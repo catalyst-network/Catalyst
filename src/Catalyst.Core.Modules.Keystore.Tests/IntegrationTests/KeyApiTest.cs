@@ -40,6 +40,8 @@ using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class KeyApiTest : FileSystemBasedTest
     {
         private IKeyStoreService _keyStoreService;

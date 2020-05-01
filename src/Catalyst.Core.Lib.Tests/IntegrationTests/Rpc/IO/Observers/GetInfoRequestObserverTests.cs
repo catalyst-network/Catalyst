@@ -43,6 +43,8 @@ using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class GetInfoRequestObserverTests
     {
         private readonly TestScheduler _testScheduler;
@@ -66,7 +68,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public async Task GetInfoMessageRequest_UsingValidRequest_ShouldSendGetInfoResponse()
         {
             var protocolMessage = new GetInfoRequest
