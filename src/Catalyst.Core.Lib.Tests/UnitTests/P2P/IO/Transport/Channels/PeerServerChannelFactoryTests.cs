@@ -41,13 +41,14 @@ using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
+using Catalyst.TestUtils.Fakes;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Embedded;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
 {
@@ -72,16 +73,17 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
             public IReadOnlyCollection<IChannelHandler> InheritedHandlers => _handlers;
         }
 
-        private readonly TestScheduler _testScheduler;
-        private readonly IPeerMessageCorrelationManager _correlationManager;
-        private readonly IBroadcastManager _gossipManager;
-        private readonly FakeKeySigner _keySigner;
-        private readonly TestPeerServerChannelFactory _factory;
-        private readonly PeerId _senderId;
-        private readonly ICorrelationId _correlationId;
-        private readonly byte[] _signature;
+        private TestScheduler _testScheduler;
+        private IPeerMessageCorrelationManager _correlationManager;
+        private IBroadcastManager _gossipManager;
+        private FakeKeySigner _keySigner;
+        private TestPeerServerChannelFactory _factory;
+        private PeerId _senderId;
+        private ICorrelationId _correlationId;
+        private byte[] _signature;
 
-        public PeerServerChannelFactoryTests()
+        [SetUp]
+        public void Init()
         {
             _testScheduler = new TestScheduler();
             _correlationManager = Substitute.For<IPeerMessageCorrelationManager>();
@@ -107,7 +109,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
                .ReturnsForAnyArgs(true);
         }
 
-        [Fact]
+        [Test]
         public void PeerServerChannelFactory_should_have_correct_handlers()
         {
             _factory.InheritedHandlers.Count(h => h != null).Should().Be(7);
@@ -121,7 +123,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
             handlers[6].Should().BeOfType<BroadcastCleanupHandler>();
         }
 
-        [Fact]
+        [Test]
         public async Task PeerServerChannelFactory_should_put_the_correct_handlers_on_the_inbound_pipeline()
         {
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),
@@ -150,7 +152,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
             }
         }
 
-        [Fact]
+        [Test]
         public void Observer_Exception_Should_Not_Stop_Correct_Messages_Reception()
         {
             var testingChannel = new EmbeddedChannel("testWithExceptions".ToChannelId(),

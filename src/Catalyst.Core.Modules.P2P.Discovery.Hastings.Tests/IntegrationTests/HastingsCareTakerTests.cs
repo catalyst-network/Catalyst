@@ -27,18 +27,19 @@ using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class HastingsCareTakerTests
     {
         private readonly PeerId _ownNode;
 
         public HastingsCareTakerTests() { _ownNode = PeerIdHelper.GetPeerId("own_node"); }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
         public void Can_Add_New_Mementos_To_Caretaker()
         {
             var careTaker = new HastingsCareTaker();
@@ -53,8 +54,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
             careTaker.HastingMementoList.Should().Contain(history);
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
         public void Taking_From_Memento_List_Takes_LIFO()
         {
             var careTaker = new HastingsCareTaker();

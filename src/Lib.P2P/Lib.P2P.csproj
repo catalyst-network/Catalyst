@@ -1,0 +1,28 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>Lib.P2P</RootNamespace>
+        <Authors>James Kirby (nshcore@protonmail.com)</Authors>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>Lib.P2P.snk</AssemblyOriginatorKeyFile>
+        <PublicSign>true</PublicSign>
+        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    </PropertyGroup>
+    <Import Project="../Common.Packable.props" />
+    <Import Project="../Common.Projects.props" />
+    <ItemGroup>
+        <PackageReference Include="Makaretu.Dns.Multicast" Version="0.25.0" />
+        <PackageReference Include="Nito.AsyncEx" Version="5.0.0" />
+        <PackageReference Include="protobuf-net" Version="2.4.0" />
+        <PackageReference Include="semver" Version="2.0.4" />
+        <PackageReference Include="System.Threading.Tasks.Dataflow" Version="4.9.0" />
+        <PackageReference Include="Portable.BouncyCastle" Version="1.8.5" />
+    </ItemGroup>
+    <ItemGroup>
+        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="16.3.13" PrivateAssets="All" />
+    </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\Catalyst.KBucket\Catalyst.KBucket.csproj" />
+      <ProjectReference Include="..\MultiFormats\MultiFormats.csproj" />
+    </ItemGroup>
+</Project>

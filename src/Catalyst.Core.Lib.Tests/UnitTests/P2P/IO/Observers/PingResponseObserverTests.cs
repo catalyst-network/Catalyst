@@ -24,6 +24,7 @@
 using System;
 using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P.Protocols;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.P2P.IO.Observers;
@@ -33,7 +34,7 @@ using DotNetty.Transport.Channels;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 {
@@ -45,10 +46,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         public PingResponseObserverTests()
         {
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _observer = new PingResponseObserver(Substitute.For<ILogger>(), Substitute.For<IPeerChallengeRequest>());
+            _observer = new PingResponseObserver(Substitute.For<IPeerChallengeRequest>(), Substitute.For<IPeerRepository>(), Substitute.For<ILogger>());
         }
 
-        [Fact]
+        [Test]
         public void Observer_Can_Process_PingResponse_Correctly()
         {
             var testScheduler = new TestScheduler();

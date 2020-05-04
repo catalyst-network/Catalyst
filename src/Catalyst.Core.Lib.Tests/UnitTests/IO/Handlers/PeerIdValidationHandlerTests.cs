@@ -30,20 +30,21 @@ using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using NSubstitute;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
 {
     public class PeerIdValidationHandlerTests
     {
-        private readonly IPeerIdValidator _peerIdValidator;
-        private readonly PeerIdValidationHandler _peerIdValidationHandler;
-        private readonly IChannelHandlerContext _fakeContext;
-        private readonly ProtocolMessage _message;
+        private IPeerIdValidator _peerIdValidator;
+        private PeerIdValidationHandler _peerIdValidationHandler;
+        private IChannelHandlerContext _fakeContext;
+        private ProtocolMessage _message;
 
-        public PeerIdValidationHandlerTests()
+        [SetUp]
+        public void Init()
         {
-            _fakeContext = Substitute.For<IChannelHandlerContext>();
+          _fakeContext = Substitute.For<IChannelHandlerContext>();
             _peerIdValidator = Substitute.For<IPeerIdValidator>();
             _peerIdValidationHandler = new PeerIdValidationHandler(_peerIdValidator);
 
@@ -51,7 +52,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
                .ToProtocolMessage(PeerIdHelper.GetPeerId("Test"));
         }
 
-        [Fact]
+        [Test]
         public void Can_Stop_Next_Pipeline_On_Invalid_Peer()
         {
             _peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(false);
@@ -59,7 +60,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
             _fakeContext.DidNotReceiveWithAnyArgs().FireChannelRead(Arg.Any<object>());
         }
 
-        [Fact]
+        [Test]
         public void Can_Continue_Next_Pipeline_On_Valid_Peer()
         {
             _peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);

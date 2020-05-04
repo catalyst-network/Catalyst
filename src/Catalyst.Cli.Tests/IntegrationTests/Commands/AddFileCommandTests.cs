@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
@@ -31,24 +30,27 @@ using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class AddFileCommandTests : CliCommandTestsBase
     {
-        public static IEnumerable<object[]> AddFileData =>
-            new List<object[]>
-            {
-                new object[] {"/fake_file_path", false},
-                new object[] {AppDomain.CurrentDomain.BaseDirectory + "/Config/addfile_test.json", true}
-            };
+        static object[] AddFileData =
+        {
+            new object[] {"/fake_file_path", false},
+            new object[] {AppDomain.CurrentDomain.BaseDirectory + "/Config/addfile_test.json", true},
+        };
 
-        public AddFileCommandTests(ITestOutputHelper output) : base(output) { }
+        [SetUp]
+        public void Init()
+        {
+            Setup(TestContext.CurrentContext);
+        }
 
-        [Theory]
-        [MemberData(nameof(AddFileData))]
+        [TestCaseSource("AddFileData")]
         public async Task Cli_Can_Send_Add_File_Request(string fileName, bool expectedResult)
         {
             var uploadFileTransferFactory = Scope.Resolve<IUploadFileTransferFactory>();

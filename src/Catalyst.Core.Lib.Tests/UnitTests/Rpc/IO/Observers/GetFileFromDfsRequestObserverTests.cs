@@ -40,59 +40,57 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
-using LibP2P;
+using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
     public sealed class GetFileFromDfsRequestObserverTests : IDisposable
     {
-        private readonly IHashProvider _hashProvider;
-        private readonly IUploadFileTransferFactory _fileTransferFactory;
-        private readonly IDfs _dfs;
-        private readonly GetFileFromDfsRequestObserver _observer;
+        private IHashProvider _hashProvider;
+        private IUploadFileTransferFactory _fileTransferFactory;
+        private IDfsService _dfsService;
+        private GetFileFromDfsRequestObserver _observer;
 
-        public GetFileFromDfsRequestObserverTests()
+        [SetUp]
+        public void Init()
         {
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _fileTransferFactory = Substitute.For<IUploadFileTransferFactory>();
-            _dfs = Substitute.For<IDfs>();
+            _dfsService = Substitute.For<IDfsService>();
             var peerSettings = PeerIdHelper.GetPeerId("test").ToSubstitutedPeerSettings();
-            _observer = new GetFileFromDfsRequestObserver(_dfs, peerSettings, _fileTransferFactory,
+            _observer = new GetFileFromDfsRequestObserver(_dfsService, peerSettings, _fileTransferFactory,
                 Substitute.For<ILogger>());
         }
 
-        [Fact]
+        [Test]
         public void GetFileRequestHandlerInitializesFileUpload()
         {
             using (GetFakeDfsStream(FileTransferResponseCodeTypes.Successful))
             {
                 _observer.OnNext(GetFileFromDfsRequestMessage());
-                _dfs.Received(1)?.ReadAsync(Arg.Any<Cid>());
+                _dfsService.UnixFsApi.Received(1)?.ReadFileAsync(Arg.Any<string>());
                 _fileTransferFactory.Received(1)?
                    .FileTransferAsync(Arg.Any<ICorrelationId>(), Arg.Any<CancellationToken>());
             }
         }
 
-        [Fact]
+        [Test]
         public void FileTransferStreamIsDisposedOnError()
         {
-            using (var fakeStream = GetFakeDfsStream(FileTransferResponseCodeTypes.Error))
-            {
-                var message = GetFileFromDfsRequestMessage();
-                _observer.OnNext(message);
-                Assert.False(fakeStream.CanRead);
-            }
+            using var fakeStream = GetFakeDfsStream(FileTransferResponseCodeTypes.Error);
+            var message = GetFileFromDfsRequestMessage();
+            _observer.OnNext(message);
+            Assert.False(fakeStream.CanRead);
         }
 
         private MemoryStream GetFakeDfsStream(FileTransferResponseCodeTypes fakeResponse)
         {
             var fakeStream = new MemoryStream();
             fakeStream.Write(new byte[50]);
-            _dfs.ReadAsync(Arg.Any<Cid>()).Returns(fakeStream);
+            _dfsService.UnixFsApi.ReadFileAsync(Arg.Any<string>()).Returns(fakeStream);
             _fileTransferFactory.RegisterTransfer(Arg.Any<IUploadFileInformation>()).Returns(fakeResponse);
             return fakeStream;
         }
@@ -101,7 +99,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         {
             var getFileFromDfsRequestMessage = new GetFileFromDfsRequest
             {
-                DfsHash = _hashProvider.ComputeUtf8MultiHash("test").CreateCid()
+                DfsHash = _hashProvider.ComputeUtf8MultiHash("test").ToCid()
             };
             var protocolMessage = getFileFromDfsRequestMessage
                .ToProtocolMessage(PeerIdHelper.GetPeerId("TestMan"), CorrelationId.GenerateCorrelationId());

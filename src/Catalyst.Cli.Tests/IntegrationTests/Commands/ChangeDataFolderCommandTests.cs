@@ -25,17 +25,23 @@ using System;
 using System.IO;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.TestUtils;
 using FluentAssertions;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class ChangeDataFolderCommandTests : CliCommandTestsBase
     {
-        public ChangeDataFolderCommandTests(ITestOutputHelper output) : base(output) { }
+        [SetUp]
+        public void Init()
+        {
+            Setup(TestContext.CurrentContext);
+        }
 
-        [Fact]
+        [Test]
         public void Cli_Can_Send_Change_Data_Folder_Request()
         {
             var path = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile),

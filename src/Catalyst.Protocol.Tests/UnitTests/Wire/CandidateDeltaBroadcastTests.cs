@@ -25,29 +25,30 @@ using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
-using Xunit;
+using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace Catalyst.Protocol.Tests.UnitTests.Wire
 {
     public sealed class CandidateDeltaTests
     {
-        private sealed class InvalidCandidateDeltaBroadCasts : TheoryData<CandidateDeltaBroadcast>
+        private sealed class InvalidCandidateDeltaBroadCasts : List<CandidateDeltaBroadcast>
         {
             public InvalidCandidateDeltaBroadCasts()
             {
-                AddRow(new CandidateDeltaBroadcast
+                Add(new CandidateDeltaBroadcast
                 {
                     ProducerId = null,
                     Hash = ByteString.CopyFromUtf8("hash"),
                     PreviousDeltaDfsHash = ByteString.CopyFromUtf8("yes")
                 });
-                AddRow(new CandidateDeltaBroadcast
+                Add(new CandidateDeltaBroadcast
                 {
                     ProducerId = PeerIdHelper.GetPeerId("hello"),
                     Hash = ByteString.Empty,
                     PreviousDeltaDfsHash = ByteString.CopyFromUtf8("yes")
                 });
-                AddRow(new CandidateDeltaBroadcast
+                Add(new CandidateDeltaBroadcast
                 {
                     ProducerId = PeerIdHelper.GetPeerId("hello"),
                     Hash = ByteString.CopyFromUtf8("yes"),
@@ -56,14 +57,13 @@ namespace Catalyst.Protocol.Tests.UnitTests.Wire
             }
         }
 
-        [Theory]
-        [ClassData(typeof(InvalidCandidateDeltaBroadCasts))]
+        [TestCaseSource(typeof(InvalidCandidateDeltaBroadCasts))]
         public void CandidateDeltaBroadcast_IsValid_Should_Return_False_On_Invalid_CandidateDeltaBroadcast(CandidateDeltaBroadcast candidate)
         {
             candidate.IsValid().Should().BeFalse();
         }
 
-        [Fact]
+        [Test]
         public void CandidateDeltaBroadcast_IsValid_Should_Not_Throw_On_Valid_CandidateDeltaBroadcast()
         {
             var candidate = new CandidateDeltaBroadcast

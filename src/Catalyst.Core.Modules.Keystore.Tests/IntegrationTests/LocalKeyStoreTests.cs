@@ -33,23 +33,27 @@ using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using MultiFormats.Registry;
 using NSubstitute;
+using NUnit.Framework;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class LocalKeyStoreTests : FileSystemBasedTest
     {
-        private readonly IFileSystem _fileSystem;
-        private readonly IKeyStore _keystore;
-        private readonly ICryptoContext _context;
-        private readonly IPasswordManager _passwordManager;
+        private IFileSystem _fileSystem;
+        private IKeyStore _keystore;
+        private ICryptoContext _context;
+        private IPasswordManager _passwordManager;
 
-        public LocalKeyStoreTests(ITestOutputHelper output) : base(output)
+        [SetUp]
+        public void Init()
         {
+            this.Setup(TestContext.CurrentContext);
+
             _fileSystem = Substitute.For<IFileSystem>();
             _context = new FfiWrapper();
 
@@ -58,7 +62,7 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
             _passwordManager.RetrieveOrPromptPassword(default)
                .ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("test password"));
 
-            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
             _keystore = new LocalKeyStore(_passwordManager,
                 _context,
@@ -67,16 +71,14 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
                 logger);
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
         public void KeyStore_Can_Generate_Key_And_Create_Keystore_File()
         {
             var privateKey = _keystore.KeyStoreGenerateAsync(NetworkType.Devnet, KeyRegistryTypes.DefaultKey);
             privateKey.Should().NotBe(null);
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
         public void KeyStore_Throws_Exception_On_Invalid_KeyStore_File()
         {
             _fileSystem.ReadTextFromCddSubDirectoryFile(Arg.Any<string>(), Arg.Any<string>())
@@ -84,8 +86,7 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
             Assert.Throws<Exception>(() => _keystore.KeyStoreDecrypt(KeyRegistryTypes.DefaultKey));
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
         public async Task Keystore_Can_Create_Keystore_File_From_Provided_Key()
         {
             string jsonKeyStore = null;
@@ -101,8 +102,7 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
             privateKey.Bytes.Should().BeEquivalentTo(storedKey.Bytes);
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
         public async Task Keystore_Can_Create_Keystore_File_From_Key_It_Generates()
         {
             string jsonKeyStore = null;
@@ -121,8 +121,7 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
             privateKey.Bytes.Should().BeEquivalentTo(storedKey.Bytes);
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
         public async Task Keystore_Throws_Exception_If_Password_Incorrect()
         {
             string jsonKeyStore = null;
@@ -141,8 +140,7 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
             Assert.Throws<AuthenticationException>(() => _keystore.KeyStoreDecrypt(KeyRegistryTypes.DefaultKey));
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
         public void Keystore_Returns_Null_If_Key_File_Doesnt_Exist()
         {
             _keystore.KeyStoreDecrypt(KeyRegistryTypes.DefaultKey).Should().Be(null);

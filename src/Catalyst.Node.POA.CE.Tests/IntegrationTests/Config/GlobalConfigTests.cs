@@ -33,6 +33,7 @@ using Catalyst.Core.Lib;
 using Catalyst.Core.Lib.Cli;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.DAO.Ledger;
 using Catalyst.Core.Modules.Authentication;
 using Catalyst.Core.Modules.Consensus;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
@@ -43,14 +44,17 @@ using Catalyst.Core.Modules.Kvm;
 using Catalyst.Core.Modules.Ledger;
 using Catalyst.Core.Modules.Mempool;
 using Catalyst.Core.Modules.Rpc.Server;
+using Catalyst.Core.Modules.Sync;
 using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
 using NSubstitute;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
+using SharpRepository.InMemoryRepository;
+using SharpRepository.Repository;
 
 namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.Config
 {
+    [Parallelizable(ParallelScope.None)]
     public class GlobalConfigTests : FileSystemBasedTest
     {
         public static readonly List<object[]> Networks =
@@ -60,10 +64,13 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.Config
         private IEnumerable<string> _configFilesUsed;
         private ContainerProvider _containerProvider;
 
-        public GlobalConfigTests(ITestOutputHelper output) : base(output) { }
+        [SetUp]
+        public void Init()
+        {
+            this.Setup(TestContext.CurrentContext);
+        }
 
-        [Theory]
-        [MemberData(nameof(Networks))]
+        [TestCaseSource(nameof(Networks))]
         public void Registering_All_Configs_Should_Allow_Resolving_CatalystNode(NetworkType network)
         {
             _configFilesUsed = new[]
@@ -84,6 +91,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.Config
             containerBuilder.RegisterType<ConsoleUserOutput>().As<IUserOutput>();
             containerBuilder.RegisterType<ConsoleUserInput>().As<IUserInput>();
             containerBuilder.RegisterInstance(Substitute.For<IPeerDiscovery>()).As<IPeerDiscovery>();
+            containerBuilder.RegisterModule(new KeystoreModule());
             containerBuilder.RegisterModule(new KeySignerModule());
             containerBuilder.RegisterModule(new ConsensusModule());
             containerBuilder.RegisterModule(new DfsModule());
@@ -94,6 +102,8 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.Config
             containerBuilder.RegisterModule(new KeystoreModule());
             containerBuilder.RegisterModule(new BulletProofsModule());
             containerBuilder.RegisterModule(new AuthenticationModule());
+            containerBuilder.RegisterModule(new SynchroniserModule());
+            containerBuilder.RegisterType<InMemoryRepository<DeltaIndexDao, string>>().As<IRepository<DeltaIndexDao, string>>().SingleInstance();
 
             containerBuilder.RegisterAssemblyTypes(typeof(CoreLibProvider).Assembly)
                .AssignableTo<IMapperInitializer>().As<IMapperInitializer>();
@@ -104,14 +114,17 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.Config
             {
                 _ = scope.Resolve<ICatalystNode>();
             }
+            
+            _containerProvider?.Dispose();
         }
 
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            if (!disposing) return;
-
-            _containerProvider?.Dispose();
+            if (!disposing)
+            {
+                return;
+            }
         }
     }
 }

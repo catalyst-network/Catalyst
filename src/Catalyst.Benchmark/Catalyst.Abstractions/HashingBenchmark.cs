@@ -30,10 +30,11 @@ using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
+using MultiFormats;
+using MultiFormats.Registry;
 using Nethermind.Core.Extensions;
-using TheDotNetLeague.MultiFormats.MultiHash;
 
-namespace Catalyst.Benchmark.Catalyst.Core.Modules.Hashing
+namespace Catalyst.Benchmark.Catalyst.Abstractions
 {
     [MemoryDiagnoser]
     [SimpleJob(RuntimeMoniker.CoreRt30)]
@@ -46,12 +47,12 @@ namespace Catalyst.Benchmark.Catalyst.Core.Modules.Hashing
             HashingAlgorithm.Register(name, 1234123421, NoopHash.DigestSize, () => new NoopHash());
 
             var bytes = ByteString.CopyFrom(Enumerable.Range(1, 32).Select(i => (byte) i).ToArray());
-            var amount = ByteString.CopyFrom(343434.ToByteArray(Bytes.Endianness.Big));
+            var amount = ByteString.CopyFrom(343434.ToByteArray());
 
             _entry = new PublicEntry
             {
                 Amount = amount,
-                TransactionFees = amount,
+                GasPrice = amount,
                 ReceiverAddress = bytes,
                 SenderAddress = bytes
             };

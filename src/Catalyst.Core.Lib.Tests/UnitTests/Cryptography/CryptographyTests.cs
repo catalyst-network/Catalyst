@@ -29,7 +29,7 @@ using Catalyst.Core.Modules.Cryptography.BulletProofs.Exceptions;
 using Catalyst.Core.Modules.Cryptography.BulletProofs.Types;
 using FluentAssertions;
 using Nethereum.Hex.HexConvertors.Extensions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
 {
@@ -39,14 +39,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
 
         private readonly ICryptoContext _context;
 
-        [Fact]
+        [Test]
         public void TestGeneratePrivateKey()
         {
             var privateKey = _context.GeneratePrivateKey();
             privateKey.Should().BeOfType(typeof(PrivateKey));
         }
 
-        [Fact]
+        [Test]
         public void TestFailureSigningVerification()
         {
             var key1 = _context.GeneratePrivateKey();
@@ -64,7 +64,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
                .Should().BeFalse("signature should not verify with incorrect key");
         }
 
-        [Fact]
+        [Test]
         public void TestPublicKeyFromPrivateKey()
         {
             var privateKey = _context.GeneratePrivateKey();
@@ -73,7 +73,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
             publicKey.Should().NotBeNull(" a valid public key should be created from a private key");
         }
 
-        [Fact]
+        [Test]
         public void TestSigningVerification()
         {
             var privateKey = _context.GeneratePrivateKey();
@@ -85,7 +85,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
                .Should().BeTrue("signature generated with private key should verify with corresponding public key");
         }
 
-        [Fact]
+        [Test]
         public void TestVerifyWithImportedPublicKey()
         {
             var privateKey = _context.GeneratePrivateKey();
@@ -102,7 +102,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
                .BeTrue("signature should verify with imported public key");
         }
 
-        [Fact]
+        [Test]
         public void Does_Verify_Fail_With_Incorrect_Signing_Context()
         {
             var privateKey = _context.GeneratePrivateKey();
@@ -116,7 +116,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
                .BeFalse("signature should not verify with incorrect signing context");
         }
 
-        [Fact] 
+        [Test] 
         public void Can_Throw_Signature_Exception_On_Invalid_Signature()
         {
             IPrivateKey privateKey = _context.GeneratePrivateKey();
@@ -130,19 +130,19 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
         }
 
         [Theory]
-        [InlineData("616263",
+        [TestCase("616263",
             "98a70222f0b8121aa9d30f813d683f809e462b469c7ff87639499bb94e6dae4131f85042463c2a355a2003d062adf5aaa10b8c61e636062aaad11c2a26083406",
             "ec172b93ad5e563bf4932c70e1245034c35467ef2efd4d64ebf819683467e2bf", "", true)]
-        [InlineData("616263",
+        [TestCase("616263",
             "98a70222f0b8121aa9d30f813d683f809e462b469c7ff87639499bb94e6dae4131f85042463c2a355a2003d062adf5aaa10b8c61e636062aaad11c2a26083406",
             "ec172b93ad5e563bf4932c70e1245034c35467ef2efd4d64ebf819683467e2bf", "a", false)]
-        [InlineData("616261",
+        [TestCase("616261",
             "98a70222f0b8121aa9d30f813d683f809e462b469c7ff87639499bb94e6dae4131f85042463c2a355a2003d062adf5aaa10b8c61e636062aaad11c2a26083406",
             "ec172b93ad5e563bf4932c70e1245034c35467ef2efd4d64ebf819683467e2bf", "", false)]
-        [InlineData("616263",
+        [TestCase("616263",
             "98a70222f0b8121aa9d30f813d683f809e462b469c7ff87639499bb94e6dae4131f85042463c2a355a2003d062adf5aaa10b8c61e636062aaad11c2a26083406",
             "0f1d1274943b91415889152e893d80e93275a1fc0b65fd71b4b0dda10ad7d772", "", false)]
-        [InlineData("616263",
+        [TestCase("616263",
             "98a70222f0b8121aa9d30f813d683f809e462b469c7ff87639499bb94e6dae4131f85042463c2a355a2003d062adf5aaa10b8c61e636062aaad11c2a26083405",
             "ec172b93ad5e563bf4932c70e1245034c35467ef2efd4d64ebf819683467e2bf", "", false)]
         public void Verify_Validates_Correct_Test_Vector(string message,
@@ -162,25 +162,25 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
             _context.Verify(signature, messageBytes, contextBytes).Should().Be(expectedResult);
         }
 
-        [Fact]
+        [Test]
         public void Is_PrivateKey_Length_Positive()
         {
             _context.PrivateKeyLength.Should().BePositive();
         }
 
-        [Fact]
+        [Test]
         public void Is_PublicKey_Length_Positive()
         {
             _context.PublicKeyLength.Should().BePositive();
         }
 
-        [Fact]
+        [Test]
         public void Is_Signature_Length_Positive()
         {
             _context.SignatureLength.Should().BePositive();
         }
 
-        [Fact]
+        [Test]
         public void Is_Signature_Context_Max_Length_Positive()
         {
             _context.SignatureContextMaxLength.Should().BePositive();

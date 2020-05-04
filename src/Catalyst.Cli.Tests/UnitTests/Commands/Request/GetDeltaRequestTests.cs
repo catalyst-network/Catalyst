@@ -27,10 +27,10 @@ using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
+using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.UnitTests.Commands.Request
 {
@@ -40,12 +40,12 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands.Request
 
         public GetDeltaRequestTests() { _logger = Substitute.For<ILogger>(); }
 
-        [Fact]
+        [Test]
         public void GetDeltaRequest_Can_Be_Sent()
         {
             //Arrange
-            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
-            var deltaMultiHash = hashProvider.ComputeUtf8MultiHash("previous").CreateCid();
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
+            var deltaMultiHash = hashProvider.ComputeUtf8MultiHash("previous").ToCid();
             var commandContext = TestCommandHelpers.GenerateCliRequestCommandContext();
             var connectedNode = commandContext.GetConnectedNode(null);
             var command = new GetDeltaCommand(commandContext, _logger);
@@ -58,7 +58,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands.Request
             requestSent.Should().BeOfType(typeof(GetDeltaRequest));
         }
 
-        [Fact]
+        [Test]
         public void GetDeltaRequest_Should_Be_Invalid_Multihash()
         {
             //Arrange

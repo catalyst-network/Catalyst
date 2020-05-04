@@ -35,7 +35,7 @@ using Catalyst.Core.Lib.IO.Transport;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport
 {
@@ -65,7 +65,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport
             return clientSocketRegistry;
         }
 
-        [Fact]
+        [Test]
         public void Can_Add_Multiple_Sockets_To_Registry()
         {
             var socketsByEndpointHashCode = ConstructSocketByEndpointSampleData();
@@ -77,7 +77,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport
                .And.ContainValues(socketsByEndpointHashCode.Values);
         }
 
-        [Fact]
+        [Test]
         public void Can_Add_Multiple_Sockets_To_Registry_And_Get_One()
         {
             var socketsByEndpointHashCode = ConstructSocketByEndpointSampleData();
@@ -91,7 +91,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport
                .BeAssignableTo<ISocketClient>();
         }
 
-        [Fact]
+        [Test]
         public void Can_Add_Multiple_Sockets_To_Registry_And_Remove_One()
         {
             var socketsByEndpointHashCode = ConstructSocketByEndpointSampleData();
@@ -110,7 +110,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport
                .And.ContainValues(socketsByEndpointHashCode.Values);
         }
 
-        [Fact]
+        [Test]
         public void Can_Add_Socket_To_Registry_And_Get_Same_Client_From_HashCode()
         {
             var clientSocketRegistry = new SocketClientRegistry<ISocketClient>();
@@ -131,35 +131,35 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport
                .BeAssignableTo<ISocketClient>();
         }
 
-        [Fact]
+        [Test]
         public void Can_init_peer_client_registry()
         {
             var socketRegistry = new SocketClientRegistry<IPeerClient>();
-            Assert.Equal(socketRegistry.GetRegistryType(), typeof(IPeerClient).Name);
+            Assert.AreEqual(socketRegistry.GetRegistryType(), typeof(IPeerClient).Name);
         }
 
-        [Fact]
+        [Test]
         public void Can_init_rcp_client_registry()
         {
             var socketRegistry = new SocketClientRegistry<IRpcClient>();
-            Assert.Equal(socketRegistry.GetRegistryType(), typeof(IRpcClient).Name);
+            Assert.AreEqual(socketRegistry.GetRegistryType(), typeof(IRpcClient).Name);
         }
 
-        [Fact]
+        [Test]
         public void Can_init_tcp_client_registry()
         {
             var socketRegistry = new SocketClientRegistry<ITcpClient>();
-            Assert.Equal(socketRegistry.GetRegistryType(), typeof(ITcpClient).Name);
+            Assert.AreEqual(socketRegistry.GetRegistryType(), typeof(ITcpClient).Name);
         }
 
-        [Fact]
+        [Test]
         public void Can_init_udp_client_registry()
         {
             var socketRegistry = new SocketClientRegistry<IUdpClient>();
-            Assert.Equal(socketRegistry.GetRegistryType(), typeof(IUdpClient).Name);
+            Assert.AreEqual(socketRegistry.GetRegistryType(), typeof(IUdpClient).Name);
         }
 
-        [Fact]
+        [Test]
         public void Can_Listen_To_Registry_Client_Added_Events()
         {
             var testScheduler = new TestScheduler();
@@ -182,7 +182,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport
             connectionEvents.Should().NotBeEmpty().And.HaveCount(5);
         }
 
-        [Fact]
+        [Test]
         public void Can_Listen_To_Registry_Client_Removed_Events()
         {
             var testScheduler = new TestScheduler();
@@ -209,7 +209,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport
             connectionEvents.Should().BeEmpty();
         }
 
-        [Fact]
+        [Test]
         public void Can_Remove_Socket_From_Registry()
         {
             var clientSocketRegistry = new SocketClientRegistry<ISocketClient>();
@@ -235,7 +235,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport
                .Should().BeEmpty();
         }
 
-        [Fact]
+        [Test]
         public void Cannot_Add_Inactive_Client()
         {
             var clientSocketRegistry = new SocketClientRegistry<ISocketClient>();
@@ -247,7 +247,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport
                .Throw<ArgumentException>();
         }
 
-        [Fact]
+        [Test]
         public void Socket_Registry_Has_A_List()
         {
             new SocketClientRegistry<ISocketClient>().Registry

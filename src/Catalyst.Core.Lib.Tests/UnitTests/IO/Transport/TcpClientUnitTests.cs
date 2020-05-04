@@ -26,10 +26,9 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.TestUtils;
-using FluentAssertions;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport
 {
@@ -46,12 +45,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport
         private readonly ILogger _logger;
         private readonly ITcpClientEventLoopGroupFactory _eventLoopGroupFactory;
 
-        [Fact]
+        [Test]
         public async Task TcpClient_Should_Be_Derivable()
         {
             var tcpClient = new TestTcpClient(_tcpClientChannelFactory, _logger, _eventLoopGroupFactory);
-            var exception = await Record.ExceptionAsync(() => tcpClient.StartAsync());
-            exception.Should().BeOfType<NotImplementedException>();
+            Assert.Throws<NotImplementedException>(() => tcpClient.StartAsync());
         }
     }
 }

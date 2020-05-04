@@ -37,16 +37,17 @@ using Catalyst.Protocol.Peer;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Correlation
 {
     public sealed class PeerMessageCorrelationManagerTests : MessageCorrelationManagerTests<IPeerMessageCorrelationManager>
     {
-        private readonly TestScheduler _testScheduler;
-        private readonly Dictionary<PeerId, int> _reputationByPeerIdentifier;
+        private TestScheduler _testScheduler;
+        private Dictionary<PeerId, int> _reputationByPeerIdentifier;
 
-        public PeerMessageCorrelationManagerTests()
+        [SetUp]
+        public void Init()
         {
             _testScheduler = new TestScheduler();
 
@@ -74,19 +75,19 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Correlation
             });
         }
 
-        [Fact]
+        [Test]
         public void TryMatchResponseAsync_Should_Match_Existing_Records_With_Matching_Correlation_Id()
         {
             TryMatchResponseAsync_Should_Match_Existing_Records_With_Matching_Correlation_Id<PingResponse>();
         }
 
-        [Fact]
+        [Test]
         public void TryMatchResponseAsync_Should_Not_Match_Existing_Records_With_Non_Matching_Correlation_Id()
         {
             TryMatchResponseAsync_Should_Not_Match_Existing_Records_With_Non_Matching_Correlation_Id<PingResponse>();
         }
 
-        [Fact]
+        [Test]
         public void TryMatchResponseAsync_when_matching_should_increase_reputation()
         {
             var reputationBefore = _reputationByPeerIdentifier[PeerIds[1]];
@@ -107,7 +108,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Correlation
                .Select(r => r.Value).Should().AllBeEquivalentTo(0);
         }
 
-        [Fact]
+        [Test]
         public void UncorrelatedMessage_should_decrease_reputation()
         {
             var reputationBefore = _reputationByPeerIdentifier[PeerIds[1]];

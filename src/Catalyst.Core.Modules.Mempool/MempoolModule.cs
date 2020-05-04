@@ -27,6 +27,7 @@ using Catalyst.Abstractions.Mempool.Services;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Modules.Mempool.Repositories;
 using SharpRepository.InMemoryRepository;
+using SharpRepository.MongoDbRepository;
 using SharpRepository.Repository;
 
 namespace Catalyst.Core.Modules.Mempool
@@ -35,9 +36,12 @@ namespace Catalyst.Core.Modules.Mempool
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.Register(c => new InMemoryRepository<PublicEntryDao, string>())
-               .As<IRepository<PublicEntryDao, string>>()
-               .SingleInstance();
+            builder.Register(c => new MongoDbRepository<PublicEntryDao, string>())
+                .As<IRepository<PublicEntryDao, string>>()
+                .SingleInstance();
+            //builder.Register(c => new InMemoryRepository<PublicEntryDao, string>())
+            //   .As<IRepository<PublicEntryDao, string>>()
+            //   .SingleInstance();
             builder.RegisterType<MempoolService>().As<IMempoolService<PublicEntryDao>>()
                .SingleInstance();
             builder.RegisterType<Mempool>().As<IMempool<PublicEntryDao>>().SingleInstance();

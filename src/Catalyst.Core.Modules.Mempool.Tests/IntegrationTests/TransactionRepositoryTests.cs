@@ -28,7 +28,7 @@ using Autofac;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Cryptography;
 using Catalyst.Core.Lib.DAO.Transaction;
-using Catalyst.Core.Lib.Repository;
+using Catalyst.Core.Lib.Service;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Transaction;
@@ -37,15 +37,16 @@ using Catalyst.TestUtils.ProtocolHelpers;
 using Catalyst.TestUtils.Repository;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
+using NUnit.Framework;
 using SharpRepository.Repository;
-using Xunit;
-using Xunit.Abstractions;
 
 namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class TransactionRepositoryTests : FileSystemBasedTest
     {
-        private readonly IMapperProvider _mapperProvider;
+        private IMapperProvider _mapperProvider;
 
         public static IEnumerable<object[]> ModulesList =>
             new List<object[]>
@@ -54,7 +55,8 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
                 new object[] {new MongoDbTestModule<PublicEntryDao>()}
             };
 
-        public TransactionRepositoryTests(ITestOutputHelper output) : base(output)
+        [SetUp]
+        public void Init()
         {
             _mapperProvider = new TestMapperProvider();
         }
@@ -107,22 +109,15 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
                 var transactionRepository = PopulateTransactionRepository(scope, out var criteriaId, out _);
 
                 var retrievedTransactionDao = transactionRepository.Get(criteriaId);
-                retrievedTransactionDao.TimeStamp = new DateTime(1999, 2, 2);
                 transactionRepository.Update(retrievedTransactionDao);
 
                 var retrievedTransactionDaoModified = transactionRepository.Get(criteriaId);
-
-                var dateComparer = retrievedTransactionDaoModified.TimeStamp.Date.ToString("MM/dd/yyyy");
-
-                // ReSharper disable once SuspiciousTypeConversion.Global
-                // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-                dateComparer.Should()?.Equals("02/02/1999");
             }
         }
 
-        [Theory(Skip = "Setup to run in pipeline only")]
-        [Trait(Traits.TestType, Traits.E2EMongoDb)]
-        [MemberData(nameof(ModulesList))]
+        [Ignore("Setup to run in pipeline only")]
+        [Category(Traits.E2EMongoDb)]
+        [TestCase(nameof(ModulesList))]
         public void TransactionRepository_All_Dbs_Can_Update_And_Retrieve(Module dbModule)
         {
             RegisterModules(dbModule);
@@ -130,9 +125,9 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             Transaction_Update_And_Retrieve();
         }
 
-        [Theory(Skip = "Setup to run in pipeline only")]
-        [Trait(Traits.TestType, Traits.E2EMongoDb)]
-        [MemberData(nameof(ModulesList))]
+        [Ignore("Setup to run in pipeline only")]
+        [Category(Traits.E2EMongoDb)]
+        [TestCase(nameof(ModulesList))]
         public void TransactionBroadcastRepository_All_Dbs_Can_Save_And_Retrieve(Module dbModule)
         {
             RegisterModules(dbModule);
@@ -140,8 +135,8 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             TransactionRepository_Can_Save_And_Retrieve();
         }
 
-        [Fact(Skip = "Microsoft DBs yet to be completed")]
-        [Trait(Traits.TestType, Traits.E2EMssql)]
+        [Ignore("Microsoft DBs yet to be completed")]
+        [Category(Traits.E2EMssql)]
         public void TransactionRepository_EfCore_Dbs_Update_And_Retrieve()
         {
             var connectionStr = ContainerProvider.ConfigurationRoot
@@ -155,8 +150,8 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             Transaction_Update_And_Retrieve();
         }
 
-        [Fact(Skip = "Microsoft DBs yet to be completed")]
-        [Trait(Traits.TestType, Traits.E2EMssql)]
+        [Ignore("Microsoft DBs yet to be completed")]
+        [Category(Traits.E2EMssql)]
         public void TransactionBroadcastRepository_EfCore_Dbs_Can_Save_And_Retrieve()
         {
             var connectionStr = ContainerProvider.ConfigurationRoot

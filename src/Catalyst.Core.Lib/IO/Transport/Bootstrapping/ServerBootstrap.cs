@@ -25,7 +25,7 @@ using System.Net;
 using System.Net.Sockets;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Transport.Bootstrapping;
-using Catalyst.Core.Lib.Util;
+using Catalyst.Abstractions.Lib.Util;
 using DotNetty.Transport.Channels;
 using Polly;
 using Polly.Retry;

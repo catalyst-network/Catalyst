@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Linq;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
@@ -35,20 +36,22 @@ using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
+using Google.Protobuf.WellKnownTypes;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
 {
     public sealed class TransactionReceivedEventTests
     {
-        private readonly IMempool<PublicEntryDao> _mempool;
-        private readonly ITransactionValidator _transactionValidator;
-        private readonly IBroadcastManager _broadcastManager;
-        private readonly TransactionReceivedEvent _transactionReceivedEvent;
+        private IMempool<PublicEntryDao> _mempool;
+        private ITransactionValidator _transactionValidator;
+        private IBroadcastManager _broadcastManager;
+        private TransactionReceivedEvent _transactionReceivedEvent;
 
-        public TransactionReceivedEventTests()
+        [SetUp]
+        public void Init()
         {
             var mapperProvider = new TestMapperProvider();
             _mempool = Substitute.For<IMempool<PublicEntryDao>>();
@@ -61,18 +64,18 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
                 Substitute.For<ILogger>());
         }
 
-        [Fact]
+        [Test]
         public void Can_Send_Error_To_Invalid_Transaction()
         {
             _transactionValidator.ValidateTransaction(Arg.Any<PublicEntry>())
                .Returns(false);
-            _transactionReceivedEvent.OnTransactionReceived(new TransactionBroadcast {PublicEntry = new PublicEntry()}
+            _transactionReceivedEvent.OnTransactionReceived(new TransactionBroadcast {PublicEntry = new PublicEntry{SenderAddress = new byte[32].ToByteString()}}
                    .ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId())).Should()
                .Be(ResponseCode.Error);
             _broadcastManager.DidNotReceiveWithAnyArgs()?.BroadcastAsync(default);
         }
 
-        [Fact]
+        [Test]
         public void Can_Send_Exists_If_Mempool_Contains_Transaction()
         {
             var transaction = TransactionHelper.GetPublicTransaction();
@@ -90,7 +93,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
             _mempool.Service.DidNotReceiveWithAnyArgs().CreateItem(default);
         }
 
-        [Fact]
+        [Test]
         public void Can_Broadcast_And_Save_Valid_Transaction()
         {
             var transaction = TransactionHelper.GetPublicTransaction();

@@ -24,30 +24,31 @@
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.P2P.Models;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Modules.POA.P2P.Discovery;
 using Catalyst.TestUtils;
+using MultiFormats.Registry;
 using Newtonsoft.Json;
 using NSubstitute;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
+using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
 {
     public sealed class PoaDiscoveryTests : FileSystemBasedTest
     {
-        private readonly IHashProvider _hashProvider;
+        private IHashProvider _hashProvider;
 
-        public PoaDiscoveryTests(ITestOutputHelper output) : base(output)
+        [SetUp]
+        public void Init()
         {
-            var hashingAlgorithm = HashingAlgorithm.GetAlgorithmMetadata("blake2b-256");
-            _hashProvider = new HashProvider(hashingAlgorithm);
+            this.Setup(TestContext.CurrentContext);
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
         }
 
-        [Fact]
+        [Test]
         public async Task Can_Populate_Peers_Correctly()
         {
             var peerRepository = Substitute.For<IPeerRepository>();
@@ -61,7 +62,7 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
 
             await FileSystem.WriteTextFileToCddAsync(PoaDiscovery.PoaPeerFile, JsonConvert.SerializeObject(peers));
 
-            var peerDiscovery = new PoaDiscovery(peerRepository, FileSystem, Substitute.For<ILogger>());
+            var peerDiscovery = new PoaDiscovery(Substitute.For<IPeerSettings>(), peerRepository, FileSystem, Substitute.For<ILogger>());
             await peerDiscovery.DiscoveryAsync().ConfigureAwait(false);
             peerRepository.Received(peers.Length).Add(Arg.Any<Peer>());
         }

@@ -39,10 +39,12 @@ using Microsoft.Reactive.Testing;
 using Newtonsoft.Json;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class GetInfoRequestObserverTests
     {
         private readonly TestScheduler _testScheduler;
@@ -65,8 +67,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             _fakeContext.Channel.RemoteAddress.Returns(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort));
         }
 
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
+        [Test]
         public async Task GetInfoMessageRequest_UsingValidRequest_ShouldSendGetInfoResponse()
         {
             var protocolMessage = new GetInfoRequest

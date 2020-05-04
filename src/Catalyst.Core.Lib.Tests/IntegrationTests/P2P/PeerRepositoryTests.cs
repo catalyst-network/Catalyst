@@ -25,22 +25,23 @@ using System;
 using System.Collections.Generic;
 using Autofac;
 using Catalyst.TestUtils;
-using Xunit;
-using Xunit.Abstractions;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Peer;
-using Catalyst.Core.Lib.Repository;
+using Catalyst.Core.Lib.Service;
 using Catalyst.Protocol.Peer;
 using SharpRepository.Repository;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Catalyst.TestUtils.Repository;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class PeerRepositoryTests : FileSystemBasedTest
     {
-        private readonly TestMapperProvider _mapperProvider;
+        private TestMapperProvider _mapperProvider;
 
         public static IEnumerable<object[]> ModulesList => 
             new List<object[]>
@@ -49,7 +50,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
                 new object[] {new MongoDbTestModule<PeerDao>()}
             };
 
-        public PeerRepositoryTests(ITestOutputHelper output) : base(output)
+        [SetUp]
+        public void Init()
         {
             _mapperProvider = new TestMapperProvider();
         }
@@ -111,9 +113,9 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             return peerRepo;
         }
         
-        [Theory(Skip = "Setup to run in pipeline only")]
-        [Trait(Traits.TestType, Traits.E2EMongoDb)]
-        [MemberData(nameof(ModulesList))]
+        [Ignore("Setup to run in pipeline only")]
+        [Category(Traits.E2EMongoDb)]
+        [TestCase(nameof(ModulesList))]
         public void PeerRepo_All_Dbs_Can_Update_And_Retrieve(Module dbModule)
         {
             RegisterModules(dbModule);
@@ -121,9 +123,9 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             PeerRepo_Can_Update_And_Retrieve();
         }
 
-        [Theory(Skip = "Setup to run in pipeline only")]
-        [Trait(Traits.TestType, Traits.E2EMongoDb)]
-        [MemberData(nameof(ModulesList))]
+        [Ignore("Setup to run in pipeline only")]
+        [Category(Traits.E2EMongoDb)]
+        [TestCase(nameof(ModulesList))]
         public void PeerRepo_All_Dbs_Can_Save_And_Retrieve(Module dbModule)
         {
             RegisterModules(dbModule);
@@ -131,8 +133,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             PeerRepo_Can_Save_And_Retrieve();
         }
 
-        [Fact(Skip = "Microsoft DBs yet to be completed")]
-        [Trait(Traits.TestType, Traits.E2EMssql)]
+        [Ignore("Microsoft DBs yet to be completed")]
+        [Category(Traits.E2EMssql)]
         public void PeerRepo_EfCore_Dbs_Update_And_Retrieve()
         {
             var connectionStr = ContainerProvider.ConfigurationRoot
@@ -145,8 +147,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             PeerRepo_Can_Update_And_Retrieve();
         }
 
-        [Fact(Skip = "Microsoft DBs yet to be completed")]
-        [Trait(Traits.TestType, Traits.E2EMssql)]
+        [Ignore("Microsoft DBs yet to be completed")]
+        [Category(Traits.E2EMssql)]
         public void PeerRepo_EfCore_Dbs_Can_Save_And_Retrieve()
         {
             var connectionStr = ContainerProvider.ConfigurationRoot

@@ -29,18 +29,14 @@ using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Account;
 using Catalyst.TestUtils.Protocol;
 using FluentAssertions;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
+
 
 namespace Catalyst.Protocol.Tests.Account
 {
     public class AddressTests
     {
-        private readonly ITestOutputHelper _output;
-
-        public AddressTests(ITestOutputHelper output) { _output = output; }
-
-        [Fact]
+        [Test]
         public void Address_should_produce_different_bytes_for_all_possible_network_and_account_types()
         {
             var cartesianProduct = AddressHelper.GetAllNetworksAndAccountTypesCombinations();
@@ -48,7 +44,7 @@ namespace Catalyst.Protocol.Tests.Account
             var addressTypes = cartesianProduct.ToList();
             var forOutput = addressTypes.Select(x =>
                 $"{Convert.ToString((int) x.NetworkType | (int) x.AccountType, 2).PadLeft(6, '0')} =>  {x.NetworkType}|{x.AccountType}");
-            forOutput.ToList().ForEach(o => _output.WriteLine(o));
+            forOutput.ToList().ForEach(o => TestContext.WriteLine(o));
 
             var pubKeyBytes = ByteUtil.GenerateRandomByteArray(new FfiWrapper().PublicKeyLength);
 

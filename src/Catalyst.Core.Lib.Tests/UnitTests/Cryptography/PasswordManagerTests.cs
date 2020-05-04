@@ -28,18 +28,19 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Cryptography;
 using FluentAssertions;
 using NSubstitute;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
 {
     public sealed class PasswordManagerTests : IDisposable
     {
-        private readonly IPasswordRegistry _passwordRegistry;
-        private readonly IPasswordReader _passwordReader;
-        private readonly PasswordManager _passwordManager;
-        private readonly SecureString _secureString;
+        private IPasswordRegistry _passwordRegistry;
+        private IPasswordReader _passwordReader;
+        private PasswordManager _passwordManager;
+        private SecureString _secureString;
 
-        public PasswordManagerTests()
+        [SetUp]
+        public void Init()
         {
             _passwordRegistry = Substitute.For<IPasswordRegistry>();
             _passwordReader = Substitute.For<IPasswordReader>();
@@ -49,7 +50,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
             _passwordManager = new PasswordManager(_passwordReader, _passwordRegistry);
         }
 
-        [Fact]
+        [Test]
         public void ReadAndAddPasswordToRegistry_Should_Prompt_And_Add_Non_Null_Passwords()
         {
             _passwordReader.ReadSecurePassword().ReturnsForAnyArgs(_secureString);
@@ -65,7 +66,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
             retrievedPassword.Should().Be(_secureString);
         }
 
-        [Fact]
+        [Test]
         public void ReadAndAddPasswordToRegistry_Should_Prompt_And_Not_Add_Null_Passwords()
         {
             _passwordReader.ReadSecurePassword().ReturnsForAnyArgs(_secureString);
@@ -81,7 +82,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
             retrievedPassword.Should().BeNull();
         }
 
-        [Fact]
+        [Test]
         public void AddPasswordToRegistry_Should_Add_Passwords_To_The_Correct_Registry()
         {
             _passwordReader.ReadSecurePassword().ReturnsForAnyArgs(_secureString);
@@ -95,7 +96,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
             allGood.Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void RetrieveOrPromptPassword_When_Pass_In_Registry_Should_Not_Prompt_Password_From_Console()
         {
             var registryType = PasswordRegistryTypes.DefaultNodePassword;
@@ -108,7 +109,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
             retrievedPassword.Should().Be(_secureString);
         }
 
-        [Fact]
+        [Test]
         public void RetrieveOrPromptPassword_When_Pass_Not_In_Registry_Should_Prompt_Password_From_Console()
         {
             var registryType = PasswordRegistryTypes.IpfsPassword;

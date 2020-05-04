@@ -28,6 +28,7 @@ using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
+using Catalyst.Abstractions.Options;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
@@ -41,11 +42,11 @@ using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
+using MultiFormats.Registry;
 using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
-using Xunit;
+using NUnit.Framework;
 
 //@TODO should be in rpc module test
 
@@ -53,31 +54,33 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
 {
     public sealed class AddFileToDfsRequestObserverTests
     {
-        private readonly ManualResetEvent _manualResetEvent;
-        private readonly IChannelHandlerContext _fakeContext;
-        private readonly IDownloadFileTransferFactory _nodeFileTransferFactory;
-        private readonly AddFileToDfsRequestObserver _addFileToDfsRequestObserver;
-        private readonly PeerId _senderIdentifier;
-        private readonly IDfs _fakeDfs;
-        private readonly IHashProvider _hashProvider;
+        private ManualResetEvent _manualResetEvent;
+        private IChannelHandlerContext _fakeContext;
+        private IDownloadFileTransferFactory _nodeFileTransferFactory;
+        private AddFileToDfsRequestObserver _addFileToDfsRequestObserver;
+        private PeerId _senderIdentifier;
+        private IDfsService _fakeDfsService;
+        private IHashProvider _hashProvider;
 
-        public AddFileToDfsRequestObserverTests()
+        [SetUp]
+        public void Init()
         {
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _manualResetEvent = new ManualResetEvent(false);
             _senderIdentifier = PeerIdHelper.GetPeerId("sender");
             var peerSettings = _senderIdentifier.ToSubstitutedPeerSettings();
-            _fakeDfs = Substitute.For<IDfs>();
+            _fakeDfsService = Substitute.For<IDfsService>();
             var logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _nodeFileTransferFactory = Substitute.For<IDownloadFileTransferFactory>();
-            _addFileToDfsRequestObserver = new AddFileToDfsRequestObserver(_fakeDfs,
+            _addFileToDfsRequestObserver = new AddFileToDfsRequestObserver(_fakeDfsService,
                 peerSettings,
                 _nodeFileTransferFactory,
+                _hashProvider,
                 logger);
         }
 
-        [Fact]
+        [Test]
         public void Handler_Uses_Correct_CorrelationId()
         {
             _nodeFileTransferFactory.RegisterTransfer(Arg.Any<IDownloadFileInformation>())
@@ -94,7 +97,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
                     info => info.CorrelationId.Id.Equals(correlationId.Id)));
         }
 
-        [Fact]
+        [Test]
         public void Handler_Can_Initialize_Download_File_Transfer()
         {
             _nodeFileTransferFactory.RegisterTransfer(Arg.Any<IDownloadFileInformation>())
@@ -109,7 +112,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
                     t => t.Content.FromProtocolMessage<AddFileToDfsResponse>().ResponseCode[0] == FileTransferResponseCodeTypes.Successful.Id));
         }
 
-        [Fact]
+        [Test]
         public void Handler_Sends_Error_On_Invalid_Message()
         {
             _nodeFileTransferFactory.RegisterTransfer(Arg.Any<IDownloadFileInformation>()).Throws(new Exception());
@@ -123,14 +126,16 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
                     t => t.Content.FromProtocolMessage<AddFileToDfsResponse>().ResponseCode[0] == FileTransferResponseCodeTypes.Error.Id));
         }
 
-        [Fact]
+        [Test]
         public void Successful_Add_File_Can_Respond_With_Finished_Code()
         {
             _nodeFileTransferFactory.RegisterTransfer(Arg.Any<IDownloadFileInformation>())
                .Returns(FileTransferResponseCodeTypes.Successful);
 
-            var expectedCid = _hashProvider.ComputeUtf8MultiHash("expectedHash").CreateCid();
-            _fakeDfs.AddAsync(Arg.Any<Stream>(), Arg.Any<string>()).Returns(expectedCid);
+            var expectedCid = _hashProvider.ComputeUtf8MultiHash("expectedHash").ToCid();
+            var fakeBlock = Substitute.For<IFileSystemNode>();
+            fakeBlock.Id.Returns(expectedCid);
+            _fakeDfsService.UnixFsApi.AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), Arg.Any<AddFileOptions>()).Returns(fakeBlock);
 
             var protocolMessage = GenerateProtocolMessage();
 
@@ -157,13 +162,13 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
             addFileToDfsResponse.DfsHash.Should().Be(expectedCid);
         }
 
-        [Fact]
+        [Test]
         public void Dfs_Failure_Can_Respond_With_Failed_Code()
         {
             _nodeFileTransferFactory.RegisterTransfer(Arg.Any<IDownloadFileInformation>())
                .Returns(FileTransferResponseCodeTypes.Successful);
 
-            _fakeDfs.AddAsync(Arg.Any<Stream>(), Arg.Any<string>()).Throws(new Exception());
+            _fakeDfsService.UnixFsApi.AddAsync(Arg.Any<Stream>(), Arg.Any<string>()).Throws(new Exception());
 
             var protocolMessage = GenerateProtocolMessage();
 

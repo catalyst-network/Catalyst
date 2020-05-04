@@ -30,6 +30,7 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Service;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Deltas;
@@ -39,10 +40,10 @@ using Catalyst.Protocol.Wire;
 using Dawn;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
-using LibP2P;
+using Lib.P2P;
+using MultiFormats;
 using Nethermind.Dirichlet.Numerics;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
@@ -58,6 +59,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         private readonly PeerId _producerUniqueId;
         private readonly IDeltaCache _deltaCache;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly IDeltaIndexService _deltaIndexService;
         private readonly ILogger _logger;
 
         public DeltaBuilder(IDeltaTransactionRetriever transactionRetriever,
@@ -66,8 +68,10 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             IPeerSettings peerSettings,
             IDeltaCache deltaCache,
             IDateTimeProvider dateTimeProvider,
+            IDeltaIndexService deltaIndexService,
             ILogger logger)
         {
+            _deltaIndexService = deltaIndexService;
             _transactionRetriever = transactionRetriever;
             _randomFactory = randomFactory;
             _hashProvider = hashProvider;
@@ -80,6 +84,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         ///<inheritdoc />
         public CandidateDeltaBroadcast BuildCandidateDelta(Cid previousDeltaHash)
         {
+            _logger.Error("Current height: " + _deltaIndexService.Height());
+
             _logger.Debug("Building candidate delta locally");
 
             var allTransactions = _transactionRetriever.GetMempoolTransactionsByPriority();
@@ -124,7 +130,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             var candidate = new CandidateDeltaBroadcast
             {
                 // h∆j
-                Hash = MultiBase.Decode(_hashProvider.ComputeMultiHash(globalLedgerStateUpdate).CreateCid())
+                Hash = MultiBase.Decode(_hashProvider.ComputeMultiHash(globalLedgerStateUpdate).ToCid())
                    .ToByteString(),
 
                 // Idj

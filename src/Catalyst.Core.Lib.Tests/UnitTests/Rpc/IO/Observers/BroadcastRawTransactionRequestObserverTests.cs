@@ -30,8 +30,8 @@ using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using NSubstitute;
+using NUnit.Framework;
 using Serilog;
-using Xunit;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -53,11 +53,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         }
 
         [Theory]
-        [InlineData(ResponseCode.Pending)]
-        [InlineData(ResponseCode.Error)]
-        [InlineData(ResponseCode.Successful)]
-        [InlineData(ResponseCode.Failed)]
-        [InlineData(ResponseCode.Finished)]
+        [TestCase(ResponseCode.Pending)]
+        [TestCase(ResponseCode.Error)]
+        [TestCase(ResponseCode.Successful)]
+        [TestCase(ResponseCode.Failed)]
+        [TestCase(ResponseCode.Finished)]
         public void Can_Respond_With_Correct_Response(ResponseCode expectedResponse)
         {
             var channelContext = Substitute.For<IChannelHandlerContext>();

@@ -22,17 +22,23 @@
 #endregion
 
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.TestUtils;
 using FluentAssertions;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class GetVersionCommandTests : CliCommandTestsBase
     {
-        public GetVersionCommandTests(ITestOutputHelper output) : base(output) { }
+        [SetUp]
+        public void Init()
+        {
+            Setup(TestContext.CurrentContext);
+        }
 
-        [Fact]
+        [Test]
         public void Cli_Can_Request_Node_Version()
         {
             var result = Shell.ParseCommand("getversion", NodeArgumentPrefix, ServerNodeName);

@@ -34,7 +34,7 @@ using Google.Protobuf;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 {
@@ -49,7 +49,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _observer = new GetNeighbourResponseObserver(Substitute.For<ILogger>());
         }
 
-        [Fact]
+        [Test]
         public void Observer_Can_Process_GetNeighbourResponse_Correctly()
         {
             var testScheduler = new TestScheduler();

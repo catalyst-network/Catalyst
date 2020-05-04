@@ -22,25 +22,126 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Hashing;
+using Catalyst.Abstractions.IO.Events;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Ledger;
-using Nethermind.Store;
+using Catalyst.Abstractions.Ledger.Models;
+using Catalyst.Abstractions.Mempool;
+using Catalyst.Abstractions.P2P;
+using Catalyst.Abstractions.P2P.Repository;
+using Catalyst.Abstractions.Repository;
+using Catalyst.Core.Abstractions.Sync;
+using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.DAO.Transaction;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Modules.Ledger.Repository;
+using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Peer;
+using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
+using Google.Protobuf;
+using Google.Protobuf.WellKnownTypes;
+using Lib.P2P;
+using MultiFormats;
+using Nethermind.Core.Crypto;
+using Nethermind.State;
 
-namespace Catalyst.Core.Modules.Ledger 
+namespace Catalyst.Core.Modules.Ledger
 {
-    public class Web3EthApi : IWeb3EthApi
+    public sealed class Web3EthApi : IWeb3EthApi
     {
-        public Web3EthApi(IDeltaExecutor deltaExecutor, IStateReader stateReader, IStateRootResolver stateRootResolver, IDeltaResolver deltaResolver)
+        private IMempool<PublicEntryDao> _mempoolRepository;
+        private readonly ITransactionRepository _receipts;
+        private readonly ITransactionReceivedEvent _transactionReceived;
+        private readonly IMapperProvider _mapperProvider;
+        public IHashProvider HashProvider { get; }
+        public IDfsService DfsService { get; }
+        public SyncState SyncState { get; }
+        private readonly PeerId _peerId;
+
+        public Web3EthApi(IStateReader stateReader,
+            IDeltaResolver deltaResolver,
+            IDeltaCache deltaCache,
+            IDeltaExecutor executor,
+            IStorageProvider storageProvider,
+            IStateProvider stateProvider,
+            ITransactionRepository receipts,
+            ITransactionReceivedEvent transactionReceived,
+            IPeerRepository peerRepository,
+            IMempool<PublicEntryDao> mempoolRepository,
+            IDfsService dfsService,
+            IHashProvider hashProvider,
+            SyncState syncState,
+            IMapperProvider mapperProvider,
+            IPeerSettings peerSettings)
         {
-            DeltaExecutor = deltaExecutor ?? throw new ArgumentNullException(nameof(deltaExecutor));
+            _receipts = receipts;
+            _transactionReceived = transactionReceived ?? throw new ArgumentNullException(nameof(transactionReceived));
+            HashProvider = hashProvider;
+            _peerId = peerSettings.PeerId;
+            _mempoolRepository = mempoolRepository;
+            PeerRepository = peerRepository;
+            _mapperProvider = mapperProvider;
+
             StateReader = stateReader ?? throw new ArgumentNullException(nameof(stateReader));
-            StateRootResolver = stateRootResolver ?? throw new ArgumentNullException(nameof(stateRootResolver));
             DeltaResolver = deltaResolver ?? throw new ArgumentNullException(nameof(deltaResolver));
+            DeltaCache = deltaCache ?? throw new ArgumentNullException(nameof(deltaCache));
+            Executor = executor ?? throw new ArgumentNullException(nameof(executor));
+            StorageProvider = storageProvider ?? throw new ArgumentNullException(nameof(storageProvider));
+            StateProvider = stateProvider ?? throw new ArgumentNullException(nameof(stateProvider));
+            DfsService = dfsService;
+            SyncState = syncState;
         }
-        
-        public IDeltaExecutor DeltaExecutor { get; }
+
         public IStateReader StateReader { get; }
         public IDeltaResolver DeltaResolver { get; }
-        public IStateRootResolver StateRootResolver { get; }
+        public IDeltaCache DeltaCache { get; }
+
+        public IDeltaExecutor Executor { get; }
+        public IStorageProvider StorageProvider { get; }
+        public IStateProvider StateProvider { get; }
+        public IPeerRepository PeerRepository { get; }
+
+
+        public Keccak SendTransaction(PublicEntry publicEntry)
+        {
+            TransactionBroadcast broadcast = new TransactionBroadcast
+            {
+                PublicEntry = publicEntry
+            };
+
+            _transactionReceived.OnTransactionReceived(broadcast.ToProtocolMessage(_peerId));
+
+            byte[] kvmAddressBytes = Keccak.Compute(publicEntry.SenderAddress.ToByteArray()).Bytes.AsSpan(12).ToArray();
+            string hex = kvmAddressBytes.ToHexString() ?? throw new ArgumentNullException("kvmAddressBytes.ToHexString()");
+            publicEntry.SenderAddress = kvmAddressBytes.ToByteString();
+
+            if (publicEntry.ReceiverAddress.Length == 1)
+            {
+                publicEntry.ReceiverAddress = ByteString.Empty;
+            }
+
+            return publicEntry.GetHash(HashProvider);
+        }
+
+        public IEnumerable<PublicEntry> GetPendingTransactions()
+        {
+            return _mempoolRepository.Service.GetAll().Select(x=>x.ToProtoBuff<PublicEntryDao, PublicEntry>(_mapperProvider));
+        }
+
+        public TransactionReceipt FindReceipt(Keccak transactionHash)
+        {
+            return _receipts.TryFind(transactionHash, out TransactionReceipt receipt) ? receipt : default;
+        }
+
+        public bool FindTransactionData(Keccak transactionHash, out Cid deltaHash, out Delta delta, out int index)
+        {
+            return _receipts.TryFind(transactionHash, out deltaHash, out delta, out index);
+        }
     }
 }

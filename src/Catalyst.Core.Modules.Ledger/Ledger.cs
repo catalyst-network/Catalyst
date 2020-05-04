@@ -25,23 +25,27 @@ using System;
 using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Ledger;
+using Catalyst.Abstractions.Ledger.Models;
 using Catalyst.Abstractions.Mempool;
+using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.DAO.Ledger;
 using Catalyst.Core.Lib.DAO.Transaction;
-using Catalyst.Core.Modules.Kvm;
+using Catalyst.Core.Lib.Service;
 using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
 using Dawn;
-using LibP2P;
+using Google.Protobuf;
+using Lib.P2P;
 using Nethermind.Core.Crypto;
-using Nethermind.Evm.Tracing;
-using Nethermind.Store;
+using Nethermind.Db;
+using Nethermind.State;
 using Serilog;
 using Serilog.Events;
-using Account = Catalyst.Abstractions.Ledger.Models.Account;
 
 namespace Catalyst.Core.Modules.Ledger
 {
@@ -57,43 +61,71 @@ namespace Catalyst.Core.Modules.Ledger
         private readonly IStateProvider _stateProvider;
         private readonly IStorageProvider _storageProvider;
         private readonly ISnapshotableDb _stateDb;
-        private readonly ISnapshotableDb _codeDb;
-        private readonly ILedgerSynchroniser _synchroniser;
+        private readonly IDb _codeDb;
+        private readonly ITransactionRepository _receipts;
         private readonly IMempool<PublicEntryDao> _mempool;
         private readonly IMapperProvider _mapperProvider;
+        private readonly IHashProvider _hashProvider;
         private readonly ILogger _logger;
         private readonly IDisposable _deltaUpdatesSubscription;
 
         private readonly object _synchronisationLock = new object();
+        volatile Cid _latestKnownDelta;
+        long _latestKnownDeltaNumber = -1;
 
-        public Cid LatestKnownDelta { get; private set; }
+        public Cid LatestKnownDelta => _latestKnownDelta;
+
+        public long LatestKnownDeltaNumber => Volatile.Read(ref _latestKnownDeltaNumber);
+
+        private readonly IDeltaIndexService _deltaIndexService;
+
+        private readonly ISynchroniser _synchroniser;
+
         public bool IsSynchonising => Monitor.IsEntered(_synchronisationLock);
 
         public Ledger(IDeltaExecutor deltaExecutor,
             IStateProvider stateProvider,
             IStorageProvider storageProvider,
             ISnapshotableDb stateDb,
-            ISnapshotableDb codeDb,
+            IDb codeDb,
             IAccountRepository accounts,
+            IDeltaIndexService deltaIndexService,
+            ITransactionRepository receipts,
             IDeltaHashProvider deltaHashProvider,
-            ILedgerSynchroniser synchroniser,
+            ISynchroniser synchroniser,
             IMempool<PublicEntryDao> mempool,
             IMapperProvider mapperProvider,
+            IHashProvider hashProvider,
             ILogger logger)
         {
             Accounts = accounts;
             _deltaExecutor = deltaExecutor;
             _stateProvider = stateProvider;
             _storageProvider = storageProvider;
+
             _stateDb = stateDb;
             _codeDb = codeDb;
-            _synchroniser = synchroniser;
             _mempool = mempool;
             _mapperProvider = mapperProvider;
+            _hashProvider = hashProvider;
             _logger = logger;
+            _receipts = receipts;
+            _synchroniser = synchroniser;
 
             _deltaUpdatesSubscription = deltaHashProvider.DeltaHashUpdates.Subscribe(Update);
-            LatestKnownDelta = _synchroniser.DeltaCache.GenesisHash;
+
+            _deltaIndexService = deltaIndexService;
+
+            var latestDeltaIndex = _deltaIndexService.LatestDeltaIndex();
+            if (latestDeltaIndex != null)
+            {
+                _latestKnownDelta = latestDeltaIndex.Cid;
+                _latestKnownDeltaNumber = (long)latestDeltaIndex.Height;
+                return;
+            }
+
+            _latestKnownDelta = _synchroniser.DeltaCache.GenesisHash;
+            WriteLatestKnownDelta(_latestKnownDelta);
         }
 
         private void FlushTransactionsFromDelta(Cid deltaHash)
@@ -101,7 +133,9 @@ namespace Catalyst.Core.Modules.Ledger
             _synchroniser.DeltaCache.TryGetOrAddConfirmedDelta(deltaHash, out var delta);
             if (delta != null)
             {
-                var deltaTransactions = delta.PublicEntries.Select(x => x.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider));
+                var deltaTransactions =
+                    delta.PublicEntries.Select(x => x.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider));
+
                 _mempool.Service.Delete(deltaTransactions);
             }
         }
@@ -131,7 +165,7 @@ namespace Catalyst.Core.Modules.Ledger
                 lock (_synchronisationLock)
                 {
                     var chainedDeltaHashes = _synchroniser
-                       .CacheDeltasBetween(LatestKnownDelta, deltaHash, CancellationToken.None)
+                       .CacheDeltasBetween(LatestKnownDelta, deltaHash, CancellationToken.None)?
                        .Reverse()
                        .ToList();
 
@@ -143,7 +177,7 @@ namespace Catalyst.Core.Modules.Ledger
                         return;
                     }
 
-                    foreach (var chainedDeltaHash in chainedDeltaHashes)
+                    foreach (var chainedDeltaHash in chainedDeltaHashes.Skip(1))
                     {
                         UpdateLedgerFromDelta(chainedDeltaHash);
                     }
@@ -155,20 +189,19 @@ namespace Catalyst.Core.Modules.Ledger
             {
                 _logger.Error(exception, "Failed to update the ledger using the delta with hash {deltaHash}",
                     deltaHash);
+                Environment.Exit(2);
             }
         }
 
         private void UpdateLedgerFromDelta(Cid deltaHash)
         {
             var stateSnapshot = _stateDb.TakeSnapshot();
-            var codeSnapshot = _codeDb.TakeSnapshot();
-            if (stateSnapshot != -1 || codeSnapshot != -1)
+            if (stateSnapshot != -1)
             {
                 if (_logger.IsEnabled(LogEventLevel.Error))
                 {
-                    _logger.Error("Uncommitted state ({stateSnapshot}, {codeSnapshot}) when processing from a branch root {branchStateRoot} starting with delta {deltaHash}",
+                    _logger.Error("Uncommitted state ({stateSnapshot}) when processing from a branch root {branchStateRoot} starting with delta {deltaHash}",
                         stateSnapshot,
-                        codeSnapshot,
                         null,
                         deltaHash);
                 }
@@ -176,53 +209,59 @@ namespace Catalyst.Core.Modules.Ledger
 
             var snapshotStateRoot = _stateProvider.StateRoot;
 
-            // this code should be brought in / used as a reference if reorganization behaviour is known
-            //// if (branchStateRoot != null && _stateProvider.StateRoot != branchStateRoot)
-            //// {
-            ////     /* discarding the other branch data - chain reorganization */
-            ////     Metrics.Reorganizations++;
-            ////     _storageProvider.Reset();
-            ////     _stateProvider.Reset();
-            ////     _stateProvider.StateRoot = branchStateRoot;
-            //// }
-
             try
             {
-                if (!_synchroniser.DeltaCache.TryGetOrAddConfirmedDelta(deltaHash, out Delta nextDeltaInChain))
+                if (!_synchroniser.DeltaCache.TryGetOrAddConfirmedDelta(deltaHash, out var nextDeltaInChain))
                 {
-                    _logger.Warning(
-                        "Failed to retrieve Delta with hash {hash} from the Dfs, ledger has not been updated.",
-                        deltaHash);
+                    _logger.Warning("Failed to retrieve Delta with hash {hash} from the Dfs, ledger has not been updated.", deltaHash);
                     return;
                 }
 
-                // add here a receipts tracer or similar, depending on what data needs to be stored for each contract
-                _deltaExecutor.Execute(nextDeltaInChain, NullTxTracer.Instance);
+                Cid parentCid = Cid.Read(nextDeltaInChain.PreviousDeltaDfsHash.ToByteArray());
+                if (!_synchroniser.DeltaCache.TryGetOrAddConfirmedDelta(parentCid, out Delta parentDelta))
+                {
+                    _logger.Warning("Failed to retrieve parent Delta with hash {hash} from the Dfs, ledger has not been updated.", deltaHash);
+                    return;
+                }
 
-                // this code should be brought in / used as a reference if reorganization behaviour is known
-                //// delta testing here (for delta production)
-                //// if ((options & ProcessingOptions.ReadOnlyChain) != 0)
-                //// {
-                ////     Restore(stateSnapshot, codeSnapshot, snapshotStateRoot);
-                //// }
-                //// else
-                //// {
-                ////   _stateDb.Commit();
-                ////   _codeDb.Commit();
-                //// }
+                ReceiptDeltaTracer tracer = new ReceiptDeltaTracer(nextDeltaInChain, deltaHash);
+
+                // add here a receipts tracer or similar, depending on what data needs to be stored for each contract
+
+                _stateProvider.Reset();
+                _storageProvider.Reset();
+
+                _stateProvider.StateRoot = new Keccak(parentDelta.StateRoot?.ToByteArray());
+                _deltaExecutor.Execute(nextDeltaInChain, tracer);
+
+                // store receipts
+                if (tracer.Receipts.Any())
+                {
+                    _receipts.Put(deltaHash, tracer.Receipts.ToArray(), nextDeltaInChain.PublicEntries.ToArray());
+                }
 
                 _stateDb.Commit();
-                _codeDb.Commit();
 
-                LatestKnownDelta = deltaHash;
+                _latestKnownDelta = deltaHash;
+
+                WriteLatestKnownDelta(deltaHash);
             }
             catch
             {
-                Restore(stateSnapshot, codeSnapshot, snapshotStateRoot);
+                Restore(stateSnapshot, snapshotStateRoot);
             }
         }
 
-        private void Restore(int stateSnapshot, int codeSnapshot, Keccak snapshotStateRoot)
+        void WriteLatestKnownDelta(Cid deltaHash)
+        {
+            _latestKnownDelta = deltaHash;
+
+            Volatile.Write(ref _latestKnownDeltaNumber, _latestKnownDeltaNumber + 1);
+            _deltaIndexService.Map(_latestKnownDeltaNumber, deltaHash); // store delta numbers
+            _synchroniser.UpdateState((ulong)_latestKnownDeltaNumber);
+        }
+
+        private void Restore(int stateSnapshot, Keccak snapshotStateRoot)
         {
             if (_logger.IsEnabled(LogEventLevel.Verbose))
             {
@@ -230,7 +269,6 @@ namespace Catalyst.Core.Modules.Ledger
             }
 
             _stateDb.Restore(stateSnapshot);
-            _codeDb.Restore(codeSnapshot);
             _storageProvider.Reset();
             _stateProvider.Reset();
             _stateProvider.StateRoot = snapshotStateRoot;

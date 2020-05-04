@@ -45,7 +45,7 @@ namespace Catalyst.Core.Lib.IO.Handlers
             Logger.Verbose("Received {msg}", signedMessage);
             if (!Verify(signedMessage))
             {
-                Logger.Warning("Failed to verify {msg} signature.", signedMessage);
+                // Logger.Warning("Failed to verify {msg} signature.", signedMessage);
                 return;
             }
 

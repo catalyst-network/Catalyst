@@ -27,13 +27,13 @@ using Catalyst.Protocol.Rpc.Node;
 using FluentAssertions;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.UnitTests.Commands.Request
 {
     public sealed class GetPeerBlackListingRequestTests
     {
-        [Fact]
+        [Test]
         public void GetPeerBlackListingRequest_Can_Be_Sent()
         {
             //Arrange
@@ -46,8 +46,8 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands.Request
                 "-p", "public key");
 
             //Assert
-            var requestSent = TestCommandHelpers.GetRequest<SetPeerBlacklistRequest>(connectedNode);
-            requestSent.Should().BeOfType(typeof(SetPeerBlacklistRequest));
+            var requestSent = TestCommandHelpers.GetRequest<SetPeerBlackListRequest>(connectedNode);
+            requestSent.Should().BeOfType(typeof(SetPeerBlackListRequest));
         }
     }
 }

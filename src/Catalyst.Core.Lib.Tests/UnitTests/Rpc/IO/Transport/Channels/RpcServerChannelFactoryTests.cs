@@ -40,6 +40,7 @@ using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
+using Catalyst.TestUtils.Fakes;
 using DotNetty.Buffers;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
@@ -48,7 +49,7 @@ using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
 {
@@ -72,12 +73,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
             public IReadOnlyCollection<IChannelHandler> InheritedHandlers => _handlers;
         }
 
-        private readonly TestScheduler _testScheduler;
-        private readonly IRpcMessageCorrelationManager _correlationManager;
-        private readonly TestRpcServerChannelFactory _factory;
-        private readonly FakeKeySigner _keySigner;
+        private TestScheduler _testScheduler;
+        private IRpcMessageCorrelationManager _correlationManager;
+        private TestRpcServerChannelFactory _factory;
+        private FakeKeySigner _keySigner;
 
-        public RpcServerChannelFactoryTests()
+        [SetUp]
+        public void Init()
         {
             _testScheduler = new TestScheduler();
             _correlationManager = Substitute.For<IRpcMessageCorrelationManager>();
@@ -101,7 +103,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
                 _testScheduler);
         }
 
-        [Fact]
+        [Test]
         public void RpcServerChannelFactory_should_have_correct_handlers()
         {
             _factory.InheritedHandlers.Count(h => h != null).Should().Be(10);
@@ -118,7 +120,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
             handlers[9].Should().BeOfType<ObservableServiceHandler>();
         }
 
-        [Fact]
+        [Test]
         public void RpcServerChannelFactory_should_put_the_correct_inbound_handlers_on_the_pipeline()
         {
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),
@@ -147,7 +149,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
             }
         }
 
-        [Fact]
+        [Test]
         public void RpcServerChannelFactory_should_put_the_correct_outbound_handlers_on_the_pipeline()
         {
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),

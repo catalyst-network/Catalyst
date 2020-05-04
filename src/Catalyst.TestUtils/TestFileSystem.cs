@@ -41,7 +41,7 @@ namespace Catalyst.TestUtils
         public TestFileSystem(string rootPath)
         {
             var rootDirectory = new DirectoryInfo(rootPath);
-            _fileSystem = Substitute.ForPartsOf<FileSystem>();
+            _fileSystem = Substitute.For<FileSystem>();
             _fileSystem.GetCatalystDataDir().Returns(rootDirectory);
             _retryPolicy = Policy.Handle<IOException>()
                .WaitAndRetry(5, i => TimeSpan.FromMilliseconds(500).Multiply(i));
@@ -74,9 +74,7 @@ namespace Catalyst.TestUtils
         }
 
         public bool DataFileExists(string fileName) { return _fileSystem.DataFileExists(fileName); }
-        public bool DataFileExistsInSubDirectory(string fileName, string subDirectory) { return _fileSystem.DataFileExistsInSubDirectory(fileName, subDirectory); }
-        public string ReadTextFromCddFile(string fileName) { return _fileSystem.ReadTextFromCddFile(fileName); }
-
+        
         public string ReadTextFromCddSubDirectoryFile(string fileName, string subDirectory)
         {
             var content = _retryPolicy.Execute(() => _fileSystem.ReadTextFromCddSubDirectoryFile(fileName, subDirectory));

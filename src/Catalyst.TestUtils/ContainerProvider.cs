@@ -33,18 +33,20 @@ using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Core.Lib;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.KeySigner;
 using Catalyst.Core.Modules.Keystore;
 using DotNetty.Common.Internal.Logging;
 using Microsoft.Extensions.Configuration;
+using NUnit.Framework;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
 using Serilog.Extensions.Logging;
+using Serilog.Filters;
 using SharpRepository.Ioc.Autofac;
 using SharpRepository.Repository;
-using Xunit.Abstractions;
 
 namespace Catalyst.TestUtils
 {
@@ -52,14 +54,14 @@ namespace Catalyst.TestUtils
     {
         private readonly IEnumerable<string> _configFilesUsed;
         private readonly IFileSystem _fileSystem;
-        private readonly ITestOutputHelper _output;
+        private readonly TestContext  _output;
         private IConfigurationRoot _configRoot;
         public ContainerBuilder ContainerBuilder { get; } = new ContainerBuilder();
         private IContainer _container;
 
         public ContainerProvider(IEnumerable<string> configFilesUsed,
             IFileSystem fileSystem,
-            ITestOutputHelper output = null)
+            TestContext output)
         {
             _configFilesUsed = configFilesUsed;
             _fileSystem = fileSystem;
@@ -116,6 +118,7 @@ namespace Catalyst.TestUtils
             var keyRegistry = TestKeyRegistry.MockKeyRegistry();
             ContainerBuilder.RegisterInstance(keyRegistry).As<IKeyRegistry>();
 
+            ContainerBuilder.RegisterModule(new DfsModule());
             ContainerBuilder.RegisterModule(new BulletProofsModule());
             ContainerBuilder.RegisterModule(new KeystoreModule());
             ContainerBuilder.RegisterModule(new KeySignerModule());
@@ -124,21 +127,26 @@ namespace Catalyst.TestUtils
             ConfigureLogging(writeLogsToTestOutput, writeLogsToFile, logDotNettyTraffic);
         }
 
-        private void ConfigureLogging(bool writeLogsToTestOutput, bool writeLogsToFile, bool logDotNettyTraffic = false)
+        private void ConfigureLogging(bool writeLogsToTestOutput, bool writeLogsToFile, bool logDotNettyTraffic = false, bool logAspTraffic = false)
         {
             var loggerConfiguration = new LoggerConfiguration()
                .ReadFrom.Configuration(ConfigurationRoot).MinimumLevel.Verbose()
                .Enrich.WithThreadId();
+
+            if (!logAspTraffic)
+            {
+                loggerConfiguration = loggerConfiguration.Filter.ByExcluding(Matching.FromSource("Microsoft"));
+            }
 
             if (writeLogsToTestOutput)
             {
                 if (_output == null)
                 {
                     throw new NullReferenceException(
-                        $"An instance of {typeof(ITestOutputHelper)} is needed in order to log to the test output");
+                        $"An instance of {typeof(TestContext)} is needed in order to log to the test output");
                 }
 
-                loggerConfiguration = loggerConfiguration.WriteTo.TestOutput(_output, LogEventLevel, LogOutputTemplate);
+                loggerConfiguration = loggerConfiguration.WriteTo.NUnitOutput(LogEventLevel, null, null, LogOutputTemplate);
             }
 
             var logFile = Path.Combine(_fileSystem.GetCatalystDataDir().FullName, "Catalyst.Node.log");
@@ -162,7 +170,7 @@ namespace Catalyst.TestUtils
 
             if (writeLogsToFile)
             {
-                _output?.WriteLine(logFile);
+                logger.Information(logFile);
             }
         }
 

@@ -23,15 +23,15 @@
 
 using System.IO;
 using Catalyst.Abstractions.FileSystem;
-using Catalyst.Core.Lib.Repository;
+using Catalyst.Core.Lib.Service;
 using NSubstitute;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Repository
 {
     public sealed class FileSystemAwareXmlRepositoryTests
     {
-        [Fact]
+        [Test]
         public void MyTestedMethod_Should_Be_Producing_This_Result_When_Some_Conditions_Are_Met()
         {
             var fileSystem = Substitute.For<IFileSystem>();

@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.IO;
 using System.Linq;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Kvm;
@@ -30,6 +31,7 @@ using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 using Nethermind.Core;
+using Nethermind.Core.Attributes;
 using Nethermind.Core.Crypto;
 using Nethermind.Core.Extensions;
 using Nethermind.Core.Specs;
@@ -37,7 +39,7 @@ using Nethermind.Dirichlet.Numerics;
 using Nethermind.Evm;
 using Nethermind.Evm.Precompiles;
 using Nethermind.Evm.Tracing;
-using Nethermind.Store;
+using Nethermind.State;
 using Serilog;
 using Serilog.Events;
 
@@ -85,7 +87,7 @@ namespace Catalyst.Core.Modules.Kvm
         }
 
         [Todo("Wider work needed to split calls and execution properly")]
-        public void CallAndRestore(Delta stateUpdate, ITxTracer txTracer) { Execute(stateUpdate, txTracer, true); }
+        public void CallAndReset(Delta stateUpdate, ITxTracer txTracer) { Execute(stateUpdate, txTracer, true); }
 
         [Todo(
             "After delta is executed we should validate the state root and if it is not as expected we should revert all the changes.")]
@@ -143,17 +145,6 @@ namespace Catalyst.Core.Modules.Kvm
             return result;
         }
 
-        private Address GetAccountAddress(ByteString publicKeyByteString)
-        {
-            if (publicKeyByteString == null || publicKeyByteString.IsEmpty)
-            {
-                return null;
-            }
-
-            var publicKey = _cryptoContext.GetPublicKeyFromBytes(publicKeyByteString.ToByteArray());
-            return publicKey.ToKvmAddress();
-        }
-
         private static void QuickFail(PublicEntry entry, ExecutionEnvironment env, ITxTracer txTracer)
         {
             // here we need to propagate back to Delta
@@ -171,19 +162,32 @@ namespace Catalyst.Core.Modules.Kvm
             // revert state if any fails (take snapshot)
             foreach (var publicEntry in delta.PublicEntries)
             {
-                Execute(publicEntry, stateUpdate, txTracer, readOnly);
+                Execute(publicEntry, stateUpdate, txTracer);
             }
-
+            
+            var spec = _specProvider.GetSpec(stateUpdate.Number);
+            _storageProvider.Commit(txTracer.IsTracingState ? txTracer : null);
+            _stateProvider.Commit(spec, txTracer.IsTracingState ? txTracer : null);
+            
+            _stateProvider.RecalculateStateRoot();
             if (!readOnly)
             {
-                // we should assign block rewards here (or in Ledger)
-                _stateProvider.CommitTree();
+                if (new Keccak(delta.StateRoot.ToByteArray()) != _stateProvider.StateRoot)
+                {
+                    if (_logger.IsEnabled(LogEventLevel.Error)) _logger.Error("Invalid delta state root - found {found} and should be {shouldBe}", _stateProvider.StateRoot, new Keccak(delta.StateRoot.ToByteArray()));
+                }
+                
+                // compare state roots
                 _storageProvider.CommitTrees();
+                _stateProvider.CommitTree();
             }
             else
             {
-                _storageProvider.Reset();
+
+                delta.StateRoot = _stateProvider.StateRoot.ToByteString(); 
+                if (_logger.IsEnabled(LogEventLevel.Debug)) _logger.Debug($"Setting candidate delta {delta.DeltaNumber} root to {delta.StateRoot.ToKeccak()}");
                 _stateProvider.Reset();
+                _storageProvider.Reset();
             }
         }
 
@@ -209,7 +213,7 @@ namespace Catalyst.Core.Modules.Kvm
         /// <param name="readOnly">Defines whether the state should be reverted after the execution.</param>
         /// <exception cref="TransactionCollisionException">Thrown when deployment address already has some code.</exception>
         /// <exception cref="OutOfGasException">Thrown when not enough gas is available for deposit.</exception>
-        private void Execute(PublicEntry entry, StateUpdate stateUpdate, ITxTracer txTracer, bool readOnly)
+        private void Execute(PublicEntry entry, StateUpdate stateUpdate, ITxTracer txTracer)
         {
             var spec = _specProvider.GetSpec(stateUpdate.Number);
 
@@ -341,18 +345,6 @@ namespace Catalyst.Core.Modules.Kvm
                 }
             }
 
-            if (!readOnly)
-            {
-                _storageProvider.Commit(txTracer.IsTracingState ? txTracer : null);
-                _stateProvider.Commit(spec, txTracer.IsTracingState ? txTracer : null);
-                stateUpdate.GasUsed += (long) spentGas;
-            }
-            else
-            {
-                _storageProvider.Reset();
-                _stateProvider.Reset();
-            }
-
             if (txTracer.IsTracingReceipt)
             {
                 if (statusCode == StatusCode.Failure)
@@ -414,13 +406,11 @@ namespace Catalyst.Core.Modules.Kvm
 
         private (Address sender, Address recipient) ExtractSenderAndRecipient(PublicEntry entry)
         {
-            var sender = GetAccountAddress(entry.SenderAddress);
-            var recipient = entry.TargetContract == null
-                ? GetAccountAddress(entry.ReceiverAddress)
-                : new Address(entry.TargetContract);
+            var sender = entry.SenderAddress.ToAddress();
+            var recipient = entry.ReceiverAddress.ToAddress();
             if (entry.IsValidDeploymentEntry)
             {
-                recipient = Address.OfContract(sender, _stateProvider.GetNonce(sender));
+                recipient = ContractAddress.From(sender, _stateProvider.GetNonce(sender));
             }
 
             return (sender, recipient);

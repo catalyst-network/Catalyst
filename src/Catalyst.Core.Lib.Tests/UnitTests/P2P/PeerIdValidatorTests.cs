@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
@@ -31,43 +32,40 @@ using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
 {
-    public sealed class PeerIdValidatorTests
+    public class PeerIdValidatorTests
     {
-        private readonly ITestOutputHelper _output;
-        private readonly IPeerIdValidator _peerIdValidator;
-        private readonly PeerId _validPeerId;
+        private IPeerIdValidator _peerIdValidator;
+        private PeerId _validPeerId;
 
-        public PeerIdValidatorTests(ITestOutputHelper output)
+        [SetUp]
+        public void Init()
         {
-            _output = output;
             _validPeerId = PeerIdHelper.GetPeerId();
             _peerIdValidator = new PeerIdValidator(new FfiWrapper());
         }
 
-        [Fact]
+        [Test]
         public void Can_Validate_PeerId_Format()
         {
             _peerIdValidator.ValidatePeerIdFormat(_validPeerId);
 
-            _output.WriteLine(string.Join(" ", _validPeerId.ToByteArray()));
+            TestContext.WriteLine(string.Join(" ", _validPeerId.ToByteArray()));
             var fieldsInBytes = new[]
             {
                 _validPeerId.Ip.ToByteArray(), BitConverter.GetBytes(_validPeerId.Port),
                 _validPeerId.PublicKey.ToByteArray()
             };
-            _output.WriteLine(string.Join(" ", fieldsInBytes.SelectMany(b => b)));
+            TestContext.WriteLine(string.Join(" ", fieldsInBytes.SelectMany(b => b)));
         }
 
-        [Theory]
-        [InlineData(0)]
-        [InlineData(10)]
-        [InlineData(19)]
-        [InlineData(21)]
+        [TestCase(0)]
+        [TestCase(10)]
+        [TestCase(19)]
+        [TestCase(21)]
         public void Can_Throw_Argument_Exception_On_Invalid_Public_Key(int pubKeySize)
         {
             var invalidPeer = new PeerId(_validPeerId)
@@ -80,7 +78,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
             invalidPeer.PublicKey = new byte[21].ToByteString();
         }
 
-        private sealed class IpTestData : TheoryData<byte[]>
+        private sealed class IpTestData : List<byte[]>
         {
             public IpTestData()
             {
@@ -91,8 +89,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
             }
         }
 
-        [Theory]
-        [ClassData(typeof(IpTestData))]
+        [TestCaseSource(typeof(IpTestData))]
 
         //Todo: discuss if this is relevant: why do we enforce a given size for IPs (or anything) if proto handles it
         public void Can_Throw_Argument_Exception_On_Invalid_Ip(byte[] ipBytes)
@@ -106,11 +103,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
                .Should().Throw<ArgumentException>().WithMessage("*Ip*");
         }
 
-        [Theory]
-        [InlineData(0)]
-        [InlineData(1)]
-        [InlineData(1024)]
-        public void Can_Throw_Argument_Exception_On_Wrong_Port(ushort port)
+        [TestCase(0u)]
+        [TestCase(1u)]
+        [TestCase(1024u)]
+        public void Can_Throw_Argument_Exception_On_Wrong_Port(uint port)
         {
             var invalidPeer = new PeerId(_validPeerId)
             {

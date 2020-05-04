@@ -31,7 +31,7 @@ namespace Catalyst.Abstractions.Ledger.Models
     /// This class represent a user account of which there can be the following types:
     /// confidential account, non-confidential account and smart contract account
     /// </summary>
-    public interface IAccount : IDocument
+    public interface IAccount
     {
         /// <summary>
         /// The address used to identify the account.

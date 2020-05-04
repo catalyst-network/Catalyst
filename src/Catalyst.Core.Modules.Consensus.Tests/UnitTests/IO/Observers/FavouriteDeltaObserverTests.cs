@@ -25,6 +25,8 @@ using System.Linq;
 using System.Text;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Abstractions.P2P.Repository;
+using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Modules.Consensus.IO.Observers;
@@ -34,39 +36,46 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
+using MultiFormats;
+using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiBase;
-using TheDotNetLeague.MultiFormats.MultiHash;
-using Xunit;
+using NUnit.Framework;
+using Google.Protobuf;
+using System.Collections.Generic;
+using Catalyst.Core.Lib.P2P.Models;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
 {
     public sealed class FavouriteDeltaObserverTests
     {
-        private readonly IDeltaElector _deltaElector;
-        private readonly IChannelHandlerContext _fakeChannelContext;
-        private readonly PeerId _voterId;
-        private readonly PeerId _producerId;
-        private readonly FavouriteDeltaObserver _favouriteDeltaObserver;
-        private readonly byte[] _newHash;
-        private readonly byte[] _prevHash;
+        private IDeltaElector _deltaElector;
+        private IChannelHandlerContext _fakeChannelContext;
+        private PeerId _voterId;
+        private PeerId _producerId;
+        private FavouriteDeltaObserver _favouriteDeltaObserver;
+        private byte[] _newHash;
+        private byte[] _prevHash;
 
-        public FavouriteDeltaObserverTests()
+        [SetUp]
+        public void Init()
         {
-            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _deltaElector = Substitute.For<IDeltaElector>();
             _fakeChannelContext = Substitute.For<IChannelHandlerContext>();
             var logger = Substitute.For<ILogger>();
             _voterId = PeerIdHelper.GetPeerId("favourite delta voter");
             _producerId = PeerIdHelper.GetPeerId("candidate delta producer");
 
-            _favouriteDeltaObserver = new FavouriteDeltaObserver(_deltaElector, hashProvider, logger);
-            _newHash = MultiBase.Decode(hashProvider.ComputeUtf8MultiHash("newHash").CreateCid());
-            _prevHash = MultiBase.Decode(hashProvider.ComputeUtf8MultiHash("prevHash").CreateCid());
+            var peerRepository = Substitute.For<IPeerRepository>();
+            peerRepository.GetPeersByIpAndPublicKey(Arg.Any<ByteString>(), Arg.Any<ByteString>()).Returns(new List<Peer> { new Peer() });
+
+            _favouriteDeltaObserver = new FavouriteDeltaObserver(_deltaElector, new SyncState() { IsSynchronized = true }, peerRepository, hashProvider, logger);
+            _newHash = MultiBase.Decode(hashProvider.ComputeUtf8MultiHash("newHash").ToCid());
+            _prevHash = MultiBase.Decode(hashProvider.ComputeUtf8MultiHash("prevHash").ToCid());
         }
 
-        [Fact]
+        [Test]
         public void HandleBroadcast_Should_Cast_Hashes_To_Multihash_And_Send_To_Voter()
         {
             var receivedMessage = PrepareReceivedMessage(_newHash, _prevHash, _producerId, _voterId);
@@ -79,7 +88,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
              && c.Candidate.ProducerId.Equals(_producerId)));
         }
 
-        [Fact]
+        [Test]
         public void HandleBroadcast_Should_Not_Try_Forwarding_Invalid_Hash()
         {
             var invalidNewHash = Encoding.UTF8.GetBytes("invalid hash");
@@ -91,7 +100,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _deltaElector.DidNotReceiveWithAnyArgs().OnNext(default);
         }
 
-        [Fact]
+        [Test]
         public void HandleBroadcast_Should_Not_Try_Forwarding_Invalid_PreviousHash()
         {
             var invalidPrevHash = Encoding.UTF8.GetBytes("invalid previous hash");

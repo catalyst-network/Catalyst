@@ -41,7 +41,7 @@ using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Correlation
 {
@@ -115,7 +115,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Correlation
             CacheEntriesByRequest.Add(correlationId, cacheEntry);
         }
 
-        [Fact]
+        [Test]
         public virtual void New_Entries_Should_Be_Added_With_Individual_Entry_Options()
         {
             PendingRequests.ForEach(p => AddCreateEntryExpectation(p.Content.CorrelationId));
@@ -185,7 +185,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Correlation
             request.Should().BeFalse();
         }
 
-        [Fact]
+        [Test]
         public void UncorrelatedMessage_Should_Not_Propagate_To_Next_Pipeline()
         {
             var correlationManager = Substitute.For<IMessageCorrelationManager>();
@@ -200,7 +200,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Correlation
             channelHandlerContext.DidNotReceive().FireChannelRead(nonCorrelatedMessage);
         }
 
-        [Fact]
+        [Test]
         public void TryMatchResponseAsync_Should_Not_Match_On_Wrong_Response_Type()
         {
             var matchingRequest = PendingRequests[2].Content;

@@ -22,20 +22,27 @@
 #endregion
 
 using Catalyst.Abstractions.Kvm;
-using Catalyst.Protocol.Deltas;
-using Nethermind.Core.Crypto;
+using Catalyst.Abstractions.Ledger;
+using Catalyst.Core.Lib.Service;
+using Lib.P2P;
 
 namespace Catalyst.Core.Modules.Ledger
 {
-    public class DeltaResolver : IDeltaResolver
+    public sealed class DeltaResolver : IDeltaResolver
     {
-        public Keccak Resolve(int deltaNumber)
+        readonly IDeltaIndexService _deltaIndexService;
+        readonly ILedger _ledger;
+
+        public DeltaResolver(IDeltaIndexService deltaIndexService, ILedger ledger)
         {
-            throw new System.NotImplementedException();
+            _deltaIndexService = deltaIndexService;
+            _ledger = ledger;
         }
 
-        public Delta Latest { get; }
-        public Delta Earliest { get; }
-        public Delta Pending { get; }
+        public bool TryResolve(long deltaNumber, out Cid deltaHash) => _deltaIndexService.TryFind(deltaNumber, out deltaHash);
+
+        public long LatestDeltaNumber => _ledger.LatestKnownDeltaNumber;
+
+        public Cid LatestDelta => _ledger.LatestKnownDelta;
     }
 }

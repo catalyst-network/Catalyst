@@ -30,7 +30,7 @@ using DotNetty.Handlers.Tls;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
 using NSubstitute;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport.Channels
 {
@@ -45,7 +45,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport.Channels
 
         private readonly ClientChannelInitializerBase<IChannel> _clientChannelInitializerBase;
 
-        [Fact]
+        [Test]
         public void NewTlsHandler_With_Correct_Parameters_Should_Return_TlsHandler()
         {
             var tlsHandler =
@@ -53,28 +53,28 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport.Channels
             tlsHandler.Should().BeOfType<TlsHandler>();
         }
 
-        [Fact]
+        [Test]
         public void NewTlsHandler_With_Null_Parameters_Should_Return_Null()
         {
             var tlsHandler = _clientChannelInitializerBase.NewTlsHandler(null, null);
             tlsHandler.Should().BeNull();
         }
 
-        [Fact]
+        [Test]
         public void NewTlsHandler_With_Null_TargetHost_Should_Return_Null()
         {
             var tlsHandler = _clientChannelInitializerBase.NewTlsHandler(null, Substitute.For<X509Certificate>());
             tlsHandler.Should().BeNull();
         }
 
-        [Fact]
+        [Test]
         public void NewTlsHandler_With_Null_X509Certificate_Should_Return_Null()
         {
             var tlsHandler = _clientChannelInitializerBase.NewTlsHandler(IPAddress.Any, null);
             tlsHandler.Should().BeNull();
         }
 
-        [Fact]
+        [Test]
         public void When_ToString_Is_Called_Return_Custom_String()
         {
             const string targetValue = "OutboundInitializer[IChannel]";

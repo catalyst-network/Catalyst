@@ -351,3 +351,4 @@ Icon?
 Thumbs.db
 
 *.lock
+src/Catalyst.Core.Modules.Ledger.Tests/IntegrationTests/TruffleTest/build/

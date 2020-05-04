@@ -24,13 +24,13 @@
 using System.Reactive.Concurrency;
 using Catalyst.Core.Modules.Consensus.Cycle;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
 {
     public sealed class CycleSchedulerProviderTests
     {
-        [Fact]
+        [Test]
         public void Scheduler_Should_Be_The_Default_TaskPoolScheduler()
         {
             var provider = new CycleSchedulerProvider();

@@ -22,7 +22,7 @@
 #endregion
 
 using System.Linq;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Lib.Util;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;

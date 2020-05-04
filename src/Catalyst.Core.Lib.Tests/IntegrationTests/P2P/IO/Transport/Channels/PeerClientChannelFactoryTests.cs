@@ -36,16 +36,19 @@ using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
+using Catalyst.TestUtils.Fakes;
 using DotNetty.Transport.Channels.Embedded;
 using DotNetty.Transport.Channels.Sockets;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class PeerClientChannelFactoryTests
     {
         private readonly TestScheduler _testScheduler;
@@ -100,9 +103,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
                 new EmbeddedChannel("client".ToChannelId(), true, _clientFactory.InheritedHandlers.ToArray());
         }
         
-        [Fact]
-        [Trait(Traits.TestType, Traits.IntegrationTest)]
-        public async Task
+        [Test]
+public async Task
             PeerClientChannelFactory_Pipeline_Should_Produce_Request_Object_PeerClientChannelFactory_Can_Process()
         {
             var recipient = PeerIdHelper.GetPeerId("recipient");

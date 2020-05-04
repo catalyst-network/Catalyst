@@ -28,7 +28,7 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Account;
 using Catalyst.Protocol.Network;
-using TheDotNetLeague.MultiFormats.MultiHash;
+using MultiFormats.Registry;
 
 namespace Catalyst.TestUtils.Protocol
 {
@@ -38,7 +38,7 @@ namespace Catalyst.TestUtils.Protocol
             NetworkType networkType = NetworkType.Devnet,
             AccountType accountType = AccountType.PublicAccount)
         {
-            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
             var address = new Address
             {

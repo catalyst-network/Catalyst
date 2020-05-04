@@ -21,7 +21,7 @@
 
 #endregion
 
-using Nethermind.Core.Model;
+using Nethermind.Core;
 
 namespace Catalyst.Abstractions.Kvm.Models
 {

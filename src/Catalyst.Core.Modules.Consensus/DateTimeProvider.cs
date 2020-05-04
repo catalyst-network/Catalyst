@@ -27,7 +27,7 @@ using Catalyst.Abstractions.Consensus;
 namespace Catalyst.Core.Modules.Consensus
 {
     /// <inheritdoc />
-    public class DateTimeProvider : IDateTimeProvider
+    public sealed class DateTimeProvider : IDateTimeProvider
     {
         /// <inheritdoc />
         public DateTime UtcNow => DateTime.UtcNow;

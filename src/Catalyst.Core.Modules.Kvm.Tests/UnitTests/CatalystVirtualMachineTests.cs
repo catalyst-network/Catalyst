@@ -21,17 +21,21 @@
 
 #endregion
 
+using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Core.Modules.Hashing;
+using MultiFormats.Registry;
 using Nethermind.Evm;
 using Nethermind.Logging;
-using Nethermind.Store;
+using Nethermind.State;
 using NSubstitute;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Kvm.Tests.UnitTests
 {
+    [TestFixture]
     public sealed class CatalystVirtualMachineTests
     {
-        [Fact]
+        [Test]
         public void Catalyst_virtual_machine_can_be_initialized()
         {
             var virtualMachine = new KatVirtualMachine(
@@ -39,6 +43,8 @@ namespace Catalyst.Core.Modules.Kvm.Tests.UnitTests
                 Substitute.For<IStorageProvider>(),
                 Substitute.For<IStateUpdateHashProvider>(),
                 new CatalystSpecProvider(),
+                new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256")),
+                new FfiWrapper(), 
                 LimboLogs.Instance);
             Assert.NotNull(virtualMachine);
         }

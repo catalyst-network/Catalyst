@@ -47,7 +47,7 @@ using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
 {
@@ -94,14 +94,14 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
 
         private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _mockSocketReplySubject;
 
-        [Fact]
+        [Test]
         public async Task SubscribeToResponse_Should_Not_Return_Invalid_Response()
         {
             var nodeRpcClientFactory = new RpcClientFactory(_channelFactory, _clientEventLoopGroupFactory,
-                new List<IRpcResponseObserver> {new GetVersionResponseObserver(_logger)});
+                new List<IRpcResponseObserver> { new GetVersionResponseObserver(_logger) });
             var nodeRpcClient = await nodeRpcClientFactory.GetClientAsync(null, _rpcClientConfig);
             var receivedResponse = false;
-            var targetVersionResponse = new VersionResponse {Version = "1.2.3.4"};
+            var targetVersionResponse = new VersionResponse { Version = "1.2.3.4" };
             var protocolMessage =
                 targetVersionResponse.ToProtocolMessage(_peerIdentifier, CorrelationId.GenerateCorrelationId());
             var observerDto = new ObserverDto(_channelHandlerContext, protocolMessage);
@@ -113,14 +113,14 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
             receivedResponse.Should().BeFalse();
         }
 
-        [Fact]
+        [Test]
         public async Task SubscribeToResponse_Should_Return_Response()
         {
             var nodeRpcClientFactory = new RpcClientFactory(_channelFactory, _clientEventLoopGroupFactory,
-                new List<IRpcResponseObserver> {new GetVersionResponseObserver(_logger)});
+                new List<IRpcResponseObserver> { new GetVersionResponseObserver(_logger) });
             var nodeRpcClient = await nodeRpcClientFactory.GetClientAsync(null, _rpcClientConfig);
             VersionResponse returnedVersionResponse = null;
-            var targetVersionResponse = new VersionResponse {Version = "1.2.3.4"};
+            var targetVersionResponse = new VersionResponse { Version = "1.2.3.4" };
             var protocolMessage =
                 targetVersionResponse.ToProtocolMessage(_peerIdentifier, CorrelationId.GenerateCorrelationId());
             var observerDto = new ObserverDto(_channelHandlerContext, protocolMessage);
@@ -132,25 +132,23 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
             targetVersionResponse.Should().Be(returnedVersionResponse);
         }
 
-        [Fact]
+        [Test]
         public async Task SubscribeToResponse_Without_Response_Handler_Should_Throw_Exception()
         {
             var nodeRpcClientFactory = new RpcClientFactory(_channelFactory, _clientEventLoopGroupFactory,
                 new List<IRpcResponseObserver>());
             var nodeRpcClient = await nodeRpcClientFactory.GetClientAsync(null, _rpcClientConfig);
-            var targetVersionResponse = new VersionResponse {Version = "1.2.3.4"};
+            var targetVersionResponse = new VersionResponse { Version = "1.2.3.4" };
             var protocolMessage =
                 targetVersionResponse.ToProtocolMessage(_peerIdentifier, CorrelationId.GenerateCorrelationId());
             var observerDto = new ObserverDto(_channelHandlerContext, protocolMessage);
 
-            var exception = Record.Exception(() =>
+            Assert.Throws<ResponseHandlerDoesNotExistException>(() =>
             {
                 _mockSocketReplySubject.OnNext(observerDto);
                 nodeRpcClient.SubscribeToResponse<VersionResponse>(response => { });
                 _testScheduler.Start();
             });
-
-            exception.Should().BeOfType<ResponseHandlerDoesNotExistException>();
         }
     }
 }

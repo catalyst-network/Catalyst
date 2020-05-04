@@ -28,13 +28,13 @@ using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
 {
     public sealed class RequestObserverBaseTests
     {
-        [Fact]
+        [Test]
         public void OnNext_Should_Still_Get_Called_After_HandleBroadcast_Failure()
         {
             var testScheduler = new TestScheduler();

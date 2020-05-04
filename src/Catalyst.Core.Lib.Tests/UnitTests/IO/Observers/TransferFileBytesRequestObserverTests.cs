@@ -38,17 +38,18 @@ using Google.Protobuf;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
 {
     public sealed class TransferFileBytesRequestObserverTests
     {
-        private readonly TransferFileBytesRequestObserver _observer;
-        private readonly IDownloadFileTransferFactory _downloadFileTransferFactory;
-        private readonly IChannelHandlerContext _context;
+        private TransferFileBytesRequestObserver _observer;
+        private IDownloadFileTransferFactory _downloadFileTransferFactory;
+        private IChannelHandlerContext _context;
 
-        public TransferFileBytesRequestObserverTests()
+        [SetUp]
+        public void Init()
         {
             _context = Substitute.For<IChannelHandlerContext>();
             _context.Channel.Returns(Substitute.For<IChannel>());
@@ -59,7 +60,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
                 Substitute.For<ILogger>());
         }
 
-        [Fact]
+        [Test]
         public void CanHandlerDownloadChunk()
         {
             var guid = CorrelationId.GenerateCorrelationId();
@@ -77,7 +78,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
             _downloadFileTransferFactory.Received(1).DownloadChunk(Arg.Any<TransferFileBytesRequest>());
         }
 
-        [Fact]
+        [Test]
         public void HandlerCanSendErrorOnException()
         {
             var testScheduler = new TestScheduler();

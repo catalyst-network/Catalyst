@@ -32,7 +32,7 @@ using Module = Autofac.Module;
 
 namespace Catalyst.Modules.Server.Blazor
 {
-    public class BlazorServerModule : Module
+    public sealed class BlazorServerModule : Module
     {
         public static void Main(string[] args) { }
 

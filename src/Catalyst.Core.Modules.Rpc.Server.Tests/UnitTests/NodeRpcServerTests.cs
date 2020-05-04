@@ -46,7 +46,7 @@ using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
 {
@@ -82,13 +82,13 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
         private readonly IRpcServerSettings _rpcServerSettings;
         private readonly IChannelHandlerContext _channelHandlerContext;
 
-        [Fact]
+        [Test]
         public void Get_Settings_From_RpcServer_Should_Return_Settings()
         {
             _rpcServer.Settings.Should().Be(_rpcServerSettings);
         }
 
-        [Fact]
+        [Test]
         public async Task Subscribe_To_Message_Stream_Should_Return_VersionRequest()
         {
             await _rpcServer.StartAsync();

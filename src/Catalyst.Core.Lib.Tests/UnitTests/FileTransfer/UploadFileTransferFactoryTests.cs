@@ -28,22 +28,22 @@ using Catalyst.Core.Lib.FileTransfer;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.FileTransfer
 {
     public class UploadFileTransferFactoryTests
     {
-        private readonly IUploadFileTransferFactory _uploadFileTransferFactory;
+        private IUploadFileTransferFactory _uploadFileTransferFactory;
 
-        public UploadFileTransferFactoryTests()
+        [SetUp]
+        public void Init()
         {
             _uploadFileTransferFactory = new UploadFileTransferFactory(Substitute.For<ILogger>());
         }
 
-        [Theory]
-        [InlineData(2)]
-        [InlineData(3)]
+        [TestCase(2u)]
+        [TestCase(3u)]
         public async Task Can_Upload_File(uint numberOfChunks)
         {
             var uploadFileInformation = Substitute.For<IUploadFileInformation>();

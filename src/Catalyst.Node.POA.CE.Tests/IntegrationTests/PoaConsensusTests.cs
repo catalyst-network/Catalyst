@@ -29,59 +29,68 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Autofac;
-using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Util;
+using Catalyst.Abstractions.FileSystem;
 using Catalyst.Core.Modules.Consensus.Cycle;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Core.Modules.Hashing;
-using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Google.Protobuf;
-using TheDotNetLeague.MultiFormats.MultiHash;
-using Xunit;
-using Xunit.Abstractions;
+using NSubstitute;
+using NUnit.Framework;
 
 namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class PoaConsensusTests : FileSystemBasedTest
     {
-        private readonly CancellationTokenSource _endOfTestCancellationSource;
-        private readonly ILifetimeScope _scope;
-        private readonly List<PoaTestNode> _nodes;
+        private CancellationTokenSource _endOfTestCancellationSource;
+        private List<PoaTestNode> _nodes;
 
-        public PoaConsensusTests(ITestOutputHelper output) : base(output)
+        [SetUp]
+        public void Init()
         {
+            this.Setup(TestContext.CurrentContext);
+
             ContainerProvider.ConfigureContainerBuilder(true, true, true);
-            _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);
 
             var context = new FfiWrapper();
 
             _endOfTestCancellationSource = new CancellationTokenSource();
 
             var poaNodeDetails = Enumerable.Range(0, 3).Select(i =>
-                {
-                    var privateKey = context.GeneratePrivateKey();
-                    var publicKey = privateKey.GetPublicKey();
-                    var nodeSettings = PeerSettingsHelper.TestPeerSettings(publicKey.Bytes, 2000 + i);
-                    var peerIdentifier = nodeSettings.PeerId;
-                    var name = $"producer{i.ToString()}";
-                    return new {index = i, name, privateKey, nodeSettings, peerIdentifier};
-                }
+            {
+                var fileSystem = Substitute.For<IFileSystem>();
+                var path = Path.Combine(FileSystem.GetCatalystDataDir().FullName, $"producer{i}");
+                fileSystem.GetCatalystDataDir().Returns(new DirectoryInfo(path));
+
+                var privateKey = context.GeneratePrivateKey();
+                var publicKey = privateKey.GetPublicKey();
+                var nodeSettings = PeerSettingsHelper.TestPeerSettings(publicKey.Bytes, 2000 + i);
+                var peerIdentifier = nodeSettings.PeerId;
+                var name = $"producer{i.ToString()}";
+                var dfs = TestDfs.GetTestDfs(fileSystem);
+                return new { index = i, name, privateKey, nodeSettings, peerIdentifier, dfs, fileSystem };
+            }
             ).ToList();
 
             var peerIdentifiers = poaNodeDetails.Select(n => n.peerIdentifier).ToList();
 
-            _nodes = poaNodeDetails.Select(
-                p => new PoaTestNode($"producer{p.index.ToString()}",
-                    p.privateKey,
-                    p.nodeSettings,
-                    peerIdentifiers.Except(new[] {p.peerIdentifier}),
-                    FileSystem,
-                    output)).ToList();
+            _nodes = new List<PoaTestNode>();
+            foreach (var nodeDetails in poaNodeDetails)
+            {
+                nodeDetails.dfs.Options.Discovery.BootstrapPeers = poaNodeDetails.Select(x => x.dfs.LocalPeer.Addresses.First());
+                var node = new PoaTestNode(nodeDetails.name,
+                    nodeDetails.privateKey,
+                    nodeDetails.nodeSettings,
+                    nodeDetails.dfs,
+                    peerIdentifiers.Except(new[] { nodeDetails.peerIdentifier }),
+                    nodeDetails.fileSystem);
+
+                _nodes.Add(node);
+            }
         }
 
-        [Fact]
+        [Test]
         public async Task Run_ConsensusAsync()
         {
             _nodes.AsParallel()
@@ -93,29 +102,26 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 
             await Task.Delay(Debugger.IsAttached
                     ? TimeSpan.FromHours(3)
-                    : CycleConfiguration.Default.CycleDuration.Multiply(1.3))
+                    : CycleConfiguration.Default.CycleDuration.Multiply(2.3))
                .ConfigureAwait(false);
 
-            var dfsDir = Path.Combine(FileSystem.GetCatalystDataDir().FullName, "dfs");
-            Directory.GetFiles(dfsDir).Length.Should().Be(1,
-                "only the elected producer should score high enough to see his block elected.");
+            //At least one delta should be produced
+            var maxDeltasProduced = 1;
+            var files = new List<string>();
+            for (var i = 0; i < _nodes.Count; i++)
+            {
+                var dfsDir = Path.Combine(FileSystem.GetCatalystDataDir().FullName, $"producer{i}/dfs", "blocks");
+                var deltaFiles = Directory.GetFiles(dfsDir).Select(x => new FileInfo(x).Name).ToList();
+                maxDeltasProduced = Math.Max(maxDeltasProduced, deltaFiles.Count());
+                files.AddRange(deltaFiles);
+            }
+
+            files.Distinct().Count().Should().Be(maxDeltasProduced,
+                "only the elected producer should score high enough to see his block elected. Found: " +
+                files.Aggregate((x, y) => x + "," + y));
 
             _endOfTestCancellationSource.CancelAfter(TimeSpan.FromMinutes(3));
         }
-
-        protected override void Dispose(bool disposing)
-        {
-            base.Dispose(disposing);
-            if (!disposing) return;
-
-            if (_endOfTestCancellationSource.Token.IsCancellationRequested
-             && _endOfTestCancellationSource.Token.CanBeCanceled)
-                _endOfTestCancellationSource.Cancel();
-
-            _endOfTestCancellationSource.Dispose();
-            _nodes.AsParallel().ForAll(n => n.Dispose());
-
-            _scope.Dispose();
-        }
+        
     }
 }

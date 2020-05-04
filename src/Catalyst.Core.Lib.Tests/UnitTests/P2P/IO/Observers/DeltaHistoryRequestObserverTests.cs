@@ -24,10 +24,12 @@
 using System;
 using System.Reactive.Linq;
 using System.Threading.Tasks;
+using Catalyst.Core.Lib.DAO.Ledger;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.IO.Observers;
+using Catalyst.Core.Lib.Service;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Deltas;
@@ -36,10 +38,11 @@ using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Microsoft.Reactive.Testing;
+using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
-using Xunit;
+using SharpRepository.InMemoryRepository;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 {
@@ -55,14 +58,16 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _subbedLogger = Substitute.For<ILogger>();
             
             var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
-            
+            var deltaIndexService = new DeltaIndexService(new InMemoryRepository<DeltaIndexDao, string>());
+
             _deltaHistoryRequestObserver = new DeltaHistoryRequestObserver(peerSettings,
-                _subbedLogger,
-                new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"))
+                deltaIndexService,
+                new TestMapperProvider(), 
+                _subbedLogger
             );
         }
 
-        [Fact]
+        [Test]
         public async Task Can_Process_DeltaHeightRequest_Correctly()
         {
             var fakeContext = Substitute.For<IChannelHandlerContext>();
@@ -80,7 +85,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _testScheduler.Start();
 
             var response = new DeltaHistoryResponse();
-            var hp = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            var hp = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             var lastDeltaHash = hp.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32));
 
             for (uint x = 0; x < 10; x++)
@@ -96,7 +101,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
                     Cid = delta.ToByteString()
                 };
 
-                response.Result.Add(index);
+                response.DeltaIndex.Add(index);
                 lastDeltaHash = hp.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32));
             }
             

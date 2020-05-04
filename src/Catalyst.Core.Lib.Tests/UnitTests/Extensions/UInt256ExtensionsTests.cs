@@ -24,13 +24,14 @@
 using Catalyst.Core.Lib.Extensions;
 using FluentAssertions;
 using Nethermind.Dirichlet.Numerics;
-using Xunit;
+using NUnit.Framework;
+using System.Collections.Generic;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Extensions
 {
     public class UInt256ExtensionsTests
     {
-        private sealed class UInt256ConversionTestData : TheoryData<UInt256>
+        private sealed class UInt256ConversionTestData : List<UInt256>
         {
             public UInt256ConversionTestData()
             {
@@ -44,8 +45,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Extensions
             }
         }
 
-        [Theory]
-        [ClassData(typeof(UInt256ConversionTestData))]
+        [TestCaseSource(typeof(UInt256ConversionTestData))]
         public void UInt256_ToByteString_And_Back_Should_Keep_Value_Intact(UInt256 bigInt)
         {
             var x = (UInt256) 234;

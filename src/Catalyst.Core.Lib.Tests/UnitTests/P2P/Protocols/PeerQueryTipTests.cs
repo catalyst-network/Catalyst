@@ -31,22 +31,25 @@ using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using MultiFormats;
 using NSubstitute;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
+
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
 {
     public sealed class PeerQueryTipTests : SelfAwareTestBase
     {
-        private readonly IPeerQueryTipRequest _peerQueryTipRequest;
-        private readonly IPeerSettings _testSettings;
-        private readonly CancellationTokenProvider _cancellationProvider;
+        private IPeerQueryTipRequest _peerQueryTipRequest;
+        private IPeerSettings _testSettings;
+        private CancellationTokenProvider _cancellationProvider;
 
-        public PeerQueryTipTests(ITestOutputHelper output) : base(output)
+        [SetUp]
+        public void Init()
         {
+            this.Setup(TestContext.CurrentContext);
+
             var subbedPeerClient = Substitute.For<IPeerClient>();
             _testSettings = PeerSettingsHelper.TestPeerSettings();
             _cancellationProvider = new CancellationTokenProvider(TimeSpan.FromSeconds(10));
@@ -59,7 +62,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
             );
         }
 
-        [Fact]
+        [Test]
         public async Task Can_Query_Expected_Peer()
         {
             var recipientPeerId = PeerIdHelper.GetPeerId();
@@ -70,7 +73,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
             _peerQueryTipRequest.PeerClient.ReceivedWithAnyArgs(1).SendMessage(Arg.Is(expectedDto));
         }
 
-        [Fact]
+        [Test]
         public async Task Can_Receive_Query_Response_On_Observer()
         {
             var recipientPeerId = PeerIdHelper.GetPeerId();
@@ -83,7 +86,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
             response.Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public async Task No_Response_Timeout_And_Returns_False()
         {
             var recipientPeerId = PeerIdHelper.GetPeerId();
@@ -92,7 +95,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
             response.Should().BeFalse();
         }
 
-        [Fact]
+        [Test]
         public async Task Exception_During_Query_Returns_Null()
         {
             var recipientPeerId = PeerIdHelper.GetPeerId();

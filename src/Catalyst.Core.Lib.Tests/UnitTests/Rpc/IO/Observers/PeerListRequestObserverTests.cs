@@ -28,7 +28,7 @@ using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.P2P.Models;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Wire;
@@ -38,7 +38,7 @@ using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -48,10 +48,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
     public sealed class PeerListRequestObserverTests
     {
         /// <summary>The logger</summary>
-        private readonly ILogger _logger;
+        private ILogger _logger;
 
         /// <summary>The fake channel context</summary>
-        private readonly IChannelHandlerContext _fakeContext;
+        private IChannelHandlerContext _fakeContext;
 
         /// <summary>
         ///     Initializes a new instance of the
@@ -60,7 +60,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         ///     </see>
         ///     class.
         /// </summary>
-        public PeerListRequestObserverTests()
+        [SetUp]
+        public void Init()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
@@ -72,9 +73,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         ///     Tests the peer list request and response.
         /// </summary>
         /// <param name="fakePeers">The fake peers.</param>
-        [Theory]
-        [InlineData("FakePeer1", "FakePeer2")]
-        [InlineData("FakePeer1002", "FakePeer6000", "FakePeerSataoshi")]
+        [TestCase("FakePeer1", "FakePeer2")]
+        [TestCase("FakePeer1002", "FakePeer6000", "FakePeerSataoshi")]
         public void TestPeerListRequestResponse(params string[] fakePeers)
         {
             var testScheduler = new TestScheduler();
