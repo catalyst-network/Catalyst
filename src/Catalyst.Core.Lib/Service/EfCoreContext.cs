@@ -28,7 +28,7 @@ using Catalyst.Core.Lib.DAO.Peer;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Microsoft.EntityFrameworkCore;
 
-namespace Catalyst.Core.Lib.Repository
+namespace Catalyst.Core.Lib.Service
 {
     public interface IDbContext : IDisposable
     {

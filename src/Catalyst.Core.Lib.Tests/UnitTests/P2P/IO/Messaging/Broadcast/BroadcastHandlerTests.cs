@@ -30,25 +30,27 @@ using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
+using Catalyst.TestUtils.Fakes;
 using Catalyst.TestUtils.Protocol;
 using DotNetty.Transport.Channels.Embedded;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using NSubstitute.ReceivedExtensions;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
 {
     public sealed class BroadcastHandlerTests
     {
-        private readonly IBroadcastManager _fakeBroadcastManager;
-        private readonly BroadcastHandler _broadcastHandler;
-        private readonly FakeKeySigner _keySigner;
-        private readonly ProtocolMessage _broadcastMessageSigned;
-        private readonly SigningContext _signingContext;
+        private IBroadcastManager _fakeBroadcastManager;
+        private BroadcastHandler _broadcastHandler;
+        private FakeKeySigner _keySigner;
+        private ProtocolMessage _broadcastMessageSigned;
+        private SigningContext _signingContext;
 
-        public BroadcastHandlerTests()
+        [SetUp]
+        public void Init()
         {
             _keySigner = Substitute.For<FakeKeySigner>();
             _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default).ReturnsForAnyArgs(true);
@@ -67,7 +69,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
                .ToSignedProtocolMessage(peerId, fakeSignature, _signingContext);
         }
 
-        [Fact]
+        [Test]
         public async Task Broadcast_Handler_Can_Notify_Manager_On_Incoming_Broadcast()
         {
             EmbeddedChannel channel = new EmbeddedChannel(
@@ -82,7 +84,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
                .ReceiveAsync(Arg.Any<ProtocolMessage>());
         }
 
-        [Fact]
+        [Test]
         public void Broadcast_Can_Execute_Proto_Handler()
         {
             var testScheduler = new TestScheduler();

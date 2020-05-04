@@ -28,9 +28,9 @@ using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Transaction;
 using FluentAssertions;
+using MultiFormats.Registry;
 using Google.Protobuf;
-using TheDotNetLeague.MultiFormats.MultiHash;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
 {
@@ -47,16 +47,16 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
             _container.BeginLifetimeScope();
         }
 
-        [Fact]
+        [Test]
         public void HashProvider_Can_Be_Resolved() { _container.Resolve<IHashProvider>().Should().NotBeNull(); }
 
-        [Fact]
+        [Test]
         public void MultihashAlgorithm_Can_Be_Resolved()
         {
             _container.Resolve<HashingAlgorithm>().Should().NotBeNull();
         }
 
-        [Fact]
+        [Test]
         public void Can_Hash_Data()
         {
             var hashProvider = _container.Resolve<IHashProvider>();
@@ -65,7 +65,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
             multiHash.Should().NotBeNull();
         }
 
-        [Fact]
+        [Test]
         public void Hashes_messages()
         {
             var hashProvider = _container.Resolve<IHashProvider>();
@@ -77,7 +77,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
             arrayHash.ToArray().Should().BeEquivalentTo(messageHash.ToArray());
         }
 
-        [Fact]
+        [Test]
         public void Hashes_messages_with_suffix()
         {
             var hashProvider = _container.Resolve<IHashProvider>();

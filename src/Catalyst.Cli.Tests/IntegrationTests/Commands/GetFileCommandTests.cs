@@ -31,11 +31,12 @@ using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class GetFileCommandTests : CliCommandTestsBase
     {
         public static IEnumerable<object[]> GetFileData =>
@@ -45,10 +46,14 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
                     {"/fake_file_hash", AppDomain.CurrentDomain.BaseDirectory + "/Config/addfile_test.json", true}
             };
 
-        public GetFileCommandTests(ITestOutputHelper output) : base(output) { }
+        [SetUp]
+        public void Init()
+        {
+            Setup(TestContext.CurrentContext);
+        }
 
         [Theory]
-        [MemberData(nameof(GetFileData))]
+        [TestCaseSource(nameof(GetFileData))]
         public async Task Cli_Can_Send_Get_File_Request(string fileHash, string outputPath, bool expectedResult)
         {
             var downloadFileFactory = Scope.Resolve<IDownloadFileTransferFactory>();

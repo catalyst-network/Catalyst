@@ -24,13 +24,13 @@
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
 {
     public sealed class KeyUtilTest
     {
-        [Fact]
+        [Test]
         public void Can_Encode_And_Decode_Correctly()
         {
             var cryptoContext = new FfiWrapper();

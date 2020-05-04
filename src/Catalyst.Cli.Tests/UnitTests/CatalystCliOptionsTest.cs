@@ -26,7 +26,7 @@ using System.Collections.Generic;
 using System.IO;
 using Catalyst.Cli.Options;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.UnitTests
 {
@@ -58,8 +58,7 @@ namespace Catalyst.Cli.Tests.UnitTests
 
         public CatalystCliOptionsTest() { _changeDataFolderOptions = new ChangeDataFolderOptions(); }
 
-        [Theory]
-        [MemberData(nameof(WorkingPaths))]
+        [TestCaseSource(nameof(WorkingPaths))]
         public void ChangeDataFolder_Set_Data_Folder_Property_Valid_Path_Must_Store_Successfully(string path)
         {
             _changeDataFolderOptions.DataFolder = path;
@@ -67,10 +66,9 @@ namespace Catalyst.Cli.Tests.UnitTests
             _changeDataFolderOptions.DataFolder.Should().Be(path);
         }
 
-        [Theory]
-        [InlineData("'q*Pen\0'cilL:\\123\\fak / e'")]
-        [InlineData("'phmtbt*\0 3 / lopg'")]
-        [InlineData(
+        [TestCase("'q*Pen\0'cilL:\\123\\fak / e'")]
+        [TestCase("'phmtbt*\0 3 / lopg'")]
+        [TestCase(
             "'\0/gthgt5\000*\0 3 / woigwogmom4t4040gkwvkinwewowegmvowpmgopweWe will WIN anyway, but it would be much easier if the g5 undergmowgewgwgwegwegegegeg'")]
         public void ChangeDataFolder_Does_Not_Set_Data_Folder_Property_Invalid_Path(string path)
         {

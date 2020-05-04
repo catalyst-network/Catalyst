@@ -26,13 +26,13 @@ using System.Linq;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
 {
     public static class EnumerableExtensionTests
     {
-        [Fact]
+        [Test]
         public static void RandomElementReturnsCorrectTypeOfString()
         {
             var randomList = new List<string>();
@@ -42,7 +42,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
             returnedElement.Should().BeOfType<string>();
         }
 
-        [Fact]
+        [Test]
         public static void RandomElementReturnsCorrectTypeOfBool()
         {
             var randomList = new List<bool> {false};
@@ -51,7 +51,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
             returnedElement.Should().BeFalse();
         }
 
-        [Fact]
+        [Test]
         public static void GetARandomElement()
         {
             var randomList = new List<string>();

@@ -29,7 +29,7 @@ using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using SharpRepository.InMemoryRepository;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Authentication.Tests.Repository
 {
@@ -52,13 +52,13 @@ namespace Catalyst.Core.Modules.Authentication.Tests.Repository
             _repositoryAuthenticationStrategy = new RepositoryAuthenticationStrategy(whiteListRepo);
         }
 
-        [Fact]
+        [Test]
         public void Can_Validate_Trusted_Peer()
         {
             _repositoryAuthenticationStrategy.Authenticate(_trustedPeer).Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void Can_Invalidate_Untrusted_Peer()
         {
             _repositoryAuthenticationStrategy.Authenticate(PeerIdHelper.GetPeerId("NotTrusted"))

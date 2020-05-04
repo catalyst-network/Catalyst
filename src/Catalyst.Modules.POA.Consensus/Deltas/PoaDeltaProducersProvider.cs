@@ -25,14 +25,15 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Protocol.Peer;
 using Dawn;
-using LibP2P;
+using Lib.P2P;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using Serilog;
@@ -45,7 +46,6 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
         private static string GetCacheKey(string rawKey) { return nameof(PoaDeltaProducersProvider) + "-" + rawKey; }
 
         private readonly ILogger _logger;
-
         private readonly IMemoryCache _producersByPreviousDelta;
         private readonly MemoryCacheEntryOptions _cacheEntryOptions;
         private readonly Peer _selfAsPeer;
@@ -61,13 +61,14 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
             ILogger logger)
         {
             _logger = logger;
-            _selfAsPeer = new Peer {PeerId = peerSettings.PeerId};
+            _selfAsPeer = new Peer { PeerId = peerSettings.PeerId };
             PeerRepository = peerRepository;
             _hashProvider = hashProvider;
             _cacheEntryOptions = new MemoryCacheEntryOptions()
                .AddExpirationToken(
                     new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(3)).Token));
             _producersByPreviousDelta = producersByPreviousDelta;
+
         }
 
         public IList<PeerId> GetDeltaProducersFromPreviousDelta(Cid previousDeltaHash)
@@ -85,7 +86,7 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
             _logger.Information("Calculating favourite delta producers for the successor of {0}.",
                 previousDeltaHash);
 
-            var allPeers = PeerRepository.GetAll().Concat(new[] {_selfAsPeer});
+            var allPeers = PeerRepository.GetActivePoaPeers().Concat(new[] { _selfAsPeer });
 
             var previous = previousDeltaHash.ToArray();
 

@@ -29,26 +29,27 @@ using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.FileTransfer;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.FileTransfer
 {
     public sealed class DownloadFileTransferInformationTests : IDisposable
     {
-        private readonly IDownloadFileInformation _downloadFileInformation;
+        private IDownloadFileInformation _downloadFileInformation;
 
-        public DownloadFileTransferInformationTests()
+        [SetUp]
+        public void Init()
         {
             _downloadFileInformation =
-                new DownloadFileTransferInformation(null,
-                    null,
-                    null,
-                    CorrelationId.GenerateCorrelationId(),
-                    "",
-                    10);
+            new DownloadFileTransferInformation(null,
+                null,
+                null,
+                CorrelationId.GenerateCorrelationId(),
+                "",
+                10);
         }
 
-        [Fact]
+        [Test]
         public void Can_Write_To_File_When_Received_Chunk()
         {
             var bytes = Enumerable.Range(1, 10).Select(e => (byte) e).ToArray();
@@ -58,9 +59,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.FileTransfer
             writtenBytes.SequenceEqual(bytes).Should().BeTrue();
         }
 
-        [Theory]
-        [InlineData(2)]
-        [InlineData(3)]
+        [TestCase(2u)]
+        [TestCase(3u)]
         public void Can_Set_File_Length(uint chunkAmount)
         {
             var byteLenForChunkAmount = (ulong) (Constants.FileTransferChunkSize * chunkAmount);

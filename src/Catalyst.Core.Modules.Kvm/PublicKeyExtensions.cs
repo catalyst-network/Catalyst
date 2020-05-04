@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -22,9 +22,12 @@
 #endregion
 
 using Catalyst.Abstractions.Cryptography;
+using Catalyst.Core.Lib.Extensions;
+using Google.Protobuf;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
 using Nethermind.Core.Extensions;
+using Nethermind.Evm;
 
 namespace Catalyst.Core.Modules.Kvm
 {
@@ -32,7 +35,22 @@ namespace Catalyst.Core.Modules.Kvm
     {
         public static Address ToKvmAddress(this IPublicKey publicKey)
         {
-            return new Address(ValueKeccak.Compute(publicKey.Bytes).BytesAsSpan.SliceWithZeroPadding(0, 20).ToArray());
+            if (publicKey == null)
+            {
+                return null;
+            }
+
+            return ToKvmAddress(publicKey.Bytes);
+        }
+
+        public static Address ToKvmAddress(this byte[] publicKey)
+        {
+            return new Address(ValueKeccak.Compute(publicKey).BytesAsSpan.SliceWithZeroPadding(0, 20).ToArray());
+        }
+
+        public static ByteString ToKvmAddressByteString(this IPublicKey recipient)
+        {
+            return recipient?.ToKvmAddress().Bytes.ToByteString() ?? ByteString.Empty;
         }
     }
 }

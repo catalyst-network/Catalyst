@@ -22,8 +22,8 @@
 #endregion
 
 using System;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Abstractions.P2P.ReputationSystem;
-using Catalyst.Core.Lib.P2P.Repository;
 
 namespace Catalyst.Core.Lib.P2P.ReputationSystem
 {

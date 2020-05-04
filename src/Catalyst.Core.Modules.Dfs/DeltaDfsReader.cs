@@ -26,7 +26,7 @@ using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Protocol.Deltas;
-using LibP2P;
+using Lib.P2P;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Dfs
@@ -34,12 +34,12 @@ namespace Catalyst.Core.Modules.Dfs
     /// <inheritdoc />
     public sealed class DeltaDfsReader : IDeltaDfsReader
     {
-        private readonly IDfs _dfs;
+        private readonly IDfsService _dfsService;
         private readonly ILogger _logger;
 
-        public DeltaDfsReader(IDfs dfs, ILogger logger)
+        public DeltaDfsReader(IDfsService dfsService, ILogger logger)
         {
-            _dfs = dfs;
+            _dfsService = dfsService;
             _logger = logger;
         }
 
@@ -50,24 +50,21 @@ namespace Catalyst.Core.Modules.Dfs
         {
             try
             {
-                using (var responseStream = _dfs.ReadAsync(cid, cancellationToken)
+                using var responseStream = _dfsService.UnixFsApi.ReadFileAsync(cid, cancellationToken)
                    .ConfigureAwait(false)
                    .GetAwaiter()
-                   .GetResult()
-                )
+                   .GetResult();
+                var uncheckedDelta = Delta.Parser.ParseFrom(responseStream);
+                var isValid = uncheckedDelta.IsValid();
+                if (!isValid)
                 {
-                    var uncheckedDelta = Delta.Parser.ParseFrom(responseStream);
-                    var isValid = uncheckedDelta.IsValid();
-                    if (!isValid)
-                    {
-                        _logger.Warning("Retrieved an invalid delta from the Dfs at address {hash}");
-                        delta = default;
-                        return false;
-                    }
-
-                    delta = uncheckedDelta;
-                    return true;
+                    _logger.Warning("Retrieved an invalid delta from the Dfs at address {hash}");
+                    delta = default;
+                    return false;
                 }
+
+                delta = uncheckedDelta;
+                return true;
             }
             catch (Exception e)
             {

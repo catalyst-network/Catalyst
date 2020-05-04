@@ -1,7 +1,22 @@
 [
-  {
-    "Ip": "127.0.0.1",
-    "Port": 42076,
-    "PublicKey": ""
-  }
+    {
+        "Ip": "77.68.110.194",
+        "Port": 42076,
+        "PublicKey": "ethay56ivymefuzejdck7hek5y7g2b5fryxl5hmwka74orwi7rzq"
+    },
+    {
+        "Ip": "77.68.110.195",
+        "Port": 42076,
+        "PublicKey": "aowryb5lxzvz3pt4encbmq6fyokbzwb4i7lrdykunczubpowyqeq"
+    },
+    {
+        "Ip": "77.68.110.196",
+        "Port": 42076,
+        "PublicKey": "f3pxmguzliuzv3mk6bkdm4qro5qv5jvweutkvxtqfg35qnzfvogq"
+    },
+    {
+        "Ip": "77.68.110.197",
+        "Port": 42076,
+        "PublicKey": "3s3vlmivyoox7hyuk6zbpiti5lfvnvp2btwoubgp6i3ui5x4nydq"
+    }
 ]

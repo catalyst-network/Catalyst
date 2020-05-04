@@ -21,17 +21,66 @@
 
 #endregion
 
+using System;
+using System.IO;
+using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Ledger;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
+using Google.Protobuf;
+using Google.Protobuf.WellKnownTypes;
+using Nethermind.Core;
 using Nethermind.Core.Crypto;
+using Nethermind.Crypto;
+using Nethermind.Dirichlet.Numerics;
+using Nethermind.Logging;
+using Nethermind.Serialization.Rlp;
+using Nethermind.Specs;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
     [EthWeb3RequestHandler("eth", "sendRawTransaction")]
     public class EthSendRawTransactionHandler : EthWeb3RequestHandler<byte[], Keccak>
     {
-        protected override Keccak Handle(byte[] param1, IWeb3EthApi api)
+        protected override Keccak Handle(byte[] transaction, IWeb3EthApi api)
         {
-            throw new System.NotImplementedException();
+            PublicEntry publicEntry;
+            try
+            {
+                Transaction tx = Rlp.Decode<Transaction>(transaction);
+                EthereumEcdsa ecdsa = new EthereumEcdsa(MainnetSpecProvider.Instance, LimboLogs.Instance);
+                tx.SenderAddress = ecdsa.RecoverAddress(tx, MainnetSpecProvider.IstanbulBlockNumber);
+                tx.Timestamp = (UInt256) DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                publicEntry = new PublicEntry
+                {
+                    Data = (tx.Data ?? tx.Init).ToByteString(),
+                    GasLimit = (ulong) tx.GasLimit,
+                    GasPrice = tx.GasPrice.ToUint256ByteString(),
+                    Nonce = (ulong) tx.Nonce,
+                    SenderAddress = tx.SenderAddress.Bytes.ToByteString(),
+                    ReceiverAddress = tx.To?.Bytes.ToByteString() ?? ByteString.Empty,
+                    Amount = tx.Value.ToUint256ByteString(),
+                    Signature = new Protocol.Cryptography.Signature
+                    {
+                        RawBytes = ByteString.CopyFrom((byte) 1)
+                    }
+                };
+            }
+            catch
+            {
+                try
+                {
+                    TransactionBroadcast transactionBroadcast = TransactionBroadcast.Parser.ParseFrom(transaction);
+                    publicEntry = transactionBroadcast.PublicEntry;
+                }
+                catch (Exception)
+                {
+                    throw new InvalidDataException($"Transaction data could not be deserialized into a {nameof(PublicEntry)}");
+                }
+            }
+
+            return api.SendTransaction(publicEntry);
         }
     }
 }

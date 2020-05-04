@@ -21,16 +21,39 @@
 
 #endregion
 
-using Catalyst.Protocol.Cryptography;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
 using System.Reflection;
+using Nethermind.Dirichlet.Numerics;
+using System;
+using Google.Protobuf;
+using MultiFormats;
 
 namespace Catalyst.Protocol.Transaction
 {
     public partial class PublicEntry
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
+
+        //Props like Amount and Gas price can contain null bytes appended to the end that can cause a different 
+        //Id when converted back and forth. I assume this is comming from the web provider.
+        private byte[] TrimEnd(byte[] array)
+        {
+            int lastIndex = Array.FindLastIndex(array, b => b != 0);
+
+            Array.Resize(ref array, lastIndex + 1);
+
+            return array;
+        }
+
+        //Give the same TransactionId everytime.
+        public MultiHash GetId(string algorithmName)
+        {
+            var publicEntryClone = new PublicEntry(this);
+            publicEntryClone.Amount = ByteString.CopyFrom(TrimEnd(publicEntryClone.Amount.ToByteArray()));
+            publicEntryClone.GasPrice = ByteString.CopyFrom(TrimEnd(publicEntryClone.GasPrice.ToByteArray()));
+            return MultiHash.ComputeHash(publicEntryClone.ToByteArray(), algorithmName);
+        }
 
         public bool IsValid()
         {
@@ -40,15 +63,12 @@ namespace Catalyst.Protocol.Transaction
                 return false;
             }
 
-            var isTimestampValid = Timestamp != default(Timestamp) && Timestamp != new Timestamp();
-            if (!isTimestampValid)
-            {
-                Logger.Debug("{timestamp} cannot be null or 0.");
-                return false;
-            }
+            return true;
 
-            var hasValidSignature = Signature.IsValid(SignatureType.TransactionPublic);
-            return hasValidSignature;
+            // TODO: reconsider signature
+
+            //var hasValidSignature = Signature.IsValid(SignatureType.TransactionPublic);
+            //return hasValidSignature;
         }
 
         /// <summary>bytes
@@ -62,8 +82,6 @@ namespace Catalyst.Protocol.Transaction
         /// otherwise <value>false</value>.
         /// </summary>
         public bool IsValidCallEntry => IsValid() && !ReceiverAddress.IsEmpty;
-
-        public byte[] TargetContract { get; set; }
 
         public bool IsContractDeployment => IsValidDeploymentEntry;
         public bool IsContractCall => IsValidCallEntry;

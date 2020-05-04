@@ -25,7 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Abstractions.Hashing;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
@@ -34,47 +34,48 @@ using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
-using LibP2P;
+using Lib.P2P;
 using Microsoft.Extensions.Caching.Memory;
+using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiHash;
-using Xunit;
+using NUnit.Framework;
 using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
 
 namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
 {
     public class PoaDeltaProducersProviderTests
     {
-        private readonly Peer _selfAsPeer;
-        private readonly List<Peer> _peers;
-        private readonly PoaDeltaProducersProvider _poaDeltaProducerProvider;
-        private readonly Cid _previousDeltaHash;
-        private readonly IMemoryCache _producersByPreviousDelta;
-        private readonly IHashProvider _hashProvider;
+        private Peer _selfAsPeer;
+        private List<Peer> _peers;
+        private PoaDeltaProducersProvider _poaDeltaProducerProvider;
+        private Cid _previousDeltaHash;
+        private IMemoryCache _producersByPreviousDelta;
+        private IHashProvider _hashProvider;
 
-        public PoaDeltaProducersProviderTests()
+        [SetUp]
+        public void Init()
         {
-            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
             var peerSettings = PeerIdHelper.GetPeerId("TEST").ToSubstitutedPeerSettings();
-            _selfAsPeer = new Peer {PeerId = peerSettings.PeerId};
+            _selfAsPeer = new Peer { PeerId = peerSettings.PeerId };
             var rand = new Random();
             _peers = Enumerable.Range(0, 5)
                .Select(_ =>
                 {
                     var peerIdentifier = PeerIdHelper.GetPeerId(rand.Next().ToString());
-                    var peer = new Peer {PeerId = peerIdentifier};
+                    var peer = new Peer { PeerId = peerIdentifier, LastSeen = DateTime.UtcNow };
                     return peer;
                 }).ToList();
 
             var logger = Substitute.For<ILogger>();
 
             var peerRepository = Substitute.For<IPeerRepository>();
-            peerRepository.GetAll().Returns(_ => _peers);
+            peerRepository.GetActivePoaPeers().Returns(_ => _peers);
 
             _previousDeltaHash =
-                _hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).CreateCid();
+                _hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).ToCid();
 
             _producersByPreviousDelta = Substitute.For<IMemoryCache>();
 
@@ -85,12 +86,12 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
                 logger);
         }
 
-        [Fact]
+        [Test]
         public void GetDeltaProducersFromPreviousDelta_when_not_cached_should_store_and_return_an_ordered_list()
         {
             _producersByPreviousDelta.TryGetValue(Arg.Any<string>(), out Arg.Any<object>()).Returns(false);
 
-            var peers = _peers.Concat(new[] {_selfAsPeer});
+            var peers = _peers.Concat(new[] { _selfAsPeer });
 
             var expectedProducers = peers.Select(p =>
                 {
@@ -123,7 +124,7 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
             }
         }
 
-        [Fact]
+        [Test]
         public void GetDeltaProducersFromPreviousDelta_when_cached_should_not_recompute()
         {
             _producersByPreviousDelta.TryGetValue(Arg.Is<string>(s => s.EndsWith(_previousDeltaHash)),

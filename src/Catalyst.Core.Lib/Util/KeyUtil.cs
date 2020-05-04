@@ -23,7 +23,7 @@
 
 using Catalyst.Core.Lib.Extensions;
 using Google.Protobuf;
-using TheDotNetLeague.MultiFormats.MultiBase;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.Util
 {
@@ -32,7 +32,7 @@ namespace Catalyst.Core.Lib.Util
     {
         public static string KeyToString(this byte[] keyAsBytes)
         {
-            return Base32.ToBase32(keyAsBytes).ToLowerInvariant();
+            return Base32.ToBase32(keyAsBytes).ToLowerInvariant(); ///@TODO get from hashlib
         }
 
         public static byte[] KeyToBytes(this string keyAsString)

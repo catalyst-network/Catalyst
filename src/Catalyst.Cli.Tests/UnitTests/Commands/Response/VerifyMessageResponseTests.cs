@@ -28,7 +28,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.UnitTests.Commands.Response
 {
@@ -36,13 +36,13 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands.Response
     {
         private readonly TestScheduler _testScheduler = new TestScheduler();
 
-        [Fact]
+        [Test]
         public void VerifyMessageResponse_Can_Get_Output()
         {
             //Arrange
             var verifyMessageResponse = new VerifyMessageResponse();
             var commandContext = TestCommandHelpers.GenerateCliResponseCommandContext(_testScheduler);
-            var messageVerifyCommand = new MessageVerifyCommand(commandContext, Substitute.For<ILogger>());
+            new MessageVerifyCommand(commandContext, Substitute.For<ILogger>());
 
             //Act
             TestCommandHelpers.GenerateResponse(commandContext, verifyMessageResponse);

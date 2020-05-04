@@ -33,8 +33,8 @@ using Catalyst.Core.Lib.IO.Transport;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
+using NUnit.Framework;
 using Serilog;
-using Xunit;
 
 namespace Catalyst.Cli.Tests.UnitTests
 {
@@ -61,7 +61,7 @@ namespace Catalyst.Cli.Tests.UnitTests
 
         private readonly ICommandContext _commandContext;
 
-        [Fact]
+        [Test]
         public void ParseCommand_That_Does_Exist_Should_Return_True()
         {
             var userOutput = Substitute.For<IUserOutput>();
@@ -74,7 +74,7 @@ namespace Catalyst.Cli.Tests.UnitTests
             catalystCli.ParseCommand("test").Should().BeTrue();
         }
 
-        [Fact]
+        [Test]
         public void ParseCommand_That_Does_Not_Exist_Should_Return_False()
         {
             var userOutput = Substitute.For<IUserOutput>();
@@ -84,7 +84,7 @@ namespace Catalyst.Cli.Tests.UnitTests
             catalystCli.ParseCommand("test").Should().BeFalse();
         }
 
-        [Fact]
+        [Test]
         public void RunConsole_Stops_On_Cancellation_Token()
         {
             var userOutput = Substitute.For<IUserOutput>();

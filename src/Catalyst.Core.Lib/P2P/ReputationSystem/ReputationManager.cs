@@ -26,9 +26,8 @@ using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Threading;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Abstractions.P2P.ReputationSystem;
-using Catalyst.Core.Lib.P2P.Repository;
 using Dawn;
 using Serilog;
 
@@ -41,7 +40,6 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
         public readonly ReplaySubject<IPeerReputationChange> ReputationEvent;
         public IObservable<IPeerReputationChange> ReputationEventStream => ReputationEvent.AsObservable();
         public IObservable<IPeerReputationChange> MergedEventStream { get; set; }
-        private static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1);
 
         public ReputationManager(IPeerRepository peerRepository, ILogger logger, IScheduler scheduler = null)
         {
@@ -50,6 +48,7 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
             _logger = logger;
             PeerRepository = peerRepository;
             ReputationEvent = new ReplaySubject<IPeerReputationChange>(0, observableScheduler);
+
             ReputationEventStream.Subscribe(OnNext, OnError, OnCompleted);
         }
 
@@ -67,14 +66,17 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
 
         private void OnError(Exception exc) { _logger.Error("ReputationManager error: {@Exc}", exc); }
 
-        // ReSharper disable once VSTHRD100
-        public async void OnNext(IPeerReputationChange peerReputationChange)
+        public void OnNext(IPeerReputationChange peerReputationChange)
         {
             try
             {
-                await SemaphoreSlim.WaitAsync().ConfigureAwait(false);
-
                 var peer = PeerRepository.GetAll().FirstOrDefault(p => p.PeerId.Equals(peerReputationChange.PeerId));
+                //todo come back to later
+                if (peer == null)
+                {
+                    return;
+                }
+
                 Guard.Argument(peer, nameof(peer)).NotNull();
 
                 // ReSharper disable once PossibleNullReferenceException
@@ -84,10 +86,6 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
             catch (Exception e)
             {
                 _logger.Error(e, e.Message);
-            }
-            finally
-            {
-                SemaphoreSlim.Release();
             }
         }
 

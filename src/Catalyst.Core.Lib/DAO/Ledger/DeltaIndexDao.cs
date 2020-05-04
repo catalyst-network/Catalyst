@@ -24,24 +24,49 @@
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO.Converters;
-using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Deltas;
 using Google.Protobuf;
+using Newtonsoft.Json;
+using SharpRepository.Repository;
 
 namespace Catalyst.Core.Lib.DAO.Ledger
 {
-    public class DeltaIndexDao : DaoBase
+    public class DeltaIndexDao
     {
-        public int DeltaHeight { get; }
-        public string DeltaCid { get; }
+        [RepositoryPrimaryKey(Order = 1)]
+        [JsonProperty("id")]
+        public new string Id => BuildDocumentId(Height);
+        public ulong Height { set; get; }
+        public string Cid { set; get; }
+
+        public static string BuildDocumentId(ulong number) => number.ToString("D");
+
+        public static TProto ToProtoBuff<TProto>(DeltaIndexDao dao, IMapperProvider mapperProvider)
+            where TProto : IMessage
+        {
+            return mapperProvider.Mapper.Map<TProto>(dao);
+        }
+
+        public static DeltaIndexDao ToDao<TProto>(DeltaIndex protoBuff, IMapperProvider mapperProvider)
+            where TProto : IMessage
+        {
+            return mapperProvider.Mapper.Map<DeltaIndexDao>(protoBuff);
+        }
     }
-    
+
     public class DeltaIndexMapperInitialiser : IMapperInitializer
     {
         public void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<DeltaHistoryResponse, DeltaIndexDao>()
-               .ForMember(a => a.DeltaHeight, opt => opt.UseDestinationValue())
-               .ForMember(a => a.DeltaCid, opt => opt.ConvertUsing<ByteStringToDfsHashConverter, ByteString>());
+            cfg.CreateMap<DeltaIndex, DeltaIndexDao>()
+               .ForMember(a => a.Height, opt => opt.UseDestinationValue())
+               .ForMember(a => a.Cid,
+                    opt => opt.ConvertUsing<ByteStringToDfsHashConverter, ByteString>());
+
+            cfg.CreateMap<DeltaIndexDao, DeltaIndex>()
+               .ForMember(a => a.Height, opt => opt.UseDestinationValue())
+               .ForMember(a => a.Cid,
+                    opt => opt.ConvertUsing<DfsHashToByteStringConverter, string>());
         }
     }
 }

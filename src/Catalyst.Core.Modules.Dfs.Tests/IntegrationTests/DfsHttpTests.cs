@@ -30,9 +30,9 @@
 //        private readonly Dfs _dfs;
 //        private readonly DfsGateway _dfsGateway;
 
-//        public DfsHttpTests(ITestOutputHelper output) : base(output)
+//        public DfsHttpTests() : base(TestContext.CurrentContext)
 //        {
-//            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+//            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 //            var passwordReader = Substitute.For<IPasswordManager>();
 //            passwordReader.RetrieveOrPromptAndAddPasswordToRegistry(Arg.Any<PasswordRegistryTypes>(), Arg.Any<string>()).ReturnsForAnyArgs(TestPasswordReader.BuildSecureStringPassword("abcd"));
 //            var logger = Substitute.For<ILogger>();
@@ -42,9 +42,9 @@
 //        }
 
 //        [Theory]
-//        [Trait(Traits.TestType, Traits.IntegrationTest)]
-//        [InlineData("Expected content str")]
-//        [InlineData("Expected @!�:!$!%(")]
+//       
+//        [TestCase("Expected content str")]
+//        [TestCase("Expected @!�:!$!%(")]
 //        public async Task Should_have_a_URL_for_content(string expectedText)
 //        {
 //            var id = await _dfs.AddTextAsync(expectedText).ConfigureAwait(false);
@@ -53,9 +53,9 @@
 //        }
 
 //        [Theory]
-//        [Trait(Traits.TestType, Traits.IntegrationTest)]
-//        [InlineData("Expected content str")]
-//        [InlineData("Expected @!�:!$!%(")]
+//       
+//        [TestCase("Expected content str")]
+//        [TestCase("Expected @!�:!$!%(")]
 //        public async Task Should_serve_the_content(string expectedText)
 //        {
 //            var id = await _dfs.AddTextAsync(expectedText);

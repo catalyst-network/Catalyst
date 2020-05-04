@@ -25,13 +25,13 @@ using System.Net;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
 {
     public class RpcServerSettingsTests
     {
-        [Fact]
+        [Test]
         public void Constructor_Should_Set_Settings_From_Config()
         {
             const string pfxFileName = "pfx";

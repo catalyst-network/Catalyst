@@ -22,9 +22,10 @@
 #endregion
 
 using Autofac;
-using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Peer;
-using Catalyst.Core.Lib.Repository;
+using Catalyst.Core.Lib.DAO.Transaction;
+using Catalyst.Core.Lib.Service;
+using SharpRepository.EfCoreRepository;
 using SharpRepository.Repository;
 
 namespace Catalyst.TestUtils.Repository
@@ -39,8 +40,8 @@ namespace Catalyst.TestUtils.Repository
             builder.Register(c => new EfCoreContext(_connectionString)).AsImplementedInterfaces().AsSelf()
                .InstancePerLifetimeScope();
 
-            builder.RegisterType<PeerEfCoreRepository>().As<IRepository<PeerDao, string>>().SingleInstance();
-            builder.RegisterType<MempoolEfCoreRepository>().As<IRepository<TransactionBroadcastDao, string>>().SingleInstance();
+            builder.RegisterType<EfCoreRepository<PeerDao, string>>().As<IRepository<PeerDao, string>>().SingleInstance();
+            builder.RegisterType<EfCoreRepository<PublicEntryDao, string>>().As<IRepository<PublicEntryDao, string>>().SingleInstance();
         }
     }
 }

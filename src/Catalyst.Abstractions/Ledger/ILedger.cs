@@ -22,7 +22,7 @@
 #endregion
 
 using Catalyst.Abstractions.Ledger.Models;
-using LibP2P;
+using Lib.P2P;
 
 namespace Catalyst.Abstractions.Ledger
 {
@@ -61,5 +61,10 @@ namespace Catalyst.Abstractions.Ledger
         ///     A boolean indicating whether a synchronisation of the ledger is in currently in process.
         /// </summary>
         bool IsSynchonising { get; }
+
+        /// <summary>
+        ///     The latest know delta number.
+        /// </summary>
+        long LatestKnownDeltaNumber { get; }
     }
 }

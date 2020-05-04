@@ -43,25 +43,28 @@ using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
 using Serilog;
-using Xunit;
-using Xunit.Abstractions;
+using NUnit.Framework;
+
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
 {
-    public sealed class PeerServiceTests : SelfAwareTestBase, IDisposable
+    public class PeerServiceTests : SelfAwareTestBase, IDisposable
     {
-        private readonly ICorrelationId _guid;
-        private readonly ILogger _logger;
-        private readonly PeerId _pid;
-        private readonly IUdpServerChannelFactory _udpServerServerChannelFactory;
-        private readonly IPeerDiscovery _peerDiscovery;
-        private readonly List<IP2PMessageObserver> _p2PMessageHandlers;
-        private readonly EmbeddedObservableChannel _serverChannel;
-        private readonly IPeerSettings _peerSettings;
+        private ICorrelationId _guid;
+        private ILogger _logger;
+        private PeerId _pid;
+        private IUdpServerChannelFactory _udpServerServerChannelFactory;
+        private IPeerDiscovery _peerDiscovery;
+        private List<IP2PMessageObserver> _p2PMessageHandlers;
+        private EmbeddedObservableChannel _serverChannel;
+        private IPeerSettings _peerSettings;
         private IPeerService _peerService;
 
-        public PeerServiceTests(ITestOutputHelper output) : base(output)
+        [SetUp]
+        public void Init()
         {
+            this.Setup(TestContext.CurrentContext);
+
             _pid = PeerIdHelper.GetPeerId("im_a_key");
             _guid = CorrelationId.GenerateCorrelationId();
             _logger = Substitute.For<ILogger>();
@@ -80,7 +83,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
             _p2PMessageHandlers = new List<IP2PMessageObserver>();
         }
 
-        [Fact]
+        [Test]
         public async Task Can_receive_incoming_ping_responses()
         {
             var messageObserver = new TestMessageObserver<PingResponse>(_logger);
@@ -91,7 +94,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
             messageObserver.SubstituteObserver.Received().OnNext(Arg.Any<PingResponse>());
         }
 
-        [Fact]
+        [Test]
         public async Task Can_receive_PingRequest()
         {
             var pingRequestHandler = new TestMessageObserver<PingRequest>(_logger);
@@ -102,7 +105,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
             pingRequestHandler.SubstituteObserver.Received().OnNext(Arg.Any<PingRequest>());
         }
 
-        [Fact]
+        [Test]
         public async Task Can_receive_PeerNeighborsRequest()
         {
             var pingRequestHandler = new TestMessageObserver<PeerNeighborsRequest>(_logger);
@@ -113,7 +116,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
             pingRequestHandler.SubstituteObserver.Received().OnNext(Arg.Any<PeerNeighborsRequest>());
         }
 
-        [Fact]
+        [Test]
         public async Task Can_receive_PeerNeighborsResponse()
         {
             var pingRequestHandler = new TestMessageObserver<PeerNeighborsResponse>(_logger);
@@ -144,7 +147,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
                 Substitute.For<IHealthChecker>());
 
             await _peerService.StartAsync();
-            _serverChannel.SimulateReceivingMessagesAsync(message);
+            _serverChannel.SimulateReceivingMessages(message);
         }
 
         private void Dispose(bool disposing)

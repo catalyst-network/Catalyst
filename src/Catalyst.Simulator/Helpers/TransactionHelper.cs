@@ -44,7 +44,7 @@ namespace Catalyst.Simulator.Helpers
             SignatureType = SignatureType.TransactionPublic
         };
 
-        public static BroadcastRawTransactionRequest GenerateTransaction(uint amount, int fee, int nonce = 0)
+        public static BroadcastRawTransactionRequest GenerateTransaction(uint amount, int nonce = 0)
         {
             var cryptoWrapper = new FfiWrapper();
             var privateKey = cryptoWrapper.GeneratePrivateKey();
@@ -57,9 +57,7 @@ namespace Catalyst.Simulator.Helpers
                     Amount = ((UInt256) amount).ToUint256ByteString(),
                     Nonce = (ulong) nonce,
                     SenderAddress = privateKey.GetPublicKey().Bytes.ToByteString(),
-                    ReceiverAddress = publicKey,
-                    TransactionFees = ((UInt256) fee).ToUint256ByteString(),
-                    Timestamp = Timestamp.FromDateTime(DateTime.UtcNow)
+                    ReceiverAddress = publicKey
                 }.Sign(cryptoWrapper, privateKey, DevNetPublicTransactionContext)
             };
 

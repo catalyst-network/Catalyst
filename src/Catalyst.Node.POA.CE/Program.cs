@@ -21,16 +21,11 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading;
-using System.Threading.Tasks;
 using Autofac;
 using Autofac.Core;
 using Catalyst.Abstractions;
 using Catalyst.Abstractions.Cli;
+using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.DAO;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.Types;
@@ -50,11 +45,21 @@ using Catalyst.Core.Modules.Ledger;
 using Catalyst.Core.Modules.Mempool;
 using Catalyst.Core.Modules.P2P.Discovery.Hastings;
 using Catalyst.Core.Modules.Rpc.Server;
+using Catalyst.Core.Modules.Sync;
 using Catalyst.Core.Modules.Web3;
 using Catalyst.Modules.POA.Consensus;
 using Catalyst.Modules.POA.P2P;
+using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Network;
 using CommandLine;
+using MultiFormats;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Catalyst.Node.POA.CE
 {
@@ -74,6 +79,9 @@ namespace Catalyst.Node.POA.CE
 
         [Option("network-file", HelpText = "The name of the network file")]
         public string OverrideNetworkFile { get; set; }
+
+        [Option('r', "reset", HelpText = "Reset the state")]
+        public bool Reset { get; set; }
     }
 
     public static class Program
@@ -93,16 +101,11 @@ namespace Catalyst.Node.POA.CE
         /// </summary>
         /// <param name="kernel"></param>
         /// <returns></returns>
-        private static async Task CustomBootLogic(Kernel kernel)
+        private static async Task CustomBootLogicAsync(Kernel kernel)
         {
             RegisterNodeDependencies(Kernel.ContainerBuilder);
-
             kernel.StartContainer();
-            kernel.Instance.Resolve<ICatalystNode>()
-               .RunAsync(new CancellationToken())
-
-                // ReSharper disable once VSTHRD002
-               .Wait();
+            await kernel.Instance.Resolve<ICatalystNode>().RunAsync(new CancellationToken());
         }
 
         private static readonly Dictionary<Type, Func<IModule>> DefaultModulesByTypes =
@@ -111,6 +114,7 @@ namespace Catalyst.Node.POA.CE
                 {typeof(CoreLibProvider), () => new CoreLibProvider()},
                 {typeof(MempoolModule), () => new MempoolModule()},
                 {typeof(ConsensusModule), () => new ConsensusModule()},
+                {typeof(SynchroniserModule), () => new SynchroniserModule()},
                 {typeof(KvmModule), () => new KvmModule()},
                 {typeof(LedgerModule), () => new LedgerModule()},
                 {typeof(HashingModule), () => new HashingModule()},
@@ -123,10 +127,10 @@ namespace Catalyst.Node.POA.CE
                 {typeof(AuthenticationModule), () => new AuthenticationModule()},
                 {
                     typeof(ApiModule),
-                    () => new ApiModule("http://*:5005", new List<string> {"Catalyst.Core.Modules.Web3"})
+                    () => new ApiModule("http://*:5005", new List<string> {"Catalyst.Core.Modules.Web3", "Catalyst.Core.Modules.Dfs"})
                 },
                 {typeof(PoaConsensusModule), () => new PoaConsensusModule()},
-                {typeof(PoaP2PModule), () => new PoaP2PModule()},
+                {typeof(PoaP2PModule), () => new PoaP2PModule()}
             };
 
         public static void RegisterNodeDependencies(ContainerBuilder containerBuilder,
@@ -157,21 +161,30 @@ namespace Catalyst.Node.POA.CE
                .Select(p => p.Value())
                .Concat(extraModuleInstances ?? new List<IModule>());
 
-            foreach (var module in modulesToRegister) containerBuilder.RegisterModule(module);
+            foreach (var module in modulesToRegister)
+            {
+                containerBuilder.RegisterModule(module);
+            }
         }
 
-        public static int Main(string[] args)
+        public static async Task<int> Main(string[] args)
         {
             // Parse the arguments.
-            Parser.Default
+            var result = await Parser.Default
                .ParseArguments<Options>(args)
-               .WithParsed(async o => await RunAsync(o).ConfigureAwait(false));
+               .MapResult(async options => await RunAsync(options).ConfigureAwait(false),
+                    response => Task.FromResult(1)).ConfigureAwait(false);
 
-            return Environment.ExitCode;
+            return Environment.ExitCode = result;
         }
 
-        private static async Task RunAsync(Options options)
+        private static async Task<int> RunAsync(Options options)
         {
+            // uncomment to speed up node launching
+            // options.IpfsPassword ??= "ipfs";
+            // options.NodePassword ??= "node";
+            // options.SslCertPassword ??= "cert";
+
             Kernel.Logger.Information("Catalyst.Node started with process id {0}",
                 Process.GetCurrentProcess().Id.ToString());
 
@@ -187,14 +200,15 @@ namespace Catalyst.Node.POA.CE
                    .WithPassword(PasswordRegistryTypes.DefaultNodePassword, options.NodePassword)
                    .WithPassword(PasswordRegistryTypes.IpfsPassword, options.IpfsPassword)
                    .WithPassword(PasswordRegistryTypes.CertificatePassword, options.SslCertPassword)
-                   .StartCustomAsync(CustomBootLogic);
+                   .Reset(options.Reset)
+                   .StartCustomAsync(CustomBootLogicAsync);
 
-                Environment.ExitCode = 0;
+                return 0;
             }
             catch (Exception e)
             {
                 Kernel.Logger.Fatal(e, "Catalyst.Node stopped unexpectedly");
-                Environment.ExitCode = 1;
+                return 1;
             }
         }
     }

@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Text;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Keystore;
@@ -31,20 +32,21 @@ using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
 using FluentAssertions;
 using NSubstitute;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
 {
     public sealed class KeySignerTests
     {
-        private readonly IKeyStore _keystore;
-        private readonly IKeyRegistry _keyRegistry;
-        private readonly ISignature _signature;
-        private readonly IPrivateKey _privateKey;
-        private readonly SigningContext _signingContext;
-        private readonly ICryptoContext _cryptoContext;
+        private IKeyStore _keystore;
+        private IKeyRegistry _keyRegistry;
+        private ISignature _signature;
+        private IPrivateKey _privateKey;
+        private SigningContext _signingContext;
+        private ICryptoContext _cryptoContext;
 
-        public KeySignerTests()
+        [SetUp]
+        public void Init()
         {
             _keystore = Substitute.For<IKeyStore>();
             _keyRegistry = Substitute.For<IKeyRegistry>();
@@ -55,11 +57,11 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
             _privateKey.Bytes.Returns(ByteUtil.GenerateRandomByteArray(32));
 
             _keystore.KeyStoreDecrypt(default).ReturnsForAnyArgs(_privateKey);
-            
+
             _signingContext = new SigningContext();
         }
-        
-        [Fact]
+
+        [Test]
         public void On_Init_KeySigner_Can_Retrieve_Key_From_KeyStore_If_Key_Doesnt_Initially_Exist_In_Registry()
         {
             _keyRegistry.GetItemFromRegistry(default).ReturnsForAnyArgs((IPrivateKey) null);
@@ -72,7 +74,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
             keySigner.Should().NotBe(null);
         }
 
-        [Fact]
+        [Test]
         public void On_Init_KeySigner_Can_Generate_Default_Key_If_Key_No_KeyStore_File_Exists()
         {
             _keyRegistry.GetItemFromRegistry(default).ReturnsForAnyArgs((IPrivateKey) null);
@@ -88,7 +90,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
             keySigner.Should().NotBe(null);
         }
 
-        [Fact] 
+        [Test] 
         public void KeySigner_Can_Sign_If_Key_Exists_In_Registry()
         {
             _keyRegistry.GetItemFromRegistry(default).ReturnsForAnyArgs(_privateKey);
@@ -108,10 +110,10 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
             _keystore.Received(0)?.KeyStoreGenerateAsync(Arg.Any<NetworkType>(), Arg.Any<KeyRegistryTypes>());
             _keyRegistry.ReceivedWithAnyArgs(0).AddItemToRegistry(default, default);
             
-            Assert.Equal(_signature, actualSignature);
+            Assert.AreEqual(_signature, actualSignature);
         }
 
-        [Fact] 
+        [Test] 
         public void KeySigner_Can_Sign_If_Key_Doesnt_Exists_In_Registry_But_There_Is_A_Keystore_File()
         {            
             var keySigner = new KeySigner(_keystore, _cryptoContext, _keyRegistry);            
@@ -126,12 +128,12 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
 
             _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryTypes>());
 
-            Assert.Equal(_signature, actualSignature);
+            Assert.AreEqual(_signature, actualSignature);
         }
 
-        class CryptoContext : ICryptoContext
+        private sealed class CryptoContext : ICryptoContext
         {
-            readonly ISignature _signature;
+            private readonly ISignature _signature;
             public CryptoContext(ISignature signature) { _signature = signature; }
 
             public int PrivateKeyLength { get; }
@@ -148,6 +150,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
 
             public ISignature Sign(IPrivateKey privateKey, ReadOnlySpan<byte> message, ReadOnlySpan<byte> context) => _signature;
             public bool Verify(ISignature signature, ReadOnlySpan<byte> message, ReadOnlySpan<byte> context) { throw new NotImplementedException(); }
+            public bool BatchVerify(IList<ISignature> signatures, IList<byte[]> messages, ReadOnlySpan<byte> context) { throw new NotImplementedException(); }
         }
     }
 }

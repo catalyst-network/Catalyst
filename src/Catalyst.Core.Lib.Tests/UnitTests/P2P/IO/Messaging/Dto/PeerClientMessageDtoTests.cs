@@ -29,13 +29,13 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Dto
 {
     public sealed class PeerClientMessageDtoTests
     {
-        [Fact]
+        [Test]
         public void Can_Create_Dto_For_IPPN_Message()
         {
             var pingRequest = new PingRequest();
@@ -49,7 +49,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Dto
             dto.Sender.Should().Be(pid);
         }
 
-        [Fact]
+        [Test]
         public void Throws_Exception_For_Non_IPPN_Message()
         {
             var rpcMessage = new VersionRequest();

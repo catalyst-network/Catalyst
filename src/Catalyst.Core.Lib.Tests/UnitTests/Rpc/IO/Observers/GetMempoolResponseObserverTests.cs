@@ -28,13 +28,13 @@ using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
     public sealed class GetMempoolResponseObserverTests
     {
-        [Fact]
+        [Test]
         public void Null_Mempool_Throws_Exception()
         {
             var channelHandlerContext = Substitute.For<IChannelHandlerContext>();

@@ -60,7 +60,7 @@ namespace Catalyst.TestUtils
             MessageStream = observableServiceHandler.MessageStream;
         }
 
-        public void SimulateReceivingMessagesAsync(params object[] messages)
+        public void SimulateReceivingMessages(params object[] messages)
         {
             _channel.WriteInbound(messages);
             _testScheduler.Start();

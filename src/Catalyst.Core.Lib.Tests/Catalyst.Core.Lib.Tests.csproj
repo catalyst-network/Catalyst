@@ -1,32 +1,40 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.0</TargetFramework>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
         <RootNamespace>Catalyst.Core.Lib.Tests</RootNamespace>
         <Authors>James Kirby (nshcore@protonmail.com)</Authors>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Catalyst.Core.Lib.Tests.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
     </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <NoWarn>1701;1702;VSTHRD200;CS8002</NoWarn>
+    </PropertyGroup>
     <Import Project="../Common.TestProjects.props" />
     <ItemGroup>
-      <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />
-      <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.6" />
-      <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.6" />
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+        <PackageReference Include="NUnit3TestAdapter" Version="3.16.1">
+            <PrivateAssets>all</PrivateAssets>
+            <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+        </PackageReference>
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\..\submodules\nethermind\src\Dirichlet\Nethermind.Dirichlet.Numerics\Nethermind.Dirichlet.Numerics.csproj" />
-      <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
-      <ProjectReference Include="..\Catalyst.Core.Modules.Authentication\Catalyst.Core.Modules.Authentication.csproj" />
-      <ProjectReference Include="..\Catalyst.Core.Modules.Cryptography.BulletProofs\Catalyst.Core.Modules.Cryptography.BulletProofs.csproj" />
-      <ProjectReference Include="..\Catalyst.Core.Modules.Dfs\Catalyst.Core.Modules.Dfs.csproj" />
-      <ProjectReference Include="..\Catalyst.Core.Modules.Hashing\Catalyst.Core.Modules.Hashing.csproj" />
-      <ProjectReference Include="..\Catalyst.Core.Modules.KeySigner\Catalyst.Core.Modules.KeySigner.csproj" />
-      <ProjectReference Include="..\Catalyst.Core.Modules.Keystore\Catalyst.Core.Modules.Keystore.csproj" />
-      <ProjectReference Include="..\Catalyst.Core.Modules.Mempool\Catalyst.Core.Modules.Mempool.csproj" />
-      <ProjectReference Include="..\Catalyst.Core.Modules.Rpc.Client\Catalyst.Core.Modules.Rpc.Client.csproj" />
-      <ProjectReference Include="..\Catalyst.Core.Modules.Rpc.Server\Catalyst.Core.Modules.Rpc.Server.csproj" />
-      <ProjectReference Include="..\Catalyst.Modules.Repository.CosmosDb\Catalyst.Modules.Repository.CosmosDb.csproj" />
-      <ProjectReference Include="..\Catalyst.Modules.Repository.MongoDb\Catalyst.Modules.Repository.MongoDb.csproj" />
-      <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
+        <ProjectReference Include="..\..\submodules\nethermind\src\Dirichlet\Nethermind.Dirichlet.Numerics\Nethermind.Dirichlet.Numerics.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Modules.Authentication\Catalyst.Core.Modules.Authentication.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Modules.Cryptography.BulletProofs\Catalyst.Core.Modules.Cryptography.BulletProofs.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Modules.Dfs\Catalyst.Core.Modules.Dfs.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Modules.Hashing\Catalyst.Core.Modules.Hashing.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Modules.KeySigner\Catalyst.Core.Modules.KeySigner.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Modules.Keystore\Catalyst.Core.Modules.Keystore.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Modules.Mempool\Catalyst.Core.Modules.Mempool.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Modules.Rpc.Client\Catalyst.Core.Modules.Rpc.Client.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Modules.Rpc.Server\Catalyst.Core.Modules.Rpc.Server.csproj" />
+        <ProjectReference Include="..\Catalyst.Modules.Repository.CosmosDb\Catalyst.Modules.Repository.CosmosDb.csproj" />
+        <ProjectReference Include="..\Catalyst.Modules.Repository.MongoDb\Catalyst.Modules.Repository.MongoDb.csproj" />
+        <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
+        <ProjectReference Include="..\MultiFormats\MultiFormats.csproj" />
     </ItemGroup>
 </Project>

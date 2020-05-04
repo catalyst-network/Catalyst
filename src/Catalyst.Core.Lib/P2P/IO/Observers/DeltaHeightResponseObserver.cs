@@ -32,10 +32,10 @@ using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.Protocols;
-using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using DotNetty.Transport.Channels;
+using Lib.P2P;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.IO.Observers
@@ -54,17 +54,16 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             _peerQueryTipRequest = peerQueryTipRequest;
             ResponseMessageSubject = new ReplaySubject<IPeerClientMessageDto>(1);
         }
-        
+
         protected override void HandleResponse(LatestDeltaHashResponse deltaHeightResponse,
             IChannelHandlerContext channelHandlerContext,
             PeerId senderPeerId,
             ICorrelationId correlationId)
         {
             ResponseMessageSubject.OnNext(new PeerClientMessageDto(deltaHeightResponse, senderPeerId, correlationId));
-            
+
             _peerQueryTipRequest.QueryTipResponseMessageStreamer.OnNext(
-                new PeerQueryTipResponse(senderPeerId, HashProvider.Parse(deltaHeightResponse.DeltaHash.ToString())
-                )
+                new PeerQueryTipResponse(senderPeerId, Cid.Read(deltaHeightResponse.DeltaIndex.Cid.ToByteArray()))
             );
         }
     }

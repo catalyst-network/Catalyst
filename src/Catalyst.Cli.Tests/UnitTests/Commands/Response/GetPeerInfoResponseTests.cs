@@ -29,7 +29,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.UnitTests.Commands.Response
 {
@@ -37,7 +37,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands.Response
     {
         private readonly TestScheduler _testScheduler = new TestScheduler();
 
-        [Fact]
+        [Test]
         public void GetPeerInfoResponse_Can_Get_Output()
         {
             //Arrange
@@ -46,7 +46,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands.Response
             getPeerInfoResponse.PeerInfo.Add(peer);
 
             var commandContext = TestCommandHelpers.GenerateCliResponseCommandContext(_testScheduler);
-            var getPeerInfoCommand = new GetPeerInfoCommand(commandContext, Substitute.For<ILogger>());
+            new GetPeerInfoCommand(commandContext, Substitute.For<ILogger>());
 
             //Act
             TestCommandHelpers.GenerateResponse(commandContext, getPeerInfoResponse);

@@ -58,6 +58,6 @@ steps:
     inputs:
       command: test
       projects: 'src/*[Tt]ests/*.csproj'
-      arguments: '--filter TestType=EndToEndTest_MSSQL --configuration $(BuildConfiguration)'
+      arguments: '--filter TestCategory=EndToEndTest_MSSQL --configuration $(BuildConfiguration)'
       failOnStandardError: 'true'
     timeoutInMinutes: 10

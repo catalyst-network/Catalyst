@@ -33,11 +33,11 @@ using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Dawn;
-using LibP2P;
+using Lib.P2P;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
+using MultiFormats;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiBase;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
@@ -95,6 +95,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             try
             {
                 var rankingFactor = GetProducerRankFactor(candidate);
+
 
                 var candidateCacheKey = GetCandidateCacheKey(candidate);
                 if (_candidatesCache.TryGetValue<IScoredCandidateDelta>(candidateCacheKey, out var retrievedScoredDelta)
@@ -191,7 +192,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 throw new KeyNotFoundException(
                     $"Producer {candidate.ProducerId} " +
                     "should not be sending candidate deltas with previous hash " +
-                    $"{candidate.PreviousDeltaDfsHash.ToByteArray().ToCid()}");
+                    $"{candidate.PreviousDeltaDfsHash.ToByteArray().ToCid()} {candidate.PreviousDeltaDfsHash.ToByteArray().ToCid().Hash.ToBase32()}");
             }
 
             return preferredProducers.Count - ranking;

@@ -32,7 +32,7 @@ using Catalyst.Abstractions.Consensus;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
-using Xunit.Abstractions;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests
 {
@@ -50,15 +50,15 @@ namespace Catalyst.Core.Lib.Tests
 
         private readonly ContainerProvider _configProvider;
 
-        public TestCatalystNode(string name, ITestOutputHelper output) 
-            : base(output, new[]
+        public TestCatalystNode(string name) 
+            : base(new[]
             {
                 Constants.NetworkConfigFile(NetworkType.Devnet),
                 Constants.SerilogJsonConfigFile
             }.Select(f => Path.Combine(Constants.ConfigSubFolder, f)))
         {
             Name = name;
-            _configProvider = new ContainerProvider(_configFilesUsed, FileSystem, output);
+            _configProvider = new ContainerProvider(_configFilesUsed, FileSystem, TestContext.CurrentContext);
         }
 
         public IConsensus Consensus => _catalystNode.Consensus;

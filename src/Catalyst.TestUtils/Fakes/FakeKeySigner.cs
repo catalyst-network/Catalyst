@@ -27,7 +27,7 @@ using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Protocol.Cryptography;
 
-namespace Catalyst.TestUtils
+namespace Catalyst.TestUtils.Fakes
 {
     /// <summary>
     /// A fake <see cref="IKeySigner"/> that enables to use NSubstitute for faking instances of it.

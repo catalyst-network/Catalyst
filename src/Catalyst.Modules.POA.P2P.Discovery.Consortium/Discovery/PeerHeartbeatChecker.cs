@@ -27,7 +27,7 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Abstractions.P2P.Protocols;
-using Catalyst.Core.Lib.P2P.Repository;
+using Catalyst.Abstractions.P2P.Repository;
 using Serilog;
 
 namespace Catalyst.Modules.POA.P2P.Discovery
@@ -76,19 +76,26 @@ namespace Catalyst.Modules.POA.P2P.Discovery
                         $"Heartbeat result: {result.ToString()} Peer: {peer.PeerId} Non-Responsive Counter: {counterValue}");
                     if (!result)
                     {
+                        // @TODO touch last seen on peer
                         _nonResponsivePeerMap[peer.DocumentId] += 1;
                         counterValue += 1;
 
                         if (counterValue >= _maxNonResponsiveCounter)
                         {
-                            _peerRepository.Delete(peer.DocumentId);
-                            _nonResponsivePeerMap.TryRemove(peer.DocumentId, out _);
+                            // Remove all non POA nodes at the moment until node is using same p2p discovery
+                            if (!peer.IsPoaNode)
+                            {
+                                _peerRepository.Delete(peer.DocumentId);
+                                _nonResponsivePeerMap.TryRemove(peer.DocumentId, out _);
+                            }
                             _logger.Verbose(
                                 $"Peer reached maximum non-responsive count: {peer.PeerId}. Evicted from repository");
                         }
                     }
                     else
                     {
+                        peer.Touch();
+                        _peerRepository.Update(peer);
                         _nonResponsivePeerMap[peer.DocumentId] = 0;
                     }
                 }).ConfigureAwait(false);

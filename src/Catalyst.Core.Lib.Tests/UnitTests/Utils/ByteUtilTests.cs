@@ -25,13 +25,13 @@ using System;
 using System.Linq;
 using Catalyst.Core.Lib.Util;
 using FluentAssertions;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
 {
     public sealed class ByteUtilTests
     {
-        [Fact]
+        [Test]
         public void Merge_ByteArrays_To_Single_Byte_Collection_Should_Succeed()
         {
             var firstBytesArray = GeneratePopulatedBytesArray(50);
@@ -46,7 +46,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
             byteResult.Length.Should().Be(100);
         }
 
-        [Fact]
+        [Test]
         public void Append_Byte_To_ByteArrays_Should_Succeed()
         {
             var firstBytesArray = GeneratePopulatedBytesArray(50);
@@ -62,8 +62,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
         }
 
         [Theory]
-        [InlineData(78)]
-        [InlineData(10)]
+        [TestCase(78)]
+        [TestCase(10)]
         public void Initialise_Empty_ByteArray_Should_Succeed(int arraySize)
         {
             var byteResult = ByteUtil.InitialiseEmptyByteArray(arraySize);

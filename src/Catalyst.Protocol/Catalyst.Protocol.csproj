@@ -1,24 +1,28 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.0</TargetFramework>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
         <RootNamespace>Catalyst.Protocol</RootNamespace>
         <Authors>James Kirby (nshcore@protonmail.com)</Authors>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Catalyst.Protocol.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
     </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <NoWarn>1701;1702;CS8002</NoWarn>
+    </PropertyGroup>
     <Import Project="../Common.Packable.props" />
     <Import Project="../Common.Projects.props" />
     <ItemGroup>
-        <PackageReference Include="Dawn.Guard" Version="1.9.0" />
+        <PackageReference Include="Dawn.Guard" Version="1.11.0" />
         <PackageReference Include="Google.Protobuf" Version="3.9.1" />
         <PackageReference Include="Grpc.Tools" Version="1.22.0" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
         <PackageReference Include="Serilog" Version="2.8.0" />
     </ItemGroup>
     <ItemGroup>
-        <ProtoBuf Include="..\..\submodules\protocol-protobuffs\src\*.proto" Link="Protobuffs\%(Filename)%(Extension)" />
+        <ProtoBuf Include="..\..\submodules\Protocol\src\*.proto" Link="Protobuffs\%(Filename)%(Extension)" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\..\submodules\nethermind\src\Dirichlet\Nethermind.Dirichlet.Numerics\Nethermind.Dirichlet.Numerics.csproj" />
+      <ProjectReference Include="..\MultiFormats\MultiFormats.csproj" />
     </ItemGroup>
 </Project>

@@ -31,13 +31,17 @@ using Autofac.Configuration;
 using AutofacSerilogIntegration;
 using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.Cryptography;
+using Catalyst.Abstractions.Ledger.Models;
 using Catalyst.Abstractions.Types;
 using Catalyst.Abstractions.Util;
 using Catalyst.Core.Lib.Config;
+using Catalyst.Core.Lib.DAO.Ledger;
+using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Network;
 using Microsoft.Extensions.Configuration;
 using Serilog;
+using Serilog.Filters;
 using SharpRepository.Ioc.Autofac;
 using SharpRepository.Repository;
 
@@ -81,6 +85,7 @@ namespace Catalyst.Core.Lib.Kernel
             Logger = new LoggerConfiguration()
                .WriteTo.Console()
                .WriteTo.File(Path.Combine(Path.GetTempPath(), fileName), rollingInterval: RollingInterval.Day)
+               .Filter.ByExcluding(Matching.FromSource("Microsoft"))
                .CreateLogger()
                .ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -114,6 +119,8 @@ namespace Catalyst.Core.Lib.Kernel
                .File(Path.Combine(_targetConfigFolder, _fileName),
                     rollingInterval: RollingInterval.Day,
                     outputTemplate: "{Timestamp:HH:mm:ss} [{Level:u3}] ({MachineName}/{ThreadId}) {Message} ({SourceContext}){NewLine}{Exception}")
+               .Filter.ByExcluding(Matching.FromSource("Microsoft"))
+               .Filter.ByExcluding(Matching.FromSource("LibP2P"))
                .CreateLogger()
                .ForContext(MethodBase.GetCurrentMethod().DeclaringType);
             ContainerBuilder.RegisterLogger(Logger);
@@ -218,6 +225,76 @@ namespace Catalyst.Core.Lib.Kernel
                 Instance = ContainerBuilder.Build()
                    .BeginLifetimeScope(declaringType.AssemblyQualifiedName);
             }
+        }
+
+        public Kernel Reset(bool reset)
+        {
+            if (reset)
+            {
+                Logger.Information("Resetting State");
+
+                var stateFolder = Path.Join(_targetConfigFolder, "state");
+                if (Directory.Exists(stateFolder))
+                {
+                    Logger.Information("Deleting EVM State");
+                    Directory.Delete(stateFolder, true);
+                }
+
+                var codeFolder = Path.Join(_targetConfigFolder, "code");
+                if (Directory.Exists(codeFolder))
+                {
+                    Logger.Information("Deleting EVM Code");
+                    Directory.Delete(codeFolder, true);
+                }
+
+                var blockFolder = Path.Join(_targetConfigFolder, "dfs", "blocks");
+                if (Directory.Exists(blockFolder))
+                {
+                    Logger.Information("Deleting DFS Blocks");
+                    Directory.Delete(blockFolder, true);
+                }
+
+                var pinFolder = Path.Join(_targetConfigFolder, "dfs", "pins");
+                if (Directory.Exists(pinFolder))
+                {
+                    Logger.Information("Deleting DFS Pins");
+                    Directory.Delete(pinFolder, true);
+                }
+
+                ContainerBuilder.RegisterBuildCallback(buildCallback =>
+                {
+                    var deltaIndexes = buildCallback.Resolve<IRepository<DeltaIndexDao, string>>();
+                    var transactionReceipts = buildCallback.Resolve<IRepository<TransactionReceipts, string>>();
+                    var transactionToDeltas = buildCallback.Resolve<IRepository<TransactionToDelta, string>>();
+                    var mempool = buildCallback.Resolve<IRepository<PublicEntryDao, string>>();
+
+                    Logger.Information("Deleting DeltaIndexes");
+                    foreach (var deltaIndex in deltaIndexes.GetAll())
+                    {
+                        deltaIndexes.Delete(deltaIndex);
+                    }
+
+                    Logger.Information("Deleting transactionReceipts");
+                    foreach (var transactionReceipt in transactionReceipts.GetAll())
+                    {
+                        transactionReceipts.Delete(transactionReceipt);
+                    }
+
+                    Logger.Information("Deleting transactionToDeltas");
+                    foreach (var transactionToDelta in transactionToDeltas.GetAll())
+                    {
+                        transactionToDeltas.Delete(transactionToDelta);
+                    }
+
+                    Logger.Information("Deleting mempool");
+                    foreach (var mempoolItem in mempool.GetAll())
+                    {
+                        mempool.Delete(mempoolItem);
+                    }
+                });
+            }
+
+            return this;
         }
     }
 }

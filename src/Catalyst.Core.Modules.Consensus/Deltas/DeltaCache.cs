@@ -25,14 +25,21 @@ using System;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
+using Catalyst.Core.Lib.Service;
 using Catalyst.Core.Modules.Dfs.Extensions;
+using Catalyst.Core.Modules.Kvm;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Wire;
+using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
-using LibP2P;
+using Lib.P2P;
 using Microsoft.Extensions.Caching.Memory;
+using Nethermind.Core;
+using MultiFormats;
+using Nethermind.Db;
+using Nethermind.State;
 using Serilog;
-using TheDotNetLeague.MultiFormats.MultiBase;
+using Catalyst.Core.Lib.DAO.Ledger;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
@@ -42,24 +49,48 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
     {
         private readonly IMemoryCache _memoryCache;
         private readonly IDeltaDfsReader _dfsReader;
+        private readonly IDeltaIndexService _deltaIndexService;
         private readonly ILogger _logger;
         private readonly Func<MemoryCacheEntryOptions> _entryOptions;
         public Cid GenesisHash { get; set; }
 
-        public static string GetLocalDeltaCacheKey(CandidateDeltaBroadcast candidate)
-        {
-            return nameof(DeltaCache) + "-LocalDelta-" + MultiBase.Encode(candidate.Hash.ToByteArray(), "base32");
-        }
+        public static string GetLocalDeltaCacheKey(CandidateDeltaBroadcast candidate) { return nameof(DeltaCache) + "-LocalDelta-" + MultiBase.Encode(candidate.Hash.ToByteArray(), "base32"); }
 
+        public static Address TruffleTestAccount = new Address("0xb77aec9f59f9d6f39793289a09aea871932619ed");
+
+        public static Address CatalystTruffleTestAccount = new Address("0x58BeB247771F0B6f87AA099af479aF767CcC0F00");
+        
         public DeltaCache(IHashProvider hashProvider,
             IMemoryCache memoryCache,
             IDeltaDfsReader dfsReader,
             IDeltaCacheChangeTokenProvider changeTokenProvider,
+            IStorageProvider storageProvider,
+            IStateProvider stateProvider,
+            ISnapshotableDb stateDb,
+            IDeltaIndexService deltaIndexService,
             ILogger logger)
         {
-            var genesisDelta = new Delta {TimeStamp = Timestamp.FromDateTime(DateTime.MinValue.ToUniversalTime())};
+            _deltaIndexService = deltaIndexService;
 
-            GenesisHash = hashProvider.ComputeMultiHash(genesisDelta).CreateCid();
+            stateProvider.CreateAccount(TruffleTestAccount, 1_000_000_000.Kat());
+            stateProvider.CreateAccount(CatalystTruffleTestAccount, 1_000_000_000.Kat());
+            
+            storageProvider.Commit();
+            stateProvider.Commit(CatalystGenesisSpec.Instance);
+
+            storageProvider.CommitTrees();
+            stateProvider.CommitTree();
+
+            stateDb.Commit();
+
+            var genesisDelta = new Delta
+            {
+                TimeStamp = Timestamp.FromDateTime(DateTime.UnixEpoch),
+                StateRoot = ByteString.CopyFrom(stateProvider.StateRoot.Bytes),
+            };
+
+            
+            GenesisHash = hashProvider.ComputeMultiHash(genesisDelta).ToCid();
 
             _dfsReader = dfsReader;
             _logger = logger;
@@ -71,10 +102,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             _memoryCache.Set(GenesisHash, genesisDelta);
         }
 
-        private void EvictionCallback(object key, object value, EvictionReason reason, object state)
-        {
-            _logger.Debug("Evicted Delta {0} from cache.", key);
-        }
+        private void EvictionCallback(object key, object value, EvictionReason reason, object state) { _logger.Debug("Evicted Delta {0} from cache.", key); }
 
         /// <inheritdoc />
         public bool TryGetOrAddConfirmedDelta(Cid cid,
@@ -101,6 +129,16 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             var tryGetLocalDelta = _memoryCache.TryGetValue(GetLocalDeltaCacheKey(candidate), out delta);
             _logger.Verbose("Retrieved full details {delta}", delta?.ToString() ?? "nothing");
             return tryGetLocalDelta;
+        }
+
+        public void AddLocalDelta(Cid cid, Delta delta)
+        {
+            _logger.Verbose("Adding local details of delta with CID {cid}", cid);
+            _memoryCache.Set(cid, delta, _entryOptions());
+            if (!TryGetOrAddConfirmedDelta(cid, out Delta retrieved, CancellationToken.None))
+            {
+                throw new InvalidOperationException();
+            }
         }
 
         public void AddLocalDelta(CandidateDeltaBroadcast localCandidate, Delta delta)

@@ -54,17 +54,16 @@ namespace Catalyst.Cli
         /// <summary>
         ///     Main cli loop
         /// </summary>
-        public static int Main(string[] args)
+        public static async Task<int> Main(string[] args)
         {
             // Parse the arguments.
-            Parser.Default
-               .ParseArguments<Options>(args)
-               .WithParsed(async o => await RunAsync(o).ConfigureAwait(false));
-
-            return Environment.ExitCode;
+            var result = await Parser.Default.ParseArguments<Options>(args)
+               .MapResult(async options => await RunAsync(options).ConfigureAwait(false),
+                    response => Task.FromResult(1)).ConfigureAwait(false);
+            return Environment.ExitCode = result;
         }
 
-        private static async Task RunAsync(Options options)
+        private static async Task<int> RunAsync(Options options)
         {
             Kernel.Logger.Information("Catalyst.Cli started with process id {0}",
                 Process.GetCurrentProcess().Id.ToString());
@@ -78,18 +77,18 @@ namespace Catalyst.Cli
                    .WithConfigurationFile(CliConstants.ShellConfigFile)
                    .WithNetworksConfigFile(NetworkType.Devnet, options.OverrideNetworkFile)
                    .BuildKernel()
-                   .StartCustomAsync(StartCli);
+                   .StartCustomAsync(StartCliAsync);
 
-                Environment.ExitCode = 0;
+                return 0;
             }
             catch (Exception e)
             {
                 Kernel.Logger.Fatal(e, "Catalyst.Cli stopped unexpectedly");
-                Environment.ExitCode = 1;
+                return 1;
             }
         }
 
-        private static async Task StartCli(Kernel kernel)
+        private static void StartCli(Kernel kernel)
         {
             const int bufferSize = 1024 * 67 + 128;
 
@@ -109,6 +108,11 @@ namespace Catalyst.Cli
 
             kernel.Instance.Resolve<ICatalystCli>()
                .RunConsole(kernel.CancellationTokenProvider.CancellationTokenSource.Token);
+        }
+
+        private static async Task StartCliAsync(Kernel kernel)
+        {
+            await Task.Run(() => StartCli(kernel)).ConfigureAwait(false);
         }
     }
 }

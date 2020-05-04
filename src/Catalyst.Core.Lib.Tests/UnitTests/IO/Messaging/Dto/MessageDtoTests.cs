@@ -29,7 +29,7 @@ using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
-using Xunit;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Dto
 {
@@ -45,7 +45,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Dto
             );
         }
 
-        [Fact]
+        [Test]
         public void CanInitMessageDtoCorrectly()
         {
             Assert.NotNull(_messageDto);

@@ -40,8 +40,8 @@ using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using Google.Protobuf;
+using MultiFormats.Registry;
 using NSubstitute;
-using TheDotNetLeague.MultiFormats.MultiHash;
 
 namespace Catalyst.Cli.Tests.UnitTests.Helpers
 {
@@ -86,7 +86,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Helpers
             commandContext.RpcClientFactory.Returns(nodeRpcClientFactory);
             commandContext.CertificateStore.Returns(certificateStore);
 
-            IHashProvider hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256"));
+            IHashProvider hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             var deltaMultiHash = hashProvider.ComputeUtf8MultiHash("previous");
             commandContext.PeerId.Returns(
                 PeerIdHelper.GetPeerId(deltaMultiHash.Digest, IPAddress.Any, 9010));

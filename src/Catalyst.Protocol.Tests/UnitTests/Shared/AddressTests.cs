@@ -27,7 +27,7 @@
 // using FluentAssertions;
 // using Multiformats.Hash.Algorithms;
 // using NSubstitute;
-// using Xunit;
+// using NUnit.Framework;
 //
 // namespace Catalyst.Protocol.Tests.Shared
 // {
@@ -42,13 +42,13 @@
 //             random.NextBytes(_noPrefixBytes);
 //         }
 //
-//         [Fact]
+//         [Test]
 //         public void Address_Constructor_From_Raw_Bytes_Should_Throw_On_Null_Argument()
 //         {
 //             new Action(() => new Address(null)).Should().Throw<ArgumentException>();
 //         }
 //
-//         [Fact]
+//         [Test]
 //         public void Address_Constructor_From_Raw_Bytes_Should_Throw_On_Bad_Network()
 //         {
 //             var wrongNetworkType = (byte) 255;
@@ -58,7 +58,7 @@
 //             new Action(() => new Address(fullAddress)).Should().Throw<ArgumentException>();
 //         }
 //
-//         [Fact]
+//         [Test]
 //         public void Address_Constructor_From_Raw_Bytes_Should_Throw_On_Bad_SmartContract_Byte()
 //         {
 //             var NetworkType = (byte) 1;
@@ -68,7 +68,7 @@
 //             new Action(() => new Address(fullAddress)).Should().Throw<ArgumentException>();
 //         }
 //
-//         [Fact]
+//         [Test]
 //         public void Address_Constructor_From_Raw_Bytes_Should_Throw_On_Bad_Byte_Length()
 //         {
 //             var NetworkType = (byte) 1;
@@ -81,7 +81,7 @@
 //             new Action(() => new Address(fullAddress)).Should().Throw<ArgumentException>();
 //         }
 //         
-//         [Fact]
+//         [Test]
 //         public void Address_Constructor_From_Raw_Bytes_Should_Work_On_Correct_Bytes()
 //         {
 //             var NetworkType = (byte) (int) Network.Devnet;
@@ -94,7 +94,7 @@
 //             address.RawBytes.Should().EndWith(_noPrefixBytes);
 //         }
 //
-//         [Fact]
+//         [Test]
 //         public void Address_Constructor_From_IPublicKey_Should_Fail_On_Null_Public_Key()
 //         {
 //             new Action(() => new Address(null,

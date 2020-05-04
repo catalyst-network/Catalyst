@@ -30,15 +30,15 @@ using Serilog;
 
 namespace Catalyst.Cli.Commands
 {
-    public sealed class PeerBlackListingCommand : BaseMessageCommand<SetPeerBlacklistRequest, SetPeerBlacklistResponse,
+    public sealed class PeerBlackListingCommand : BaseMessageCommand<SetPeerBlackListRequest, SetPeerBlackListResponse,
         PeerBlackListingOptions>
     {
         public PeerBlackListingCommand(ICommandContext commandContext, ILogger logger)
             : base(commandContext, logger) { }
 
-        protected override SetPeerBlacklistRequest GetMessage(PeerBlackListingOptions option)
+        protected override SetPeerBlackListRequest GetMessage(PeerBlackListingOptions option)
         {
-            return new SetPeerBlacklistRequest
+            return new SetPeerBlackListRequest
             {
                 PublicKey = option.PublicKey.ToUtf8ByteString(),
                 Ip = option.IpAddress.ToUtf8ByteString(),

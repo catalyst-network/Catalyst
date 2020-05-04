@@ -21,9 +21,11 @@
 
 #endregion
 
+using Catalyst.Abstractions.Ledger.Models;
+using Lib.P2P;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
-using Nethermind.Core.Json;
+using Nethermind.Serialization.Json;
 using Newtonsoft.Json;
 
 namespace Catalyst.Abstractions.Kvm.Models
@@ -40,14 +42,14 @@ namespace Catalyst.Abstractions.Kvm.Models
             Topics = logEntry.Topics;
         }
 
-        public LogEntryForRpc(TxReceipt receipt, LogEntry logEntry, int index)
+        public LogEntryForRpc(TransactionReceipt receipt, LogEntry logEntry, int index)
         {
             Removed = false;
             LogIndex = index;
             TransactionIndex = receipt.Index;
-            TransactionHash = receipt.TxHash;
-            BlockHash = receipt.BlockHash;
-            BlockNumber = receipt.BlockNumber;
+            TransactionHash = receipt.DeltaHash;
+            BlockHash = receipt.DeltaHash;
+            BlockNumber = receipt.DeltaNumber;
             Address = logEntry.LoggersAddress;
             Data = logEntry.Data;
             Topics = logEntry.Topics;
@@ -60,12 +62,12 @@ namespace Catalyst.Abstractions.Kvm.Models
         
         [JsonConverter(typeof(NullableLongConverter))]
         public long? TransactionIndex { get; set; }
-        
-        [JsonConverter(typeof(KeccakConverter))]
-        public Keccak TransactionHash { get; set; }
-        
-        [JsonConverter(typeof(KeccakConverter))]
-        public Keccak BlockHash { get; set; }
+
+        [JsonConverter(typeof(CidJsonConverter))]
+        public Cid TransactionHash { get; set; }
+
+        [JsonConverter(typeof(CidJsonConverter))]
+        public Cid BlockHash { get; set; }
         
         [JsonConverter(typeof(NullableLongConverter))]
         public long? BlockNumber { get; set; }
