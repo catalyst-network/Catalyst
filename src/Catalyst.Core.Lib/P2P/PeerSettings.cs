@@ -25,13 +25,18 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
+using System.Reflection;
+using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Peer;
 using Dawn;
+using Lib.P2P;
 using Microsoft.Extensions.Configuration;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.P2P
 {
@@ -54,14 +59,16 @@ namespace Catalyst.Core.Lib.P2P
         ///     Set attributes
         /// </summary>
         /// <param name="rootSection"></param>
-        public PeerSettings(IConfigurationRoot rootSection)
+        public PeerSettings(IConfigurationRoot rootSection, Peer localPeer)
         {
             Guard.Argument(rootSection, nameof(rootSection)).NotNull();
-            
+
             var section = rootSection.GetSection("CatalystNodeConfiguration").GetSection("Peer");
             Enum.TryParse(section.GetSection("Network").Value, out _networkType);
 
-            PublicKey = section.GetSection("PublicKey").Value;
+            var pksi = Convert.FromBase64String(localPeer.PublicKey);
+            PublicKey = pksi.GetPublicKeyBytesFromPeerId().ToBase58();
+
             Port = int.Parse(section.GetSection("Port").Value);
             PayoutAddress = section.GetSection("PayoutAddress").Value;
             BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value);
@@ -71,7 +78,7 @@ namespace Catalyst.Core.Lib.P2P
                .Select(p => EndpointBuilder.BuildNewEndPoint(p.Value)).ToArray();
 
             var publicIpAddress = IPAddress.Parse(section.GetSection("PublicIpAddress").Value);
-            PeerId = PublicKey.BuildPeerIdFromBase32Key(publicIpAddress, Port);
+            PeerId = PublicKey.BuildPeerIdFromBase58Key(publicIpAddress, Port);
         }
     }
 }

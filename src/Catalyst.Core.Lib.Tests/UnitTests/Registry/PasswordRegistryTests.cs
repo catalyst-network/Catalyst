@@ -44,49 +44,49 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Registry
         [Test]
         public void Can_Add_Item_To_Registry()
         {
-            _passwordRegistry.AddItemToRegistry(PasswordRegistryTypes.IpfsPassword, _secureString).Should().BeTrue();
-            _passwordRegistry.RegistryContainsKey(PasswordRegistryTypes.IpfsPassword).Should().BeTrue();
+            _passwordRegistry.AddItemToRegistry(PasswordRegistryTypes.DefaultNodePassword, _secureString).Should().BeTrue();
+            _passwordRegistry.RegistryContainsKey(PasswordRegistryTypes.DefaultNodePassword).Should().BeTrue();
         }
 
         [Test]
         public void Can_Add_Multiple_Items_To_Registry()
         {
-            _passwordRegistry.AddItemToRegistry(PasswordRegistryTypes.IpfsPassword, _secureString).Should().BeTrue();
+            _passwordRegistry.AddItemToRegistry(PasswordRegistryTypes.DefaultNodePassword, _secureString).Should().BeTrue();
             _passwordRegistry.AddItemToRegistry(PasswordRegistryTypes.CertificatePassword, _secureString).Should().BeTrue();    
             
-            _passwordRegistry.RegistryContainsKey(PasswordRegistryTypes.IpfsPassword).Should().BeTrue();
+            _passwordRegistry.RegistryContainsKey(PasswordRegistryTypes.DefaultNodePassword).Should().BeTrue();
             _passwordRegistry.RegistryContainsKey(PasswordRegistryTypes.CertificatePassword).Should().BeTrue();
         }
 
         [Test]
         public void Cant_Add_Items_To_Registry_Twice_With_Same_Key()
         {
-            _passwordRegistry.AddItemToRegistry(PasswordRegistryTypes.IpfsPassword, _secureString).Should().BeTrue();
-            _passwordRegistry.AddItemToRegistry(PasswordRegistryTypes.IpfsPassword, _secureString).Should().BeFalse();    
+            _passwordRegistry.AddItemToRegistry(PasswordRegistryTypes.DefaultNodePassword, _secureString).Should().BeTrue();
+            _passwordRegistry.AddItemToRegistry(PasswordRegistryTypes.DefaultNodePassword, _secureString).Should().BeFalse();    
             
-            _passwordRegistry.RegistryContainsKey(PasswordRegistryTypes.IpfsPassword).Should().BeTrue();
+            _passwordRegistry.RegistryContainsKey(PasswordRegistryTypes.DefaultNodePassword).Should().BeTrue();
         }
 
         [Test]
         public void Can_Remove_Item_From_Registry()
         {
-            _passwordRegistry.AddItemToRegistry(PasswordRegistryTypes.IpfsPassword, _secureString).Should().BeTrue();
-            _passwordRegistry.RemoveItemFromRegistry(PasswordRegistryTypes.IpfsPassword).Should().BeTrue();    
+            _passwordRegistry.AddItemToRegistry(PasswordRegistryTypes.DefaultNodePassword, _secureString).Should().BeTrue();
+            _passwordRegistry.RemoveItemFromRegistry(PasswordRegistryTypes.DefaultNodePassword).Should().BeTrue();    
             
-            _passwordRegistry.RegistryContainsKey(PasswordRegistryTypes.IpfsPassword).Should().BeFalse();
+            _passwordRegistry.RegistryContainsKey(PasswordRegistryTypes.DefaultNodePassword).Should().BeFalse();
         }
 
         [Test]
         public void Can_Retrieve_Item_From_Registry()
         {
-            _passwordRegistry.AddItemToRegistry(PasswordRegistryTypes.IpfsPassword, _secureString).Should().BeTrue();
-            _passwordRegistry.GetItemFromRegistry(PasswordRegistryTypes.IpfsPassword).Should().BeEquivalentTo(_secureString);
+            _passwordRegistry.AddItemToRegistry(PasswordRegistryTypes.DefaultNodePassword, _secureString).Should().BeTrue();
+            _passwordRegistry.GetItemFromRegistry(PasswordRegistryTypes.DefaultNodePassword).Should().BeEquivalentTo(_secureString);
         }
 
         [Test]
         public void Retrieving_Item_Not_Contained_In_Registry_Returns_Null()
         {
-            _passwordRegistry.GetItemFromRegistry(PasswordRegistryTypes.IpfsPassword).Should().BeEquivalentTo((SecureString) null);
+            _passwordRegistry.GetItemFromRegistry(PasswordRegistryTypes.DefaultNodePassword).Should().BeEquivalentTo((SecureString) null);
         }
 
         [Test]

@@ -53,10 +53,7 @@ namespace Catalyst.Abstractions.Keystore
         ///    A task that represents the asynchronous operation. The task's result
         ///    is the newly imported key.
         /// </returns>
-        Task<IKey> ImportAsync(string name,
-            string pem,
-            char[] password = null,
-            CancellationToken cancel = default);
+        Task<IKey> ImportAsync(string name, string pem, char[] password = null, CancellationToken cancel = default);
         
         /// <summary>
         ///   Gets the IPFS encoded public key for the specified key.
@@ -76,7 +73,7 @@ namespace Catalyst.Abstractions.Keystore
         ///   a type and the DER encoding of the PKCS Subject Public Key Info.
         /// </remarks>
         /// <seealso href="https://tools.ietf.org/html/rfc5280#section-4.1.2.7"/>
-        Task<string> GetPublicKeyAsync(string name, CancellationToken cancel = default);
+        Task<string> GetIpfsPublicKeyAsync(string name, CancellationToken cancel = default);
 
         /// <summary>
         ///   Find a key by its name.
@@ -121,9 +118,7 @@ namespace Catalyst.Abstractions.Keystore
         ///   is used to digitally sign, digest, authenticate, and/or encrypt
         ///   arbitrary message content.
         /// </remarks>
-        Task<byte[]> CreateProtectedDataAsync(string keyName,
-            byte[] plainText,
-            CancellationToken cancel = default);
+        Task<byte[]> CreateProtectedDataAsync(string keyName, byte[] plainText, CancellationToken cancel = default);
 
         /// <summary>
         ///   Decrypt CMS protected data.
@@ -148,8 +143,7 @@ namespace Catalyst.Abstractions.Keystore
         ///   is used to digitally sign, digest, authenticate, and/or encrypt
         ///   arbitrary message content.
         /// </remarks>
-        Task<byte[]> ReadProtectedDataAsync(byte[] cipherText,
-            CancellationToken cancel = default);
+        Task<byte[]> ReadProtectedDataAsync(byte[] cipherText, CancellationToken cancel = default);
 
         /// <summary>
         ///   Sets the passphrase for the key chain.
@@ -171,19 +165,13 @@ namespace Catalyst.Abstractions.Keystore
         ///   Neither the <paramref name="passphrase"/> nor the DEK are stored.
         ///   </para>
         /// </remarks>
-        Task SetPassphraseAsync(SecureString passphrase,
-            CancellationToken cancel = default);
+        Task SetPassphraseAsync(SecureString passphrase, CancellationToken cancel = default);
 
         /// <inheritdoc />
-        Task<IKey> CreateAsync(string name,
-            string keyType,
-            int size,
-            CancellationToken cancel = default);
+        Task<IKey> CreateAsync(string name, string keyType, int size, CancellationToken cancel = default);
 
         /// <inheritdoc />
-        Task<string> ExportAsync(string name,
-            char[] password,
-            CancellationToken cancel = default);
+        Task<string> ExportAsync(string name, char[] password, CancellationToken cancel = default);
 
         /// <inheritdoc />
         Task<IEnumerable<IKey>> ListAsync(CancellationToken cancel = default);
@@ -192,9 +180,7 @@ namespace Catalyst.Abstractions.Keystore
         Task<IKey> RemoveAsync(string name, CancellationToken cancel = default);
 
         /// <inheritdoc />
-        Task<IKey> RenameAsync(string oldName,
-            string newName,
-            CancellationToken cancel = default);
+        Task<IKey> RenameAsync(string oldName, string newName, CancellationToken cancel = default);
 
         /// <summary>
         ///   Gets the Bouncy Castle representation of the private key.
@@ -209,8 +195,8 @@ namespace Catalyst.Abstractions.Keystore
         ///   A task that represents the asynchronous operation. The task's result is
         ///   the private key as an <b>AsymmetricKeyParameter</b>.
         /// </returns>
-        Task<AsymmetricKeyParameter> GetPrivateKeyAsync(string name,
-            CancellationToken cancel = default);
+        Task<AsymmetricKeyParameter> GetPrivateKeyAsync(string name, CancellationToken cancel = default);
+        Task<AsymmetricKeyParameter> GetPublicKeyAsync(string name, CancellationToken cancel = default);
 
         /// <summary>
         ///   Create a X509 certificate for the specified key.
@@ -220,7 +206,6 @@ namespace Catalyst.Abstractions.Keystore
         /// </param>
         /// <param name="cancel"></param>
         /// <returns></returns>
-        Task<byte[]> CreateCertificateAsync(string keyName,
-            CancellationToken cancel = default);
+        Task<byte[]> CreateCertificateAsync(string keyName, CancellationToken cancel = default);
     }
 }

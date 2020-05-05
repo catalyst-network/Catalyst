@@ -38,26 +38,28 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Network
     [Category(Traits.IntegrationTest)] 
     public sealed class IpIntegrationTests
     {
-        [Test]
-        public async Task GetPublicIp_should_not_wait_for_longest_response()
-        {
-            var delayedObservable = Ip.DefaultIpEchoUrls
-               .Select((o, i) =>
-                {
-                    return i != 2
-                        ? Observable.Timer(TimeSpan.FromSeconds(5)).Select(_ => o)
-                        : Observable.Return(o);
-                }).Merge();
+        //todo issue: https://github.com/catalyst-network/Catalyst/issues/1234
+        //[Test]
+        //[Property(Traits.TestType, Traits.IntegrationTest)]
+        //public async Task GetPublicIp_should_not_wait_for_longest_response()
+        //{
+        //    var delayedObservable = Ip.DefaultIpEchoUrls
+        //       .Select((o, i) =>
+        //        {
+        //            return i != 2
+        //                ? Observable.Timer(TimeSpan.FromSeconds(5)).Select(_ => o)
+        //                : Observable.Return(o);
+        //        }).Merge();
 
-            var stopWatch = new Stopwatch();
+        //    var stopWatch = new Stopwatch();
 
-            stopWatch.Start();
-            var myIp = await Ip.GetPublicIpAsync(delayedObservable);
-            stopWatch.Stop();
+        //    stopWatch.Start();
+        //    var myIp = await Ip.GetPublicIpAsync(delayedObservable);
+        //    stopWatch.Stop();
 
-            myIp.Should().NotBe(default(IPAddress));
-            stopWatch.Elapsed.Should().BeLessThan(TimeSpan.FromSeconds(3));
-        }
+        //    myIp.Should().NotBe(default(IPAddress));
+        //    stopWatch.Elapsed.Should().BeLessThan(TimeSpan.FromSeconds(3));
+        //}
 
         [Test]
         public async Task GetPublicIp_should_tolerate_echo_failure()

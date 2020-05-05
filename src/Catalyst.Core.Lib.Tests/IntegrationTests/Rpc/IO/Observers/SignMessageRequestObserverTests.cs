@@ -109,7 +109,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
                 signMessageRequest.ToProtocolMessage(sender);
 
             await TaskHelper.WaitForAsync(
-                () => _keySigner.KeyStore.KeyStoreDecrypt(KeyRegistryTypes.DefaultKey) != null, 
+                () => _keySigner.GetPrivateKey(KeyRegistryTypes.DefaultKey) != null, 
                 TimeSpan.FromSeconds(2));
 
             var messageStream =

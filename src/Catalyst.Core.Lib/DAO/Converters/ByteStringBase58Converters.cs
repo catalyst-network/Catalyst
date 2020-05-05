@@ -21,19 +21,26 @@
 
 #endregion
 
-using System.Threading.Tasks;
-using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.Types;
-using Catalyst.Protocol.Network;
+using AutoMapper;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Util;
+using Google.Protobuf;
 
-namespace Catalyst.Abstractions.Keystore
+namespace Catalyst.Core.Lib.DAO.Converters
 {
-    public interface IKeyStore
+    public class ByteStringToBase58Converter : IValueConverter<ByteString, string>
     {
-        IPrivateKey KeyStoreDecrypt(KeyRegistryTypes keyIdentifier);
+        public string Convert(ByteString sourceMember, ResolutionContext context)
+        {
+            return sourceMember.ToByteArray().KeyToString();
+        }
+    }
 
-        Task<IPrivateKey> KeyStoreGenerateAsync(KeyRegistryTypes keyIdentifier);
-
-        Task KeyStoreEncryptAsync(IPrivateKey privateKey, NetworkType networkType, KeyRegistryTypes keyIdentifier);
+    public class Base58ToByteStringFormatter : IValueConverter<string, ByteString>
+    {
+        public ByteString Convert(string sourceMember, ResolutionContext context)
+        {
+            return sourceMember.KeyToBytes().ToByteString();
+        }
     }
 }

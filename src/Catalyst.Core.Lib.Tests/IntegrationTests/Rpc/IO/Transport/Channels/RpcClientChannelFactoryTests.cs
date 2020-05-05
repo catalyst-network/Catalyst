@@ -51,18 +51,19 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
 {
     public sealed class RpcClientChannelFactoryTests
     {
-        private readonly TestScheduler _testScheduler;
-        private readonly UnitTests.Rpc.IO.Transport.Channels.RpcServerChannelFactoryTests.TestRpcServerChannelFactory _serverFactory;
-        private readonly EmbeddedChannel _serverChannel;
-        private readonly EmbeddedChannel _clientChannel;
-        private readonly IRpcMessageCorrelationManager _clientCorrelationManager;
-        private readonly FakeKeySigner _clientKeySigner;
-        private readonly IAuthenticationStrategy _authenticationStrategy;
-        private readonly IPeerIdValidator _peerIdValidator;
-        private readonly FakeKeySigner _serverKeySigner;
-        private readonly IRpcMessageCorrelationManager _serverCorrelationManager;
+        private TestScheduler _testScheduler;
+        private UnitTests.Rpc.IO.Transport.Channels.RpcServerChannelFactoryTests.TestRpcServerChannelFactory _serverFactory;
+        private EmbeddedChannel _serverChannel;
+        private EmbeddedChannel _clientChannel;
+        private IRpcMessageCorrelationManager _clientCorrelationManager;
+        private FakeKeySigner _clientKeySigner;
+        private IAuthenticationStrategy _authenticationStrategy;
+        private IPeerIdValidator _peerIdValidator;
+        private FakeKeySigner _serverKeySigner;
+        private IRpcMessageCorrelationManager _serverCorrelationManager;
 
-        public RpcClientChannelFactoryTests()
+        [SetUp]
+        public void Init()
         {
             _testScheduler = new TestScheduler();
             _serverCorrelationManager = Substitute.For<IRpcMessageCorrelationManager>();

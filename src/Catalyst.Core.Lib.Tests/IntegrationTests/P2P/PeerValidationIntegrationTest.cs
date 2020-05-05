@@ -25,6 +25,8 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Autofac;
+using Catalyst.Abstractions.Cli;
+using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
@@ -33,6 +35,8 @@ using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
 using Catalyst.Abstractions.P2P.Protocols;
+using Catalyst.Abstractions.Types;
+using Catalyst.Core.Lib.Cli;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.EventLoop;
 using Catalyst.Core.Lib.P2P;
@@ -44,6 +48,8 @@ using Catalyst.Core.Modules.KeySigner;
 using Catalyst.Core.Modules.Keystore;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using Lib.P2P;
+using MultiFormats;
 using NSubstitute;
 using NUnit.Framework;
 using Serilog;
@@ -68,24 +74,29 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             var keyRegistry = TestKeyRegistry.MockKeyRegistry();
             ContainerProvider.ContainerBuilder.RegisterInstance(keyRegistry).As<IKeyRegistry>();
 
+            ContainerProvider.ContainerBuilder.RegisterModule(new CoreLibProvider());
             ContainerProvider.ContainerBuilder.RegisterModule(new KeystoreModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new KeySignerModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new HashingModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new BulletProofsModule());
 
-            _peerSettings = new PeerSettings(ContainerProvider.ConfigurationRoot);
+            ContainerProvider.ContainerBuilder.RegisterType<ConsoleUserOutput>().As<IUserOutput>();
+            ContainerProvider.ContainerBuilder.RegisterType<ConsoleUserInput>().As<IUserInput>();
 
-            var peerSettings =
-                PeerIdHelper.GetPeerId("sender", _peerSettings.BindAddress, _peerSettings.Port)
-                   .ToSubstitutedPeerSettings();
+            var passwordManager = Substitute.For<IPasswordManager>();
+            passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(Arg.Is(PasswordRegistryTypes.DefaultNodePassword), Arg.Any<string>()).Returns(TestPasswordReader.BuildSecureStringPassword("test"));
+            ContainerProvider.ContainerBuilder.RegisterInstance(passwordManager).As<IPasswordManager>();
+
+            _peerSettings = (PeerSettings) ContainerProvider.Container.Resolve<IPeerSettings>();
 
             ContainerProvider.ContainerBuilder.Register(c =>
             {
                 var peerClient = c.Resolve<IPeerClient>();
                 peerClient.StartAsync().ConfigureAwait(false).GetAwaiter().GetResult();
-                return new PeerChallengeRequest(logger, peerClient, peerSettings, 10);
+                return new PeerChallengeRequest(logger, peerClient, _peerSettings, 10);
             }).As<IPeerChallengeRequest>().SingleInstance();
 
+            
             _peerChallengeRequest = ContainerProvider.Container.Resolve<IPeerChallengeRequest>();
 
             var eventLoopGroupFactoryConfiguration = new EventLoopGroupFactoryConfiguration
@@ -125,8 +136,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         // }
 
         [Theory]
-        [TestCase("ftqm5kpzpo7bvl6e53q5j6mmrjwupbbiuszpsopxvjodkkqqiusa", "92.207.178.198", 1574)]
-        [TestCase("fzqm5kpzpo7bvl5e53q5j6mmrjwupbbiuszpsopxvjodkkqqiusd", "198.51.100.3", 2524)]
+        [TestCase("42Bm3dA9xKjnMYp5CztnUYqEme4Y46suNCvKx6ueDhz", "92.207.178.198", 1574)]
+        [TestCase("483NWsFHJ5UrTRf8q6Ew3E8mD89i9cXyaxxFM1sSn4q1", "198.51.100.3", 2524)]
         public async Task PeerChallenge_PeerIdentifiers_Expect_To_Fail_IP_Port_PublicKey(string publicKey,
             string ip,
             int port)
@@ -142,7 +153,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             TestContext.WriteLine(ip.ToString());
             TestContext.WriteLine(port.ToString());
 
-            var recipient = publicKey.BuildPeerIdFromBase32Key(ip, port);
+            var recipient = publicKey.BuildPeerIdFromBase58Key(ip, port);
 
             return await _peerChallengeRequest.ChallengePeerAsync(recipient);
         }

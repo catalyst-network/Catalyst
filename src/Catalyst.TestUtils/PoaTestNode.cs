@@ -79,6 +79,8 @@ using Catalyst.Modules.POA.Consensus;
 using Catalyst.Modules.POA.P2P;
 using Catalyst.Node.POA.CE;
 using SharpRepository.Repository;
+using Catalyst.Core.Lib.Cryptography;
+using Catalyst.Core.Lib.FileSystem;
 
 namespace Catalyst.TestUtils
 {
@@ -144,15 +146,6 @@ namespace Catalyst.TestUtils
 
             _scope = _containerProvider.Container.BeginLifetimeScope(Name);
             _node = _scope.Resolve<ICatalystNode>();
-
-            var keyStore = _scope.Resolve<IKeyStore>();
-            var keyRegistry = _scope.Resolve<IKeyRegistry>();
-            keyRegistry.RemoveItemFromRegistry(KeyRegistryTypes.DefaultKey);
-            keyRegistry.AddItemToRegistry(KeyRegistryTypes.DefaultKey, privateKey);
-
-            keyStore.KeyStoreEncryptAsync(privateKey, nodeSettings.NetworkType, KeyRegistryTypes.DefaultKey)
-               .ConfigureAwait(false).GetAwaiter()
-               .GetResult();
         }
         
         public static void RegisterNodeDependencies(ContainerBuilder containerBuilder,
@@ -240,6 +233,8 @@ namespace Catalyst.TestUtils
                .AsImplementedInterfaces();
             builder.RegisterInstance(new InMemoryRepository<TransactionToDelta, string>())
                .AsImplementedInterfaces();
+
+            builder.RegisterInstance(_dfsService.KeyApi).As<IKeyApi>().SingleInstance();
 
             _containerProvider.ContainerBuilder.RegisterInstance(new TestPasswordReader()).As<IPasswordReader>();
             _containerProvider.ContainerBuilder.RegisterInstance(_nodeSettings).As<IPeerSettings>();

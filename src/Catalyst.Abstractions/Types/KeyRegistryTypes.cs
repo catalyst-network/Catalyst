@@ -32,7 +32,7 @@ namespace Catalyst.Abstractions.Types
 
         private sealed class DefaultSigningKey : KeyRegistryTypes
         {
-            public DefaultSigningKey() : base(1, "defaultSigningKey") { }
+            public DefaultSigningKey() : base(1, "self") { }
         }
     }
 }

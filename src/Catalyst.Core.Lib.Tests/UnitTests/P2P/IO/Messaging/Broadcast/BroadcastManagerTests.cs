@@ -47,13 +47,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
 {
     public sealed class BroadcastManagerTests : IDisposable
     {
-        private readonly IPeerRepository _peers;
-        private readonly IMemoryCache _cache;
-        private readonly FakeKeySigner _keySigner;
-        private readonly PeerId _senderPeerId;
-        private readonly IPeerSettings _peerSettings;
+        private IPeerRepository _peers;
+        private IMemoryCache _cache;
+        private FakeKeySigner _keySigner;
+        private PeerId _senderPeerId;
+        private IPeerSettings _peerSettings;
 
-        public BroadcastManagerTests()
+        [SetUp]
+        public void Init()
         {
             _senderPeerId = PeerIdHelper.GetPeerId("sender");
             _keySigner = Substitute.For<FakeKeySigner>();

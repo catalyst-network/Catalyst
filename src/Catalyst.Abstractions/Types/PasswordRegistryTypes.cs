@@ -28,7 +28,6 @@ namespace Catalyst.Abstractions.Types
     public class PasswordRegistryTypes : Enumeration
     {
         public static readonly PasswordRegistryTypes CertificatePassword = new CertificatePasswordTypes();
-        public static readonly PasswordRegistryTypes IpfsPassword = new IpfsPasswordTypes();
         public static readonly PasswordRegistryTypes DefaultNodePassword = new DefaultNodePasswordTypes();
 
         private PasswordRegistryTypes(int id, string name) : base(id, name) { }
@@ -38,14 +37,9 @@ namespace Catalyst.Abstractions.Types
             public CertificatePasswordTypes() : base(1, "certificatePasswordKey") { }
         }
 
-        private sealed class IpfsPasswordTypes : PasswordRegistryTypes
-        {
-            public IpfsPasswordTypes() : base(2, "ipfsPasswordKey") { }
-        }
-
         private sealed class DefaultNodePasswordTypes : PasswordRegistryTypes
         {
-            public DefaultNodePasswordTypes() : base(4, "defaultNodePasswordKey") { }
+            public DefaultNodePasswordTypes() : base(2, "defaultNodePasswordKey") { }
         }
     }
 }

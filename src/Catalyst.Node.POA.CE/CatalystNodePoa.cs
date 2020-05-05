@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -31,15 +32,23 @@ using Catalyst.Abstractions.Contract;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.KeySigner;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Abstractions.Types;
+using Catalyst.Core.Lib.Cryptography.Proto;
 using Catalyst.Core.Lib.DAO.Transaction;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Modules.Hashing;
 using Dawn;
 using MultiFormats;
+using MultiFormats.Registry;
+using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Asn1.X509;
+using ProtoBuf;
 using Serilog;
 
 namespace Catalyst.Node.POA.CE
@@ -59,6 +68,7 @@ namespace Catalyst.Node.POA.CE
         private readonly IPublicKey _publicKey;
         private readonly ISynchroniser _synchronizer;
         private readonly IPeerRepository _peerRepository;
+        private readonly IKeyApi _keyApi;
 
         public CatalystNodePoa(IKeySigner keySigner,
             IPeerService peer,
@@ -71,6 +81,7 @@ namespace Catalyst.Node.POA.CE
             IMempool<PublicEntryDao> memPool,
             ISynchroniser synchronizer,
             IPeerRepository peerRepository,
+            IKeyApi keyApi,
             IContract contract = null)
         {
             Guard.Argument(peerRepository, nameof(peerRepository)).NotNull();
@@ -87,8 +98,9 @@ namespace Catalyst.Node.POA.CE
             _contract = contract;
             _synchronizer = synchronizer;
             _peerRepository = peerRepository;
+            _keyApi = keyApi;
 
-            var privateKey = keySigner.KeyStore.KeyStoreDecrypt(KeyRegistryTypes.DefaultKey);
+            var privateKey = keySigner.GetPrivateKey(KeyRegistryTypes.DefaultKey);
             _publicKey = keySigner.CryptoContext.GetPublicKeyFromPrivateKey(privateKey);
         }
 
@@ -101,7 +113,11 @@ namespace Catalyst.Node.POA.CE
         public async Task RunAsync(CancellationToken ct)
         {
             _logger.Information("Starting the Catalyst Node");
-            _logger.Information($"***** using PublicKey: {_publicKey.Bytes.ToBase32()} *****");
+            var key = await _keyApi.GetKeyAsync("self").ConfigureAwait(false);
+            var peerId = key.Id;
+
+            _logger.Information($"***** using PeerId: {peerId} *****");
+            _logger.Information($"***** using PublicKey: {_publicKey.Bytes.ToBase58()} *****");
 
             await StartSocketsAsync().ConfigureAwait(false);
 

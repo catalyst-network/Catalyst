@@ -39,7 +39,9 @@ using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
-
+using Catalyst.Abstractions.Keystore;
+using Catalyst.Abstractions.Options;
+using Catalyst.Core.Lib.FileSystem;
 
 namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
 {
@@ -52,23 +54,22 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
         {
             this.Setup(TestContext.CurrentContext);
 
-            var logger = Substitute.For<ILogger>();
-
-            var passwordManager = Substitute.For<IPasswordManager>();
-
             var cryptoContext = new FfiWrapper();
 
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.NetworkType.Returns(NetworkType.Devnet);
 
-            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
-
-            var keystore = new LocalKeyStore(passwordManager, cryptoContext, FileSystem, hashProvider,
-                logger);
-
             var keyRegistry = new KeyRegistry();
 
-            _keySigner = new KeySigner(keystore, cryptoContext, keyRegistry);
+            var inMemoryStore = new InMemoryStore<string, EncryptedKey>();
+            var keyStoreService = new KeyStoreService(new KeyChainOptions { DefaultKeyType = "ed25519" }, inMemoryStore);
+            var keyApi = new KeyApi(keyStoreService);
+
+            var secureString = TestPasswordReader.BuildSecureStringPassword("password");
+            keyApi.SetPassphraseAsync(secureString).GetAwaiter().GetResult();
+            keyApi.CreateAsync("self", "ed25519", 0).GetAwaiter().GetResult();
+
+            _keySigner = new KeySigner(cryptoContext, keyApi, keyRegistry);
         }
 
         private IKeySigner _keySigner;

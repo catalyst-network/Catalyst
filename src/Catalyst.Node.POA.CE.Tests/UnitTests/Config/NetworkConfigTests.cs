@@ -34,6 +34,8 @@ using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using SharpRepository.Repository;
 using NUnit.Framework;
+using NSubstitute;
+using Lib.P2P;
 
 namespace Catalyst.Node.POA.CE.Tests.UnitTests.Config
 {
@@ -74,7 +76,11 @@ namespace Catalyst.Node.POA.CE.Tests.UnitTests.Config
             containerBuilder.RegisterModule(configModule);
             containerBuilder.RegisterInstance(configRoot).As<IConfigurationRoot>();
 
-            var peerSettings = new PeerSettings(configRoot);
+            var peer = new Peer
+            {
+                PublicKey = "CAESLDAqMAUGAytlcAMhADyXIeZUUBKx3OiDdhDb5GGrDUPOhhzJWPf80Iqam3lr"
+            };
+            var peerSettings = new PeerSettings(configRoot, peer);
 
             peerSettings.Should().NotBeNull();
             peerSettings.NetworkType.Should().NotBeNull();
