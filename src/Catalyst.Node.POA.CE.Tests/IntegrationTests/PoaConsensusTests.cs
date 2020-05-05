@@ -57,7 +57,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 
             _endOfTestCancellationSource = new CancellationTokenSource();
 
-            var poaNodeDetails = Enumerable.Range(0, 3).Select(i =>
+            var poaNodeDetails = Enumerable.Range(0, 4).Select(i =>
             {
                 var fileSystem = Substitute.For<IFileSystem>();
                 var path = Path.Combine(FileSystem.GetCatalystDataDir().FullName, $"producer{i}");
