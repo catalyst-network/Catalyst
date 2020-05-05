@@ -186,6 +186,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Db.Rocks", "..\s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RocksDbNative", "..\submodules\nethermind\src\rocksdb-sharp\RocksDbNative\RocksDbNative.csproj", "{8C464EDF-B72C-4A9B-84BB-1B51EC3A26A5}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Modules.UPnP", "Catalyst.Modules.UPnP\Catalyst.Modules.UPnP.csproj", "{40E17E50-8D0C-43FE-AE1B-BEA0545C546D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Modules.UPnP.Tests", "Catalyst.Modules.UPnP.Tests\Catalyst.Modules.UPnP.Tests.csproj", "{A9E06266-42C2-4074-949F-2DDA75F9A122}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -488,6 +492,14 @@ Global
 		{8C464EDF-B72C-4A9B-84BB-1B51EC3A26A5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8C464EDF-B72C-4A9B-84BB-1B51EC3A26A5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8C464EDF-B72C-4A9B-84BB-1B51EC3A26A5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40E17E50-8D0C-43FE-AE1B-BEA0545C546D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40E17E50-8D0C-43FE-AE1B-BEA0545C546D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40E17E50-8D0C-43FE-AE1B-BEA0545C546D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40E17E50-8D0C-43FE-AE1B-BEA0545C546D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9E06266-42C2-4074-949F-2DDA75F9A122}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9E06266-42C2-4074-949F-2DDA75F9A122}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9E06266-42C2-4074-949F-2DDA75F9A122}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9E06266-42C2-4074-949F-2DDA75F9A122}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

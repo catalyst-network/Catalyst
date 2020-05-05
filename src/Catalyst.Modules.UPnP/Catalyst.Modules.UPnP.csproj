@@ -14,7 +14,6 @@
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <NoWarn>1701;1702;CS8002</NoWarn>
     </PropertyGroup>
-    <Import Project="../Common.Projects.props" />
     <ItemGroup>
         <PackageReference Include="Mono.Nat" Version="2.0.0" />
         <PackageReference Include="CommandLineParser" Version="2.5.0" />

@@ -4,22 +4,56 @@ using Mono.Nat;
 
 namespace Catalyst.Modules.UPnP
 {
+    
     public sealed class PortMapper
     {
-        public TimeSpan Timeout { get; } = TimeSpan.FromMilliseconds(100000);  
-       
-        public bool TryAddPortMapping(int port)
+        private INatUtilityProvider _natUtilityProvider;
+        public PortMapper(INatUtilityProvider natUtilityProvider)
         {
+            _natUtilityProvider = natUtilityProvider;
+        }
+        public event EventHandler TimeoutReached;
+        
+       
+        public void TryGetDevice(int port, int timeoutInSeconds = 30)
+        {
+            var started = DateTime.Now;
+            var timespan = TimeSpan.FromSeconds(timeoutInSeconds);  
+            //NatUtility.DeviceFound += (sender, args) => TryAddPort(sender, args, port);
+            _natUtilityProvider.DeviceFound += TryGetPorts;
+            
+            _natUtilityProvider.StartDiscovery();
+            Console.WriteLine("started searching");
+            while (DateTime.Now <= started + timespan)
+            {
+                //Thread.Sleep(5000);
+            }
+           
 
-            NatUtility.DeviceFound += (sender, args) => TryAddPort(sender, args, port);
+            _natUtilityProvider.StopDiscovery();
+            Console.WriteLine("stopped searching");
+
+            OnTimeoutReached();
+        }
+
+        private void OnTimeoutReached()
+        {
+            EventHandler handler = TimeoutReached;
+            handler?.Invoke(this, EventArgs.Empty);
+        }
+        
+        public void TryGetPortMappings(int timeoutInSeconds = 30)
+        {
+            var timespan = TimeSpan.FromMilliseconds(timeoutInSeconds);  
+            NatUtility.DeviceFound += TryGetPorts;
             
             NatUtility.StartDiscovery();
             
-            Thread.Sleep(Timeout);
+            Thread.Sleep(timespan);
 
             NatUtility.StopDiscovery();
-            return true;
         }
+        
 
         private readonly SemaphoreSlim _locker = new SemaphoreSlim(1, 1);
      
@@ -38,6 +72,33 @@ namespace Catalyst.Modules.UPnP
                 try 
                 {
                     var map = await device.GetSpecificMappingAsync(Protocol.Tcp, port);
+                } 
+                catch 
+                {
+                    Console.WriteLine("Couldn't get specific mapping");
+                }
+            } 
+            finally 
+            {
+                _locker.Release();
+            }
+        }
+        
+        private async void TryGetPorts(object sender, DeviceEventArgs args)
+        { 
+            await _locker.WaitAsync();
+            try
+            {
+                INatDevice device = args.Device;
+
+                try 
+                {
+                    var mappings = await device.GetAllMappingsAsync();
+                    if (mappings.Length == 0)
+                        Console.WriteLine("No existing uPnP mappings found.");
+                    foreach (Mapping mp in mappings)
+                        Console.WriteLine("Existing Mapping: protocol={0}, public={1}, private={2}", mp.Protocol, mp.PublicPort, mp.PrivatePort);
+
                 } 
                 catch 
                 {
@@ -88,4 +149,5 @@ namespace Catalyst.Modules.UPnP
             }
         }
     }
+    
 }
