@@ -37,7 +37,7 @@ namespace Catalyst.Simulator
 
         public PeerId ToPeerIdentifier()
         {
-            return PublicKey.BuildPeerIdFromBase32Key(IPAddress.Parse(Ip), Port);
+            return PublicKey.BuildPeerIdFromBase58Key(IPAddress.Parse(Ip), Port);
         }
     }
 }

@@ -31,7 +31,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Protocols;
-using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;

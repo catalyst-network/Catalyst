@@ -23,7 +23,7 @@
 
 using System;
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.Keystore;
+using Catalyst.Abstractions.Types;
 using Catalyst.Protocol.Cryptography;
 using ISignature = Catalyst.Abstractions.Cryptography.ISignature;
 
@@ -32,14 +32,11 @@ namespace Catalyst.Abstractions.KeySigner
     public interface IKeySigner
     {
         /// <summary>
-        ///     Takes a KeyStore implementation to support both local and remote KeyStores'.
-        /// </summary>
-        IKeyStore KeyStore { get; }
-
-        /// <summary>
         ///     Takes the crypto library implementation the nodes using.
         /// </summary>
         ICryptoContext CryptoContext { get; }
+
+        IPrivateKey GetPrivateKey(KeyRegistryTypes keyIdentifier);
 
         ISignature Sign(ReadOnlySpan<byte> data, SigningContext signingContext);
 

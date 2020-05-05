@@ -58,7 +58,7 @@ namespace Catalyst.Core.Modules.Sync.Watcher
             IPeerRepository peerRepository,
             IPeerService peerService,
             double threshold = 0.5d,
-            int minimumPeers = 2)
+            int minimumPeers = 0)
         {
             _peerClient = peerClient;
             DeltaHeightRanker = new DeltaHeightRanker(peerRepository, 100, threshold);

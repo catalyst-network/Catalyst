@@ -26,6 +26,7 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 
 namespace Catalyst.Modules.POA.P2P
 {
@@ -41,7 +42,7 @@ namespace Catalyst.Modules.POA.P2P
         {
             return new PeerId
             {
-                PublicKey = PublicKey.KeyToByteString(),
+                PublicKey = PublicKey.FromBase58().ToByteString(),
                 Ip = IPAddress.Parse(Ip).To16Bytes().ToByteString(),
                 Port = (uint) Port
             };

@@ -21,26 +21,25 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
 using System.Text;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
-using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Protocol;
 using Catalyst.Protocol.Cryptography;
-using Catalyst.Protocol.Network;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
+using Org.BouncyCastle.Crypto.Parameters;
+using Org.BouncyCastle.Security;
 
 namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
 {
     public sealed class KeySignerTests
     {
-        private IKeyStore _keystore;
+        private IKeyApi _keyApi;
         private IKeyRegistry _keyRegistry;
-        private ISignature _signature;
         private IPrivateKey _privateKey;
         private SigningContext _signingContext;
         private ICryptoContext _cryptoContext;
@@ -48,109 +47,64 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
         [SetUp]
         public void Init()
         {
-            _keystore = Substitute.For<IKeyStore>();
+            _keyApi = Substitute.For<IKeyApi>();
             _keyRegistry = Substitute.For<IKeyRegistry>();
-            _signature = Substitute.For<ISignature>();
             _privateKey = Substitute.For<IPrivateKey>();
-            _cryptoContext = new CryptoContext(_signature);
+            _cryptoContext = new FfiWrapper();
 
-            _privateKey.Bytes.Returns(ByteUtil.GenerateRandomByteArray(32));
+            var g = GeneratorUtilities.GetKeyPairGenerator("Ed25519");
+            var random = new SecureRandom();
+            g.Init(new Ed25519KeyGenerationParameters(random));
+            var keyPair = g.GenerateKeyPair();
 
-            _keystore.KeyStoreDecrypt(default).ReturnsForAnyArgs(_privateKey);
+            _keyApi.GetPrivateKeyAsync(KeyRegistryTypes.DefaultKey.Name).Returns(keyPair.Private);
+            _privateKey.Bytes.Returns(((Ed25519PrivateKeyParameters) keyPair.Private).GetEncoded());
 
             _signingContext = new SigningContext();
         }
 
         [Test]
-        public void On_Init_KeySigner_Can_Retrieve_Key_From_KeyStore_If_Key_Doesnt_Initially_Exist_In_Registry()
-        {
-            _keyRegistry.GetItemFromRegistry(default).ReturnsForAnyArgs((IPrivateKey) null);
-            _keyRegistry.RegistryContainsKey(default).ReturnsForAnyArgs(false);
-            _keyRegistry.AddItemToRegistry(default, default).ReturnsForAnyArgs(true);
-
-            var keySigner = new KeySigner(_keystore, _cryptoContext, _keyRegistry);
-            _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryTypes>());
-            _keyRegistry.ReceivedWithAnyArgs(1).AddItemToRegistry(default, default);
-            keySigner.Should().NotBe(null);
-        }
-
-        [Test]
-        public void On_Init_KeySigner_Can_Generate_Default_Key_If_Key_No_KeyStore_File_Exists()
-        {
-            _keyRegistry.GetItemFromRegistry(default).ReturnsForAnyArgs((IPrivateKey) null);
-            _keyRegistry.RegistryContainsKey(default).ReturnsForAnyArgs(false);
-            _keyRegistry.AddItemToRegistry(default, default).ReturnsForAnyArgs(true);
-
-            _keystore.KeyStoreDecrypt(default).ReturnsForAnyArgs((IPrivateKey) null);
-
-            var keySigner = new KeySigner(_keystore, _cryptoContext, _keyRegistry);
-            _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryTypes>());
-            _keystore.Received(1)?.KeyStoreGenerateAsync(Arg.Any<NetworkType>(), Arg.Any<KeyRegistryTypes>());
-            _keyRegistry.ReceivedWithAnyArgs(1).AddItemToRegistry(default, default);
-            keySigner.Should().NotBe(null);
-        }
-
-        [Test] 
         public void KeySigner_Can_Sign_If_Key_Exists_In_Registry()
         {
             _keyRegistry.GetItemFromRegistry(default).ReturnsForAnyArgs(_privateKey);
             _keyRegistry.RegistryContainsKey(default).ReturnsForAnyArgs(true);
             _keyRegistry.AddItemToRegistry(default, default).ReturnsForAnyArgs(true);
 
-            var keySigner = new KeySigner(_keystore, _cryptoContext, _keyRegistry);
+            var keySigner = new KeySigner(_cryptoContext, Substitute.For<IKeyApi>(), _keyRegistry);
 
             _keyRegistry.ReceivedWithAnyArgs(0).AddItemToRegistry(default, default);
-            _keystore.ClearReceivedCalls();
             _keyRegistry.ClearReceivedCalls();
 
-            var actualSignature = keySigner.Sign(Encoding.UTF8.GetBytes("sign this please"), _signingContext);
+            var content = Encoding.UTF8.GetBytes("sign this please");
+            var actualSignature = keySigner.Sign(content, _signingContext);
 
             _keyRegistry.ReceivedWithAnyArgs(1).GetItemFromRegistry(default);
-            _keystore.Received(0).KeyStoreDecrypt(Arg.Any<KeyRegistryTypes>());
-            _keystore.Received(0)?.KeyStoreGenerateAsync(Arg.Any<NetworkType>(), Arg.Any<KeyRegistryTypes>());
             _keyRegistry.ReceivedWithAnyArgs(0).AddItemToRegistry(default, default);
-            
-            Assert.AreEqual(_signature, actualSignature);
+
+            using var pooled = _signingContext.SerializeToPooledBytes();
+            var signature = _cryptoContext.Sign(_privateKey, content, pooled.Span);
+            signature.PublicKeyBytes.Should().BeEquivalentTo(actualSignature.PublicKeyBytes);
+            signature.SignatureBytes.Should().BeEquivalentTo(actualSignature.SignatureBytes);
         }
 
-        [Test] 
+        [Test]
         public void KeySigner_Can_Sign_If_Key_Doesnt_Exists_In_Registry_But_There_Is_A_Keystore_File()
-        {            
-            var keySigner = new KeySigner(_keystore, _cryptoContext, _keyRegistry);            
-            _keystore.ClearReceivedCalls();
+        {
+            var keySigner = new KeySigner(_cryptoContext, _keyApi, _keyRegistry);
             _keyRegistry.ClearReceivedCalls();
 
-            _keyRegistry.GetItemFromRegistry(default).ReturnsForAnyArgs(null, _privateKey);
-            _keyRegistry.RegistryContainsKey(default).ReturnsForAnyArgs(true);
+            _keyRegistry.RegistryContainsKey(default).ReturnsForAnyArgs(false);
             _keyRegistry.AddItemToRegistry(default, default).ReturnsForAnyArgs(true);
-            
-            var actualSignature = keySigner.Sign(Encoding.UTF8.GetBytes("sign this please"), _signingContext);
 
-            _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryTypes>());
+            var content = Encoding.UTF8.GetBytes("sign this please");
+            var actualSignature = keySigner.Sign(content, _signingContext);
 
-            Assert.AreEqual(_signature, actualSignature);
-        }
+            _keyApi.Received(1).GetPrivateKeyAsync(KeyRegistryTypes.DefaultKey.Name);
 
-        private sealed class CryptoContext : ICryptoContext
-        {
-            private readonly ISignature _signature;
-            public CryptoContext(ISignature signature) { _signature = signature; }
-
-            public int PrivateKeyLength { get; }
-            public int PublicKeyLength { get; }
-            public int SignatureLength { get; }
-            public int SignatureContextMaxLength { get; }
-            public IPrivateKey GeneratePrivateKey() { throw new NotImplementedException(); }
-            public IPublicKey GetPublicKeyFromPrivateKey(IPrivateKey privateKey) { throw new NotImplementedException(); }
-            public IPublicKey GetPublicKeyFromBytes(byte[] publicKeyBytes) { throw new NotImplementedException(); }
-            public IPrivateKey GetPrivateKeyFromBytes(byte[] privateKeyBytes) { throw new NotImplementedException(); }
-            public ISignature GetSignatureFromBytes(byte[] signatureBytes, byte[] publicKeyBytes) { throw new NotImplementedException(); }
-            public byte[] ExportPrivateKey(IPrivateKey privateKey) { throw new NotImplementedException(); }
-            public byte[] ExportPublicKey(IPublicKey publicKey) { throw new NotImplementedException(); }
-
-            public ISignature Sign(IPrivateKey privateKey, ReadOnlySpan<byte> message, ReadOnlySpan<byte> context) => _signature;
-            public bool Verify(ISignature signature, ReadOnlySpan<byte> message, ReadOnlySpan<byte> context) { throw new NotImplementedException(); }
-            public bool BatchVerify(IList<ISignature> signatures, IList<byte[]> messages, ReadOnlySpan<byte> context) { throw new NotImplementedException(); }
+            using var pooled = _signingContext.SerializeToPooledBytes();
+            var signature = _cryptoContext.Sign(_privateKey, content, pooled.Span);
+            signature.PublicKeyBytes.Should().BeEquivalentTo(actualSignature.PublicKeyBytes);
+            signature.SignatureBytes.Should().BeEquivalentTo(actualSignature.SignatureBytes);
         }
     }
 }

@@ -21,19 +21,28 @@
 
 #endregion
 
-using System.Threading.Tasks;
-using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.Types;
-using Catalyst.Protocol.Network;
+using Catalyst.Abstractions.Options;
+using Catalyst.Core.Lib.Cryptography;
+using Catalyst.Core.Lib.FileSystem;
+using MultiFormats;
+using System.IO;
+using System.Text;
 
-namespace Catalyst.Abstractions.Keystore
+namespace Catalyst.Core.Modules.Keystore
 {
-    public interface IKeyStore
+    public class KeyFileStore : FileStore<string, EncryptedKey>
     {
-        IPrivateKey KeyStoreDecrypt(KeyRegistryTypes keyIdentifier);
+        public KeyFileStore(RepositoryOptions repositoryOptions)
+        {
+            var folder = Path.Combine(repositoryOptions.Folder, "keys");
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
 
-        Task<IPrivateKey> KeyStoreGenerateAsync(KeyRegistryTypes keyIdentifier);
-
-        Task KeyStoreEncryptAsync(IPrivateKey privateKey, NetworkType networkType, KeyRegistryTypes keyIdentifier);
+            Folder = folder;
+            NameToKey = name => Encoding.UTF8.GetBytes(name).ToBase32();
+            KeyToName = key => Encoding.UTF8.GetString(Base32.Decode(key));
+        }
     }
 }

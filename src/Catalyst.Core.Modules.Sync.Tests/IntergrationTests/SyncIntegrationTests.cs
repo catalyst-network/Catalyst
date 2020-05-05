@@ -27,7 +27,6 @@ using System.Linq;
 using System.Threading;
 using Autofac;
 using Catalyst.Abstractions.FileSystem;
-
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.TestUtils;
 using NSubstitute;

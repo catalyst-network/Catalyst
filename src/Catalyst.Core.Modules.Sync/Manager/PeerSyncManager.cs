@@ -70,7 +70,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
             IDeltaHeightWatcher deltaHeightWatcher,
             IDfsService dfsService,
             double threshold = 0.5d,
-            int minimumPeers = 2,
+            int minimumPeers = 0,
             IScheduler scheduler = null)
         {
             _peerClient = peerClient;
