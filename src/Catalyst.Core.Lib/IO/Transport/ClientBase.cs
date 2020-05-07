@@ -34,22 +34,19 @@ namespace Catalyst.Core.Lib.IO.Transport
     public abstract class ClientBase : SocketBase, ISocketClient
     {
         private ILogger _logger;
-        private IPubSubApi _pubSubApi;
 
         protected ClientBase(IChannelFactory channelFactory,
-            IPubSubApi pubSubApi,
             ILogger logger,
             IEventLoopGroupFactory handlerEventEventLoopGroupFactory)
             : base(channelFactory, logger, handlerEventEventLoopGroupFactory)
         {
-            _pubSubApi = pubSubApi;
             _logger = logger;
         }
 
         public virtual void SendMessage<T>(IMessageDto<T> message) where T : IMessage<T>
         {
-            _pubSubApi.PublishAsync("catalyst", message.Content.ToByteArray()).GetAwaiter().GetResult();
-            //Channel.WriteAsync(message).ConfigureAwait(false);
+            //_pubSubApi.PublishAsync("catalyst", message.Content.ToByteArray()).GetAwaiter().GetResult();
+            Channel.WriteAsync(message).ConfigureAwait(false);
         }
     }
 }

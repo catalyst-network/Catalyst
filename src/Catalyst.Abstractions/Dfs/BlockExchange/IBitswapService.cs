@@ -45,7 +45,7 @@ namespace Catalyst.Abstractions.Dfs.BlockExchange
         /// <summary>
         ///   Provides access to other peers.
         /// </summary>
-        SwarmService SwarmService { get; set; }
+        ISwarmService SwarmService { get; set; }
 
         /// <summary>
         ///   Provides access to blocks of data.

@@ -36,9 +36,8 @@ namespace Catalyst.TestUtils
     public class TestClientBase : ClientBase
     {
         public TestClientBase(IChannelFactory channelFactory,
-            IPubSubApi pubSubApi,
             ILogger logger,
-            IEventLoopGroupFactory handlerEventEventLoopGroupFactory) : base(channelFactory, pubSubApi, logger,
+            IEventLoopGroupFactory handlerEventEventLoopGroupFactory) : base(channelFactory, logger,
             handlerEventEventLoopGroupFactory)
         {
             Channel = Substitute.For<IChannel>();

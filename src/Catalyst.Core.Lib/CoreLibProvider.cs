@@ -113,6 +113,8 @@ namespace Catalyst.Core.Lib
             // Register P2P.Discovery
             builder.RegisterType<HealthChecker>().As<IHealthChecker>();
 
+            //builder.RegisterType<PeerLibP2PChannelFactory>().As<ILibP2PChannelFactory>();
+
             // Register P2P.IO.Transport.Channels
             builder.RegisterType<PeerServerChannelFactory>().As<IUdpServerChannelFactory>();
             builder.RegisterType<PeerClientChannelFactory>().As<IUdpClientChannelFactory>();

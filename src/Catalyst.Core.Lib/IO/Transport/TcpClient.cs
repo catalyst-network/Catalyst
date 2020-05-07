@@ -31,7 +31,7 @@ namespace Catalyst.Core.Lib.IO.Transport
 {
     public abstract class TcpClient : ClientBase, ITcpClient
     {
-        protected TcpClient(ITcpClientChannelFactory channelFactory, IPubSubApi pubSubApi, ILogger logger, ITcpClientEventLoopGroupFactory loopGroupFactory)
-            : base(channelFactory, pubSubApi, logger, loopGroupFactory) { }
+        protected TcpClient(ITcpClientChannelFactory channelFactory, ILogger logger, ITcpClientEventLoopGroupFactory loopGroupFactory)
+            : base(channelFactory, logger, loopGroupFactory) { }
     }
 }

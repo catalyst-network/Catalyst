@@ -36,9 +36,8 @@ namespace Catalyst.TestUtils
     public class TestTcpClient : TcpClient
     {
         public TestTcpClient(ITcpClientChannelFactory tcpClientChannelFactory,
-            IPubSubApi pubSubApi,
             ILogger logger,
-            ITcpClientEventLoopGroupFactory eventLoopGroupFactory) : base(tcpClientChannelFactory, pubSubApi, logger, eventLoopGroupFactory)
+            ITcpClientEventLoopGroupFactory eventLoopGroupFactory) : base(tcpClientChannelFactory, logger, eventLoopGroupFactory)
         {
             Channel = Substitute.For<IChannel>();
         }

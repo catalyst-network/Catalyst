@@ -229,7 +229,7 @@ namespace Catalyst.TestUtils
             PeerActive(localPeer.Addresses.First());
 
             await StartSocketsAsync().ConfigureAwait(false);
-            <
+            
             while (_dfsService.SwarmApi.PeersAsync().GetAwaiter().GetResult().Count() < 2)
             {
                 await Task.Delay(300, cancellationSourceToken);

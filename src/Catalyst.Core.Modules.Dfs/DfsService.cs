@@ -71,7 +71,7 @@ namespace Catalyst.Core.Modules.Dfs
         private ConcurrentBag<Func<Task>> _stopTasks = new ConcurrentBag<Func<Task>>();
 
         public DfsService(IBitSwapApi bitSwapApi,
-            BitSwapService bitSwapService,
+            IBitswapService bitSwapService,
             IBlockApi blockApi,
             IBlockRepositoryApi blockRepositoryApi,
             IBootstrapApi bootstrapApi,
@@ -79,7 +79,7 @@ namespace Catalyst.Core.Modules.Dfs
             IDagApi dagApi,
             IDhtApi dhtApi,
             IDnsApi dnsApi,
-            KatDhtService dhtService,
+            IDhtService dhtService,
             IUnixFsApi unixFsApi,
             IKeyApi keyApi,
             INameApi nameApi,
@@ -87,14 +87,13 @@ namespace Catalyst.Core.Modules.Dfs
             IPinApi pinApi,
             Ping1 pingService,
             IPubSubApi pubSubApi,
-            PubSubService pubSubService,
+            IPubSubService pubSubService,
             IStatsApi statsApi,
             ISwarmApi swarmApi,
-            SwarmService swarmService,
-            DfsOptions dfsOptions,
+            ISwarmService swarmService,
             IHashProvider hashProvider,
+            DfsOptions dfsOptions,
             DfsState dfsState,
-            IPasswordManager passwordManager,
             IMigrationManager migrationManager,
             Peer localPeer)
         {
@@ -419,12 +418,12 @@ namespace Catalyst.Core.Modules.Dfs
         /// <summary>
         ///     Manages communication with other peers.
         /// </summary>
-        public SwarmService SwarmService { get; }
+        public ISwarmService SwarmService { get; }
 
         /// <summary>
         ///     Manages publishng and subscribing to messages.
         /// </summary>
-        public PubSubService PubSubService { get; }
+        public IPubSubService PubSubService { get; }
 
         /// <summary>
         ///     Exchange blocks with other peers.
@@ -434,7 +433,7 @@ namespace Catalyst.Core.Modules.Dfs
         /// <summary>
         ///     Finds information with a distributed hash table.
         /// </summary>
-        public DhtService DhtService { get; }
+        public IDhtService DhtService { get; }
 
         #endregion
 

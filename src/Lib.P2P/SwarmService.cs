@@ -147,7 +147,7 @@ namespace Lib.P2P
                 {
                     throw new ArgumentException("Invalid peer.");
                 }
-                
+
                 _localPeer = value;
             }
         }
@@ -185,7 +185,7 @@ namespace Lib.P2P
         /// <summary>
         ///   Manages the swarm's peer connections.
         /// </summary>
-        internal readonly ConnectionManager Manager = new ConnectionManager();
+        public ConnectionManager Manager { private set; get; } = new ConnectionManager();
 
         /// <summary>
         ///   Use to find addresses of a peer.
@@ -264,7 +264,7 @@ namespace Lib.P2P
             var peer = new Peer
             {
                 Id = address.PeerId,
-                Addresses = new List<MultiAddress> {address}
+                Addresses = new List<MultiAddress> { address }
             };
 
             return RegisterPeer(peer);
@@ -326,7 +326,7 @@ namespace Lib.P2P
                     {
                         return existing;
                     }
-                    
+
                     existing.AgentVersion = peer.AgentVersion ?? existing.AgentVersion;
                     existing.ProtocolVersion = peer.ProtocolVersion ?? existing.ProtocolVersion;
                     existing.PublicKey = peer.PublicKey ?? existing.PublicKey;
@@ -348,7 +348,7 @@ namespace Lib.P2P
             {
                 _log.Debug($"New peer registerd {p}");
             }
-            
+
             PeerDiscovered?.Invoke(this, p);
 
             return p;
@@ -375,7 +375,7 @@ namespace Lib.P2P
             {
                 peer = found;
             }
-            
+
             PeerRemoved?.Invoke(this, peer);
         }
 
@@ -404,7 +404,14 @@ namespace Lib.P2P
         /// 
         /// </summary>
         /// <param name="dhtService"></param>
-        public SwarmService(IPeerRouting dhtService = null) { Router = dhtService; }
+        public SwarmService(Peer localPeer, IPeerRouting dhtService = null)
+        {
+            if (localPeer != null)
+            {
+                LocalPeer = localPeer;
+            }
+            Router = dhtService;
+        }
 
         /// <inheritdoc />
         public Task StartAsync()
@@ -426,7 +433,7 @@ namespace Lib.P2P
                     {
                         _protocols.Remove(p);
                     }
-                    
+
                     _protocols.Add(_plaintext1);
                 }
 
@@ -445,9 +452,9 @@ namespace Lib.P2P
         {
             if (!_otherPeers.TryGetValue(peerId.ToBase58(), out var peer))
             {
-                peer = new Peer {Id = peerId};
+                peer = new Peer { Id = peerId };
             }
-            
+
             PeerDisconnected?.Invoke(this, peer);
         }
 
@@ -638,7 +645,7 @@ namespace Lib.P2P
             var blackList = _listeners.Keys
                .Select(a => a.WithoutPeerId())
                .ToArray();
-            
+
             var possibleAddresses =
                 (await Task.WhenAll(multiAddresses.Select(a => a.ResolveAsync(cancel))).ConfigureAwait(false))
                .SelectMany(a => a)
@@ -646,7 +653,7 @@ namespace Lib.P2P
                .Select(a => a.WithPeerId(remote.Id))
                .Distinct()
                .ToArray();
-               
+
             if (possibleAddresses.Length == 0)
             {
                 throw new Exception($"{remote} has no known or reachable address.");
@@ -728,7 +735,7 @@ namespace Lib.P2P
                 {
                     continue;
                 }
-                
+
                 stream = await transport().ConnectAsync(addr, cancel).ConfigureAwait(false);
                 if (cancel.IsCancellationRequested)
                 {
@@ -846,7 +853,7 @@ namespace Lib.P2P
             IEnumerable<MultiAddress> addresses = new List<MultiAddress>();
             var ips = NetworkInterface.GetAllNetworkInterfaces()
 
-                // It appears that the loopback adapter is not UP on Ubuntu 14.04.5 LTS
+               // It appears that the loopback adapter is not UP on Ubuntu 14.04.5 LTS
                .Where(nic => nic.OperationalStatus == OperationalStatus.Up
                  || nic.NetworkInterfaceType == NetworkInterfaceType.Loopback)
                .SelectMany(nic => nic.GetIPProperties().UnicastAddresses);
@@ -866,18 +873,18 @@ namespace Lib.P2P
             }
             else
             {
-                addresses = new[] {result};
+                addresses = new[] { result };
             }
-            
+
             if (!addresses.Any())
             {
                 var msg = "Cannot determine address(es) for " + result;
-                
+
                 foreach (var ip in ips)
                 {
                     msg += " nic-ip: " + ip.Address;
                 }
-                
+
                 cancel.Cancel();
                 throw new Exception(msg);
             }
@@ -1013,7 +1020,7 @@ namespace Lib.P2P
                 {
                     _log.Debug($"remote connect from {remote} failed: {e.Message}");
                 }
-                
+
                 try
                 {
                     stream.Dispose();

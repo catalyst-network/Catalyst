@@ -45,24 +45,17 @@ namespace Catalyst.Core.Lib.P2P
     public sealed class PeerClient : UdpClient, IPeerClient
     {
         private readonly IPeerSettings _peerSettings;
-        private readonly IPubSubApi _pubSubApi;
-        private readonly Peer _localPeer;
 
         /// <param name="clientChannelFactory">A factory used to build the appropriate kind of channel for a udp client.</param>
         /// <param name="eventLoopGroupFactory"></param>
         /// <param name="peerSettings"></param>
         public PeerClient(IUdpClientChannelFactory clientChannelFactory,
-            IPubSubApi pubSubApi,
-            Peer localPeer,
             IUdpClientEventLoopGroupFactory eventLoopGroupFactory,
             IPeerSettings peerSettings)
             : base(clientChannelFactory,
-                  pubSubApi,
                 Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType),
                 eventLoopGroupFactory)
         {
-            _pubSubApi = pubSubApi;
-            _localPeer = localPeer;
             _peerSettings = peerSettings;
         }
 

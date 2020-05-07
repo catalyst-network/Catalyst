@@ -36,7 +36,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
     {
         private readonly IPubSubService _pubSubService;
 
-        public PubSubApi(PubSubService pubSubService)
+        public PubSubApi(IPubSubService pubSubService)
         {
             _pubSubService = pubSubService;
         }

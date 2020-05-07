@@ -32,7 +32,7 @@ namespace Catalyst.Core.Lib.P2P
         ///     Takes an injectable swarm service
         /// </summary>
         /// <param name="swarmService"></param>
-        public KatDhtService(SwarmService swarmService)
+        public KatDhtService(ISwarmService swarmService)
         {
             SwarmService = swarmService;
         }

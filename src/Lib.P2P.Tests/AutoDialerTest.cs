@@ -57,7 +57,7 @@ namespace Lib.P2P.Tests
         [TestMethod]
         public void Defaults()
         {
-            using (var dialer = new AutoDialer(new SwarmService()))
+            using (var dialer = new AutoDialer(new SwarmService(peerA)))
             {
                 Assert.AreEqual(AutoDialer.DefaultMinConnections, dialer.MinConnections);
             }
@@ -66,11 +66,11 @@ namespace Lib.P2P.Tests
         [TestMethod]
         public async Task Connects_OnPeerDiscovered_When_Below_MinConnections()
         {
-            var swarmA = new SwarmService {LocalPeer = peerA};
+            var swarmA = new SwarmService(peerA);
             await swarmA.StartAsync();
             await swarmA.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
 
-            var swarmB = new SwarmService {LocalPeer = peerB};
+            var swarmB = new SwarmService(peerB);
             await swarmB.StartAsync();
             var peerBAddress = await swarmB.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
 
@@ -100,11 +100,11 @@ namespace Lib.P2P.Tests
         [TestMethod]
         public async Task Noop_OnPeerDiscovered_When_NotBelow_MinConnections()
         {
-            var swarmA = new SwarmService {LocalPeer = peerA};
+            var swarmA = new SwarmService(peerA);
             await swarmA.StartAsync();
             await swarmA.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
 
-            var swarmB = new SwarmService {LocalPeer = peerB};
+            var swarmB = new SwarmService(peerB);
             await swarmB.StartAsync();
             var peerBAddress = await swarmB.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
 
@@ -139,15 +139,15 @@ namespace Lib.P2P.Tests
         [TestMethod]
         public async Task Connects_OnPeerDisconnected_When_Below_MinConnections()
         {
-            var swarmA = new SwarmService {LocalPeer = peerA};
+            var swarmA = new SwarmService(peerA);
             await swarmA.StartAsync();
             await swarmA.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
 
-            var swarmB = new SwarmService {LocalPeer = peerB};
+            var swarmB = new SwarmService(peerB);
             await swarmB.StartAsync();
             var peerBAddress = await swarmB.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
 
-            var swarmC = new SwarmService {LocalPeer = peerC};
+            var swarmC = new SwarmService(peerC);
             await swarmC.StartAsync();
             var peerCAddress = await swarmC.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
 

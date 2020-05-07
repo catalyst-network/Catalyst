@@ -60,23 +60,17 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
         private readonly IBroadcastManager _broadcastManager;
         private readonly IKeySigner _keySigner;
         private readonly IPeerIdValidator _peerIdValidator;
-        private readonly IPubSubApi _pubSubApi;
         private readonly SigningContext _signingContext;
-        private readonly LibP2P.Peer _localPeer;
         private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _messageSubject;
         public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
 
         public PeerServerChannelFactory(IPeerMessageCorrelationManager messageCorrelationManager,
-            LibP2P.Peer localPeer,
-            IPubSubApi pubSubApi,
             IBroadcastManager broadcastManager,
             IKeySigner keySigner,
             IPeerIdValidator peerIdValidator,
             IPeerSettings peerSettings,
             IScheduler scheduler = null)
         {
-            _localPeer = localPeer;
-            _pubSubApi = pubSubApi;
             _scheduler = scheduler ?? Scheduler.Default;
             _messageCorrelationManager = messageCorrelationManager;
             _broadcastManager = broadcastManager;
@@ -100,10 +94,10 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
                             new DatagramPacketEncoder<IMessage>(new ProtobufEncoder())
                         ),
                         new PeerIdValidationHandler(_peerIdValidator),
-                        //new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-                        //    new ProtocolMessageVerifyHandler(_keySigner),
-                        //    new ProtocolMessageSignHandler(_keySigner, _signingContext)
-                        //),
+                        new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
+                            new ProtocolMessageVerifyHandler(_keySigner),
+                            new ProtocolMessageSignHandler(_keySigner, _signingContext)
+                        ),
                         new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
                             new CorrelationHandler<IPeerMessageCorrelationManager>(_messageCorrelationManager),
                             new CorrelatableHandler<IPeerMessageCorrelationManager>(_messageCorrelationManager)
@@ -130,23 +124,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
 
             var messageStream = channel.Pipeline.Get<IObservableServiceHandler>()?.MessageStream;
 
-            await _pubSubApi.SubscribeAsync("catalyst", msg =>
-            {
-                if (msg.Sender.Id != _localPeer.Id)
-                {
-                    var proto = ProtocolMessage.Parser.ParseFrom(msg.DataStream);
-                    if (proto.IsBroadCastMessage())
-                    {
-                        var innerGossipMessageSigned = ProtocolMessage.Parser.ParseFrom(proto.Value);
-                        _messageSubject.OnNext(new ObserverDto(null, innerGossipMessageSigned));
-                        return;
-                    }
-
-                    _messageSubject.OnNext(new ObserverDto(null, proto));
-                }
-            }, CancellationToken.None);
-
-            return new ObservableChannel(MessageStream
+            return new ObservableChannel(messageStream
              ?? Observable.Never<IObserverDto<ProtocolMessage>>(), channel);
         }
     }

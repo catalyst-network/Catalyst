@@ -44,7 +44,7 @@ namespace Lib.P2P
         /// </summary>
         public const int DefaultMinConnections = 16;
 
-        private readonly SwarmService _swarmService;
+        private readonly ISwarmService _swarmService;
         private int _pendingConnects;
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Lib.P2P
         /// <param name="swarmService">
         ///   Provides access to other peers.
         /// </param>
-        public AutoDialer(SwarmService swarmService)
+        public AutoDialer(ISwarmService swarmService)
         {
             _swarmService = swarmService;
             swarmService.PeerDiscovered += OnPeerDiscovered;

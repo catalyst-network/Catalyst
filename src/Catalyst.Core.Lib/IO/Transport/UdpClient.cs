@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Transport;
 using Catalyst.Abstractions.IO.Transport.Channels;
@@ -31,7 +30,7 @@ namespace Catalyst.Core.Lib.IO.Transport
 {
     public abstract class UdpClient : ClientBase, IUdpClient
     {
-        protected UdpClient(IUdpClientChannelFactory clientChannelFactory, IPubSubApi pubSubApi, ILogger logger, IUdpClientEventLoopGroupFactory eventLoopGroupFactory)
-            : base(clientChannelFactory, pubSubApi, logger, eventLoopGroupFactory) { }
+        protected UdpClient(IUdpClientChannelFactory clientChannelFactory, ILogger logger, IUdpClientEventLoopGroupFactory eventLoopGroupFactory)
+            : base(clientChannelFactory, logger, eventLoopGroupFactory) { }
     }
 }
