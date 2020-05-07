@@ -67,6 +67,11 @@ namespace Lib.P2P.PubSub
         /// </summary>
         public SwarmService SwarmService { get; set; }
 
+        public FloodRouter(SwarmService swarmService)
+        {
+            SwarmService = swarmService;
+        }
+
         /// <inheritdoc />
         public Task StartAsync()
         {

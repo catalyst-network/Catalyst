@@ -41,7 +41,7 @@ using Org.BouncyCastle.Crypto.Parameters;
 namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 {
     [TestFixture]
-    [Category(Traits.IntegrationTest)] 
+    [Category(Traits.IntegrationTest)]
     public sealed class PoaConsensusTests : FileSystemBasedTest
     {
         private CancellationTokenSource _endOfTestCancellationSource;
@@ -64,17 +64,17 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
                 var path = Path.Combine(FileSystem.GetCatalystDataDir().FullName, $"producer{i}");
                 fileSystem.GetCatalystDataDir().Returns(new DirectoryInfo(path));
 
-                var dfs = TestDfs.GetTestDfs(fileSystem);
+                //var dfs = TestDfs.GetTestDfs(fileSystem);
 
-                var privateKeyParameters = ((Ed25519PrivateKeyParameters) dfs.KeyApi.GetPrivateKeyAsync("self").GetAwaiter().GetResult());
-                var privateKey = context.GetPrivateKeyFromBytes(privateKeyParameters.GetEncoded());
-                var publicKey = privateKey.GetPublicKey();
+                //var privateKeyParameters = ((Ed25519PrivateKeyParameters) dfs.KeyApi.GetPrivateKeyAsync("self").GetAwaiter().GetResult());
+                //var privateKey = context.GetPrivateKeyFromBytes(privateKeyParameters.GetEncoded());
+                //var publicKey = privateKey.GetPublicKey();publicKey.Bytes
 
-                var nodeSettings = PeerSettingsHelper.TestPeerSettings(publicKey.Bytes, 2000 + i);
+                var nodeSettings = PeerSettingsHelper.TestPeerSettings(new byte[] { 0x0 }, 2000 + i);
                 var peerIdentifier = nodeSettings.PeerId;
-                var name = $"producer{i.ToString()}";
+                //privateKey dfs
 
-                return new { index = i, name, privateKey, nodeSettings, peerIdentifier, dfs, fileSystem };
+                return new { index = i, nodeSettings, peerIdentifier, fileSystem };
             }
             ).ToList();
 
@@ -83,11 +83,11 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             _nodes = new List<PoaTestNode>();
             foreach (var nodeDetails in poaNodeDetails)
             {
-                nodeDetails.dfs.Options.Discovery.BootstrapPeers = poaNodeDetails.Select(x => x.dfs.LocalPeer.Addresses.First());
-                var node = new PoaTestNode(nodeDetails.name,
-                    nodeDetails.privateKey,
+                //nodeDetails.dfs.Options.Discovery.BootstrapPeers = poaNodeDetails.Select(x => x.dfs.LocalPeer.Addresses.First());
+                var node = new PoaTestNode(nodeDetails.index,
+                    //nodeDetails.privateKey,
                     nodeDetails.nodeSettings,
-                    nodeDetails.dfs,
+                    //nodeDetails.dfs,
                     peerIdentifiers.Except(new[] { nodeDetails.peerIdentifier }),
                     nodeDetails.fileSystem);
 
@@ -101,8 +101,12 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             _nodes.AsParallel()
                .ForAll(n =>
                 {
+                    n.PeerActive += peerAddress =>
+                    {
+                        _nodes.ForEach(node => node.RegisterPeerAddress(peerAddress));
+                    };
+
                     n?.RunAsync(_endOfTestCancellationSource.Token);
-                    n?.Consensus.StartProducing();
                 });
 
             await Task.Delay(Debugger.IsAttached

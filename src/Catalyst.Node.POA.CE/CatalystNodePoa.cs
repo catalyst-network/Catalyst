@@ -44,6 +44,8 @@ using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Hashing;
 using Dawn;
+using Lib.P2P.Protocols;
+using Lib.P2P.PubSub;
 using MultiFormats;
 using MultiFormats.Registry;
 using Org.BouncyCastle.Asn1;
@@ -69,6 +71,7 @@ namespace Catalyst.Node.POA.CE
         private readonly ISynchroniser _synchronizer;
         private readonly IPeerRepository _peerRepository;
         private readonly IKeyApi _keyApi;
+        private readonly PubSubService _messageRouter;
 
         public CatalystNodePoa(IKeySigner keySigner,
             IPeerService peer,
@@ -82,6 +85,7 @@ namespace Catalyst.Node.POA.CE
             ISynchroniser synchronizer,
             IPeerRepository peerRepository,
             IKeyApi keyApi,
+            PubSubService messageRouter,
             IContract contract = null)
         {
             Guard.Argument(peerRepository, nameof(peerRepository)).NotNull();
@@ -99,6 +103,7 @@ namespace Catalyst.Node.POA.CE
             _synchronizer = synchronizer;
             _peerRepository = peerRepository;
             _keyApi = keyApi;
+            _messageRouter = messageRouter;
 
             var privateKey = keySigner.GetPrivateKey(KeyRegistryTypes.DefaultKey);
             _publicKey = keySigner.CryptoContext.GetPublicKeyFromPrivateKey(privateKey);
@@ -106,6 +111,7 @@ namespace Catalyst.Node.POA.CE
 
         public async Task StartSocketsAsync()
         {
+            _messageRouter.Routers.ForEach(x => x.JoinTopicAsync("catalyst", CancellationToken.None).GetAwaiter().GetResult());
             await _peerClient.StartAsync().ConfigureAwait(false);
             await _peer.StartAsync().ConfigureAwait(false);
         }
@@ -119,9 +125,10 @@ namespace Catalyst.Node.POA.CE
             _logger.Information($"***** using PeerId: {peerId} *****");
             _logger.Information($"***** using PublicKey: {_publicKey.Bytes.ToBase58()} *****");
 
+            await _dfsService.StartAsync().ConfigureAwait(false);
+
             await StartSocketsAsync().ConfigureAwait(false);
 
-            _dfsService.StartAsync().ConfigureAwait(false);
             _synchronizer.StartAsync().ConfigureAwait(false);
 
             _synchronizer.SyncCompleted.Subscribe((x) =>

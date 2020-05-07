@@ -91,16 +91,15 @@ namespace Catalyst.Core.Modules.Dfs
                 var swarmService = x.Resolve<SwarmService>();
 
                 var bitSwapService = x.Resolve<BitSwapService>();
-                bitSwapService.SwarmService = swarmService;
+                //bitSwapService.SwarmService = swarmService;
                 bitSwapService.BlockService = x.Resolve<IBlockApi>();
-
-                var pubService = x.Resolve<PubSubService>();
-                pubService.LocalPeer = localPeer;
-                pubService.Routers.Add(new FloodRouter
-                {
-                    SwarmService = swarmService
-                });
             });
+
+            builder.RegisterType<LoopbackRouter>()
+               .As<IMessageRouter>();
+
+            builder.RegisterType<FloodRouter>()
+                .As<IMessageRouter>();
 
             builder.RegisterType<SwarmService>()
                .As<SwarmService>()

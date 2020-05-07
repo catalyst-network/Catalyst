@@ -23,6 +23,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Core.Lib.IO.Transport;
@@ -35,8 +36,9 @@ namespace Catalyst.TestUtils
     public class TestTcpClient : TcpClient
     {
         public TestTcpClient(ITcpClientChannelFactory tcpClientChannelFactory,
+            IPubSubApi pubSubApi,
             ILogger logger,
-            ITcpClientEventLoopGroupFactory eventLoopGroupFactory) : base(tcpClientChannelFactory, logger, eventLoopGroupFactory)
+            ITcpClientEventLoopGroupFactory eventLoopGroupFactory) : base(tcpClientChannelFactory, pubSubApi, logger, eventLoopGroupFactory)
         {
             Channel = Substitute.For<IChannel>();
         }

@@ -99,8 +99,10 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
         /// <summary>
         ///   Creates a new instance of the <see cref="BitSwapService"/> class.
         /// </summary>
-        public BitSwapService()
+        public BitSwapService(SwarmService swarmService)
         {
+            SwarmService = swarmService;
+    
             Protocols = new IBitswapProtocol[]
             {
                 new Bitswap11 {BitswapService = this}

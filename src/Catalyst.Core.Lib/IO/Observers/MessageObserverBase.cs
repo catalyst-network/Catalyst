@@ -50,8 +50,9 @@ namespace Catalyst.Core.Lib.IO.Observers
             }
 
             MessageSubscription = messageStream
-               .Where(m => m.Payload?.TypeUrl != null
-                 && m.Payload.TypeUrl == _filterMessageType)
+               .Where(m => {
+                   return m.Payload?.TypeUrl != null && m.Payload.TypeUrl == _filterMessageType;
+                 })
                .Subscribe(this);
         }
 

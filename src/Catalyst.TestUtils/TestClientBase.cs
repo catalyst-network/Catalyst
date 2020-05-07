@@ -23,6 +23,7 @@
 
 using System;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Core.Lib.IO.Transport;
@@ -35,8 +36,9 @@ namespace Catalyst.TestUtils
     public class TestClientBase : ClientBase
     {
         public TestClientBase(IChannelFactory channelFactory,
+            IPubSubApi pubSubApi,
             ILogger logger,
-            IEventLoopGroupFactory handlerEventEventLoopGroupFactory) : base(channelFactory, logger,
+            IEventLoopGroupFactory handlerEventEventLoopGroupFactory) : base(channelFactory, pubSubApi, logger,
             handlerEventEventLoopGroupFactory)
         {
             Channel = Substitute.For<IChannel>();

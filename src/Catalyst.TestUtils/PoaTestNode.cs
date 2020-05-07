@@ -81,12 +81,19 @@ using Catalyst.Node.POA.CE;
 using SharpRepository.Repository;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.FileSystem;
+using Catalyst.Abstractions.Dfs.CoreApi;
+using Newtonsoft.Json.Linq;
+using MultiFormats;
+using Catalyst.Core.Abstractions.Sync;
 
 namespace Catalyst.TestUtils
 {
     public sealed class PoaTestNode : ICatalystNode, IDisposable
     {
-        private readonly IDfsService _dfsService;
+        public delegate void PeerActivedHandler(MultiAddress peerAddress);
+        public event PeerActivedHandler PeerActive;
+
+        private IDfsService _dfsService;
         private readonly IMempool<PublicEntryDao> _memPool;
         private readonly ICatalystNode _node;
         private readonly DirectoryInfo _nodeDirectory;
@@ -98,19 +105,19 @@ namespace Catalyst.TestUtils
         private readonly ContainerProvider _containerProvider;
         private readonly IDeltaByNumberRepository _deltaByNumber;
 
-        public PoaTestNode(string name,
-            IPrivateKey privateKey,
+        public PoaTestNode(int nodeNumber,
+            //IPrivateKey privateKey,
             IPeerSettings nodeSettings,
-            IDfsService dfsService,
+            //IDfsService dfsService,
             IEnumerable<PeerId> knownPeerIds,
             IFileSystem parentTestFileSystem)
         {
-            Name = name;
+            NodeNumber = nodeNumber;
             _nodeSettings = nodeSettings;
 
             _nodeDirectory = parentTestFileSystem.GetCatalystDataDir();
 
-            _dfsService = dfsService;
+            //_dfsService = dfsService;
 
             _rpcSettings = RpcSettingsHelper.GetRpcServerSettings(nodeSettings.Port + 100);
             _nodePeerId = nodeSettings.PeerId;
@@ -144,10 +151,10 @@ namespace Catalyst.TestUtils
             _containerProvider.ConfigureContainerBuilder(true, true);
             OverrideContainerBuilderRegistrations();
 
-            _scope = _containerProvider.Container.BeginLifetimeScope(Name);
+            _scope = _containerProvider.Container.BeginLifetimeScope(NodeNumber);
             _node = _scope.Resolve<ICatalystNode>();
         }
-        
+
         public static void RegisterNodeDependencies(ContainerBuilder containerBuilder,
             List<IModule> extraModuleInstances = default,
             List<Type> excludedModules = default)
@@ -181,7 +188,7 @@ namespace Catalyst.TestUtils
                 containerBuilder.RegisterModule(module);
             }
         }
-        
+
         private static readonly Dictionary<Type, Func<IModule>> DefaultModulesByTypes =
             new Dictionary<Type, Func<IModule>>
             {
@@ -207,13 +214,41 @@ namespace Catalyst.TestUtils
                 {typeof(PoaP2PModule), () => new PoaP2PModule()}
             };
 
-        private string Name { get; }
+        private int NodeNumber { get; }
 
         public IConsensus Consensus => _node.Consensus;
 
         public async Task RunAsync(CancellationToken cancellationSourceToken)
         {
-            await _node.RunAsync(cancellationSourceToken).ConfigureAwait(false);
+            var localPeer = _scope.Resolve<Lib.P2P.Peer>();
+            var config = _scope.Resolve<IConfigApi>();
+            _dfsService = _scope.Resolve<IDfsService>();
+
+            await _dfsService.StartAsync().ConfigureAwait(false);
+
+            PeerActive(localPeer.Addresses.First());
+
+            await StartSocketsAsync().ConfigureAwait(false);
+            <
+            while (_dfsService.SwarmApi.PeersAsync().GetAwaiter().GetResult().Count() < 2)
+            {
+                await Task.Delay(300, cancellationSourceToken);
+            }
+
+            Consensus.StartProducing();
+
+            do
+            {
+                await Task.Delay(300, cancellationSourceToken);
+            } while (!cancellationSourceToken.IsCancellationRequested);
+
+            //await _node.RunAsync(cancellationSourceToken).ConfigureAwait(false);
+            var a = 0;
+        }
+
+        public async Task RegisterPeerAddress(MultiAddress multiAddress)
+        {
+            await _dfsService.SwarmService.ConnectAsync(multiAddress);
         }
 
         public async Task StartSocketsAsync() { await _node.StartSocketsAsync(); }
@@ -224,6 +259,7 @@ namespace Catalyst.TestUtils
         {
             var builder = _containerProvider.ContainerBuilder;
 
+            builder.RegisterInstance(new SyncState { IsSynchronized = true }).As<SyncState>();
             builder.RegisterInstance(_deltaByNumber).As<IDeltaByNumberRepository>();
             builder.RegisterInstance(new MemDb()).As<IDb>().SingleInstance();
             builder.RegisterInstance(new StateDb()).As<ISnapshotableDb>().SingleInstance();
@@ -234,18 +270,23 @@ namespace Catalyst.TestUtils
             builder.RegisterInstance(new InMemoryRepository<TransactionToDelta, string>())
                .AsImplementedInterfaces();
 
-            builder.RegisterInstance(_dfsService.KeyApi).As<IKeyApi>().SingleInstance();
+            //builder.RegisterInstance(_dfsService.KeyApi).As<IKeyApi>().SingleInstance();
 
             _containerProvider.ContainerBuilder.RegisterInstance(new TestPasswordReader()).As<IPasswordReader>();
             _containerProvider.ContainerBuilder.RegisterInstance(_nodeSettings).As<IPeerSettings>();
             _containerProvider.ContainerBuilder.RegisterInstance(_rpcSettings).As<IRpcServerSettings>();
             _containerProvider.ContainerBuilder.RegisterInstance(_nodePeerId).As<PeerId>();
             _containerProvider.ContainerBuilder.RegisterInstance(_memPool).As<IMempool<PublicEntryDao>>();
-            _containerProvider.ContainerBuilder.RegisterInstance(_dfsService).As<IDfsService>();
+            //_containerProvider.ContainerBuilder.RegisterInstance(_dfsService).As<IDfsService>();
             _containerProvider.ContainerBuilder.RegisterInstance(_peerRepository).As<IPeerRepository>();
             _containerProvider.ContainerBuilder.RegisterType<TestFileSystem>().As<IFileSystem>()
                .WithParameter("rootPath", _nodeDirectory.FullName);
             _containerProvider.ContainerBuilder.RegisterInstance(Substitute.For<IPeerDiscovery>()).As<IPeerDiscovery>();
+
+            var config = Substitute.For<IConfigApi>();
+            var swarm = JToken.FromObject(new List<string> { $"/ip4/0.0.0.0/tcp/410{NodeNumber}" });
+            config.GetAsync("Addresses.Swarm").Returns(swarm);
+            _containerProvider.ContainerBuilder.RegisterInstance(config).As<IConfigApi>();
         }
 
         private void Dispose(bool disposing)
