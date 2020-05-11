@@ -92,7 +92,6 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 
         [Test]
         [Ignore("To be fixed in issue #1241")]
-
         public async Task Run_ConsensusAsync()
         {
             _nodes.AsParallel()
