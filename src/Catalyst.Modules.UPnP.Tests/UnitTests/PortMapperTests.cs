@@ -35,8 +35,6 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
 {
     public class PortMapperTests
     {
-       
-        private PortMapper _portMapper;
         private INatDevice _device = Substitute.For<INatDevice>();
         private INatUtilityProvider _natUtilityProvider = Substitute.For<INatUtilityProvider>();
         private ILogger _logger;
@@ -54,8 +52,6 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             _mappingB = new Mapping(Mono.Nat.Protocol.Tcp, portB, portB);
             _mappingC = new Mapping(Mono.Nat.Protocol.Tcp, portA, portB);
             _logger = Substitute.For<ILogger>();
-            
-            
         }
 
         [Test]
@@ -75,14 +71,11 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             const int secondsTimeout = 500;
             var natUtilityProvider = new TestNatUtilityProvider(_device);
             var portMapper = new PortMapper(natUtilityProvider, _logger);
-            portMapper.AddPortMappings(new List<Mapping>(), secondsTimeout);
-            await Task.Delay(TimeSpan.FromSeconds(10));
-            _natUtilityProvider.Received(1).StartDiscovery();
-            _natUtilityProvider.Received(1).StopDiscovery();
+            await portMapper.AddPortMappings(new List<Mapping>(), secondsTimeout);
         }
         
         [Test]
-        public async Task On_Device_Found_Adds_Mapping_If_Mapping_Doesnt_Exist()
+        public async Task Adds_Mapping_If_Mapping_Doesnt_Exist()
         {
             var secondsTimeout = 5;
             
@@ -100,7 +93,25 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
         }
         
         [Test]
-        public async Task On_Device_Found_Does_Not_Add_Mapping_If_Mapping_Exists()
+        public async Task Can_Add_Multiple_Mappings()
+        {
+            var secondsTimeout = 5;
+            
+            Mapping[] existingMappings = {};
+            Mapping[] attemptedMappings = {_mappingA,_mappingB, _mappingC};
+            
+            var device = Substitute.For<INatDevice>();
+            device.GetAllMappingsAsync()
+                .Returns(Task.FromResult(existingMappings));
+            
+            var portMapper = new PortMapper(new TestNatUtilityProvider(device), _logger);
+            
+            await portMapper.AddPortMappings(attemptedMappings, secondsTimeout);
+            await device.Received(2).CreatePortMapAsync(Arg.Any<Mapping>());
+        }
+        
+        [Test]
+        public async Task Does_Not_Add_Mapping_If_Mapping_Exists()
         {
             var secondsTimeout = 5;
             
@@ -116,7 +127,7 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
         }
         
         [Test]
-        public async Task On_Device_Found_Does_Not_Add_Mapping_If_Mapping_Partially_Exists()
+        public async Task Does_Not_Add_Mapping_If_Mapping_Partially_Exists()
         {
             var secondsTimeout = 5;
             Mapping[] existingMappings = {_mappingA};
@@ -131,9 +142,39 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
         }
         
         [Test]
-        public void Can_Remove_Mapped_Port()
+        public async Task Can_Remove_Mapped_Port_If_Mapping_Exists()
         {
-           // _portMapper.MapPort(_device, _port);
+            var secondsTimeout = 5;
+            
+            Mapping[] existingMappings = {_mappingA};
+            Mapping[] mappingsToDelete = {_mappingA};
+            
+            var device = Substitute.For<INatDevice>();
+            device.GetAllMappingsAsync()
+                .Returns(Task.FromResult(existingMappings));
+            
+            var portMapper = new PortMapper(new TestNatUtilityProvider(device), _logger);
+            
+            await portMapper.DeletePortMappings(mappingsToDelete, secondsTimeout);
+            await device.Received(1).DeletePortMapAsync(Arg.Is(mappingsToDelete[0]));
+        }
+        
+        [Test]
+        public async Task Does_Not_Attempt_Remove_Mapped_Port_If_Mapping_Doesnt_Exist()
+        {
+            var secondsTimeout = 5;
+            
+            Mapping[] existingMappings = {_mappingA};
+            Mapping[] mappingsToDelete = {_mappingB};
+            
+            var device = Substitute.For<INatDevice>();
+            device.GetAllMappingsAsync()
+                .Returns(Task.FromResult(existingMappings));
+            
+            var portMapper = new PortMapper(new TestNatUtilityProvider(device), _logger);
+            
+            await portMapper.DeletePortMappings(mappingsToDelete, secondsTimeout);
+            await device.Received(0).DeletePortMapAsync(Arg.Is(mappingsToDelete[0]));
         }
 
 
