@@ -1,153 +1,156 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Mono.Nat;
+using Serilog;
 
 namespace Catalyst.Modules.UPnP
 {
     
     public sealed class PortMapper
     {
-        private INatUtilityProvider _natUtilityProvider;
-        public PortMapper(INatUtilityProvider natUtilityProvider)
+        private readonly INatUtilityProvider _natUtilityProvider;
+        private readonly ILogger _logger;
+        private bool _isTaskFinished;
+        public PortMapper(INatUtilityProvider natUtilityProvider, ILogger logger)
         {
             _natUtilityProvider = natUtilityProvider;
+            _logger = logger;
         }
-        public event EventHandler TimeoutReached;
-        
-       
-        public void TryGetDevice(int port, int timeoutInSeconds = 30)
+
+        private async Task PerformEventOnDeviceFound(int timeoutInSeconds, EventHandler<DeviceEventArgs> onDeviceFound)
         {
-            var started = DateTime.Now;
-            var timespan = TimeSpan.FromSeconds(timeoutInSeconds);  
-            //NatUtility.DeviceFound += (sender, args) => TryAddPort(sender, args, port);
-            _natUtilityProvider.DeviceFound += TryGetPorts;
+            _isTaskFinished = false;
+            _natUtilityProvider.DeviceFound += onDeviceFound;
             
             _natUtilityProvider.StartDiscovery();
-            Console.WriteLine("started searching");
-            while (DateTime.Now <= started + timespan)
+            _logger.Information("Started searching for a compatible router...");
+            
+            var stop = DateTime.Now.AddSeconds(timeoutInSeconds);
+            while (DateTime.Now < stop && !_isTaskFinished)
             {
-                //Thread.Sleep(5000);
+                await Task.Delay(10);
             }
-           
-
+            
             _natUtilityProvider.StopDiscovery();
-            Console.WriteLine("stopped searching");
-
-            OnTimeoutReached();
+            _natUtilityProvider.DeviceFound -= onDeviceFound;
+            _logger.Information("Stopped searching for the router.");
+            if(!_isTaskFinished){_logger.Information("A compatible router could not be found.");}
         }
-
-        private void OnTimeoutReached()
+   
+        public async Task AddPortMappings(IEnumerable<Mapping> ports, int timeoutInSeconds = 30)
         {
-            EventHandler handler = TimeoutReached;
-            handler?.Invoke(this, EventArgs.Empty);
+            await PerformEventOnDeviceFound(timeoutInSeconds, (sender, args) => AddPortMappings(args, ports));
         }
         
-        public void TryGetPortMappings(int timeoutInSeconds = 30)
+        public async Task DeletePortMappings(IEnumerable<Mapping> ports, int timeoutInSeconds = 30)
         {
-            var timespan = TimeSpan.FromMilliseconds(timeoutInSeconds);  
-            NatUtility.DeviceFound += TryGetPorts;
-            
-            NatUtility.StartDiscovery();
-            
-            Thread.Sleep(timespan);
-
-            NatUtility.StopDiscovery();
+            await PerformEventOnDeviceFound(timeoutInSeconds, (sender, args) => DeletePortMappings(args, ports));
         }
-        
 
         private readonly SemaphoreSlim _locker = new SemaphoreSlim(1, 1);
-     
-        private async void TryAddPort(object sender, DeviceEventArgs args, int port)
-        { 
+
+        private async void AddPortMappings(DeviceEventArgs args, IEnumerable<Mapping> portMappings)
+        {
             await _locker.WaitAsync();
             try
             {
-                INatDevice device = args.Device;
+                var device = args.Device;
 
-                // Try to create a new port map:
-                var mapping = new Mapping(Protocol.Tcp, port, port);
-                await device.CreatePortMapAsync(mapping);
-                
-                // Try to retrieve confirmation on the port map we just created:
-                try 
+                var existingMappings = await device.GetAllMappingsAsync();
+
+                foreach (var newMapping in portMappings)
                 {
-                    var map = await device.GetSpecificMappingAsync(Protocol.Tcp, port);
-                } 
-                catch 
-                {
-                    Console.WriteLine("Couldn't get specific mapping");
+                    if (CanCreateNewMapping(existingMappings, newMapping))
+                    {
+                        var portMapped = await device.CreatePortMapAsync(newMapping);
+                        _logger.Information(
+                            portMapped.Equals(newMapping)
+                                ? PortMapperConstants.CreatedMapping
+                                : PortMapperConstants.CouldNotCreateMapping,
+                            newMapping.Protocol, newMapping.PublicPort, newMapping.PrivatePort);
+                    }
+                    else
+                    {
+                        _logger.Information(
+                            PortMapperConstants.ConflictingMappingExists,
+                            newMapping.Protocol, newMapping.PublicPort, newMapping.PrivatePort);
+                    }
                 }
-            } 
-            finally 
+            }
+            catch
             {
+                _logger.Information(PortMapperConstants.CouldNotFindRouter);
+            }
+            finally
+            {
+                _isTaskFinished = true;
                 _locker.Release();
             }
         }
-        
-        private async void TryGetPorts(object sender, DeviceEventArgs args)
-        { 
+
+        private async void DeletePortMappings(DeviceEventArgs args,
+                IEnumerable<Mapping> portMappings)
+        {
             await _locker.WaitAsync();
             try
             {
-                INatDevice device = args.Device;
+                var device = args.Device;
 
-                try 
-                {
-                    var mappings = await device.GetAllMappingsAsync();
-                    if (mappings.Length == 0)
-                        Console.WriteLine("No existing uPnP mappings found.");
-                    foreach (Mapping mp in mappings)
-                        Console.WriteLine("Existing Mapping: protocol={0}, public={1}, private={2}", mp.Protocol, mp.PublicPort, mp.PrivatePort);
+                var mappings = await device.GetAllMappingsAsync();
 
-                } 
-                catch 
+                foreach (var p in portMappings)
                 {
-                    Console.WriteLine("Couldn't get specific mapping");
+                    if (Array.Exists(mappings, m => m.Equals(p)))
+                    {
+                        var portDeleted = await device.DeletePortMapAsync(p);
+                        _logger.Information(
+                            portDeleted.Equals(p)
+                                ? PortMapperConstants.DeletedMapping
+                                : PortMapperConstants.CouldNotDeleteMapping, p.Protocol, p.PublicPort, p.PrivatePort);
+                    }
+                    else
+                    {
+                        _logger.Information(PortMapperConstants.NoExistingMapping
+                            ,
+                            p.Protocol, p.PublicPort, p.PrivatePort);
+                    }
                 }
-            } 
-            finally 
+            }
+            catch
             {
+                _logger.Information(PortMapperConstants.CouldNotFindRouter);
+            }
+            finally
+            {
+                _isTaskFinished = true;
                 _locker.Release();
             }
         }
-        
-        private async void TryDeletePort(object sender, DeviceEventArgs args, int port)
-        { 
-            await _locker.WaitAsync();
-            try
-            {
-                INatDevice device = args.Device;
 
-                // Try to create a new port map:
-                var mapping = new Mapping(Protocol.Tcp, port, port);
-                await device.CreatePortMapAsync(mapping);
-                
-                // Try to retrieve confirmation on the port map we just created:
-                try 
-                {
-                    var map = await device.GetSpecificMappingAsync(Protocol.Tcp, port);
-                } 
-                catch 
-                {
-                    Console.WriteLine("Couldn't get specific mapping");
-                }
-
-                // Try deleting the port we opened before:
-                try
-                {
-                    var map = await device.DeletePortMapAsync(mapping);
-                    Console.WriteLine("Deleting Mapping: protocol={0}, public={1}, private={2}", map.Protocol, map.PublicPort, map.PrivatePort);
-                } 
-                catch 
-                {
-                    Console.WriteLine("Couldn't delete specific mapping");
-                }
-            } 
-            finally 
-            {
-                _locker.Release();
-            }
+        private static bool CanCreateNewMapping(Mapping[] existingMappings, Mapping newMapping)
+        {
+            return !Array.Exists(existingMappings, m =>  m.PrivatePort==newMapping.PrivatePort || m.PublicPort==newMapping.PublicPort);
         }
+
+        private static class PortMapperConstants
+        {
+             public const string CouldNotFindRouter = "Sorry, it wasn't possible to communicate with your router.";
+             public const string NoExistingMapping = "There is no existing mapping for protocol = {0}, public port = {1}, private port = {2}.";
+             public const string DeletedMapping =
+                 "Deleted the mapping for protocol = {0}, public port = {1}, private port = {2}.";
+             public const string CouldNotDeleteMapping =
+                 "It wasn't possible to delete the mapping for protocol = {0}, public port = {1}, private port = {2}.";
+             public const string CouldNotCreateMapping =
+                 "It wasn't possible to create a mapping for protocol = {0}, public port = {1}, private port = {2}.";
+             public const string CreatedMapping =
+                 "Created a mapping for protocol = {0}, public port = {1}, private port = {2}.";
+             public const string ConflictingMappingExists =
+                 "There is an existing mapping which conflicts with requested mapping protocol = {0}, public port = {1}, private port = {2}.";
+        }
+
     }
     
 }

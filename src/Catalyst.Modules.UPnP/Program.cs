@@ -6,24 +6,35 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Mono.Nat;
+using Newtonsoft.Json;
+using Serilog;
 
 namespace Catalyst.Modules.UPnP
 {
-    class Program
+    static class Program
     {
-        
-        static void Main(string[] args)
+
+        static async Task Main(string[] args)
         {
-            var timeoutInSeconds = 10;
-            INatUtilityProvider provider = new NatUtilityProvider();
-            var portMapper = new PortMapper(provider);
-            portMapper.TryGetDevice(5, timeoutInSeconds);
-            portMapper.TimeoutReached += Exit;
+            const int timeoutInSeconds = 10;
+            var provider = new NatUtilityProvider();
+            var logger = new LoggerConfiguration()
+                .WriteTo.Console()
+                .CreateLogger();
+            var portMapper = new PortMapper(provider, logger);
+            var portMappings = new []{new Mapping(Protocol.Tcp, 6025, 6025)};
+            await portMapper.AddPortMappings(portMappings, timeoutInSeconds);
+        }
+        
+        public static List<Mapping> LoadPortMappings(string path)
+        {
+            using var r = new StreamReader(path);
+            var json = r.ReadToEnd();
+            return JsonConvert.DeserializeObject<List<Mapping>>(json);
         }
 
-        private static void Exit(object sender, EventArgs e)
-            {
-                Console.WriteLine("exiting");
-            }
-        }
+
+
+    }
 }
