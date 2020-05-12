@@ -11,6 +11,7 @@ namespace Catalyst.Modules.UPnP
     
     public sealed class PortMapper
     {
+        private readonly SemaphoreSlim _locker = new SemaphoreSlim(1, 1);
         private readonly INatUtilityProvider _natUtilityProvider;
         private readonly ILogger _logger;
         private bool _isTaskFinished;
@@ -20,13 +21,13 @@ namespace Catalyst.Modules.UPnP
             _logger = logger;
         }
 
-        private async Task PerformEventOnDeviceFound(int timeoutInSeconds, EventHandler<DeviceEventArgs> onDeviceFound)
+        private async Task<int> PerformEventOnDeviceFound(int timeoutInSeconds, EventHandler<DeviceEventArgs> onDeviceFound)
         {
             _isTaskFinished = false;
             _natUtilityProvider.DeviceFound += onDeviceFound;
             
             _natUtilityProvider.StartDiscovery();
-            _logger.Information("Started searching for a compatible router...");
+            _logger.Information(PortMapperConstants.StartedSearching);
             
             var stop = DateTime.Now.AddSeconds(timeoutInSeconds);
             while (DateTime.Now < stop && !_isTaskFinished)
@@ -36,23 +37,24 @@ namespace Catalyst.Modules.UPnP
             
             _natUtilityProvider.StopDiscovery();
             _natUtilityProvider.DeviceFound -= onDeviceFound;
-            _logger.Information("Stopped searching for the router.");
-            if(!_isTaskFinished){_logger.Information("A compatible router could not be found.");}
+            
+            _logger.Information(PortMapperConstants.StoppedSearching);
+            if(!_isTaskFinished){_logger.Information(PortMapperConstants.CouldNotCommunicateWithRouter);}
+
+            return 0;
         }
-   
-        public async Task AddPortMappings(IEnumerable<Mapping> ports, int timeoutInSeconds = 30)
+
+        public async Task<int> AddPortMappings(Mapping[] ports, int timeoutInSeconds = 30)
         {
-            await PerformEventOnDeviceFound(timeoutInSeconds, (sender, args) => AddPortMappings(args, ports));
+            return await PerformEventOnDeviceFound(timeoutInSeconds, (sender, args) => ReMapPorts(args, ports, AddMappingsIfNotPreExisting));
         }
         
-        public async Task DeletePortMappings(IEnumerable<Mapping> ports, int timeoutInSeconds = 30)
+        public async Task<int> DeletePortMappings(Mapping[] ports, int timeoutInSeconds = 30)
         {
-            await PerformEventOnDeviceFound(timeoutInSeconds, (sender, args) => DeletePortMappings(args, ports));
+            return await PerformEventOnDeviceFound(timeoutInSeconds, (sender, args) => ReMapPorts(args, ports, DeletePortMappingsIfExisting));
         }
-
-        private readonly SemaphoreSlim _locker = new SemaphoreSlim(1, 1);
-
-        private async void AddPortMappings(DeviceEventArgs args, IEnumerable<Mapping> portMappings)
+        
+        private async void ReMapPorts(DeviceEventArgs args, Mapping[] portMappings, Func<Mapping[], Mapping[], INatDevice, Task> remappingLogic)
         {
             await _locker.WaitAsync();
             try
@@ -60,29 +62,11 @@ namespace Catalyst.Modules.UPnP
                 var device = args.Device;
 
                 var existingMappings = await device.GetAllMappingsAsync();
-
-                foreach (var newMapping in portMappings)
-                {
-                    if (CanCreateNewMapping(existingMappings, newMapping))
-                    {
-                        var portMapped = await device.CreatePortMapAsync(newMapping);
-                        _logger.Information(
-                            portMapped.Equals(newMapping)
-                                ? PortMapperConstants.CreatedMapping
-                                : PortMapperConstants.CouldNotCreateMapping,
-                            newMapping.Protocol, newMapping.PublicPort, newMapping.PrivatePort);
-                    }
-                    else
-                    {
-                        _logger.Information(
-                            PortMapperConstants.ConflictingMappingExists,
-                            newMapping.Protocol, newMapping.PublicPort, newMapping.PrivatePort);
-                    }
-                }
+                await remappingLogic(existingMappings, portMappings, device);
             }
             catch
             {
-                _logger.Information(PortMapperConstants.CouldNotFindRouter);
+                _logger.Information(PortMapperConstants.CouldNotCommunicateWithRouter);
             }
             finally
             {
@@ -91,53 +75,56 @@ namespace Catalyst.Modules.UPnP
             }
         }
 
-        private async void DeletePortMappings(DeviceEventArgs args,
-                IEnumerable<Mapping> portMappings)
+        private async Task DeletePortMappingsIfExisting(Mapping[] existingMappings, Mapping[] newMappings, INatDevice device)
         {
-            await _locker.WaitAsync();
-            try
+            foreach (var newMapping in newMappings)
             {
-                var device = args.Device;
-
-                var mappings = await device.GetAllMappingsAsync();
-
-                foreach (var p in portMappings)
+                if (Array.Exists(existingMappings, m => m.Equals(newMapping)))
                 {
-                    if (Array.Exists(mappings, m => m.Equals(p)))
-                    {
-                        var portDeleted = await device.DeletePortMapAsync(p);
-                        _logger.Information(
-                            portDeleted.Equals(p)
-                                ? PortMapperConstants.DeletedMapping
-                                : PortMapperConstants.CouldNotDeleteMapping, p.Protocol, p.PublicPort, p.PrivatePort);
-                    }
-                    else
-                    {
-                        _logger.Information(PortMapperConstants.NoExistingMapping
-                            ,
-                            p.Protocol, p.PublicPort, p.PrivatePort);
-                    }
+                    var portDeleted = await device.DeletePortMapAsync(newMapping);
+                    _logger.Information(
+                        portDeleted.Equals(newMapping)
+                            ? PortMapperConstants.DeletedMapping
+                            : PortMapperConstants.CouldNotDeleteMapping, newMapping.Protocol, newMapping.PublicPort, newMapping.PrivatePort);
                 }
-            }
-            catch
-            {
-                _logger.Information(PortMapperConstants.CouldNotFindRouter);
-            }
-            finally
-            {
-                _isTaskFinished = true;
-                _locker.Release();
+                else
+                {
+                    _logger.Information(PortMapperConstants.NoExistingMapping
+                        ,
+                        newMapping.Protocol, newMapping.PublicPort, newMapping.PrivatePort);
+                }
             }
         }
 
-        private static bool CanCreateNewMapping(Mapping[] existingMappings, Mapping newMapping)
+        private async Task AddMappingsIfNotPreExisting(Mapping[] existingMappings, Mapping[] newMappings, INatDevice device)
         {
-            return !Array.Exists(existingMappings, m =>  m.PrivatePort==newMapping.PrivatePort || m.PublicPort==newMapping.PublicPort);
+            foreach (var newMapping in newMappings)
+            {
+                if (!existingMappings.Any(m =>  m.PrivatePort==newMapping.PrivatePort || m.PublicPort==newMapping.PublicPort))
+                {
+                    var portMapped = await device.CreatePortMapAsync(newMapping);
+                    if (portMapped.Equals(newMapping))
+                    {
+                        _logger.Information(PortMapperConstants.CreatedMapping, newMapping.Protocol, newMapping.PublicPort, newMapping.PrivatePort);
+                    }
+                    else
+                    {
+                        await device.DeletePortMapAsync(portMapped);
+                        _logger.Information(PortMapperConstants.CouldNotCreateMapping, newMapping.Protocol, newMapping.PublicPort, newMapping.PrivatePort);
+                    }
+                }
+                else
+                {
+                    _logger.Information(
+                        PortMapperConstants.ConflictingMappingExists,
+                        newMapping.Protocol, newMapping.PublicPort, newMapping.PrivatePort);
+                }
+            }
         }
 
         private static class PortMapperConstants
         {
-             public const string CouldNotFindRouter = "Sorry, it wasn't possible to communicate with your router.";
+             public const string CouldNotCommunicateWithRouter = "Sorry, it wasn't possible to communicate with your router.";
              public const string NoExistingMapping = "There is no existing mapping for protocol = {0}, public port = {1}, private port = {2}.";
              public const string DeletedMapping =
                  "Deleted the mapping for protocol = {0}, public port = {1}, private port = {2}.";
@@ -149,8 +136,9 @@ namespace Catalyst.Modules.UPnP
                  "Created a mapping for protocol = {0}, public port = {1}, private port = {2}.";
              public const string ConflictingMappingExists =
                  "There is an existing mapping which conflicts with requested mapping protocol = {0}, public port = {1}, private port = {2}.";
+             public const string StoppedSearching = "Stopped searching for the router.";
+             public const string StartedSearching = "Started searching for a compatible router...";
         }
-
     }
     
 }

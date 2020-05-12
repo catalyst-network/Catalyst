@@ -35,8 +35,7 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
 {
     public class PortMapperTests
     {
-        private INatDevice _device = Substitute.For<INatDevice>();
-        private INatUtilityProvider _natUtilityProvider = Substitute.For<INatUtilityProvider>();
+        private readonly INatUtilityProvider _natUtilityProvider = Substitute.For<INatUtilityProvider>();
         private ILogger _logger;
         private Mapping _mappingA;
         private Mapping _mappingB;
@@ -46,11 +45,11 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
         [SetUp]
         public void Init()
         {
-             var portA = 6024;
-             var portB = 6025;
+             const int portA = 6024;
+             const int portB = 6025;
             _mappingA = new Mapping(Mono.Nat.Protocol.Tcp, portA, portA);
             _mappingB = new Mapping(Mono.Nat.Protocol.Tcp, portB, portB);
-            _mappingC = new Mapping(Mono.Nat.Protocol.Tcp, portA, portB);
+            _mappingC = new Mapping(Mono.Nat.Protocol.Tcp, portB, portA);
             _logger = Substitute.For<ILogger>();
         }
 
@@ -59,21 +58,12 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
         {
             const int secondsTimeout = 5;
             var portMapper = new PortMapper(_natUtilityProvider, _logger);
-            portMapper.AddPortMappings(new List<Mapping>(), secondsTimeout);
+            portMapper.AddPortMappings(new Mapping[]{}, secondsTimeout);
             await Task.Delay(TimeSpan.FromSeconds(secondsTimeout + 1));
             _natUtilityProvider.Received(1).StartDiscovery();
             _natUtilityProvider.Received(1).StopDiscovery();
         }
-        
-        [Test]
-        public async Task PortMapper_Stops_Searching_After_Task_Finished()
-        {
-            const int secondsTimeout = 500;
-            var natUtilityProvider = new TestNatUtilityProvider(_device);
-            var portMapper = new PortMapper(natUtilityProvider, _logger);
-            await portMapper.AddPortMappings(new List<Mapping>(), secondsTimeout);
-        }
-        
+
         [Test]
         public async Task Adds_Mapping_If_Mapping_Doesnt_Exist()
         {
@@ -98,12 +88,14 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             var secondsTimeout = 5;
             
             Mapping[] existingMappings = {};
-            Mapping[] attemptedMappings = {_mappingA,_mappingB, _mappingC};
+            Mapping[] attemptedMappings = {_mappingA,_mappingB};
             
             var device = Substitute.For<INatDevice>();
             device.GetAllMappingsAsync()
                 .Returns(Task.FromResult(existingMappings));
-            
+            device.CreatePortMapAsync(_mappingA)
+                .Returns(Task.FromResult(_mappingA));
+
             var portMapper = new PortMapper(new TestNatUtilityProvider(device), _logger);
             
             await portMapper.AddPortMappings(attemptedMappings, secondsTimeout);
@@ -120,6 +112,8 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             var device = Substitute.For<INatDevice>();
             device.GetAllMappingsAsync()
                 .Returns(Task.FromResult(existingMappings));
+            device.CreatePortMapAsync(default)
+                .Returns(Task.FromResult(_mappingA));
             var portMapper = new PortMapper(new TestNatUtilityProvider(device), _logger);
             await portMapper.AddPortMappings(attemptedMappings, secondsTimeout);
 

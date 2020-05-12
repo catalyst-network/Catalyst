@@ -8,30 +8,48 @@ using System.Threading;
 using System.Threading.Tasks;
 using Mono.Nat;
 using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 using Serilog;
 
 namespace Catalyst.Modules.UPnP
 {
-    static class Program
+    internal class Options
     {
+        [Option('t', "timeout", HelpText = "The delay in seconds after which this application will stop.")]
+        public int Timeout { get; set; }
+            
+        [Option('p', "filepath", HelpText = "The path of the mapping file")]
+        public string FilePath { get; set; }
+    }
 
-        static async Task Main(string[] args)
+    internal static class Program
+    {
+        static async Task<int> Main(string[] args)
         {
-            const int timeoutInSeconds = 10;
+            var result = await Parser.Default
+                .ParseArguments<Options>(args).MapResult(async options => await RunPortMapper(options),
+                    response =>  Task.FromResult(1)).ConfigureAwait(false);
+
+            return Environment.ExitCode = result;
+        }
+
+        private static async Task<int> RunPortMapper(Options options)
+        {
             var provider = new NatUtilityProvider();
             var logger = new LoggerConfiguration()
                 .WriteTo.Console()
                 .CreateLogger();
             var portMapper = new PortMapper(provider, logger);
-            var portMappings = new []{new Mapping(Protocol.Tcp, 6025, 6025)};
-            await portMapper.AddPortMappings(portMappings, timeoutInSeconds);
+            var mappings = LoadPortMappingConfig(options.FilePath);
+            return await portMapper.AddPortMappings(mappings.ToArray(), options.Timeout>0?options.Timeout:10);
         }
         
-        public static List<Mapping> LoadPortMappings(string path)
+        private static List<Mapping> LoadPortMappingConfig(string path)
         {
-            using var r = new StreamReader(path);
-            var json = r.ReadToEnd();
-            return JsonConvert.DeserializeObject<List<Mapping>>(json);
+            //using var r = new StreamReader(path);
+            //var json = r.ReadToEnd();
+            const string json = @"[{'Protocol':0,'PrivatePort':6024,'PublicPort':6024}]";
+            return JsonConvert.DeserializeObject<List<Mapping>>(json, new MappingConverter()) ?? new List<Mapping>();
         }
 
 
