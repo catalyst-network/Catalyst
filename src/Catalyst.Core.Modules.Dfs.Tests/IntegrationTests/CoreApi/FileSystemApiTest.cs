@@ -610,6 +610,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         }
 
         [Test]
+        [Ignore("To be fixed in issue #1241")]
         public async Task AddFile_WithProgress()
         {
             var path = Path.GetTempFileName();
