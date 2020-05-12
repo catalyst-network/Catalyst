@@ -123,7 +123,7 @@ namespace Catalyst.Node.POA.CE
                 {typeof(LedgerModule), () => new LedgerModule()},
                 {typeof(HashingModule), () => new HashingModule()},
                 {typeof(DiscoveryHastingModule), () => new DiscoveryHastingModule()},
-                {typeof(RpcServerModule), () => new RpcServerModule()},
+                //{typeof(RpcServerModule), () => new RpcServerModule()},
                 {typeof(BulletProofsModule), () => new BulletProofsModule()},
                 {typeof(KeystoreModule), () => new KeystoreModule()},
                 {typeof(KeySignerModule), () => new KeySignerModule()},
@@ -150,9 +150,9 @@ namespace Catalyst.Node.POA.CE
             containerBuilder.RegisterAssemblyTypes(typeof(CoreLibProvider).Assembly)
                .AssignableTo<IP2PMessageObserver>().As<IP2PMessageObserver>();
 
-            containerBuilder.RegisterAssemblyTypes(typeof(RpcServerModule).Assembly)
-               .AssignableTo<IRpcRequestObserver>().As<IRpcRequestObserver>()
-               .PublicOnly();
+            //containerBuilder.RegisterAssemblyTypes(typeof(RpcServerModule).Assembly)
+            //   .AssignableTo<IRpcRequestObserver>().As<IRpcRequestObserver>()
+            //   .PublicOnly();
 
             // DAO MapperInitialisers
             containerBuilder.RegisterAssemblyTypes(typeof(CoreLibProvider).Assembly)

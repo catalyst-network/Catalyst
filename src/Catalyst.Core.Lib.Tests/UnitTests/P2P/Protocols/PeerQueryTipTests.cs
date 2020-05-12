@@ -51,7 +51,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
         {
             this.Setup(TestContext.CurrentContext);
 
-            var subbedPeerClient = Substitute.For<IPeerClient>();
+            var subbedPeerClient = Substitute.For<ILibP2PPeerClient>();
             _testSettings = PeerSettingsHelper.TestPeerSettings();
             _recipientPeerId = _testSettings.PeerId;
 

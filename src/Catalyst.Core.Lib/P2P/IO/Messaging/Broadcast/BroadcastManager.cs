@@ -67,7 +67,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         private readonly PeerId _peerId;
 
         /// <summary>The peer client</summary>
-        private readonly IPeerClient _peerClient;
+        private readonly ILibP2PPeerClient _peerClient;
 
         /// <summary>This signer is in-charge of adding an extra signature wrapping to the broadcast message</summary>
         private readonly IKeySigner _signer;
@@ -93,7 +93,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         public BroadcastManager(IPeerRepository peers,
             IPeerSettings peerSettings,
             IMemoryCache memoryCache,
-            IPeerClient peerClient,
+            ILibP2PPeerClient peerClient,
             IKeySigner signer,
             ILogger logger)
         {

@@ -46,7 +46,7 @@ namespace Catalyst.Core.Lib.P2P
                      keyApi.CreateAsync("self", keyChainOptions.DefaultKeyType, 0).ConfigureAwait(false).GetAwaiter().GetResult();
 
             this.Id = self.Id;
-            this.PublicKey = keyApi.GetIpfsPublicKeyAsync("self").ConfigureAwait(false).GetAwaiter().GetResult();
+            this.PublicKey = keyApi.GetDfsPublicKeyAsync("self").ConfigureAwait(false).GetAwaiter().GetResult();
             this.ProtocolVersion = "ipfs/0.1.0";
 
             var version = typeof(IDfsService).GetTypeInfo().Assembly.GetName().Version;

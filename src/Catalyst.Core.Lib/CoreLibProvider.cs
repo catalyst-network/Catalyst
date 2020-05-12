@@ -78,26 +78,26 @@ namespace Catalyst.Core.Lib
                .SingleInstance();
 
             // Register IO.EventLoop
-            builder.RegisterType<UdpClientEventLoopGroupFactory>().As<IUdpClientEventLoopGroupFactory>()
-               .SingleInstance();
-            builder.RegisterType<UdpServerEventLoopGroupFactory>().As<IUdpServerEventLoopGroupFactory>()
-               .SingleInstance();
-            builder.RegisterType<TcpServerEventLoopGroupFactory>().As<ITcpServerEventLoopGroupFactory>()
-               .SingleInstance();
-            builder.RegisterType<TcpClientEventLoopGroupFactory>().As<ITcpClientEventLoopGroupFactory>();
-            builder.RegisterType<EventLoopGroupFactoryConfiguration>().As<IEventLoopGroupFactoryConfiguration>()
-               .WithProperty("TcpServerHandlerWorkerThreads", 4)
-               .WithProperty("TcpClientHandlerWorkerThreads", 4)
-               .WithProperty("UdpServerHandlerWorkerThreads", 8)
-               .WithProperty("UdpClientHandlerWorkerThreads", 2);
+            //builder.RegisterType<UdpClientEventLoopGroupFactory>().As<IUdpClientEventLoopGroupFactory>()
+            //   .SingleInstance();
+            //builder.RegisterType<UdpServerEventLoopGroupFactory>().As<IUdpServerEventLoopGroupFactory>()
+            //   .SingleInstance();
+            //builder.RegisterType<TcpServerEventLoopGroupFactory>().As<ITcpServerEventLoopGroupFactory>()
+            //   .SingleInstance();
+            //builder.RegisterType<TcpClientEventLoopGroupFactory>().As<ITcpClientEventLoopGroupFactory>();
+            //builder.RegisterType<EventLoopGroupFactoryConfiguration>().As<IEventLoopGroupFactoryConfiguration>()
+            //   .WithProperty("TcpServerHandlerWorkerThreads", 4)
+            //   .WithProperty("TcpClientHandlerWorkerThreads", 4)
+            //   .WithProperty("UdpServerHandlerWorkerThreads", 8)
+            //   .WithProperty("UdpClientHandlerWorkerThreads", 2);
 
             // Register P2P
-            builder.RegisterType<PeerService>().As<IPeerService>().SingleInstance();
+            //builder.RegisterType<PeerService>().As<IPeerService>().SingleInstance();
             builder.RegisterType<PeerSettings>().As<IPeerSettings>();
             builder.RegisterType<Peer>().As<IPeer>();
 
             builder.RegisterType<PeerIdValidator>().As<IPeerIdValidator>();
-            builder.RegisterType<PeerClient>().As<IPeerClient>().SingleInstance();
+            //builder.RegisterType<PeerClient>().As<IPeerClient>().SingleInstance();
 
             builder.RegisterType<PeerChallengeRequest>().As<IPeerChallengeRequest>()
                .WithParameter("ttl", 5)
@@ -113,11 +113,15 @@ namespace Catalyst.Core.Lib
             // Register P2P.Discovery
             builder.RegisterType<HealthChecker>().As<IHealthChecker>();
 
-            //builder.RegisterType<PeerLibP2PChannelFactory>().As<ILibP2PChannelFactory>();
+            builder.RegisterType<PeerLibP2PServerChannelFactory>().As<PeerLibP2PServerChannelFactory>().SingleInstance();
+            builder.RegisterType<LibP2PPeerService>().As<ILibP2PPeerService>().SingleInstance();
+
+            builder.RegisterType<PeerLibP2PClientChannelFactory>().As<PeerLibP2PClientChannelFactory>().SingleInstance();
+            builder.RegisterType<LibP2PPeerClient>().As<ILibP2PPeerClient>().SingleInstance();
 
             // Register P2P.IO.Transport.Channels
-            builder.RegisterType<PeerServerChannelFactory>().As<IUdpServerChannelFactory>();
-            builder.RegisterType<PeerClientChannelFactory>().As<IUdpClientChannelFactory>();
+            //builder.RegisterType<PeerServerChannelFactory>().As<IUdpServerChannelFactory>();
+            //builder.RegisterType<PeerClientChannelFactory>().As<IUdpClientChannelFactory>();
 
             //  Register P2P.Messaging.Correlation
             builder.RegisterType<PeerMessageCorrelationManager>().As<IPeerMessageCorrelationManager>().SingleInstance();

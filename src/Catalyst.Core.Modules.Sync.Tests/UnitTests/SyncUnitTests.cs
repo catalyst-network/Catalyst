@@ -77,11 +77,11 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
         private IPeerSettings _peerSettings;
         private IDeltaDfsReader _deltaDfsReader;
         private ILedger _ledger;
-        private IPeerClient _peerClient;
+        private ILibP2PPeerClient _peerClient;
         private IDeltaIndexService _deltaIndexService;
         private IPeerRepository _peerRepository;
 
-        private IPeerService _peerService;
+        private ILibP2PPeerService _peerService;
 
         private IP2PMessageObserver _deltaHeightResponseObserver;
         private ReplaySubject<IObserverDto<ProtocolMessage>> _deltaHeightReplaySubject;
@@ -126,14 +126,14 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 
             _ledger = Substitute.For<ILedger>();
 
-            _peerService = Substitute.For<IPeerService>();
+            _peerService = Substitute.For<ILibP2PPeerService>();
 
             _deltaHashProvider = new DeltaHashProvider(_deltaCache, Substitute.For<IDeltaIndexService>(), Substitute.For<ILogger>());
 
             _deltaIndexService = new DeltaIndexService(new InMemoryRepository<DeltaIndexDao, string>());
             _deltaIndexService.Add(new DeltaIndexDao { Cid = _hashProvider.ComputeUtf8MultiHash("0").ToCid(), Height = 0 });
 
-            _peerClient = Substitute.For<IPeerClient>();
+            _peerClient = Substitute.For<ILibP2PPeerClient>();
             ModifyPeerClient<LatestDeltaHashRequest>((request, senderPeerIdentifier) =>
             {
                 var deltaHeightResponse = new LatestDeltaHashResponse
@@ -146,8 +146,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
                     }
                 };
 
-                _deltaHeightReplaySubject.OnNext(new ObserverDto(Substitute.For<IChannelHandlerContext>(),
-                    deltaHeightResponse.ToProtocolMessage(senderPeerIdentifier, CorrelationId.GenerateCorrelationId())));
+                _deltaHeightReplaySubject.OnNext(new ObserverDto(null, deltaHeightResponse.ToProtocolMessage(senderPeerIdentifier, CorrelationId.GenerateCorrelationId())));
             });
 
             ModifyPeerClient<DeltaHistoryRequest>((request, senderPeerIdentifier) =>
@@ -155,9 +154,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
                 var data = GenerateSampleData((int)request.Height, (int)request.Range, (int)_syncTestHeight);
                 _deltaIndexService.Add(data.DeltaIndex.Select(x => DeltaIndexDao.ToDao<DeltaIndex>(x, _mapperProvider)));
 
-                _deltaHistoryReplaySubject.OnNext(new ObserverDto(Substitute.For<IChannelHandlerContext>(),
-                    data
-                       .ToProtocolMessage(senderPeerIdentifier, CorrelationId.GenerateCorrelationId())));
+                _deltaHistoryReplaySubject.OnNext(new ObserverDto(null, data.ToProtocolMessage(senderPeerIdentifier, CorrelationId.GenerateCorrelationId())));
             });
 
             _peerRepository = new PeerRepository(new InMemoryRepository<Peer, string>());

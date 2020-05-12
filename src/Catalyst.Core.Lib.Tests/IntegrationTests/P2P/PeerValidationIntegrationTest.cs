@@ -91,7 +91,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 
             ContainerProvider.ContainerBuilder.Register(c =>
             {
-                var peerClient = c.Resolve<IPeerClient>();
+                var peerClient = c.Resolve<ILibP2PPeerClient>();
                 peerClient.StartAsync().ConfigureAwait(false).GetAwaiter().GetResult();
                 return new PeerChallengeRequest(logger, peerClient, _peerSettings, 10);
             }).As<IPeerChallengeRequest>().SingleInstance();

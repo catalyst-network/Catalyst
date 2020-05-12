@@ -53,7 +53,7 @@ namespace Catalyst.Core.Lib.P2P.Protocols
         /// <param name="cancellationTokenProvider"></param>
         /// <param name="scheduler"></param>
         public PeerQueryTipRequestRequest(ILogger logger,
-            IPeerClient peerClient,
+            ILibP2PPeerClient peerClient,
             IPeerSettings peerSettings,
             ICancellationTokenProvider cancellationTokenProvider,
             IScheduler scheduler = null) : base(logger, peerSettings.PeerId, cancellationTokenProvider, peerClient)

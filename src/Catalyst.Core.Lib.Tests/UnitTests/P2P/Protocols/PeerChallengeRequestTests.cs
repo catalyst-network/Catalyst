@@ -47,7 +47,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
         [SetUp]
         public void Init()
         {
-            var subbedPeerClient = Substitute.For<IPeerClient>();
+            var subbedPeerClient = Substitute.For<ILibP2PPeerClient>();
             _testSettings = PeerSettingsHelper.TestPeerSettings();
             _cancellationProvider = new CancellationTokenProvider(TimeSpan.FromSeconds(10));
 

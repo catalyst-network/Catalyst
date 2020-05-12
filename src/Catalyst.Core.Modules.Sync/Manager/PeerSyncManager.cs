@@ -46,9 +46,9 @@ namespace Catalyst.Core.Modules.Sync.Manager
         private bool _disposed;
         private readonly double _threshold;
         private int _minimumPeers;
-        private readonly IPeerClient _peerClient;
+        private readonly ILibP2PPeerClient _peerClient;
         private readonly IPeerRepository _peerRepository;
-        private readonly IPeerService _peerService;
+        private readonly ILibP2PPeerService _peerService;
         private readonly IUserOutput _userOutput;
         private readonly IDfsService _dfsService;
         private readonly ReplaySubject<IEnumerable<DeltaIndex>> _scoredDeltaIndexRangeSubject;
@@ -63,9 +63,9 @@ namespace Catalyst.Core.Modules.Sync.Manager
 
         private readonly IDeltaHeightWatcher _deltaHeightWatcher;
 
-        public PeerSyncManager(IPeerClient peerClient,
+        public PeerSyncManager(ILibP2PPeerClient peerClient,
             IPeerRepository peerRepository,
-            IPeerService peerService,
+            ILibP2PPeerService peerService,
             IUserOutput userOutput,
             IDeltaHeightWatcher deltaHeightWatcher,
             IDfsService dfsService,
@@ -114,7 +114,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
         public void Start()
         {
             _isRunning = true;
-            _deltaHistorySubscription = _peerService.MessageStream.Where(x => x.Payload?.TypeUrl != null &&
+            _deltaHistorySubscription = _peerService.MessageStream.Where(x => x?.Payload.TypeUrl != null &&
                     x.Payload.TypeUrl.EndsWith(typeof(DeltaHistoryResponse).ShortenedProtoFullName()))
                .Select(x => x.Payload.FromProtocolMessage<DeltaHistoryResponse>()).Subscribe(DeltaHistoryOnNext);
 

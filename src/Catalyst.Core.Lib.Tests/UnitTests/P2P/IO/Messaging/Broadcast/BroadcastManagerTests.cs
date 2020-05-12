@@ -116,7 +116,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
                 _peers,
                 _peerSettings,
                 _cache,
-                Substitute.For<IPeerClient>(),
+                Substitute.For<ILibP2PPeerClient>(),
                 _keySigner,
                 Substitute.For<ILogger>());
 
@@ -149,7 +149,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
                     _peers,
                     _peerSettings,
                     _cache,
-                    Substitute.For<IPeerClient>(),
+                    Substitute.For<ILibP2PPeerClient>(),
                     _keySigner,
                     Substitute.For<ILogger>());
 

@@ -72,13 +72,8 @@ namespace Catalyst.Core.Modules.Sync.Tests.IntegrationTests
             {
                 nodeDetails.dfs.Options.Discovery.BootstrapPeers = poaNodeDetails.Except(new[] { nodeDetails })
                    .Select(x => x.dfs.LocalPeer.Addresses.First());
-                var node = new PoaTestNode(nodeDetails.index,
-                    //nodeDetails.privateKey,
-                    nodeDetails.nodeSettings,
-                    //nodeDetails.dfs,
-                    peerIdentifiers.Except(new[] { nodeDetails.peerIdentifier }),
-                    nodeDetails.fileSystem);
 
+                var node = new PoaTestNode(nodeDetails.index, nodeDetails.fileSystem);
                 _nodes.Add(node);
             }
         }

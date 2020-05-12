@@ -45,7 +45,7 @@ namespace Catalyst.Core.Lib.P2P.Protocols
         public ReplaySubject<IPeerDeltaHistoryResponse> DeltaHistoryResponseMessageStreamer { get; }
 
         public PeerDeltaHistoryRequest(ILogger logger,
-            IPeerClient peerClient,
+            ILibP2PPeerClient peerClient,
             IPeerSettings peerSettings,
             ICancellationTokenProvider cancellationTokenProvider,
             IScheduler observableScheduler = null) : base(logger, peerSettings.PeerId, cancellationTokenProvider, peerClient)

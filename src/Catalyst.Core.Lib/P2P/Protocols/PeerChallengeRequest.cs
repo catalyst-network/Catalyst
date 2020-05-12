@@ -45,13 +45,13 @@ namespace Catalyst.Core.Lib.P2P.Protocols
     {
         private readonly ILogger _logger;
         private readonly PeerId _senderIdentifier;
-        private readonly IPeerClient _peerClient;
+        private readonly ILibP2PPeerClient _peerClient;
         private readonly int _ttl;
 
         public ReplaySubject<IPeerChallengeResponse> ChallengeResponseMessageStreamer { get; }
 
         public PeerChallengeRequest(ILogger logger,
-            IPeerClient peerClient,
+            ILibP2PPeerClient peerClient,
             IPeerSettings peerSettings,
             int ttl,
             IScheduler scheduler = null)

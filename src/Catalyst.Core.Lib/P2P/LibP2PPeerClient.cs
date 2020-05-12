@@ -21,48 +21,42 @@
 
 #endregion
 
-using System.Collections.Generic;
-using System.Net;
-using System.Reflection;
-using System.Threading.Tasks;
-using Catalyst.Abstractions.IO.EventLoop;
-using Catalyst.Abstractions.IO.Transport.Channels;
+using Catalyst.Abstractions.Dfs.CoreApi;
+using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Core.Lib.IO.Transport;
+using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
 using Catalyst.Protocol.Peer;
+using Catalyst.Protocol.Wire;
 using Google.Protobuf;
-using Serilog;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace Catalyst.Core.Lib.P2P
 {
-    public sealed class PeerClient : UdpClient, IPeerClient
+    public class LibP2PPeerClient : ILibP2PPeerClient
     {
         private readonly IPeerSettings _peerSettings;
+        private readonly IPubSubApi _pubSubApi;
+        private readonly PeerLibP2PClientChannelFactory _peerLibP2PChannelFactory;
+
+        public IObservable<ProtocolMessage> MessageStream { private set; get; }
 
         /// <param name="clientChannelFactory">A factory used to build the appropriate kind of channel for a udp client.</param>
         /// <param name="eventLoopGroupFactory"></param>
         /// <param name="peerSettings"></param>
-        public PeerClient(IUdpClientChannelFactory clientChannelFactory,
-            IUdpClientEventLoopGroupFactory eventLoopGroupFactory,
-            IPeerSettings peerSettings)
-            : base(clientChannelFactory,
-                Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType),
-                eventLoopGroupFactory)
+        public LibP2PPeerClient(IPeerSettings peerSettings, PeerLibP2PClientChannelFactory peerLibP2PChannelFactory, IPubSubApi pubSubApi)
         {
             _peerSettings = peerSettings;
+            _peerLibP2PChannelFactory = peerLibP2PChannelFactory;
+            _pubSubApi = pubSubApi;
         }
 
-        public override async Task StartAsync()
+        public async Task StartAsync()
         {
-            var bindingEndpoint = new IPEndPoint(_peerSettings.BindAddress, IPEndPoint.MinPort);
-            var observableChannel = await ChannelFactory.BuildChannelAsync(EventLoopGroupFactory,
-                    bindingEndpoint.Address,
-                    bindingEndpoint.Port)
-               .ConfigureAwait(false);
-
-            Channel = observableChannel.Channel;
+            MessageStream = await _peerLibP2PChannelFactory.BuildMessageStreamAsync();
         }
 
         public void SendMessageToPeers(IMessage message, IEnumerable<PeerId> peers)
@@ -74,6 +68,11 @@ namespace Catalyst.Core.Lib.P2P
                     protocolMessage,
                     peer));
             }
+        }
+
+        public void SendMessage<T>(IMessageDto<T> message) where T : IMessage<T>
+        {
+            _pubSubApi.PublishAsync("catalyst", message.Content.ToByteArray());
         }
     }
 }

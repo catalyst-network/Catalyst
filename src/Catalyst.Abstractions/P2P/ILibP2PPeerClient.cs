@@ -21,10 +21,18 @@
 
 #endregion
 
-namespace Catalyst.Abstractions.P2P.Protocols
+using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Protocol.Peer;
+using Google.Protobuf;
+using System.Collections.Generic;
+using System.Threading.Tasks;
+
+namespace Catalyst.Abstractions.P2P
 {
-    public interface IProtocolRequest : IProtocol
+    public interface ILibP2PPeerClient
     {
-        ILibP2PPeerClient PeerClient { get; }
+        void SendMessageToPeers(IMessage message, IEnumerable<PeerId> peers);
+        void SendMessage<T>(IMessageDto<T> message) where T : IMessage<T>;
+        Task StartAsync();
     }
 }

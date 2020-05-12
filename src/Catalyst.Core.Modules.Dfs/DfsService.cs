@@ -70,59 +70,62 @@ namespace Catalyst.Core.Modules.Dfs
         private readonly IHashProvider _hashProvider;
         private ConcurrentBag<Func<Task>> _stopTasks = new ConcurrentBag<Func<Task>>();
 
-        public DfsService(IBitSwapApi bitSwapApi,
+        public DfsService(
+            Peer localPeer,
             IBitswapService bitSwapService,
-            IBlockApi blockApi,
-            IBlockRepositoryApi blockRepositoryApi,
+            IDhtService dhtService,
+            Ping1 pingService,
+            IPubSubService pubSubService,
+            ISwarmService swarmService,
             IBootstrapApi bootstrapApi,
             IConfigApi configApi,
+            IBitSwapApi bitSwapApi,
+            IBlockApi blockApi,
+            IBlockRepositoryApi blockRepositoryApi,
             IDagApi dagApi,
             IDhtApi dhtApi,
             IDnsApi dnsApi,
-            IDhtService dhtService,
             IUnixFsApi unixFsApi,
             IKeyApi keyApi,
             INameApi nameApi,
             IObjectApi objectApi,
             IPinApi pinApi,
-            Ping1 pingService,
             IPubSubApi pubSubApi,
-            IPubSubService pubSubService,
             IStatsApi statsApi,
             ISwarmApi swarmApi,
-            ISwarmService swarmService,
             IHashProvider hashProvider,
             DfsOptions dfsOptions,
             DfsState dfsState,
-            IMigrationManager migrationManager,
-            Peer localPeer)
+            IMigrationManager migrationManager)
         {
-            BitSwapApi = bitSwapApi;
+            LocalPeer = localPeer;
+
             BitSwapService = bitSwapService;
+            DhtService = dhtService;
+            PingService = pingService;
+            PubSubService = pubSubService;
+            SwarmService = swarmService;
+
+            BootstrapApi = bootstrapApi;
+            ConfigApi = configApi;     
+            BitSwapApi = bitSwapApi;
             BlockApi = blockApi;
             BlockRepositoryApi = blockRepositoryApi;
-            BootstrapApi = bootstrapApi;
-            ConfigApi = configApi;
             DagApi = dagApi;
             DhtApi = dhtApi;
-            DhtService = dhtService;
+            DnsApi = dnsApi;
             UnixFsApi = unixFsApi;
             KeyApi = keyApi;
             NameApi = nameApi;
             ObjectApi = objectApi;
             PinApi = pinApi;
-            PingService = pingService;
             PubSubApi = pubSubApi;
-            PubSubService = pubSubService;
             StatsApi = statsApi;
             SwarmApi = swarmApi;
-            SwarmService = swarmService;
             Options = dfsOptions;
             _hashProvider = hashProvider;
             _dfsState = dfsState;
-            DnsApi = dnsApi;
             MigrationManager = migrationManager;
-            LocalPeer = localPeer;
 
             InitAsync().Wait();
         }

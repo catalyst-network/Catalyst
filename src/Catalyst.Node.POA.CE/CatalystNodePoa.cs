@@ -64,28 +64,28 @@ namespace Catalyst.Node.POA.CE
         private readonly IKeySigner _keySigner;
         private readonly ILogger _logger;
         private readonly IMempool<PublicEntryDao> _memPool;
-        private readonly IPeerService _peer;
-        private readonly IPeerClient _peerClient;
+        private readonly ILibP2PPeerService _peer;
+        private readonly ILibP2PPeerClient _peerClient;
         private readonly IPeerSettings _peerSettings;
         private readonly IPublicKey _publicKey;
         private readonly ISynchroniser _synchronizer;
         private readonly IPeerRepository _peerRepository;
         private readonly IKeyApi _keyApi;
-        private readonly PubSubService _messageRouter;
+        private readonly IPubSubService _messageRouter;
 
         public CatalystNodePoa(IKeySigner keySigner,
-            IPeerService peer,
+            ILibP2PPeerService peer,
             IConsensus consensus,
             IDfsService dfsService,
             ILedger ledger,
             ILogger logger,
-            IPeerClient peerClient,
+            ILibP2PPeerClient peerClient,
             IPeerSettings peerSettings,
             IMempool<PublicEntryDao> memPool,
             ISynchroniser synchronizer,
             IPeerRepository peerRepository,
             IKeyApi keyApi,
-            PubSubService messageRouter,
+            IPubSubService messageRouter,
             IContract contract = null)
         {
             Guard.Argument(peerRepository, nameof(peerRepository)).NotNull();

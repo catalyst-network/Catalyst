@@ -25,4 +25,7 @@
       <ProjectReference Include="..\Catalyst.KBucket\Catalyst.KBucket.csproj" />
       <ProjectReference Include="..\MultiFormats\MultiFormats.csproj" />
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="Options\" />
+    </ItemGroup>
 </Project>

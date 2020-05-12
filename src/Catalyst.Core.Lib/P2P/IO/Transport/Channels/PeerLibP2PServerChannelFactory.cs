@@ -1,27 +1,23 @@
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Core.Lib.IO.Transport.Channels;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
 using Lib.P2P;
 using System;
-using System.Collections.Generic;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
 {
-    public class PeerLibP2PChannelFactory
+    public class PeerLibP2PServerChannelFactory
     {
         private readonly IScheduler _scheduler;
         private readonly IBroadcastManager _broadcastManager;
@@ -33,7 +29,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
         private readonly Peer _localPeer;
         public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
 
-        public PeerLibP2PChannelFactory(
+        public PeerLibP2PServerChannelFactory(
             IBroadcastManager broadcastManager,
             IKeySigner keySigner,
             IPeerIdValidator peerIdValidator,
@@ -53,41 +49,12 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
             MessageStream = _messageSubject.AsObservable();
         }
 
-        //protected override Func<List<IChannelHandler>> HandlerGenerationFunction
-        //{
-        //    get
-        //    {
-        //        return () =>
-        //        {
-        //            return new List<IChannelHandler>
-        //            {
-        //                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-        //                    new DatagramPacketDecoder(new ProtobufDecoder(ProtocolMessage.Parser)),
-        //                    new DatagramPacketEncoder<IMessage>(new ProtobufEncoder())
-        //                ),
-        //                new PeerIdValidationHandler(_peerIdValidator),
-        //                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-        //                    new ProtocolMessageVerifyHandler(_keySigner),
-        //                    new ProtocolMessageSignHandler(_keySigner, _signingContext)
-        //                ),
-        //                new CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>(
-        //                    new CorrelationHandler<IPeerMessageCorrelationManager>(_messageCorrelationManager),
-        //                    new CorrelatableHandler<IPeerMessageCorrelationManager>(_messageCorrelationManager)
-        //                ),
-        //                new BroadcastHandler(_broadcastManager),
-        //                new ObservableServiceHandler(_scheduler),
-        //                new BroadcastCleanupHandler(_broadcastManager)
-        //            };
-        //        };
-        //    }
-        //}
-
         /// <param name="handlerEventLoopGroupFactory"></param>
         /// <param name="targetAddress">Ignored</param>
         /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Ignored</param>
         /// <returns></returns>
-        public async Task<IObservableChannel> BuildChannelAsync()
+        public async Task<IObservable<IObserverDto<ProtocolMessage>>> BuildMessageStreamAsync()
         {
             await _pubSubApi.SubscribeAsync("catalyst", msg =>
             {
@@ -105,7 +72,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
                 }
             }, CancellationToken.None);
 
-            return new ObservableChannel(MessageStream, null);
+            return MessageStream;
         }
     }
 }

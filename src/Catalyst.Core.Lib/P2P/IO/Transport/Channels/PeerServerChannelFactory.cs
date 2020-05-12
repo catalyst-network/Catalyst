@@ -28,9 +28,7 @@ using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Security.Cryptography.X509Certificates;
-using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Handlers;
 using Catalyst.Abstractions.IO.Messaging.Dto;
@@ -39,9 +37,7 @@ using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Handlers;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.IO.Transport.Channels;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
@@ -49,7 +45,6 @@ using DotNetty.Codecs;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
-using LibP2P = Lib.P2P;
 
 namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
 {

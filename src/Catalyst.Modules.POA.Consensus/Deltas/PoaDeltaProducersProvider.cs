@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Repository;

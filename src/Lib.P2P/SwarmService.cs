@@ -410,6 +410,9 @@ namespace Lib.P2P
             {
                 LocalPeer = localPeer;
             }
+
+            //LocalPeerKey = Key.CreatePrivateKey(await KeyApi.GetPrivateKeyAsync("self").ConfigureAwait(false));
+
             Router = dhtService;
         }
 
