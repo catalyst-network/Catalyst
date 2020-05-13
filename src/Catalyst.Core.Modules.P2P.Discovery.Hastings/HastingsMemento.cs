@@ -23,6 +23,7 @@
 
 using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
 {
@@ -31,10 +32,10 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
     /// </summary>
     public sealed class HastingsMemento : IHastingsMemento
     {
-        public PeerId Peer { get; }
+        public MultiAddress Peer { get; }
         public INeighbours Neighbours { get; }
 
-        public HastingsMemento(PeerId peer, INeighbours neighbours)
+        public HastingsMemento(MultiAddress peer, INeighbours neighbours)
         {
             Peer = peer;
             Neighbours = neighbours;

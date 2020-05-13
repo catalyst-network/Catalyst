@@ -21,15 +21,25 @@
 
 #endregion
 
-using Catalyst.Protocol.Peer;
-using Lib.P2P;
 using MultiFormats;
 
-namespace Catalyst.Abstractions.P2P.Protocols
+namespace Catalyst.Core.Lib.Extensions
 {
-    public interface IPeerQueryTipResponse
+    public static class MultiAddressExtensions
     {
-        MultiAddress PeerId { get; }
-        Cid DeltaHash { get; }
+        public static string GetIpAddress(this MultiAddress multiAddress)
+        {
+            return multiAddress.Protocols[0].Value;
+        }
+
+        public static string GetPort(this MultiAddress multiAddress)
+        {
+            return multiAddress.Protocols[1].Value;
+        }
+
+        public static string GetPublicKey(this MultiAddress multiAddress)
+        {
+            return multiAddress.PeerId.GetPublicKeyBytesFromPeerId().ToBase58();
+        }
     }
 }

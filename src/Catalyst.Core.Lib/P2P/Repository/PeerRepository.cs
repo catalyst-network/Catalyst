@@ -28,6 +28,7 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Protocol.Peer;
 using Google.Protobuf;
+using MultiFormats;
 using SharpRepository.Repository;
 using SharpRepository.Repository.Queries;
 using SharpRepository.Repository.Specifications;
@@ -63,10 +64,9 @@ namespace Catalyst.Core.Lib.P2P.Repository
                .ToList();
         }
 
-        public IEnumerable<Peer> GetPeersByIpAndPublicKey(ByteString ip, ByteString publicKey)
+        public IEnumerable<Peer> GetPeersByPeerId(MultiAddress address)
         {
-            return _repository.FindAll(m =>
-                m.PeerId.Ip == ip && (publicKey.IsEmpty || m.PeerId.PublicKey == publicKey));
+            return _repository.FindAll(m => m.PeerId == address);
         }
 
         public IEnumerable<Peer> TakeHighestReputationPeers(int page, int count)
@@ -82,10 +82,10 @@ namespace Catalyst.Core.Lib.P2P.Repository
 
         public void Update(Peer peer) { _repository.Update(peer); }
 
-        public uint DeletePeersByIpAndPublicKey(ByteString ip, ByteString publicKey)
+        public uint DeletePeersByPeerId(MultiAddress address)
         {
             var peerDeletedCount = 0u;
-            var peersToDelete = GetPeersByIpAndPublicKey(ip, publicKey);
+            var peersToDelete = GetPeersByPeerId(address);
 
             foreach (var peerToDelete in peersToDelete)
             {

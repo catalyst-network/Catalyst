@@ -32,6 +32,7 @@ using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using DotNetty.Transport.Channels;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.IO.Observers
@@ -60,7 +61,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         /// <returns></returns>
         protected override PeerNeighborsResponse HandleRequest(PeerNeighborsRequest peerNeighborsRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress senderPeerId,
             ICorrelationId correlationId)
         {
             Guard.Argument(peerNeighborsRequest, nameof(peerNeighborsRequest)).NotNull();
@@ -77,7 +78,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
 
             for (var i = 0; i < Constants.NumberOfRandomPeers; i++)
             {
-                peerNeighborsResponseMessage.Peers.Add(activePeersList.RandomElement().PeerId);
+                peerNeighborsResponseMessage.Peers.Add(activePeersList.RandomElement().PeerId.ToString());
             }
 
             return peerNeighborsResponseMessage;

@@ -30,6 +30,7 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
@@ -49,7 +50,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
         protected override SetPeerDataFolderResponse HandleRequest(SetPeerDataFolderRequest setDataFolderRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress senderPeerId,
             ICorrelationId correlationId)
         {
             Guard.Argument(setDataFolderRequest, nameof(setDataFolderRequest)).NotNull();

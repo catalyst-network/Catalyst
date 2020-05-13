@@ -30,6 +30,7 @@ using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Protocol.Peer;
 using DotNetty.Transport.Channels;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.FileTransfer
 {
@@ -54,10 +55,10 @@ namespace Catalyst.Core.Lib.FileTransfer
         public IChannel RecipientChannel { get; set; }
 
         /// <inheritdoc />
-        public PeerId RecipientId { get; set; }
+        public MultiAddress RecipientId { get; set; }
 
         /// <inheritdoc />
-        public PeerId PeerId { get; set; }
+        public MultiAddress PeerId { get; set; }
 
         /// <inheritdoc />
         public CancellationToken CancellationToken { get; set; }
@@ -85,8 +86,8 @@ namespace Catalyst.Core.Lib.FileTransfer
         /// <param name="correlationId">The correlation unique identifier.</param>
         /// <param name="fileName">Name of the file.</param>
         /// <param name="fileSize">Size of the file.</param>
-        protected BaseFileTransferInformation(PeerId peerId,
-            PeerId recipientId,
+        protected BaseFileTransferInformation(MultiAddress peerId,
+            MultiAddress recipientId,
             IChannel recipientChannel,
             ICorrelationId correlationId,
             string fileName,

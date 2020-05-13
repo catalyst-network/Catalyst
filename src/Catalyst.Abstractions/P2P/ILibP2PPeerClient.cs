@@ -24,6 +24,7 @@
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Protocol.Peer;
 using Google.Protobuf;
+using MultiFormats;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -31,7 +32,7 @@ namespace Catalyst.Abstractions.P2P
 {
     public interface ILibP2PPeerClient
     {
-        void SendMessageToPeers(IMessage message, IEnumerable<PeerId> peers);
+        void SendMessageToPeers(IMessage message, IEnumerable<MultiAddress> peers);
         void SendMessage<T>(IMessageDto<T> message) where T : IMessage<T>;
         Task StartAsync();
     }

@@ -31,6 +31,7 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
@@ -59,7 +60,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <returns></returns>
         protected override SignMessageResponse HandleRequest(SignMessageRequest signMessageRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress senderPeerId,
             ICorrelationId correlationId)
         {
             Guard.Argument(signMessageRequest, nameof(signMessageRequest)).NotNull();

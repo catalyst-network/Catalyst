@@ -37,6 +37,7 @@ using Catalyst.Core.Modules.Rpc.Client;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using Microsoft.Extensions.Configuration;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Cli.Commands
@@ -59,13 +60,14 @@ namespace Catalyst.Cli.Commands
             _rpcNodeConfigs = RpcClientSettings.BuildRpcNodeSettingList(config);
 
             SocketClientRegistry = socketClientRegistry;
-            PeerId = GetPeerIdentifierFromCliConfig(config);
+            //todo
+            //PeerId = GetPeerIdentifierFromCliConfig(config);
             RpcClientFactory = rpcClientFactory;
             CertificateStore = certificateStore;
             UserOutput = userOutput;
         }
 
-        public PeerId PeerId { get; }
+        public MultiAddress PeerId { get; }
 
         public IRpcClientFactory RpcClientFactory { get; }
 

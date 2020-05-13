@@ -44,6 +44,7 @@ using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Microsoft.Reactive.Testing;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
@@ -90,7 +91,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <returns></returns>
         protected override AddFileToDfsResponse HandleRequest(AddFileToDfsRequest addFileToDfsRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress senderPeerId,
             ICorrelationId correlationId)
         {
             Guard.Argument(addFileToDfsRequest, nameof(addFileToDfsRequest)).NotNull();

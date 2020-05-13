@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text;
 using System.Threading;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
@@ -37,6 +38,7 @@ using Dawn;
 using Lib.P2P;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
+using MultiFormats;
 using Serilog;
 using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
 
@@ -72,12 +74,12 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
 
         }
 
-        public IList<PeerId> GetDeltaProducersFromPreviousDelta(Cid previousDeltaHash)
+        public IList<MultiAddress> GetDeltaProducersFromPreviousDelta(Cid previousDeltaHash)
         {
             Guard.Argument(previousDeltaHash, nameof(previousDeltaHash)).NotNull();
 
             if (_producersByPreviousDelta.TryGetValue(GetCacheKey(previousDeltaHash),
-                out IList<PeerId> cachedPeerIdsInPriorityOrder))
+                out IList<MultiAddress> cachedPeerIdsInPriorityOrder))
             {
                 _logger.Information("Retrieved favourite delta producers for successor of {0} from cache.",
                     previousDeltaHash);

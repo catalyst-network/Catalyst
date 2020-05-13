@@ -33,6 +33,7 @@ using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
@@ -63,7 +64,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <returns>The GetPeerInfoResponse</returns>
         protected override GetPeerInfoResponse HandleRequest(GetPeerInfoRequest getPeerInfoRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress senderPeerId,
             ICorrelationId correlationId)
         {
             Guard.Argument(getPeerInfoRequest, nameof(getPeerInfoRequest)).NotNull();
@@ -71,25 +72,28 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Debug("received message of type GetPeerInfoRequest");
 
-            var ip = getPeerInfoRequest.Ip;
+            //todo
+            //var ip = getPeerInfoRequest.Ip;
 
-            var peerInfo = _peerRepository.GetPeersByIpAndPublicKey(ip, getPeerInfoRequest.PublicKey)
-               .Select(x =>
-                    new PeerInfo
-                    {
-                        PeerId = x.PeerId,
-                        Reputation = x.Reputation,
-                        IsBlacklisted = x.BlackListed,
-                        IsUnreachable = x.IsAwolPeer,
-                        InactiveFor = x.InactiveFor.ToDuration(),
-                        LastSeen = x.LastSeen.ToTimestamp(),
-                        Modified = x.Modified?.ToTimestamp(),
-                        Created = x.Created.ToTimestamp()
-                    }).ToList();
+            //var peerInfo = _peerRepository.GetPeersByIpAndPublicKey(ip, getPeerInfoRequest.PublicKey)
+            //   .Select(x =>
+            //        new PeerInfo
+            //        {
+            //            PeerId = x.PeerId,
+            //            Reputation = x.Reputation,
+            //            IsBlacklisted = x.BlackListed,
+            //            IsUnreachable = x.IsAwolPeer,
+            //            InactiveFor = x.InactiveFor.ToDuration(),
+            //            LastSeen = x.LastSeen.ToTimestamp(),
+            //            Modified = x.Modified?.ToTimestamp(),
+            //            Created = x.Created.ToTimestamp()
+            //        }).ToList();
 
-            var response = new GetPeerInfoResponse();
-            response.PeerInfo.AddRange(peerInfo);
-            return response;
+            //var response = new GetPeerInfoResponse();
+            //response.PeerInfo.AddRange(peerInfo);
+            //return response;
+
+            return null;
         }
     }
 }

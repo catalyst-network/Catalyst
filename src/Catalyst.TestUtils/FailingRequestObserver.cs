@@ -30,6 +30,7 @@ using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using DotNetty.Transport.Channels;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.TestUtils
@@ -45,7 +46,7 @@ namespace Catalyst.TestUtils
 
         protected override PeerNeighborsResponse HandleRequest(PeerNeighborsRequest messageDto,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress senderPeerId,
             ICorrelationId correlationId)
         {
             var count = Interlocked.Increment(ref _counter);

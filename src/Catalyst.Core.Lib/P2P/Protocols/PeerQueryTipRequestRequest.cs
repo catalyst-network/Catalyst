@@ -36,6 +36,7 @@ using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.Protocols
@@ -61,34 +62,35 @@ namespace Catalyst.Core.Lib.P2P.Protocols
             QueryTipResponseMessageStreamer = new ReplaySubject<IPeerQueryTipResponse>(1, scheduler ?? Scheduler.Default);
         }
 
-        public async Task<bool> QueryPeerTipAsync(PeerId recipientPeerId)
+        public async Task<bool> QueryPeerTipAsync(MultiAddress recipientPeerId)
         {
-            try
-            {
-                PeerClient.SendMessage(new MessageDto(
-                    new LatestDeltaHashRequest().ToProtocolMessage(PeerId, CorrelationId.GenerateCorrelationId()),
-                    recipientPeerId
-                ));
+            //todo
+            //try
+            //{
+            //    PeerClient.SendMessage(new MessageDto(
+            //        new LatestDeltaHashRequest().ToProtocolMessage(PeerId, CorrelationId.GenerateCorrelationId()),
+            //        recipientPeerId
+            //    ));
                 
-                using (CancellationTokenProvider.CancellationTokenSource)
-                {
-                    await QueryTipResponseMessageStreamer
-                       .FirstAsync(a => a != null 
-                         && a.PeerId.PublicKey.SequenceEqual(recipientPeerId.PublicKey) 
-                         && a.PeerId.Ip.SequenceEqual(recipientPeerId.Ip))
-                       .ToTask(CancellationTokenProvider.CancellationTokenSource.Token)
-                       .ConfigureAwait(false);
-                }
-            }
-            catch (OperationCanceledException)
-            {
-                return false;
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e, nameof(QueryPeerTipAsync));
-                return false;
-            }
+            //    using (CancellationTokenProvider.CancellationTokenSource)
+            //    {
+            //        await QueryTipResponseMessageStreamer
+            //           .FirstAsync(a => a != null 
+            //             && a.PeerId.PublicKey.SequenceEqual(recipientPeerId.PublicKey) 
+            //             && a.PeerId.Ip.SequenceEqual(recipientPeerId.Ip))
+            //           .ToTask(CancellationTokenProvider.CancellationTokenSource.Token)
+            //           .ConfigureAwait(false);
+            //    }
+            //}
+            //catch (OperationCanceledException)
+            //{
+            //    return false;
+            //}
+            //catch (Exception e)
+            //{
+            //    Logger.Error(e, nameof(QueryPeerTipAsync));
+            //    return false;
+            //}
 
             return true;
         }

@@ -34,6 +34,7 @@ using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Serilog;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
@@ -63,7 +64,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <returns></returns>
         protected override SetPeerBlackListResponse HandleRequest(SetPeerBlackListRequest setPeerBlackListRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress senderPeerId,
             ICorrelationId correlationId)
         {
             Guard.Argument(setPeerBlackListRequest, nameof(setPeerBlackListRequest)).NotNull();
@@ -71,14 +72,17 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Information("received message of type PeerBlackListingRequest");
 
-            var peerItem = _peerRepository.GetAll()
-               .FirstOrDefault(m => m.PeerId.Ip == setPeerBlackListRequest.Ip
-                 && m.PeerId.PublicKey.KeyToString() == setPeerBlackListRequest.PublicKey.KeyToString());
+            //todo
+            //var peerItem = _peerRepository.GetAll()
+            //   .FirstOrDefault(m => m.PeerId.Ip == setPeerBlackListRequest.Ip
+            //     && m.PeerId.PublicKey.KeyToString() == setPeerBlackListRequest.PublicKey.KeyToString());
 
-            return peerItem == null
-                ? ReturnResponse(false, ByteString.Empty, ByteString.Empty)
-                : ReturnResponse(setPeerBlackListRequest.Blacklist, setPeerBlackListRequest.PublicKey,
-                    setPeerBlackListRequest.Ip);
+            //return peerItem == null
+            //    ? ReturnResponse(false, ByteString.Empty, ByteString.Empty)
+            //    : ReturnResponse(setPeerBlackListRequest.Blacklist, setPeerBlackListRequest.PublicKey,
+            //        setPeerBlackListRequest.Ip);
+
+            return null;
         }
 
         /// <summary>

@@ -31,6 +31,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Serilog;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
@@ -65,7 +66,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <returns></returns>
         protected override RemovePeerResponse HandleRequest(RemovePeerRequest removePeerRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress senderPeerId,
             ICorrelationId correlationId)
         {
             Guard.Argument(removePeerRequest, nameof(removePeerRequest)).NotNull();
@@ -73,13 +74,15 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Debug("Received message of type RemovePeerRequest");
 
-            var peerDeletedCount =
-                _peerRepository.DeletePeersByIpAndPublicKey(removePeerRequest.PeerIp, removePeerRequest.PublicKey);
+            //todo
+            //var peerDeletedCount =
+            //    _peerRepository.DeletePeersByIpAndPublicKey(removePeerRequest.PeerIp, removePeerRequest.PublicKey);
 
-            return new RemovePeerResponse
-            {
-                DeletedCount = peerDeletedCount
-            };
+            //return new RemovePeerResponse
+            //{
+            //    DeletedCount = peerDeletedCount
+            //};
+            return null;
         }
     }
 }

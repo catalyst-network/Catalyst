@@ -23,12 +23,13 @@
 
 using Catalyst.Protocol.Peer;
 using Google.Protobuf;
+using MultiFormats;
 
 namespace Catalyst.Abstractions.IO.Messaging.Correlation
 {
     public interface ICacheEvictionEvent<out T> where T : IMessage
     {
         T EvictedContent { get; }
-        PeerId PeerId { get; }
+        MultiAddress PeerId { get; }
     }
 }

@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Protocol.Peer;
 using Lib.P2P;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
@@ -33,7 +34,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
     {
         public DeltaProducersProvider(IPeerRepository peerRepository) { PeerRepository = peerRepository; }
 
-        public IList<PeerId> GetDeltaProducersFromPreviousDelta(Cid previousDeltaHash)
+        public IList<MultiAddress> GetDeltaProducersFromPreviousDelta(Cid previousDeltaHash)
         {
             throw new NotImplementedException();
         }

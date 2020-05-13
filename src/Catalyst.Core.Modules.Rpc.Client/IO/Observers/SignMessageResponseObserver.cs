@@ -63,7 +63,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
         /// <param name="correlationId"></param>
         protected override void HandleResponse(SignMessageResponse signMessageRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerIdentifier,
+            MultiAddress senderPeerIdentifier,
             ICorrelationId correlationId)
         {
             Guard.Argument(signMessageRequest, nameof(signMessageRequest)).NotNull();

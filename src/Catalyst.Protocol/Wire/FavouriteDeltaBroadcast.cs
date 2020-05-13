@@ -44,7 +44,8 @@ namespace Catalyst.Protocol.Wire
                 return false;
             }
 
-            return Candidate.IsValid() && VoterId.IsValid();
+            return Candidate.IsValid();
+            //&& VoterId.IsValid();
         }
     }
 }

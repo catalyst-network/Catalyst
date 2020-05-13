@@ -30,6 +30,7 @@ using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
+using MultiFormats;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
@@ -59,7 +60,7 @@ namespace Catalyst.Core.Lib.P2P
             MessageStream = await _peerLibP2PChannelFactory.BuildMessageStreamAsync();
         }
 
-        public void SendMessageToPeers(IMessage message, IEnumerable<PeerId> peers)
+        public void SendMessageToPeers(IMessage message, IEnumerable<MultiAddress> peers)
         {
             var protocolMessage = message.ToProtocolMessage(_peerSettings.PeerId);
             foreach (var peer in peers)

@@ -46,9 +46,14 @@ namespace Catalyst.Core.Lib.Extensions
     {
         public static byte[] GetPublicKeyBytesFromPeerId(this byte[] peerIdBytes)
         {
+            var peerId = new MultiHash("id", peerIdBytes);
+            return GetPublicKeyBytesFromPeerId(peerId);
+        }
+
+        public static byte[] GetPublicKeyBytesFromPeerId(this MultiHash peerId)
+        {
             try
             {
-                var peerId = new MultiHash("id", peerIdBytes);
                 using var ms = new MemoryStream(peerId.Digest);
                 var publicKey = Serializer.Deserialize<PublicKey>(ms);
                 using var aIn = new Asn1InputStream(publicKey.Data);

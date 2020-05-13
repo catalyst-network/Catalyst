@@ -78,7 +78,7 @@ namespace Catalyst.Modules.POA.P2P.Discovery
             foreach (var peer in poaPeers.Select(poaPeer => new Peer
             {
                 IsPoaNode = true,
-                PeerId = poaPeer.ToPeerId()
+                PeerId = poaPeer.MultiAddress
             }))
             {
                 //Don't add your own peer id even if you are a POA node.
@@ -87,8 +87,9 @@ namespace Catalyst.Modules.POA.P2P.Discovery
                     continue;
                 }
 
-                _logger.Information(
-                    $"Adding POA Peer: {peer.PeerId.IpAddress} Public Key: {peer.PeerId.PublicKey.KeyToString()}");
+                //todo
+                //_logger.Information(
+                //    $"Adding POA Peer: {peer.PeerId.IpAddress} Public Key: {peer.PeerId.PublicKey.KeyToString()}");
 
                 if (!_peerRepository.Exists(peer.DocumentId))
                 {

@@ -25,6 +25,7 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Transport;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 
 namespace Catalyst.Abstractions.Cli.Commands
 {
@@ -48,7 +49,7 @@ namespace Catalyst.Abstractions.Cli.Commands
 
         /// <summary>Gets the peer identifier.</summary>
         /// <value>The peer identifier.</value>
-        PeerId PeerId { get; }
+        MultiAddress PeerId { get; }
 
         /// <summary>Gets the connected node.</summary>
         /// <param name="nodeId">The node identifier located in configuration.</param>

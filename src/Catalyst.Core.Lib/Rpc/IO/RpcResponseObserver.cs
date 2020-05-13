@@ -28,6 +28,7 @@ using Catalyst.Protocol.Peer;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Lib.Rpc.IO
@@ -38,11 +39,11 @@ namespace Catalyst.Core.Lib.Rpc.IO
         protected RpcResponseObserver(ILogger logger, bool assertMessageNameCheck = true) : base(logger,
             assertMessageNameCheck) { }
 
-        protected abstract override void HandleResponse(TProto messageDto, IChannelHandlerContext channelHandlerContext, PeerId senderPeerId, ICorrelationId correlationId);
+        protected abstract override void HandleResponse(TProto messageDto, IChannelHandlerContext channelHandlerContext, MultiAddress senderPeerId, ICorrelationId correlationId);
 
         public void HandleResponseObserver(IMessage message,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress senderPeerId,
             ICorrelationId correlationId)
         {
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();

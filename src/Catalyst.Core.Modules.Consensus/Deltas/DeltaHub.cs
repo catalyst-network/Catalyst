@@ -40,6 +40,7 @@ using Catalyst.Protocol.Wire;
 using Dawn;
 using Google.Protobuf;
 using Lib.P2P;
+using MultiFormats;
 using Polly;
 using Polly.Retry;
 using Serilog;
@@ -51,7 +52,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
     public class DeltaHub : IDeltaHub
     {
         private readonly IBroadcastManager _broadcastManager;
-        private readonly PeerId _peerId;
+        private readonly MultiAddress _peerId;
         private readonly IDfsService _dfsService;
         private readonly IHashProvider _hashProvider;
         private readonly ILogger _logger;

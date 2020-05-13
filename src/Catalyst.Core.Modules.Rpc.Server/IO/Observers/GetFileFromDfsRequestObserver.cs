@@ -42,6 +42,7 @@ using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Lib.P2P;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
@@ -83,7 +84,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <returns></returns>
         protected override GetFileFromDfsResponse HandleRequest(GetFileFromDfsRequest getFileFromDfsRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress senderPeerId,
             ICorrelationId correlationId)
         {
             Guard.Argument(getFileFromDfsRequest, nameof(getFileFromDfsRequest)).NotNull();

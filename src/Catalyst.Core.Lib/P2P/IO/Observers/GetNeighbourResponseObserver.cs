@@ -34,6 +34,7 @@ using Catalyst.Core.Lib.P2P.IO.Messaging.Dto;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using DotNetty.Transport.Channels;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.IO.Observers
@@ -60,7 +61,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         /// <param name="correlationId"></param>
         protected override void HandleResponse(PeerNeighborsResponse messageDto,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress senderPeerId,
             ICorrelationId correlationId)
         {
             ResponseMessageSubject.OnNext(new PeerClientMessageDto(messageDto, senderPeerId, correlationId));

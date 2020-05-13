@@ -24,15 +24,16 @@
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Protocol.Peer;
 using Google.Protobuf;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.IO.Messaging.Correlation
 {
     public sealed class MessageEvictionEvent<T> : ICacheEvictionEvent<T> where T : IMessage
     {
         public T EvictedContent { get; }
-        public PeerId PeerId { get; }
+        public MultiAddress PeerId { get; }
         
-        public MessageEvictionEvent(CorrelatableMessage<T> correlatableMessage, PeerId sender)
+        public MessageEvictionEvent(CorrelatableMessage<T> correlatableMessage, MultiAddress sender)
         {
             EvictedContent = correlatableMessage.Content;
             PeerId = sender;

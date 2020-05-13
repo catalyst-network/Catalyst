@@ -26,6 +26,7 @@ using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Peer;
 using Dawn;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.P2P.Protocols
 {
@@ -40,7 +41,7 @@ namespace Catalyst.Core.Lib.P2P.Protocols
         /// </summary>
         /// <param name="peerId"></param>
         /// <param name="deltaCid"></param>
-        public PeerDeltaHistoryResponse(PeerId peerId, ICollection<DeltaIndex> deltaCid) : base(peerId)
+        public PeerDeltaHistoryResponse(MultiAddress peerId, ICollection<DeltaIndex> deltaCid) : base(peerId)
         {
             Guard.Argument(deltaCid.Count).InRange(1, 1024);
             DeltaCid = deltaCid;

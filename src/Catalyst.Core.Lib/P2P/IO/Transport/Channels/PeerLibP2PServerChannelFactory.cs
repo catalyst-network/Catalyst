@@ -64,10 +64,12 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
                     if (proto.IsBroadCastMessage())
                     {
                         var innerGossipMessageSigned = ProtocolMessage.Parser.ParseFrom(proto.Value);
+                        innerGossipMessageSigned.PeerId = msg.Sender.ConnectedAddress.ToString();
                         _messageSubject.OnNext(new ObserverDto(null, innerGossipMessageSigned));
                         return;
                     }
 
+                    proto.PeerId = msg.Sender.ConnectedAddress.ToString();
                     _messageSubject.OnNext(new ObserverDto(null, proto));
                 }
             }, CancellationToken.None);

@@ -26,13 +26,14 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.Peer;
 using Google.Protobuf;
+using MultiFormats;
 using System.Collections.Generic;
 
 namespace Catalyst.Core.Modules.Sync.Extensions
 {
     public static class PeerClientExtensions
     {
-        public static void SendMessageToPeers(this ILibP2PPeerClient peerClient, IPeerSettings peerSettings, IMessage message, IEnumerable<PeerId> peers)
+        public static void SendMessageToPeers(this ILibP2PPeerClient peerClient, IPeerSettings peerSettings, IMessage message, IEnumerable<MultiAddress> peers)
         {
             var protocolMessage = message.ToProtocolMessage(peerSettings.PeerId);
             foreach (var peer in peers)

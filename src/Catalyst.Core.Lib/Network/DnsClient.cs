@@ -31,6 +31,7 @@ using Catalyst.Protocol.Peer;
 using Dawn;
 using DnsClient;
 using DnsClient.Protocol;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.Network
 {
@@ -74,18 +75,19 @@ namespace Catalyst.Core.Lib.Network
         /// <summary>
         /// </summary>
         /// <param name="seedServers"></param>
-        public async Task<IEnumerable<PeerId>> GetSeedNodesFromDnsAsync(IEnumerable<string> seedServers)
+        public async Task<IEnumerable<MultiAddress>> GetSeedNodesFromDnsAsync(IEnumerable<string> seedServers)
         {
-            var peers = new List<PeerId>();
+            var peers = new List<MultiAddress>();
 
             async Task Action(string seedServer)
             {
                 var dnsQueryAnswer = await GetTxtRecordsAsync(seedServer).ConfigureAwait(false);
                 var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
 
+                //todo
                 Guard.Argument(answerSection?.EscapedText).NotNull().Count(1);
                 answerSection?.EscapedText.ToList()
-                   .ForEach(stringPid => peers.Add(stringPid.ParseHexStringTo<PeerId>()));
+                   .ForEach(stringPid => peers.Add(new MultiAddress(stringPid)));
 
                 Guard.Argument(peers).MinCount(1);
             }

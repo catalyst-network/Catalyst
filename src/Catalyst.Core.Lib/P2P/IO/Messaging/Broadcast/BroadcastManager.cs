@@ -43,6 +43,7 @@ using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using Serilog;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
 {
@@ -64,7 +65,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         private readonly Func<MemoryCacheEntryOptions> _entryOptions;
 
         /// <summary>The peer identifier</summary>
-        private readonly PeerId _peerId;
+        private readonly MultiAddress _peerId;
 
         /// <summary>The peer client</summary>
         private readonly ILibP2PPeerClient _peerClient;
@@ -199,7 +200,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
                 {
                     _logger.Verbose("Broadcasting message {message}", message);
                     var protocolMessage = message.Clone();
-                    protocolMessage.PeerId = _peerId;
+                    protocolMessage.PeerId = _peerId.ToString();
                     _peerClient.SendMessage(new MessageDto(
                         protocolMessage,
                         peerIdentifier)
@@ -224,7 +225,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         /// <summary>Gets the random peers.</summary>
         /// <param name="count">The count.</param>
         /// <returns></returns>
-        private List<PeerId> GetRandomPeers(int count)
+        private List<MultiAddress> GetRandomPeers(int count)
         {
             return _peers.GetRandomPeers(count).Select(p => p.PeerId).ToList();
         }

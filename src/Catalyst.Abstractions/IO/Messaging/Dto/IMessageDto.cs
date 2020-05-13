@@ -25,13 +25,14 @@ using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Protocol.Peer;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
+using MultiFormats;
 
 namespace Catalyst.Abstractions.IO.Messaging.Dto
 {
     public interface IMessageDto<out T> : IAddressedEnvelope<T> where T : IMessage
     {
         ICorrelationId CorrelationId { get; }
-        PeerId RecipientPeerIdentifier { get; }
-        PeerId SenderPeerIdentifier { get; }
+        MultiAddress RecipientPeerIdentifier { get; }
+        MultiAddress SenderPeerIdentifier { get; }
     }
 }

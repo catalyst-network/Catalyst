@@ -22,6 +22,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Text;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
@@ -56,16 +57,17 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 return candidateHashComparison;
             }
 
-            return ByteUtil.ByteListComparer.Default.Compare(
-                x.VoterId?.ToByteArray(),
-                y.VoterId?.ToByteArray());
+            //todo
+            var voterIdXBytes = Encoding.UTF8.GetBytes(x.VoterId);
+            var voterIdYBytes = Encoding.UTF8.GetBytes(x.VoterId);
+            return ByteUtil.ByteListComparer.Default.Compare(voterIdXBytes, voterIdYBytes);
         }
 
         private static int CompareCandidateHash(CandidateDeltaBroadcast x, CandidateDeltaBroadcast y)
         {
             var xByteArray = x?.Hash?.ToByteArray();
             var yByteArray = y?.Hash?.ToByteArray();
-            return 
+            return
                 ByteUtil.ByteListMinSizeComparer.Default.Compare(
                     xByteArray,
                     yByteArray);

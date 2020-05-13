@@ -62,7 +62,7 @@ namespace Catalyst.Core.Modules.Ledger
         public IHashProvider HashProvider { get; }
         public IDfsService DfsService { get; }
         public SyncState SyncState { get; }
-        private readonly PeerId _peerId;
+        private readonly MultiAddress _peerId;
 
         public Web3EthApi(IStateReader stateReader,
             IDeltaResolver deltaResolver,

@@ -33,6 +33,7 @@ using Catalyst.Core.Lib.IO.Events;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.Peer;
 using Google.Protobuf;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Cli.CommandTypes
@@ -46,7 +47,7 @@ namespace Catalyst.Cli.CommandTypes
         private readonly IDisposable _eventStreamObserverClientAdded;
         private readonly IDisposable _eventStreamObserverClientRemoved;
         private readonly ConcurrentDictionary<int, IDisposable> _subscriptions;
-        private PeerId _recipientPeerId;
+        private MultiAddress _recipientPeerId;
 
         protected BaseMessageCommand(ICommandContext commandContext, ILogger logger)
             : base(commandContext, logger)
@@ -58,20 +59,21 @@ namespace Catalyst.Cli.CommandTypes
                .OfType<SocketClientRegistryClientRemoved>().Subscribe(SocketClientRegistryClientRemovedOnNext);
         }
 
-        protected PeerId RecipientPeerId
+        protected MultiAddress RecipientPeerId
         {
             get
             {
                 if (_recipientPeerId != null) return _recipientPeerId;
                 var rpcClientConfig = CommandContext.GetNodeConfig(Options.Node);
-                _recipientPeerId =
-                    rpcClientConfig.PublicKey.BuildPeerIdFromBase58Key(rpcClientConfig.HostAddress,
-                        rpcClientConfig.Port);
+                //todo
+                //_recipientPeerId =
+                //    rpcClientConfig.PublicKey.BuildPeerIdFromBase58Key(rpcClientConfig.HostAddress,
+                //        rpcClientConfig.Port);
                 return _recipientPeerId;
             }
         }
 
-        protected PeerId SenderPeerId => CommandContext.PeerId;
+        protected MultiAddress SenderPeerId => CommandContext.PeerId;
 
         public void Dispose() { Dispose(true); }
 

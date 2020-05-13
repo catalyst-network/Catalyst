@@ -33,6 +33,7 @@ using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.FileTransfer
 {
@@ -45,8 +46,8 @@ namespace Catalyst.Core.Lib.FileTransfer
         /// <param name="recipientChannel">The recipient channel.</param>
         /// <param name="correlationGuid">The correlation unique identifier.</param>
         public UploadFileTransferInformation(Stream stream,
-            PeerId peerId,
-            PeerId recipientId,
+            MultiAddress peerId,
+            MultiAddress recipientId,
             IChannel recipientChannel,
             ICorrelationId correlationGuid) :
             base(peerId, recipientId, recipientChannel,

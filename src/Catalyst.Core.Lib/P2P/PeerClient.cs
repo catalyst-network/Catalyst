@@ -33,6 +33,7 @@ using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.IO.Transport;
 using Catalyst.Protocol.Peer;
 using Google.Protobuf;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P
@@ -65,7 +66,7 @@ namespace Catalyst.Core.Lib.P2P
             Channel = observableChannel.Channel;
         }
 
-        public void SendMessageToPeers(IMessage message, IEnumerable<PeerId> peers)
+        public void SendMessageToPeers(IMessage message, IEnumerable<MultiAddress> peers)
         {
             var protocolMessage = message.ToProtocolMessage(_peerSettings.PeerId);
             foreach (var peer in peers)

@@ -35,6 +35,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using Dawn;
 using DotNetty.Transport.Channels;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
@@ -65,7 +66,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <returns></returns>
         protected override GetMempoolResponse HandleRequest(GetMempoolRequest getMempoolRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress senderPeerId,
             ICorrelationId correlationId)
         {
             Guard.Argument(getMempoolRequest, nameof(getMempoolRequest)).NotNull();

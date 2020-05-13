@@ -33,6 +33,7 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
@@ -65,7 +66,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
         /// <param name="correlationId"></param>
         protected override void HandleResponse(GetFileFromDfsResponse getFileFromDfsResponse,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerIdentifier,
+            MultiAddress senderPeerIdentifier,
             ICorrelationId correlationId)
         {
             Guard.Argument(getFileFromDfsResponse, nameof(getFileFromDfsResponse)).NotNull();

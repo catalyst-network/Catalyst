@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Protocol.Peer;
 using Lib.P2P;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
@@ -42,7 +43,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         ///     The list of peers which are eligible for the production of the delta following
         ///     <see cref="previousDeltaHash" />
         /// </returns>
-        IList<PeerId> GetDeltaProducersFromPreviousDelta(Cid previousDeltaHash);
+        IList<MultiAddress> GetDeltaProducersFromPreviousDelta(Cid previousDeltaHash);
 
         /// <summary>
         ///     A peer repository containing peers eligible for the production of the next delta.

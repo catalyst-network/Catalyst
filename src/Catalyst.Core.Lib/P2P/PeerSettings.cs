@@ -53,7 +53,7 @@ namespace Catalyst.Core.Lib.P2P
         public IPAddress BindAddress { get; }
         public IList<string> SeedServers { get; }
         public IPEndPoint[] DnsServers { get; }
-        public PeerId PeerId { get; }
+        public MultiAddress PeerId { set; get; }
 
         /// <summary>
         ///     Set attributes
@@ -78,7 +78,10 @@ namespace Catalyst.Core.Lib.P2P
                .Select(p => EndpointBuilder.BuildNewEndPoint(p.Value)).ToArray();
 
             var publicIpAddress = IPAddress.Parse(section.GetSection("PublicIpAddress").Value);
-            PeerId = PublicKey.BuildPeerIdFromBase58Key(publicIpAddress, Port);
+
+            PeerId = new MultiAddress("/ip4/192.168.0.181/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdwu2yu3QMzKa2BDkb5C5pcuhtrH1G9HHbztbbxA8tGmf4");
+
+            //PublicKey.BuildPeerIdFromBase58Key(publicIpAddress, Port);
         }
     }
 }

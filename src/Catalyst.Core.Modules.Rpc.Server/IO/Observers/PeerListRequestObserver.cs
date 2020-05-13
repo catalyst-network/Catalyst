@@ -32,6 +32,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Serilog;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
@@ -71,7 +72,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <returns></returns>
         protected override GetPeerListResponse HandleRequest(GetPeerListRequest getPeerListRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress senderPeerId,
             ICorrelationId correlationId)
         {
             Guard.Argument(getPeerListRequest, nameof(getPeerListRequest)).NotNull();
@@ -79,7 +80,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Debug("received message of type PeerListRequest");
 
-            var peers = _peerRepository.GetAll().Select(x => x.PeerId);
+            var peers = _peerRepository.GetAll().Select(x => x.PeerId.ToString());
 
             var response = new GetPeerListResponse();
             response.Peers.AddRange(peers);

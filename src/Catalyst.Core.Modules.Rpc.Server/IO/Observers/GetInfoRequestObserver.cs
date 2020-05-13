@@ -30,6 +30,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Microsoft.Extensions.Configuration;
+using MultiFormats;
 using Newtonsoft.Json;
 using Serilog;
 
@@ -50,7 +51,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
         protected override GetInfoResponse HandleRequest(GetInfoRequest getInfoRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress senderPeerId,
             ICorrelationId correlationId)
         {
             Guard.Argument(getInfoRequest, nameof(getInfoRequest)).NotNull();

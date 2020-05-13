@@ -34,6 +34,7 @@ using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using DotNetty.Transport.Channels;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.IO.Observers
@@ -65,7 +66,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         /// <returns></returns>
         protected override LatestDeltaHashResponse HandleRequest(LatestDeltaHashRequest deltaHeightRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress senderPeerId,
             ICorrelationId correlationId)
         {
             Guard.Argument(deltaHeightRequest, nameof(deltaHeightRequest)).NotNull();

@@ -23,6 +23,7 @@
 
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 
 namespace Catalyst.Abstractions.P2P.Discovery
 {
@@ -37,7 +38,7 @@ namespace Catalyst.Abstractions.P2P.Discovery
         /// <summary>
         /// The peer identifier of the node used to discover new nodes.
         /// </summary>
-        PeerId Peer { get; }
+        MultiAddress Peer { get; }
 
         /// <summary>
         /// A list of neighbours, provided by <see cref="Peer"/> through a <see cref="PeerNeighborsResponse"/>

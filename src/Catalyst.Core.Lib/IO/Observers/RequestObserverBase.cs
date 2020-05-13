@@ -29,11 +29,11 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Lib.IO.Observers
@@ -51,7 +51,7 @@ namespace Catalyst.Core.Lib.IO.Observers
             logger.Verbose("{interface} instantiated", nameof(IRequestMessageObserver));
         }
 
-        protected abstract TProtoRes HandleRequest(TProtoReq messageDto, IChannelHandlerContext channelHandlerContext, PeerId senderPeerId, ICorrelationId correlationId);
+        protected abstract TProtoRes HandleRequest(TProtoReq messageDto, IChannelHandlerContext channelHandlerContext, MultiAddress senderPeerId, ICorrelationId correlationId);
 
         public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
         {
@@ -60,7 +60,7 @@ namespace Catalyst.Core.Lib.IO.Observers
             try
             {
                 var correlationId = messageDto.Payload.CorrelationId.ToCorrelationId();
-                var recipientPeerId = messageDto.Payload.PeerId;
+                var recipientPeerId = new MultiAddress(messageDto.Payload.PeerId);
 
                 var response = HandleRequest(messageDto.Payload.FromProtocolMessage<TProtoReq>(),
                     messageDto.Context,

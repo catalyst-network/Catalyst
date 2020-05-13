@@ -43,6 +43,7 @@ using Catalyst.Core.Lib.P2P.Discovery;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
@@ -57,7 +58,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
         private readonly ILogger _logger;
         private readonly int _millisecondsTimeout;
         private readonly IDisposable _neigbourResponseSubscription;
-        private readonly PeerId _ownNode;
+        private readonly MultiAddress _ownNode;
         private readonly IDisposable _pingResponseSubscriptions;
         protected readonly int PeerDiscoveryBurnIn;
         public readonly IPeerRepository PeerRepository;
@@ -92,8 +93,9 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
             _discoveredPeerInCurrentWalk = 0;
 
             // build the initial step proposal for the walk, which is our node and seed nodes
-            _ownNode = peerSettings.PublicKey.BuildPeerIdFromBase58Key(peerSettings.BindAddress,
-                peerSettings.Port);
+            //todo
+            /*_ownNode = peerSettings.PublicKey.BuildPeerIdFromBase58Key(peerSettings.BindAddress,
+                peerSettings.Port);*/
 
             var neighbours = dns.GetSeedNodesFromDnsAsync(peerSettings.SeedServers)
                .ConfigureAwait(false)

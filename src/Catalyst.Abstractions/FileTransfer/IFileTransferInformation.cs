@@ -26,6 +26,7 @@ using System.Threading;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Protocol.Peer;
 using DotNetty.Transport.Channels;
+using MultiFormats;
 
 namespace Catalyst.Abstractions.FileTransfer
 {
@@ -81,11 +82,11 @@ namespace Catalyst.Abstractions.FileTransfer
 
         /// <summary>Gets or sets the recipient identifier.</summary>
         /// <value>The recipient identifier.</value>
-        PeerId RecipientId { get; set; }
+        MultiAddress RecipientId { get; set; }
 
         /// <summary>Gets or sets the peer identifier.</summary>
         /// <value>The peer identifier.</value>
-        PeerId PeerId { get; set; }
+        MultiAddress PeerId { get; set; }
 
         /// <summary>The cancellation token</summary>
         CancellationToken CancellationToken { get; set; }

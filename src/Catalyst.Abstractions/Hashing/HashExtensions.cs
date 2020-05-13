@@ -22,6 +22,7 @@
 #endregion
 
 using System.Buffers;
+using System.Text;
 using Google.Protobuf;
 using MultiFormats;
 
@@ -51,6 +52,30 @@ namespace Catalyst.Abstractions.Hashing
                     message.WriteTo(output);
                 }
 
+                suffix.CopyTo(array, calculateSize);
+
+                var result = provider.ComputeMultiHash(array, 0, required);
+                return result;
+            }
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(array);
+            }
+        }
+
+        public static MultiHash ComputeMultiHash(this IHashProvider provider, MultiAddress address, byte[] suffix)
+        {
+            ProtoPreconditions.CheckNotNull(address, nameof(address));
+            var addressBytes = Encoding.UTF8.GetBytes(address.ToString());
+
+            var calculateSize = addressBytes.Length;
+
+            var required = calculateSize + suffix.Length;
+            var array = ArrayPool<byte>.Shared.Rent(required);
+
+            try
+            {
+                suffix.CopyTo(addressBytes, 0);
                 suffix.CopyTo(array, calculateSize);
 
                 var result = provider.ComputeMultiHash(array, 0, required);

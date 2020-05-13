@@ -32,6 +32,7 @@ using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using DotNetty.Transport.Channels;
+using MultiFormats;
 using Serilog;
 using System;
 
@@ -59,14 +60,15 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         /// <returns><see cref="PingResponse"/></returns>
         protected override PingResponse HandleRequest(PingRequest pingRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress senderPeerId,
             ICorrelationId correlationId)
         {
             Guard.Argument(pingRequest, nameof(pingRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             
-            Logger.Debug("message content is {0} IP: {1} PeerId: {2}", pingRequest, senderPeerId.Ip, senderPeerId);
+            //todo
+            //Logger.Debug("message content is {0} IP: {1} PeerId: {2}", pingRequest, senderPeerId.Ip, senderPeerId);
 
             //var peer = _peerRepository.Get(senderPeerId);
             //if (peer == null)

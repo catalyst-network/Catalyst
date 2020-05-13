@@ -28,6 +28,7 @@ using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Protocol.Peer;
 using DotNetty.Transport.Channels;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.FileTransfer
 {
@@ -48,8 +49,8 @@ namespace Catalyst.Core.Lib.FileTransfer
         /// <param name="correlationGuid">The correlation unique identifier.</param>
         /// <param name="fileOutputPath">The file output path.</param>
         /// <param name="fileSize">Size of the file.</param>
-        public DownloadFileTransferInformation(PeerId peerId,
-            PeerId recipientId,
+        public DownloadFileTransferInformation(MultiAddress peerId,
+            MultiAddress recipientId,
             IChannel recipientChannel,
             ICorrelationId correlationGuid,
             string fileOutputPath,

@@ -27,6 +27,7 @@ using Catalyst.Core.Lib.Rpc.IO;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
@@ -48,8 +49,8 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
         }
 
         protected override void HandleResponse(TransferFileBytesRequest message, 
-            IChannelHandlerContext channelHandlerContext, 
-            PeerId senderPeerIdentifier, 
+            IChannelHandlerContext channelHandlerContext,
+            MultiAddress senderPeerIdentifier, 
             ICorrelationId correlationId)
         {
             _fileTransferFactory.DownloadChunk(message);

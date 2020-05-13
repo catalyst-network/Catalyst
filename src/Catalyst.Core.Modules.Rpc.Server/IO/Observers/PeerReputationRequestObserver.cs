@@ -33,6 +33,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Serilog;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
@@ -62,7 +63,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <returns></returns>
         protected override GetPeerReputationResponse HandleRequest(GetPeerReputationRequest getPeerReputationRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress senderPeerId,
             ICorrelationId correlationId)
         {
             Guard.Argument(getPeerReputationRequest, nameof(getPeerReputationRequest)).NotNull();
@@ -70,12 +71,14 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Debug("received message of type PeerReputationRequest");
 
-            return new GetPeerReputationResponse
-            {
-                Reputation = _peerRepository.GetAll().Where(m => m.PeerId.Ip == getPeerReputationRequest.Ip
-                     && m.PeerId.PublicKey.KeyToString() == getPeerReputationRequest.PublicKey.KeyToString())
-                   .Select(x => x.Reputation).DefaultIfEmpty(int.MinValue).First()
-            };
+            //todo
+            //return new GetPeerReputationResponse
+            //{
+            //    Reputation = _peerRepository.GetAll().Where(m => m.PeerId.Ip == getPeerReputationRequest.Ip
+            //         && m.PeerId.PublicKey.KeyToString() == getPeerReputationRequest.PublicKey.KeyToString())
+            //       .Select(x => x.Reputation).DefaultIfEmpty(int.MinValue).First()
+            //};
+            return null;
         }
     }
 }

@@ -133,9 +133,9 @@ namespace Catalyst.Node.POA.CE
 
             _synchronizer.SyncCompleted.Subscribe((x) =>
             {
-                var currentPoaNode = _peerRepository.GetPeersByIpAndPublicKey(_peerSettings.PeerId.Ip, _peerSettings.PeerId.PublicKey).FirstOrDefault();
+                var currentPoaNode = _peerRepository.GetPeersByPeerId(_peerSettings.PeerId).FirstOrDefault();
                 if (currentPoaNode == null)
-                    _logger.Information($"Current node with IP address '{_peerSettings.PeerId.Ip}' is not found in poa node list. So this node will not take part in consensus.");
+                    _logger.Information($"Current node with IP address '{_peerSettings.PeerId.GetIpAddress()}' is not found in poa node list. So this node will not take part in consensus.");
                 else
                     Consensus.StartProducing();
             });

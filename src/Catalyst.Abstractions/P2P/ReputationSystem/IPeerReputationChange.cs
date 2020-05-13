@@ -23,12 +23,13 @@
 
 using Catalyst.Abstractions.Config;
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 
 namespace Catalyst.Abstractions.P2P.ReputationSystem
 {
     public interface IPeerReputationChange
     {
-        PeerId PeerId { get; }
+        MultiAddress PeerId { get; }
         IReputationEvents ReputationEvent { get; }
     }
 }

@@ -27,6 +27,7 @@ using Catalyst.Core.Modules.Sync.Modal;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,7 +37,7 @@ using System.Reactive.Subjects;
 
 namespace Catalyst.Core.Modules.Sync
 {
-    public class DeltaHeightRanker : PeerMessageRankManager<PeerId, LatestDeltaHashResponse>, IDeltaHeightRanker
+    public class DeltaHeightRanker : PeerMessageRankManager<MultiAddress, LatestDeltaHashResponse>, IDeltaHeightRanker
     {
         private bool _disposed;
         private readonly double _threshold;
@@ -57,9 +58,9 @@ namespace Catalyst.Core.Modules.Sync
         }
 
         private int GetAvaliablePeerCount() => Math.Min(_maxPeersInStore, _peerRepository.Count());
-        public IEnumerable<PeerId> GetPeers() => _messages.Keys;
+        public IEnumerable<MultiAddress> GetPeers() => _messages.Keys;
 
-        public override void Add(PeerId key, LatestDeltaHashResponse value)
+        public override void Add(MultiAddress key, LatestDeltaHashResponse value)
         {
             base.Add(key, value);
 
@@ -88,7 +89,7 @@ namespace Catalyst.Core.Modules.Sync
             return _messages.Count();
         }
 
-        public IOrderedEnumerable<IRankedItem<LatestDeltaHashResponse>> GetMessagesByMostPopular(Func<KeyValuePair<PeerId, LatestDeltaHashResponse>, bool> filter = null)
+        public IOrderedEnumerable<IRankedItem<LatestDeltaHashResponse>> GetMessagesByMostPopular(Func<KeyValuePair<MultiAddress, LatestDeltaHashResponse>, bool> filter = null)
         {
             return _messages.GroupBy(x => x.Value).Select(x => new RankedItem<LatestDeltaHashResponse> { Item = x.Key, Score = x.Count() }).OrderByDescending(x => x.Score).ThenByDescending(x => x.Item.DeltaIndex.Height);
         }

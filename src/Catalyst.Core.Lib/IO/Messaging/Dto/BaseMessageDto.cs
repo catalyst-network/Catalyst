@@ -27,6 +27,8 @@ using Catalyst.Protocol.Peer;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
+using MultiFormats;
+using System.Net;
 
 namespace Catalyst.Core.Lib.IO.Messaging.Dto
 {
@@ -34,8 +36,8 @@ namespace Catalyst.Core.Lib.IO.Messaging.Dto
         where T : IMessage<T>
     {
         public ICorrelationId CorrelationId { get; }
-        public PeerId RecipientPeerIdentifier { get; }
-        public PeerId SenderPeerIdentifier { get; }
+        public MultiAddress RecipientPeerIdentifier { get; }
+        public MultiAddress SenderPeerIdentifier { get; }
 
         /// <summary>
         ///     Data transfer object to wrap up all parameters for sending protocol messages into a MessageFactors.
@@ -45,14 +47,15 @@ namespace Catalyst.Core.Lib.IO.Messaging.Dto
         /// <param name="recipientPeerIdentifier"></param>
         /// <param name="correlationId"></param>
         protected BaseMessageDto(T content,
-            PeerId senderPeerIdentifier,
-            PeerId recipientPeerIdentifier,
+            MultiAddress senderPeerIdentifier,
+            MultiAddress recipientPeerIdentifier,
             ICorrelationId correlationId)
-            : base(content, senderPeerIdentifier.IpEndPoint, recipientPeerIdentifier.IpEndPoint)
+            : base(content, new IPEndPoint(IPAddress.Parse("10.1.1.1"), 10), new IPEndPoint(IPAddress.Parse("10.1.1.1"), 10))
         {
-            Guard.Argument(senderPeerIdentifier.IpEndPoint.Address, nameof(senderPeerIdentifier.IpEndPoint.Address)).NotNull();
-            Guard.Argument(recipientPeerIdentifier.IpEndPoint.Address,
-                nameof(recipientPeerIdentifier.IpEndPoint.Address)).NotNull();
+            //todo
+            //Guard.Argument(senderPeerIdentifier.IpEndPoint.Address, nameof(senderPeerIdentifier.IpEndPoint.Address)).NotNull();
+            //Guard.Argument(recipientPeerIdentifier.IpEndPoint.Address,
+            //    nameof(recipientPeerIdentifier.IpEndPoint.Address)).NotNull();
 
             CorrelationId = correlationId;
             SenderPeerIdentifier = senderPeerIdentifier;

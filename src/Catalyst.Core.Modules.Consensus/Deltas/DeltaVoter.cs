@@ -65,7 +65,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         private readonly IMemoryCache _candidatesCache;
 
         private readonly IDeltaProducersProvider _deltaProducersProvider;
-        private readonly PeerId _localPeerIdentifier;
+        private readonly MultiAddress _localPeerIdentifier;
         private readonly ILogger _logger;
         private readonly Func<MemoryCacheEntryOptions> _cacheEntryOptions;
 
@@ -166,7 +166,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             favourite = new FavouriteDeltaBroadcast
             {
                 Candidate = bestCandidate,
-                VoterId = _localPeerIdentifier
+                VoterId = _localPeerIdentifier.ToString()
             };
 
             _logger.Debug("Retrieved favourite candidate delta {candidate} for the successor of delta {previousDelta}",

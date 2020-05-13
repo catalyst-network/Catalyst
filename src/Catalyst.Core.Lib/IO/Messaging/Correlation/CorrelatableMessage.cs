@@ -25,13 +25,14 @@ using System;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Protocol.Peer;
 using Google.Protobuf;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.IO.Messaging.Correlation
 {
     public sealed class CorrelatableMessage<T> : ICorrelatableMessage<T> where T : IMessage
     {
         public T Content { get; set; }
-        public PeerId Recipient { get; set; }
+        public MultiAddress Recipient { get; set; }
         public DateTimeOffset SentAt { get; set; }
     }
 }

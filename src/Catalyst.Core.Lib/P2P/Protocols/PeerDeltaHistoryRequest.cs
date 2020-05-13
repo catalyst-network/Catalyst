@@ -36,6 +36,7 @@ using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.Protocols
@@ -53,7 +54,7 @@ namespace Catalyst.Core.Lib.P2P.Protocols
             DeltaHistoryResponseMessageStreamer = new ReplaySubject<IPeerDeltaHistoryResponse>(1, observableScheduler ?? Scheduler.Default);
         }
 
-        public async Task<IPeerDeltaHistoryResponse> DeltaHistoryAsync(PeerId recipientPeerId, uint height = 1, uint range = 1024)
+        public async Task<IPeerDeltaHistoryResponse> DeltaHistoryAsync(MultiAddress recipientPeerId, uint height = 1, uint range = 1024)
         {
             IPeerDeltaHistoryResponse history;
             try
@@ -67,15 +68,16 @@ namespace Catalyst.Core.Lib.P2P.Protocols
                     recipientPeerId
                 ));
                 
-                using (CancellationTokenProvider.CancellationTokenSource)
-                {
-                    history = await DeltaHistoryResponseMessageStreamer
-                       .FirstAsync(a => a != null 
-                         && a.PeerId.PublicKey.SequenceEqual(recipientPeerId.PublicKey) 
-                         && a.PeerId.Ip.SequenceEqual(recipientPeerId.Ip))
-                       .ToTask(CancellationTokenProvider.CancellationTokenSource.Token)
-                       .ConfigureAwait(false);
-                }
+                //todo
+                //using (CancellationTokenProvider.CancellationTokenSource)
+                //{
+                //    history = await DeltaHistoryResponseMessageStreamer
+                //       .FirstAsync(a => a != null 
+                //         && a.PeerId.PublicKey.SequenceEqual(recipientPeerId.PublicKey) 
+                //         && a.PeerId.Ip.SequenceEqual(recipientPeerId.Ip))
+                //       .ToTask(CancellationTokenProvider.CancellationTokenSource.Token)
+                //       .ConfigureAwait(false);
+                //}
             }
             catch (OperationCanceledException)
             {
@@ -87,7 +89,8 @@ namespace Catalyst.Core.Lib.P2P.Protocols
                 return null;
             }
 
-            return history;
+            //return history;
+            return null;
         }
 
         public void Dispose() { Dispose(true); }
