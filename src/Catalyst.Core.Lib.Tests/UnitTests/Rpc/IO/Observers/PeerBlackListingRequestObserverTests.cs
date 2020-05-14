@@ -103,16 +103,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var targetedId = PeerIdHelper.GetPeerId(publicKeySeed);
             var request = new SetPeerBlackListRequest
             {
-                PublicKey = targetedId.GetPublicKey().KeyToByteString(),
-                Ip = targetedId.GetIpAddress().GetAddressBytes().ToByteString(),
+                PeerId = targetedId.ToString(),
                 Blacklist = blacklist
             };
 
             var responseContent = GetSetPeerBlacklistRequest(request);
 
             responseContent.Blacklist.Should().Be(blacklist);
-            responseContent.Ip.Should().BeEquivalentTo(targetedId.GetIpAddress().GetAddressBytes().ToByteString());
-            responseContent.PublicKey.Should().BeEquivalentTo(targetedId.GetPublicKey().KeyToByteString());
+            responseContent.PeerId.Should().Be(targetedId.ToString());
         }
 
         [TestCase("unknown-1", false)]
@@ -123,15 +121,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var targetedId = PeerIdHelper.GetPeerId(publicKeySeed);
             var request = new SetPeerBlackListRequest
             {
-                PublicKey = targetedId.GetPublicKey().KeyToByteString(),
-                Ip = targetedId.GetIpAddress().GetAddressBytes().ToByteString(),
+                PeerId = targetedId.ToString(),
                 Blacklist = blacklist
             };
 
             var responseContent = GetSetPeerBlacklistRequest(request);
 
-            responseContent.Ip.Should().BeNullOrEmpty();
-            responseContent.PublicKey.Should().BeNullOrEmpty();
+            responseContent.PeerId.Should().BeNullOrEmpty();
         }
 
         private SetPeerBlackListResponse GetSetPeerBlacklistRequest(SetPeerBlackListRequest request)

@@ -67,6 +67,7 @@ using Serilog;
 using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
 using Catalyst.Core.Lib.P2P.Repository;
 using NUnit.Framework;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 {
@@ -207,15 +208,15 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
             return deltaHeightResponse;
         }
 
-        private void ModifyPeerClient<TRequest>(Action<TRequest, PeerId> callback) where TRequest : IMessage<TRequest>
+        private void ModifyPeerClient<TRequest>(Action<TRequest, MultiAddress> callback) where TRequest : IMessage<TRequest>
         {
             _peerClient.When(x =>
                 x.SendMessageToPeers(
-                    Arg.Is<IMessage>(y => y.Descriptor.ClrType.Name.EndsWith(typeof(TRequest).Name)), Arg.Any<IEnumerable<PeerId>>())).Do(
+                    Arg.Is<IMessage>(y => y.Descriptor.ClrType.Name.EndsWith(typeof(TRequest).Name)), Arg.Any<IEnumerable<MultiAddress>>())).Do(
                 z =>
                 {
                     var request = (TRequest)z[0];
-                    var peers = (IEnumerable<PeerId>)z[1];
+                    var peers = (IEnumerable<MultiAddress>)z[1];
                     foreach (var peer in peers)
                     {
                         callback.Invoke(request, peer);

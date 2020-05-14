@@ -49,6 +49,7 @@ using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using NUnit.Framework;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
 {
@@ -56,7 +57,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
     {
         private readonly TestScheduler _testScheduler;
         private readonly IPeerSettings _settings;
-        private readonly PeerId _ownNode;
+        private readonly MultiAddress _ownNode;
 
         public HastingsDiscoveryTests()
         {
@@ -595,7 +596,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             var peerNeighborsResponse = new PeerNeighborsResponse();
 
             peerNeighborsResponse.Peers.Add(neighbours
-               .Select(i => i.PeerId)
+               .Select(i => i.PeerId.ToString())
             );
 
             subbedDto.Message.Returns(peerNeighborsResponse);
@@ -655,7 +656,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
         public void Known_Evicted_Correlation_Cache_PingRequest_Message_Increments_UnResponsivePeer()
         {
             var pnr = CorrelationId.GenerateCorrelationId();
-            var unresponsiveNeighbour = new Neighbour(new PeerId(), NeighbourStateTypes.NotContacted, pnr);
+            var unresponsiveNeighbour = new Neighbour(PeerIdHelper.GetPeerId(), NeighbourStateTypes.NotContacted, pnr);
 
             var initialMemento = DiscoveryHelper.SubMemento(_ownNode,
                 DiscoveryHelper.MockDnsClient(_settings)

@@ -27,6 +27,7 @@ using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using MultiFormats;
 using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
@@ -35,7 +36,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
     [Category(Traits.IntegrationTest)] 
     public sealed class HastingsCareTakerTests
     {
-        private readonly PeerId _ownNode;
+        private readonly MultiAddress _ownNode;
 
         public HastingsCareTakerTests() { _ownNode = PeerIdHelper.GetPeerId("own_node"); }
 

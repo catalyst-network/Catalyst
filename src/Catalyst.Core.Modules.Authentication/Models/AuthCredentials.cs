@@ -38,13 +38,9 @@ namespace Catalyst.Core.Modules.Authentication.Models
     [Audit]
     public class AuthCredentials : IAuthCredentials
     {
-        /// <summary>Gets or sets the public key.</summary>
-        /// <value>The public key.</value>
-        public string PublicKey { get; set; }
-
-        /// <summary>Gets or sets the ip address.</summary>
-        /// <value>The ip address.</value>
-        public string IpAddress { get; set; }
+        /// <summary>Gets or sets the address.</summary>
+        /// <value>The multi address.</value>
+        public string Address { get; set; }
 
         /// <inheritdoc cref="IAuditable.Created"/>
         public DateTime Created { get; set; }
@@ -54,6 +50,6 @@ namespace Catalyst.Core.Modules.Authentication.Models
 
         [RepositoryPrimaryKey(Order = 1)]
         [JsonProperty("id")]
-        public string DocumentId => Encoding.UTF8.GetBytes($"{PublicKey}:{IpAddress}").ToByteString().ToBase64();
+        public string DocumentId => Encoding.UTF8.GetBytes($"{Address}").ToByteString().ToBase64();
     }
 }

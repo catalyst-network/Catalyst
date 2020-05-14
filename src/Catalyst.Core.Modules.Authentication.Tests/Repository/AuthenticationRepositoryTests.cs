@@ -30,13 +30,14 @@ using Catalyst.TestUtils;
 using FluentAssertions;
 using SharpRepository.InMemoryRepository;
 using NUnit.Framework;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.Authentication.Tests.Repository
 {
     public sealed class AuthenticationRepositoryTests
     {
         private readonly IAuthenticationStrategy _repositoryAuthenticationStrategy;
-        private readonly PeerId _trustedPeer;
+        private readonly MultiAddress _trustedPeer;
 
         public AuthenticationRepositoryTests()
         {
@@ -45,8 +46,7 @@ namespace Catalyst.Core.Modules.Authentication.Tests.Repository
 
             whiteListRepo.Add(new AuthCredentials
             {
-                PublicKey = _trustedPeer.PublicKey.KeyToString(),
-                IpAddress = _trustedPeer.Ip.ToString()
+                Address = _trustedPeer.ToString()
             });
 
             _repositoryAuthenticationStrategy = new RepositoryAuthenticationStrategy(whiteListRepo);

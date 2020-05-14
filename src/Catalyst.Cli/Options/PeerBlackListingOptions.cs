@@ -38,13 +38,8 @@ namespace Catalyst.Cli.Options
         [Option('b', "blacklistflag", HelpText = "Blacklist flag for peer.")]
         public bool BlackListFlag { get; set; }
 
-        /// <inheritdoc />
-        [Option('i', "ip", HelpText = "IP address of the peer to blacklist.")]
-        public string IpAddress { get; set; }
-
-        /// <inheritdoc />
-        [Option('p', "publickey", HelpText = "Public key of the peer to blacklist.")]
-        public string PublicKey { get; set; }
+        [Option('a', "address", HelpText = "MultiAddress of the peer whose info is of interest.")]
+        public string Address { get; set; }
 
         /// <summary>
         /// Gets the examples.

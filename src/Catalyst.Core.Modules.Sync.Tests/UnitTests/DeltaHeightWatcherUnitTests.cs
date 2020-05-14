@@ -50,6 +50,7 @@ using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Catalyst.Core.Lib.P2P.Repository;
 using NUnit.Framework;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 {
@@ -90,9 +91,9 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
             var deltaHeight = 100u;
             GeneratePeers(100);
 
-            _peerClient.When(x => x.SendMessageToPeers(Arg.Any<IMessage>(), Arg.Any<IEnumerable<PeerId>>())).Do(x =>
+            _peerClient.When(x => x.SendMessageToPeers(Arg.Any<IMessage>(), Arg.Any<IEnumerable<MultiAddress>>())).Do(x =>
               {
-                  var peerIds = (IEnumerable<PeerId>)x[1];
+                  var peerIds = (IEnumerable<MultiAddress>)x[1];
                   foreach (var peerId in peerIds)
                   {
                       var deltaHeightResponse = new LatestDeltaHashResponse
@@ -119,12 +120,12 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
             var deltaHeight = 100u;
             GeneratePeers(100);
 
-            _peerClient.When(x => x.SendMessageToPeers(Arg.Any<IMessage>(), Arg.Any<IEnumerable<PeerId>>())).Do(x =>
+            _peerClient.When(x => x.SendMessageToPeers(Arg.Any<IMessage>(), Arg.Any<IEnumerable<MultiAddress>>())).Do(x =>
             {
-                var peerIds = (IEnumerable<PeerId>)x[1];
+                var peerIds = (IEnumerable<MultiAddress>)x[1];
                 foreach (var peerId in peerIds)
                 {
-                    if (peerId.Port > 50)
+                    if (peerId.GetPort() > 50)
                     {
                         var deltaHeightResponse = new LatestDeltaHashResponse
                         {

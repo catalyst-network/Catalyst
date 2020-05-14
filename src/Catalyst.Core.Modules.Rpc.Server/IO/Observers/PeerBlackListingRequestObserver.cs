@@ -72,17 +72,11 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Information("received message of type PeerBlackListingRequest");
 
-            //todo
-            //var peerItem = _peerRepository.GetAll()
-            //   .FirstOrDefault(m => m.PeerId.Ip == setPeerBlackListRequest.Ip
-            //     && m.PeerId.PublicKey.KeyToString() == setPeerBlackListRequest.PublicKey.KeyToString());
+            var peerItem = _peerRepository.GetAll().FirstOrDefault(m => m.PeerId == setPeerBlackListRequest.PeerId);
 
-            //return peerItem == null
-            //    ? ReturnResponse(false, ByteString.Empty, ByteString.Empty)
-            //    : ReturnResponse(setPeerBlackListRequest.Blacklist, setPeerBlackListRequest.PublicKey,
-            //        setPeerBlackListRequest.Ip);
-
-            return null;
+            return peerItem == null
+                ? ReturnResponse(false, string.Empty)
+                : ReturnResponse(setPeerBlackListRequest.Blacklist, peerItem.PeerId.ToString());
         }
 
         /// <summary>
@@ -91,13 +85,12 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <param name="blacklist">if set to <c>true</c> [blacklist].</param>
         /// <param name="publicKey">The public key.</param>
         /// <param name="ip">The ip.</param>
-        private SetPeerBlackListResponse ReturnResponse(bool blacklist, ByteString publicKey, ByteString ip)
+        private SetPeerBlackListResponse ReturnResponse(bool blacklist, string address)
         {
             return new SetPeerBlackListResponse
             {
                 Blacklist = blacklist,
-                Ip = ip,
-                PublicKey = publicKey
+                PeerId = address
             };
         }
     }

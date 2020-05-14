@@ -71,14 +71,11 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Debug("received message of type PeerReputationRequest");
 
-            //todo
-            //return new GetPeerReputationResponse
-            //{
-            //    Reputation = _peerRepository.GetAll().Where(m => m.PeerId.Ip == getPeerReputationRequest.Ip
-            //         && m.PeerId.PublicKey.KeyToString() == getPeerReputationRequest.PublicKey.KeyToString())
-            //       .Select(x => x.Reputation).DefaultIfEmpty(int.MinValue).First()
-            //};
-            return null;
+            return new GetPeerReputationResponse
+            {
+                Reputation = _peerRepository.GetAll().Where(m => m.PeerId == getPeerReputationRequest.PeerId)
+                   .Select(x => x.Reputation).DefaultIfEmpty(int.MinValue).First()
+            };
         }
     }
 }

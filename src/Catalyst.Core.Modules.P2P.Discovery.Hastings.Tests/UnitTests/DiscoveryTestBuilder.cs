@@ -44,6 +44,7 @@ using Catalyst.TestUtils;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
 using Serilog;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
 {
@@ -211,7 +212,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
 
         public DiscoveryTestBuilder WithCurrentStep(IHastingsMemento currentStep = default,
             bool mock = false,
-            PeerId peer = default,
+            MultiAddress peer = default,
             INeighbours neighbours = default)
         {
             if (_careTaker == null)
@@ -230,7 +231,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
 
         public DiscoveryTestBuilder WithStepProposal(IHastingsOriginator stateCandidate = default,
             bool mock = false,
-            PeerId peer = default,
+            MultiAddress peer = default,
             INeighbours neighbours = default,
             ICorrelationId expectedPnr = default)
         {

@@ -50,17 +50,16 @@ namespace Catalyst.Core.Lib.IO.Handlers
         /// <inheritdoc cref="DotNetty.Transport.Channels.SimpleChannelInboundHandler{I}"/>>
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage msg)
         {
-            //todo
-            //if (_authenticationStrategy.Authenticate(msg.PeerId))
-            //{
-            //    ctx.FireChannelRead(msg);
-            //}
-            //else
-            //{
-            //    ctx?.CloseAsync().ConfigureAwait(false);
+            if (_authenticationStrategy.Authenticate(msg.PeerId))
+            {
+                ctx.FireChannelRead(msg);
+            }
+            else
+            {
+                ctx?.CloseAsync().ConfigureAwait(false);
 
-            //    throw new AuthenticationException("Authentication Attempt Failed");
-            //}
+                throw new AuthenticationException("Authentication Attempt Failed");
+            }
         }
     }
 }

@@ -36,6 +36,7 @@ using NSubstitute;
 using Serilog;
 using NUnit.Framework;
 using MultiFormats;
+using System.Linq;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 {
@@ -66,7 +67,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             {
                 Peers =
                 {
-                    peers.ToString()
+                    peers.Select(x=>x.ToString())
                 }
             };
             var protocolMessage =

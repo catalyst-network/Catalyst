@@ -48,6 +48,7 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
 {
@@ -82,7 +83,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
 
         private readonly TestScheduler _testScheduler;
 
-        private readonly PeerId _peerIdentifier;
+        private readonly MultiAddress _peerIdentifier;
 
         private readonly ITcpClientChannelFactory _channelFactory;
 

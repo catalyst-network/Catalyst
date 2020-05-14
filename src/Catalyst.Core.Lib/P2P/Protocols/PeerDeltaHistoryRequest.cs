@@ -67,17 +67,14 @@ namespace Catalyst.Core.Lib.P2P.Protocols
                     }.ToProtocolMessage(PeerId, CorrelationId.GenerateCorrelationId()),
                     recipientPeerId
                 ));
-                
-                //todo
-                //using (CancellationTokenProvider.CancellationTokenSource)
-                //{
-                //    history = await DeltaHistoryResponseMessageStreamer
-                //       .FirstAsync(a => a != null 
-                //         && a.PeerId.PublicKey.SequenceEqual(recipientPeerId.PublicKey) 
-                //         && a.PeerId.Ip.SequenceEqual(recipientPeerId.Ip))
-                //       .ToTask(CancellationTokenProvider.CancellationTokenSource.Token)
-                //       .ConfigureAwait(false);
-                //}
+
+                using (CancellationTokenProvider.CancellationTokenSource)
+                {
+                    history = await DeltaHistoryResponseMessageStreamer
+                       .FirstAsync(a => a != null && a.PeerId == recipientPeerId)
+                       .ToTask(CancellationTokenProvider.CancellationTokenSource.Token)
+                       .ConfigureAwait(false);
+                }
             }
             catch (OperationCanceledException)
             {
@@ -89,8 +86,7 @@ namespace Catalyst.Core.Lib.P2P.Protocols
                 return null;
             }
 
-            //return history;
-            return null;
+            return history;
         }
 
         public void Dispose() { Dispose(true); }

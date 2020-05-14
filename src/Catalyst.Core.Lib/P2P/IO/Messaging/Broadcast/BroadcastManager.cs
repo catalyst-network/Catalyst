@@ -178,7 +178,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
             try
             {
                 var innerMessage = message.FromProtocolMessage<ProtocolMessage>();
-                var isOwnerOfBroadcast = innerMessage.PeerId.Equals(_peerId);
+                var isOwnerOfBroadcast = innerMessage.PeerId == _peerId.ToString();
 
                 if (isOwnerOfBroadcast)
                 {

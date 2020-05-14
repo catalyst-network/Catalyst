@@ -57,6 +57,7 @@ using Nethermind.State;
 using NSubstitute;
 using NUnit.Framework;
 using ILogger = Serilog.ILogger;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
@@ -66,7 +67,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         private IHashProvider _hashProvider;
         private IDeterministicRandomFactory _randomFactory;
         private Random _random;
-        private PeerId _producerId;
+        private MultiAddress _producerId;
         private Cid _previousDeltaHash;
         private CoinbaseEntry _zeroCoinbaseEntry;
         private IDeltaCache _cache;
@@ -95,7 +96,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _zeroCoinbaseEntry = new CoinbaseEntry
             {
                 Amount = UInt256.Zero.ToUint256ByteString(),
-                ReceiverPublicKey = _producerId.PublicKey.ToByteString()
+                ReceiverPublicKey = _producerId.PeerId.GetPublicKeyBytesFromPeerId().ToByteString()
             };
 
             _logger = Substitute.For<ILogger>();
@@ -361,7 +362,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var expectedCoinBase = new CoinbaseEntry
             {
                 Amount = selectedTransactions.Sum(t => t.GasPrice.ToUInt256() * t.GasLimit).ToUint256ByteString(),
-                ReceiverPublicKey = _producerId.PublicKey.ToByteString()
+                ReceiverPublicKey = _producerId.PeerId.GetPublicKeyBytesFromPeerId().ToByteString()
             };
 
             var expectedBytesToHash = shuffledEntriesBytes.Concat(signaturesInOrder)
@@ -372,7 +373,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         private void ValidateDeltaCandidate(CandidateDeltaBroadcast candidate, byte[] expectedBytesToHash)
         {
             candidate.Should().NotBeNull();
-            candidate.ProducerId.Should().Be(_producerId);
+            candidate.ProducerId.Should().Be(_producerId.ToString());
             candidate.PreviousDeltaDfsHash.ToByteArray().SequenceEqual(_previousDeltaHash.ToArray()).Should().BeTrue();
 
             var expectedHash = _hashProvider.ComputeMultiHash(expectedBytesToHash).ToCid();

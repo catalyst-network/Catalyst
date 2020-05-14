@@ -46,6 +46,7 @@ using Polly;
 using Polly.Retry;
 using Serilog;
 using NUnit.Framework;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
@@ -53,7 +54,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
     {
         private IHashProvider _hashProvider;
         private IBroadcastManager _broadcastManager;
-        private PeerId _peerId;
+        private MultiAddress _peerId;
         private DeltaHub _hub;
         private IDfsService _dfsService;
 
@@ -109,7 +110,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var favourite = new FavouriteDeltaBroadcast
             {
                 Candidate = DeltaHelper.GetCandidateDelta(_hashProvider),
-                VoterId = _peerId
+                VoterId = _peerId.ToString()
             };
 
             _hub.BroadcastFavouriteCandidateDelta(favourite);
@@ -187,9 +188,9 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
         private static bool IsExpectedCandidateMessage<T>(ProtocolMessage protocolMessage,
             T expected,
-            PeerId senderId) where T : IMessage<T>
+            MultiAddress senderId) where T : IMessage<T>
         {
-            var hasExpectedSender = protocolMessage.PeerId.Equals(senderId);
+            var hasExpectedSender = protocolMessage.PeerId == senderId.ToString();
             var candidate = protocolMessage.FromProtocolMessage<T>();
             var hasExpectedCandidate = candidate.Equals(expected);
             return hasExpectedSender && hasExpectedCandidate;

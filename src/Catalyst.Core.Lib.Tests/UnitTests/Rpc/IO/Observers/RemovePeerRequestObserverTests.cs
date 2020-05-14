@@ -118,8 +118,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             var removePeerRequest = new RemovePeerRequest
             {
-                PeerIp = targetPeerToDelete.PeerId.GetIpAddress().GetAddressBytes().ToByteString(),
-                PublicKey = withPublicKey ? targetPeerToDelete.PeerId.GetPublicKey().KeyToByteString() : ByteString.Empty
+                PeerId = targetPeerToDelete.PeerId.ToString()
             };
 
             var protocolMessage = removePeerRequest.ToProtocolMessage(peerId);
@@ -140,7 +139,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             var signResponseMessage = sentResponseDto.Content.FromProtocolMessage<RemovePeerResponse>();
 
-            signResponseMessage.DeletedCount.Should().Be(withPublicKey ? 1 : (uint) fakePeers.Count);
+            signResponseMessage.DeletedCount.Should().Be(1);
         }
     }
 }

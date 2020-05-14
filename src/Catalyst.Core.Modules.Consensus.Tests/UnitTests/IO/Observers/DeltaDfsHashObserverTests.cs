@@ -71,7 +71,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             var prevHash = _hashProvider.ComputeUtf8MultiHash("prevHash").ToCid();
             var receivedMessage = PrepareReceivedMessage(newHash.ToArray(), prevHash.ToArray());
 
-            _peerRepository.GetPeersByIpAndPublicKey(receivedMessage.Payload.PeerId.Ip, receivedMessage.Payload.PeerId.PublicKey).Returns(new List<Peer>() { new Peer() });
+            _peerRepository.GetPeersByPeerId(receivedMessage.Payload.PeerId).Returns(new List<Peer>() { new Peer() });
             var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _syncState, _peerRepository, _logger);
 
             deltaDfsHashObserver.HandleBroadcast(receivedMessage);
@@ -100,7 +100,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             var prevHash = _hashProvider.ComputeUtf8MultiHash("prevHash").ToCid();
             var receivedMessage = PrepareReceivedMessage(newHash.ToArray(), prevHash.ToArray());
 
-            _peerRepository.GetPeersByIpAndPublicKey(receivedMessage.Payload.PeerId.Ip, receivedMessage.Payload.PeerId.PublicKey).Returns(new List<Peer>());
+            _peerRepository.GetPeersByPeerId(receivedMessage.Payload.PeerId).Returns(new List<Peer>());
             var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _syncState, _peerRepository, _logger);
 
             deltaDfsHashObserver.HandleBroadcast(receivedMessage);

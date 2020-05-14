@@ -64,33 +64,30 @@ namespace Catalyst.Core.Lib.P2P.Protocols
 
         public async Task<bool> QueryPeerTipAsync(MultiAddress recipientPeerId)
         {
-            //todo
-            //try
-            //{
-            //    PeerClient.SendMessage(new MessageDto(
-            //        new LatestDeltaHashRequest().ToProtocolMessage(PeerId, CorrelationId.GenerateCorrelationId()),
-            //        recipientPeerId
-            //    ));
-                
-            //    using (CancellationTokenProvider.CancellationTokenSource)
-            //    {
-            //        await QueryTipResponseMessageStreamer
-            //           .FirstAsync(a => a != null 
-            //             && a.PeerId.PublicKey.SequenceEqual(recipientPeerId.PublicKey) 
-            //             && a.PeerId.Ip.SequenceEqual(recipientPeerId.Ip))
-            //           .ToTask(CancellationTokenProvider.CancellationTokenSource.Token)
-            //           .ConfigureAwait(false);
-            //    }
-            //}
-            //catch (OperationCanceledException)
-            //{
-            //    return false;
-            //}
-            //catch (Exception e)
-            //{
-            //    Logger.Error(e, nameof(QueryPeerTipAsync));
-            //    return false;
-            //}
+            try
+            {
+                PeerClient.SendMessage(new MessageDto(
+                    new LatestDeltaHashRequest().ToProtocolMessage(PeerId, CorrelationId.GenerateCorrelationId()),
+                    recipientPeerId
+                ));
+
+                using (CancellationTokenProvider.CancellationTokenSource)
+                {
+                    await QueryTipResponseMessageStreamer
+                       .FirstAsync(a => a != null && a.PeerId == recipientPeerId)
+                       .ToTask(CancellationTokenProvider.CancellationTokenSource.Token)
+                       .ConfigureAwait(false);
+                }
+            }
+            catch (OperationCanceledException)
+            {
+                return false;
+            }
+            catch (Exception e)
+            {
+                Logger.Error(e, nameof(QueryPeerTipAsync));
+                return false;
+            }
 
             return true;
         }

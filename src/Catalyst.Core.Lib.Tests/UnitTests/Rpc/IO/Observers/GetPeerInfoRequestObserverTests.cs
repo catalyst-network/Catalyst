@@ -108,7 +108,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         [TestCase("publickey-2", "172.0.0.2")]
         public void TestGetPeerInfoRequestResponse(string publicKey, string ipAddress)
         {
-            var peerId = PeerIdHelper.GetPeerId(publicKey, ipAddress, 12345);
+            var peerId = PeerIdHelper.GetPeerId(publicKey, ipAddress, 9090);
             var responseContent = GetPeerInfoTest(peerId);
             responseContent.PeerInfo.Count().Should().Be(1);
 
@@ -146,7 +146,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
             var senderPeerIdentifier = PeerIdHelper.GetPeerId("sender");
-            var getPeerInfoRequest = new GetPeerInfoRequest {PublicKey = peerId.GetPublicKey().KeyToByteString(), Ip = peerId.GetIpAddress().GetAddressBytes().ToByteString()};
+            var getPeerInfoRequest = new GetPeerInfoRequest {PeerId = peerId.ToString()};
 
             var protocolMessage =
                 getPeerInfoRequest.ToProtocolMessage(senderPeerIdentifier);

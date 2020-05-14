@@ -40,10 +40,7 @@ namespace Catalyst.Cli.Commands
         {
             return new RemovePeerRequest
             {
-                PeerIp = option.Ip.ToUtf8ByteString(),
-                PublicKey = string.IsNullOrEmpty(option.PublicKey)
-                    ? ByteString.Empty
-                    : option.PublicKey.ToUtf8ByteString()
+                PeerId = option.Address
             };
         }
     }

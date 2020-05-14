@@ -41,6 +41,7 @@ using NSubstitute;
 using Serilog;
 using NUnit.Framework;
 using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
+using MultiFormats;
 
 namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
 {
@@ -95,9 +96,7 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
 
             var expectedProducers = peers.Select(p =>
                 {
-                    var bytesToHash = p.PeerId.ToByteArray()
-                       .Concat(_previousDeltaHash.ToArray()).ToArray();
-                    var ranking = _hashProvider.ComputeMultiHash(bytesToHash).ToArray();
+                    var ranking = _hashProvider.ComputeMultiHash(p.PeerId, _previousDeltaHash.ToArray()).ToArray();
                     return new
                     {
                         PeerIdentifier = p.PeerId,
@@ -119,8 +118,7 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
 
             for (var i = 0; i < expectedProducers.Count; i++)
             {
-                producers[i].ToByteArray()
-                   .Should().BeEquivalentTo(expectedProducers[i].ToByteArray());
+                producers[i].Should().BeEquivalentTo(expectedProducers[i]);
             }
         }
 
@@ -131,7 +129,7 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
                     out Arg.Any<object>())
                .Returns(ci =>
                 {
-                    ci[1] = new List<PeerId>();
+                    ci[1] = new List<MultiAddress>();
                     return true;
                 });
 

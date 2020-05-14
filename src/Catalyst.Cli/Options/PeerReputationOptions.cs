@@ -35,12 +35,8 @@ namespace Catalyst.Cli.Options
     public sealed class PeerReputationOptions : OptionsBase, IPeerReputationOptions
     {
         /// <inheritdoc />
-        [Option('i', "ip", HelpText = "IP address of the peer whose reputation is of interest.")]
-        public string IpAddress { get; set; }
-
-        /// <inheritdoc />
-        [Option('p', "publickey", HelpText = "Public key of the peer whose reputation is of interest.")]
-        public string PublicKey { get; set; }
+        [Option('a', "address", HelpText = "MultiAddress of the peer whose info is of interest.")]
+        public string Address { get; set; }
 
         /// <summary>
         /// Gets the examples.

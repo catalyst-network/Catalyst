@@ -47,6 +47,7 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
 {
@@ -77,7 +78,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
 
         private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _mockSocketReplySubject;
         private readonly TestScheduler _testScheduler;
-        private readonly PeerId _peerId;
+        private readonly MultiAddress _peerId;
         private readonly RpcServer _rpcServer;
         private readonly IRpcServerSettings _rpcServerSettings;
         private readonly IChannelHandlerContext _channelHandlerContext;

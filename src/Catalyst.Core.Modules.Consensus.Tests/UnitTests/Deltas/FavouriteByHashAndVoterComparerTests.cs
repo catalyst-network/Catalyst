@@ -29,6 +29,7 @@ using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
+using MultiFormats;
 using NUnit.Framework;
 using System.Collections.Generic;
 using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
@@ -37,11 +38,11 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
     public class FavouriteByHashAndVoterComparerTests
     {
-        private static PeerId voter1 = PeerIdHelper.GetPeerId("voter1");
-        private static PeerId voter2 = PeerIdHelper.GetPeerId("voter2");
+        private static MultiAddress voter1 = PeerIdHelper.GetPeerId("voter1");
+        private static MultiAddress voter2 = PeerIdHelper.GetPeerId("voter2");
 
-        private static PeerId producer1 = PeerIdHelper.GetPeerId("producer1");
-        private static PeerId producer2 = PeerIdHelper.GetPeerId("producer2");
+        private static MultiAddress producer1 = PeerIdHelper.GetPeerId("producer1");
+        private static MultiAddress producer2 = PeerIdHelper.GetPeerId("producer2");
 
         private static ByteString hash1 = ByteUtil.GenerateRandomByteArray(32).ToByteString();
         private static ByteString hash2 = ByteUtil.GenerateRandomByteArray(32).ToByteString();
@@ -75,34 +76,34 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 {
                     Candidate = new CandidateDeltaBroadcast
                     {
-                        Hash = hash1, ProducerId = producer1, PreviousDeltaDfsHash = previousHash1
+                        Hash = hash1, ProducerId = producer1.ToString(), PreviousDeltaDfsHash = previousHash1
                     },
-                    VoterId = voter1
+                    VoterId = voter1.ToString()
                 },
                 new FavouriteDeltaBroadcast
                 {
                     Candidate = new CandidateDeltaBroadcast
                     {
-                        Hash = hash1, ProducerId = producer1, PreviousDeltaDfsHash = previousHash1
+                        Hash = hash1, ProducerId = producer1.ToString(), PreviousDeltaDfsHash = previousHash1
                     },
-                    VoterId = voter2
+                    VoterId = voter2.ToString()
                 }, false },
 
             new object[] { new FavouriteDeltaBroadcast
                 {
                     Candidate = new CandidateDeltaBroadcast
                     {
-                        Hash = hash1, ProducerId = producer1, PreviousDeltaDfsHash = previousHash1
+                        Hash = hash1, ProducerId = producer1.ToString(), PreviousDeltaDfsHash = previousHash1
                     },
-                    VoterId = voter1
+                    VoterId = voter1.ToString()
                 },
                 new FavouriteDeltaBroadcast
                 {
                     Candidate = new CandidateDeltaBroadcast
                     {
-                        Hash = hash1, ProducerId = producer2, PreviousDeltaDfsHash = previousHash2
+                        Hash = hash1, ProducerId = producer2.ToString(), PreviousDeltaDfsHash = previousHash2
                     },
-                    VoterId = voter1
+                    VoterId = voter1.ToString()
                 }, true}
         };
 

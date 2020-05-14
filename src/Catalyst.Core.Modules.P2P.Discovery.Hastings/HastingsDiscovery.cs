@@ -93,9 +93,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
             _discoveredPeerInCurrentWalk = 0;
 
             // build the initial step proposal for the walk, which is our node and seed nodes
-            //todo
-            /*_ownNode = peerSettings.PublicKey.BuildPeerIdFromBase58Key(peerSettings.BindAddress,
-                peerSettings.Port);*/
+            _ownNode = peerSettings.PeerId;
 
             var neighbours = dns.GetSeedNodesFromDnsAsync(peerSettings.SeedServers)
                .ConfigureAwait(false)

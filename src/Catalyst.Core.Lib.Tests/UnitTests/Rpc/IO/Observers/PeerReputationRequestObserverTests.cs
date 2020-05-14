@@ -89,8 +89,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         {
             var peerId = PeerIdHelper.GetPeerId(publicKeySeed);
 
-            var request = new GetPeerReputationRequest {Ip = peerId.GetIpAddress().GetAddressBytes().ToByteString(), 
-                PublicKey = peerId.GetPublicKey().KeyToByteString()};
+            var request = new GetPeerReputationRequest { PeerId = peerId.ToString() };
 
             var responseContent = GetGetPeerReputationResponse(request);
 

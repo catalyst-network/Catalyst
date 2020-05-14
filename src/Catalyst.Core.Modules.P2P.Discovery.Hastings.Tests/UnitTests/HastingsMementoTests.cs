@@ -25,13 +25,14 @@ using Catalyst.Core.Lib.Config;
 using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using MultiFormats;
 using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
 {
     public sealed class HastingsMementoTests
     {
-        private readonly PeerId _peer;
+        private readonly MultiAddress _peer;
 
         public HastingsMementoTests() { _peer = PeerIdHelper.GetPeerId("current_peer"); }
 

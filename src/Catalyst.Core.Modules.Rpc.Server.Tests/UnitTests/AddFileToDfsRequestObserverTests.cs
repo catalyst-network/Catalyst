@@ -47,6 +47,7 @@ using NSubstitute;
 using NSubstitute.ExceptionExtensions;
 using Serilog;
 using NUnit.Framework;
+using MultiFormats;
 
 //@TODO should be in rpc module test
 
@@ -58,7 +59,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
         private IChannelHandlerContext _fakeContext;
         private IDownloadFileTransferFactory _nodeFileTransferFactory;
         private AddFileToDfsRequestObserver _addFileToDfsRequestObserver;
-        private PeerId _senderIdentifier;
+        private MultiAddress _senderIdentifier;
         private IDfsService _fakeDfsService;
         private IHashProvider _hashProvider;
 

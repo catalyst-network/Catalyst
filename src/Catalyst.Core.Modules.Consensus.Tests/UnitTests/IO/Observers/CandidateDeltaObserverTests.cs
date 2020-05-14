@@ -45,6 +45,7 @@ using Google.Protobuf;
 using System.Collections.Generic;
 using Catalyst.Core.Lib.P2P.Models;
 using Lib.P2P;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
 {
@@ -54,7 +55,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
         private IChannelHandlerContext _fakeChannelContext;
         private Cid _newHash;
         private Cid _prevHash;
-        private PeerId _producerId;
+        private MultiAddress _producerId;
         private CandidateDeltaObserver _candidateDeltaObserver;
 
         [SetUp]
@@ -69,7 +70,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _producerId = PeerIdHelper.GetPeerId("candidate delta producer");
 
             var peerRepository = Substitute.For<IPeerRepository>();
-            peerRepository.GetPeersByIpAndPublicKey(Arg.Any<ByteString>(), Arg.Any<ByteString>()).Returns(new List<Lib.P2P.Models.Peer> { new Lib.P2P.Models.Peer() });
+            peerRepository.GetPeersByPeerId(Arg.Any<MultiAddress>()).Returns(new List<Lib.P2P.Models.Peer> { new Lib.P2P.Models.Peer() });
 
             var deltaIndexService = Substitute.For<IDeltaIndexService>();
             deltaIndexService.LatestDeltaIndex().Returns(new Lib.DAO.Ledger.DeltaIndexDao() { Cid = _prevHash, Height = 0 });
@@ -86,7 +87,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _deltaVoter.Received(1).OnNext(Arg.Is<CandidateDeltaBroadcast>(c =>
                 c.Hash.SequenceEqual(_newHash.ToArray().ToByteString())
              && c.PreviousDeltaDfsHash.Equals(_prevHash.ToArray().ToByteString())
-             && c.ProducerId.Equals(_producerId)));
+             && c.ProducerId == _producerId.ToString()));
         }
 
         [Test]
@@ -113,13 +114,13 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
 
         private IObserverDto<ProtocolMessage> PrepareReceivedMessage(byte[] newHash,
             byte[] prevHash,
-            PeerId producerId)
+            MultiAddress producerId)
         {
             var message = new CandidateDeltaBroadcast
             {
                 Hash = newHash.ToByteString(),
                 PreviousDeltaDfsHash = prevHash.ToByteString(),
-                ProducerId = producerId
+                ProducerId = producerId.ToString()
             };
 
             var receivedMessage = new ObserverDto(_fakeChannelContext,

@@ -47,8 +47,7 @@ namespace Catalyst.Core.Modules.Authentication.Repository
 
         public bool TryFind(MultiAddress peerIdentifier, out AuthCredentials authCredentials)
         {
-            return _repository.TryFind(t => t.IpAddress.Equals(peerIdentifier.GetIpAddress()) &&
-                t.PublicKey.Equals(peerIdentifier.GetPublicKey()), out authCredentials);
+            return _repository.TryFind(t => t.Address == peerIdentifier.ToString(), out authCredentials);
         }
 
         public void Dispose()

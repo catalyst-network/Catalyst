@@ -48,7 +48,7 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
-
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
 {
@@ -70,7 +70,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
 
         private TestScheduler _testScheduler;
         private IPeerSettings _settings;
-        private PeerId _ownNode;
+        private MultiAddress _ownNode;
         private ILogger _logger;
 
         [Test]
