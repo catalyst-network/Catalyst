@@ -153,8 +153,10 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             TestContext.WriteLine(ip.ToString());
             TestContext.WriteLine(port.ToString());
 
-            var recipient = publicKey.BuildPeerIdFromBase58Key(ip, port);
+            //todo
+            //var recipient = publicKey.BuildPeerIdFromBase58Key(ip, port);
 
+            var recipient = PeerIdHelper.GetPeerId(publicKey, ip, port);
             return await _peerChallengeRequest.ChallengePeerAsync(recipient);
         }
 

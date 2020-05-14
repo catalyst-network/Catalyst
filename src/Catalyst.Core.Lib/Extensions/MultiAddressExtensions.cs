@@ -21,25 +21,32 @@
 
 #endregion
 
+using Catalyst.Core.Lib.Util;
 using MultiFormats;
+using System.Net;
 
 namespace Catalyst.Core.Lib.Extensions
 {
     public static class MultiAddressExtensions
     {
-        public static string GetIpAddress(this MultiAddress multiAddress)
+        public static IPAddress GetIpAddress(this MultiAddress address)
         {
-            return multiAddress.Protocols[0].Value;
+            return IPAddress.Parse(address.Protocols[0].Value);
         }
 
-        public static string GetPort(this MultiAddress multiAddress)
+        public static int GetPort(this MultiAddress address)
         {
-            return multiAddress.Protocols[1].Value;
+            return int.Parse(address.Protocols[1].Value);
         }
 
-        public static string GetPublicKey(this MultiAddress multiAddress)
+        public static string GetPublicKey(this MultiAddress address)
         {
-            return multiAddress.PeerId.GetPublicKeyBytesFromPeerId().ToBase58();
+            return address.PeerId.GetPublicKeyBytesFromPeerId().KeyToString();
+        }
+
+        public static IPEndPoint GetIPEndPoint(this MultiAddress address)
+        {
+            return new IPEndPoint(address.GetIpAddress(), address.GetPort());
         }
     }
 }

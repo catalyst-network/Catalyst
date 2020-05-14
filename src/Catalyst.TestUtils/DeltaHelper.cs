@@ -64,7 +64,7 @@ namespace Catalyst.TestUtils
         public static CandidateDeltaBroadcast GetCandidateDelta(IHashProvider hashProvider,
             Cid previousDeltaHash = null,
             Cid hash = null,
-            PeerId producerId = null)
+            MultiAddress producerId = null)
         {
             var candidateHash = hash ??
                 hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).ToCid();
@@ -77,15 +77,15 @@ namespace Catalyst.TestUtils
             {
                 Hash = MultiBase.Decode(candidateHash).ToByteString(),
                 PreviousDeltaDfsHash = MultiBase.Decode(previousHash).ToByteString(),
-                ProducerId = producer
+                ProducerId = producer.ToString()
             };
         }
 
         public static FavouriteDeltaBroadcast GetFavouriteDelta(IHashProvider hashProvider,
             Cid previousDeltaHash = null,
             Cid hash = null,
-            PeerId producerId = null,
-            PeerId voterId = null)
+            MultiAddress producerId = null,
+            MultiAddress voterId = null)
         {
             var candidate = GetCandidateDelta(hashProvider, previousDeltaHash, hash, producerId);
             var voter = voterId ?? PeerIdHelper.GetPeerId();
@@ -93,7 +93,7 @@ namespace Catalyst.TestUtils
             return new FavouriteDeltaBroadcast
             {
                 Candidate = candidate,
-                VoterId = voter
+                VoterId = voter.ToString()
             };
         }
     }

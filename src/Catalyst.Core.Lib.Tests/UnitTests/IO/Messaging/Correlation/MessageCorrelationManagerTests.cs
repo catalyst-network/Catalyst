@@ -42,20 +42,21 @@ using Microsoft.Extensions.Primitives;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Correlation
 {
     public abstract class MessageCorrelationManagerTests<T>
         where T : IMessageCorrelationManager
     {
-        protected readonly PeerId[] PeerIds;
+        protected readonly MultiAddress[] PeerIds;
         protected List<CorrelatableMessage<ProtocolMessage>> PendingRequests;
 
         protected T CorrelationManager;
         protected readonly ILogger SubbedLogger;
         protected readonly IChangeTokenProvider ChangeTokenProvider;
         protected readonly IMemoryCache Cache;
-        private readonly PeerId _senderPeerId;
+        private readonly MultiAddress _senderPeerId;
 
         protected readonly Dictionary<ByteString, ICacheEntry> CacheEntriesByRequest
             = new Dictionary<ByteString, ICacheEntry>();

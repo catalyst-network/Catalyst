@@ -34,13 +34,15 @@ using DotNetty.Transport.Channels.Embedded;
 using DotNetty.Transport.Channels.Sockets;
 using Google.Protobuf;
 using NUnit.Framework;
+using MultiFormats;
+using Catalyst.Core.Lib.Extensions;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
 {
     public sealed class DatagramPacketEncoderTests
     {
         private EmbeddedChannel _channel;
-        private PeerId _recipientPid;
+        private MultiAddress _recipientPid;
         private DatagramPacket _datagramPacket;
         private ProtocolMessage _protocolMessageSigned;
 
@@ -65,8 +67,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
 
             _datagramPacket = new DatagramPacket(
                 Unpooled.WrappedBuffer(_protocolMessageSigned.ToByteArray()),
-                senderPid.IpEndPoint,
-                _recipientPid.IpEndPoint
+                senderPid.GetIPEndPoint(),
+                _recipientPid.GetIPEndPoint()
             );
         }
 

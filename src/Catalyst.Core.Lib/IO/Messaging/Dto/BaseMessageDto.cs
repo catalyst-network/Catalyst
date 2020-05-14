@@ -23,6 +23,7 @@
 
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -50,7 +51,7 @@ namespace Catalyst.Core.Lib.IO.Messaging.Dto
             MultiAddress senderPeerIdentifier,
             MultiAddress recipientPeerIdentifier,
             ICorrelationId correlationId)
-            : base(content, new IPEndPoint(IPAddress.Parse("10.1.1.1"), 10), new IPEndPoint(IPAddress.Parse("10.1.1.1"), 10))
+            : base(content, senderPeerIdentifier.GetIPEndPoint(), recipientPeerIdentifier.GetIPEndPoint())
         {
             //todo
             //Guard.Argument(senderPeerIdentifier.IpEndPoint.Address, nameof(senderPeerIdentifier.IpEndPoint.Address)).NotNull();

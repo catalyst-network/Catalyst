@@ -32,6 +32,7 @@ using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -45,25 +46,37 @@ namespace Catalyst.Core.Lib.P2P
         private readonly IPubSubApi _pubSubApi;
         private readonly PeerLibP2PServerChannelFactory _peerLibP2PChannelFactory;
         private readonly IEnumerable<IP2PMessageObserver> _messageHandlers;
+        private readonly IPeerDiscovery _peerDiscovery;
+        private readonly IHealthChecker _healthChecker;
+        private readonly ILogger _logger;
 
         public IObservable<IObserverDto<ProtocolMessage>> MessageStream { private set; get; }
 
         /// <param name="clientChannelFactory">A factory used to build the appropriate kind of channel for a udp client.</param>
         /// <param name="eventLoopGroupFactory"></param>
         /// <param name="peerSettings"></param>
-        public LibP2PPeerService(IPeerSettings peerSettings, 
-            PeerLibP2PServerChannelFactory peerLibP2PChannelFactory, 
-            IEnumerable<IP2PMessageObserver> messageHandlers)
+        public LibP2PPeerService(IPeerSettings peerSettings,
+            PeerLibP2PServerChannelFactory peerLibP2PChannelFactory,
+            IEnumerable<IP2PMessageObserver> messageHandlers,
+            IPeerDiscovery peerDiscovery,
+            IHealthChecker healthChecker,
+            ILogger logger
+            )
         {
             _peerSettings = peerSettings;
             _peerLibP2PChannelFactory = peerLibP2PChannelFactory;
             _messageHandlers = messageHandlers;
+            _peerDiscovery = peerDiscovery;
+            _healthChecker = healthChecker;
+            _logger = logger;
         }
 
         public async Task StartAsync()
         {
             MessageStream = await _peerLibP2PChannelFactory.BuildMessageStreamAsync();
             _messageHandlers.ToList().ForEach(h => h.StartObserving(MessageStream));
+            _peerDiscovery?.DiscoveryAsync();
+            _healthChecker.Run();
         }
     }
 }

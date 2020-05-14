@@ -39,6 +39,7 @@ using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils.Fakes;
 using NUnit.Framework;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -47,7 +48,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         private IKeySigner _keySigner;
         private VerifyMessageRequestObserver _verifyMessageRequestObserver;
         private IChannelHandlerContext _fakeContext;
-        private PeerId _testPeerId;
+        private MultiAddress _testPeerId;
         private VerifyMessageRequest _verifyMessageRequest;
         private SigningContext _signingContext;
 

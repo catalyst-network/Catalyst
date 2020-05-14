@@ -43,7 +43,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
     {
         private IPeerQueryTipRequest _peerQueryTipRequest;
         private IPeerSettings _testSettings;
-        private PeerId _recipientPeerId;
+        private MultiAddress _recipientPeerId;
         private CancellationTokenProvider _cancellationProvider;
 
         [SetUp]

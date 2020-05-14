@@ -30,13 +30,14 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils.Protocol;
 using Google.Protobuf;
+using MultiFormats;
 
 namespace Catalyst.TestUtils
 {
     public static class ProtocolMessageExtensions
     {
         public static ProtocolMessage ToSignedProtocolMessage(this IMessage proto,
-            PeerId senderId,
+            MultiAddress senderId,
             ISignature signature = default,
             SigningContext signingContext = default,
             ICorrelationId correlationId = default)
@@ -45,7 +46,7 @@ namespace Catalyst.TestUtils
         }
 
         public static ProtocolMessage ToSignedProtocolMessage(this IMessage proto,
-            PeerId senderId = default,
+            MultiAddress senderId = default,
             byte[] signature = default,
             SigningContext signingContext = default,
             ICorrelationId correlationId = default)

@@ -44,6 +44,7 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
 {
@@ -111,7 +112,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
             var sender = PeerIdHelper.GetPeerId("sender");
 
             var signature = Substitute.For<ISignature>();
-            _peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
+            _peerIdValidator.ValidatePeerIdFormat(Arg.Any<MultiAddress>()).Returns(true);
             _serverKeySigner.CryptoContext.SignatureLength.Returns(64);
             _serverKeySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(signature);
 

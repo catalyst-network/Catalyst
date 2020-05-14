@@ -26,6 +26,7 @@ using Catalyst.Abstractions.KeySigner;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Lib.IO.Handlers
@@ -64,23 +65,23 @@ namespace Catalyst.Core.Lib.IO.Handlers
 
         private bool Verify(ProtocolMessage signedMessage)
         {
+            if (signedMessage.Signature == null)
+            {
+                return false;
+            }
+
             //todo
-            //if (signedMessage.Signature == null)
-            //{
-            //    return false;
-            //}
+            var sig = signedMessage.Signature.RawBytes.ToByteArray();
+            var address = new MultiAddress(signedMessage.PeerId);
+            var pub = address.PeerId.GetPublicKeyBytesFromPeerId();
 
-            //var sig = signedMessage.Signature.RawBytes.ToByteArray();
-            //var pub = signedMessage.PeerId.PublicKey.ToByteArray();
+            var signature = _keySigner.CryptoContext.GetSignatureFromBytes(sig, pub);
+            var messageWithoutSig = signedMessage.Clone();
+            messageWithoutSig.Signature = null;
 
-            //var signature = _keySigner.CryptoContext.GetSignatureFromBytes(sig, pub);
-            //var messageWithoutSig = signedMessage.Clone();
-            //messageWithoutSig.Signature = null;
+            var verified = _keySigner.Verify(signature, messageWithoutSig, signedMessage.Signature.SigningContext);
 
-            //var verified = _keySigner.Verify(signature, messageWithoutSig, signedMessage.Signature.SigningContext);
-
-            //return verified;
-            return true;
+            return verified;
         }
     }
 }

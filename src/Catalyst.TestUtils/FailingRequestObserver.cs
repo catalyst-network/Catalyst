@@ -55,7 +55,7 @@ namespace Catalyst.TestUtils
                 throw new ArgumentException("something went wrong handling the request");
             }
 
-            return new PeerNeighborsResponse {Peers = {PeerIdHelper.GetPeerId()}};
+            return new PeerNeighborsResponse {Peers = {PeerIdHelper.GetPeerId().ToString()}};
         }
     }
 }

@@ -87,7 +87,7 @@ namespace Catalyst.TestUtils
 {
     public sealed class PoaTestNode : ICatalystNode, IDisposable
     {
-        public delegate void PeerActivedHandler(MultiAddress peerAddress, PeerId peerId);
+        public delegate void PeerActivedHandler(MultiAddress peerAddress);
         public event PeerActivedHandler PeerActive;
 
         private IDfsService _dfsService;
@@ -205,7 +205,7 @@ namespace Catalyst.TestUtils
 
             await _dfsService.StartAsync().ConfigureAwait(false);
 
-            PeerActive(_localPeer.Addresses.First(), peerSettings.PeerId);
+            PeerActive(_localPeer.Addresses.First());
 
             await StartSocketsAsync().ConfigureAwait(false);
             
@@ -222,13 +222,13 @@ namespace Catalyst.TestUtils
             } while (!cancellationSourceToken.IsCancellationRequested);
         }
 
-        public void RegisterPeerAddress(MultiAddress multiAddress, PeerId peerId)
+        public void RegisterPeerAddress(MultiAddress multiAddress)
         {
             if (_localPeer.Id != multiAddress.PeerId)
             {
                 _peerRepository.Add(new Peer
                 {
-                    PeerId = peerId,
+                    PeerId = multiAddress,
                     IsPoaNode = true,
                     LastSeen = DateTime.UtcNow
                 });

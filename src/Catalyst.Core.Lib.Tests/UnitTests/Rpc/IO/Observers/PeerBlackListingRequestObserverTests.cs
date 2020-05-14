@@ -38,6 +38,8 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using MultiFormats;
+using Catalyst.Core.Lib.Util;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -51,7 +53,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         private IChannelHandlerContext _fakeContext;
 
         private TestScheduler _testScheduler;
-        private PeerId _senderId;
+        private MultiAddress _senderId;
         private IPeerRepository _peerRepository;
 
         [SetUp]
@@ -101,16 +103,16 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var targetedId = PeerIdHelper.GetPeerId(publicKeySeed);
             var request = new SetPeerBlackListRequest
             {
-                PublicKey = targetedId.PublicKey,
-                Ip = targetedId.Ip,
+                PublicKey = targetedId.GetPublicKey().KeyToByteString(),
+                Ip = targetedId.GetIpAddress().GetAddressBytes().ToByteString(),
                 Blacklist = blacklist
             };
 
             var responseContent = GetSetPeerBlacklistRequest(request);
 
             responseContent.Blacklist.Should().Be(blacklist);
-            responseContent.Ip.Should().BeEquivalentTo(targetedId.Ip);
-            responseContent.PublicKey.Should().BeEquivalentTo(targetedId.PublicKey);
+            responseContent.Ip.Should().BeEquivalentTo(targetedId.GetIpAddress().GetAddressBytes().ToByteString());
+            responseContent.PublicKey.Should().BeEquivalentTo(targetedId.GetPublicKey().KeyToByteString());
         }
 
         [TestCase("unknown-1", false)]
@@ -121,8 +123,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var targetedId = PeerIdHelper.GetPeerId(publicKeySeed);
             var request = new SetPeerBlackListRequest
             {
-                PublicKey = targetedId.PublicKey,
-                Ip = targetedId.Ip,
+                PublicKey = targetedId.GetPublicKey().KeyToByteString(),
+                Ip = targetedId.GetIpAddress().GetAddressBytes().ToByteString(),
                 Blacklist = blacklist
             };
 

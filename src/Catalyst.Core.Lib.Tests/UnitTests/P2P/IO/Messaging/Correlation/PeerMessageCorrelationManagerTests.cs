@@ -36,6 +36,7 @@ using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
+using MultiFormats;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -44,7 +45,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Correlation
     public sealed class PeerMessageCorrelationManagerTests : MessageCorrelationManagerTests<IPeerMessageCorrelationManager>
     {
         private TestScheduler _testScheduler;
-        private Dictionary<PeerId, int> _reputationByPeerIdentifier;
+        private Dictionary<MultiAddress, int> _reputationByPeerIdentifier;
 
         [SetUp]
         public void Init()

@@ -24,6 +24,7 @@
 using Catalyst.Abstractions.Rpc.Authentication;
 using Catalyst.Core.Modules.Authentication.Repository;
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.Authentication
 {
@@ -44,7 +45,7 @@ namespace Catalyst.Core.Modules.Authentication
         }
 
         /// <inheritdoc cref="IAuthenticationStrategy"/>
-        public bool Authenticate(PeerId peerIdentifier)
+        public bool Authenticate(MultiAddress peerIdentifier)
         {
             return _trustedPeers.TryFind(peerIdentifier, out _);
         }

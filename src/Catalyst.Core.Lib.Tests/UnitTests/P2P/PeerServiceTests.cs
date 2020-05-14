@@ -44,7 +44,7 @@ using FluentAssertions;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
-
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
 {
@@ -52,7 +52,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
     {
         private ICorrelationId _guid;
         private ILogger _logger;
-        private PeerId _pid;
+        private MultiAddress _pid;
         private IUdpServerChannelFactory _udpServerServerChannelFactory;
         private IPeerDiscovery _peerDiscovery;
         private List<IP2PMessageObserver> _p2PMessageHandlers;
@@ -120,7 +120,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
         public async Task Can_receive_PeerNeighborsResponse()
         {
             var pingRequestHandler = new TestMessageObserver<PeerNeighborsResponse>(_logger);
-            var neighbourIds = "abc".Select(i => PeerIdHelper.GetPeerId(i.ToString()));
+            var neighbourIds = "abc".Select(i => PeerIdHelper.GetPeerId(i.ToString()).ToString());
             var responseContent = new PeerNeighborsResponse();
             responseContent.Peers.AddRange(neighbourIds);
 

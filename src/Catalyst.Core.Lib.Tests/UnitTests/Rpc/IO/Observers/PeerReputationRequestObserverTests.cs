@@ -38,6 +38,8 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using MultiFormats;
+using Catalyst.Core.Lib.Util;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -47,7 +49,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         private IChannelHandlerContext _fakeContext;
         private TestScheduler _testScheduler;
         private IPeerRepository _peerRepository;
-        private PeerId _senderId;
+        private MultiAddress _senderId;
 
         [SetUp]
         public void Init()
@@ -87,7 +89,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         {
             var peerId = PeerIdHelper.GetPeerId(publicKeySeed);
 
-            var request = new GetPeerReputationRequest {Ip = peerId.Ip, PublicKey = peerId.PublicKey};
+            var request = new GetPeerReputationRequest {Ip = peerId.GetIpAddress().GetAddressBytes().ToByteString(), 
+                PublicKey = peerId.GetPublicKey().KeyToByteString()};
 
             var responseContent = GetGetPeerReputationResponse(request);
 

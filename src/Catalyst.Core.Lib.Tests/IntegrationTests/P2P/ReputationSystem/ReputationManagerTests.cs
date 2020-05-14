@@ -29,6 +29,7 @@ using Catalyst.Core.Lib.P2P.ReputationSystem;
 using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using MultiFormats;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -51,7 +52,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
             _reputationManager = _scope.Resolve<IReputationManager>();
         }
 
-        private Peer SavePeerInRepo(PeerId pid, int initialRep = 100)
+        private Peer SavePeerInRepo(MultiAddress pid, int initialRep = 100)
         {
             var subbedPeer = new Peer
             {

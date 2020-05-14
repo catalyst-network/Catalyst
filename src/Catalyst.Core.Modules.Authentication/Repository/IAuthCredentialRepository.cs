@@ -23,6 +23,7 @@
 
 using Catalyst.Core.Modules.Authentication.Models;
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 using System;
 
 namespace Catalyst.Core.Modules.Authentication.Repository
@@ -30,6 +31,6 @@ namespace Catalyst.Core.Modules.Authentication.Repository
     public interface IAuthCredentialRepository : IDisposable
     {
         void Add(AuthCredentials authCredentials);
-        bool TryFind(PeerId peerIdentifier, out AuthCredentials authCredentials);
+        bool TryFind(MultiAddress peerIdentifier, out AuthCredentials authCredentials);
     }
 }

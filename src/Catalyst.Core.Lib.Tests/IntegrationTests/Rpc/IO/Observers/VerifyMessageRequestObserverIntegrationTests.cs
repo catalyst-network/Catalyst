@@ -49,6 +49,7 @@ using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Peer;
 using Catalyst.Core.Modules.Authentication;
 using Catalyst.Core.Modules.Hashing;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 {
@@ -58,7 +59,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         private IChannelHandlerContext _fakeContext;
         private IRpcRequestObserver _verifyMessageRequestObserver;
         private ILifetimeScope _scope;
-        private PeerId _peerId;
+        private MultiAddress _peerId;
         private ByteString _testMessageToSign;
         
         [SetUp]
@@ -81,13 +82,13 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             ContainerProvider.ContainerBuilder.RegisterType<VerifyMessageRequestObserver>().As<IRpcRequestObserver>();
 
             ContainerProvider.ContainerBuilder.RegisterInstance(PeerIdHelper.GetPeerId("Test"))
-               .As<PeerId>();
+               .As<MultiAddress>();
 
             ContainerProvider.ConfigureContainerBuilder();
 
             _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);
             _keySigner = ContainerProvider.Container.Resolve<IKeySigner>();
-            _peerId = ContainerProvider.Container.Resolve<PeerId>();
+            _peerId = ContainerProvider.Container.Resolve<MultiAddress>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
 
             var fakeChannel = Substitute.For<IChannel>();

@@ -47,7 +47,7 @@ namespace Catalyst.TestUtils
     public static class PeerIdHelper
     {
         private static ICryptoContext ffiWrapper = new FfiWrapper();
-        public static PeerId GetPeerId(byte[] publicKey = null,
+        public static MultiAddress GetPeerId(byte[] publicKey = null,
             IPAddress ipAddress = null,
             int port = 12345)
         {
@@ -66,34 +66,36 @@ namespace Catalyst.TestUtils
                 publicKey = ((Ed25519PublicKeyParameters) keyPair.Public).GetEncoded();
             }
 
-            var peerIdentifier = new PeerId
-            {
-                PublicKey = publicKey.ToByteString(),
-                Ip = (ipAddress ?? IPAddress.Loopback).To16Bytes().ToByteString(),
-                Port = (ushort) port
-            };
-            return peerIdentifier;
+            //var peerIdentifier = new PeerId
+            //{
+            //    PublicKey = publicKey.ToByteString(),
+            //    Ip = (ipAddress ?? IPAddress.Loopback).To16Bytes().ToByteString(),
+            //    Port = (ushort) port
+            //};
+            var address = new MultiAddress($"/ip4/{ipAddress ?? IPAddress.Loopback}/tcp/{port}/ipfs/{publicKey.ToPeerId()}");
+            return address;
+            //return peerIdentifier;
         }
 
-        public static PeerId GetPeerId(string publicKeySeed,
+        public static MultiAddress GetPeerId(string publicKeySeed,
             IPAddress ipAddress = null,
             int port = 12345)
         {
             return GetPeerId(Encoding.UTF8.GetBytes(publicKeySeed), ipAddress, port);
         }
 
-        public static PeerId GetPeerId(string publicKey, string ipAddress, int port)
+        public static MultiAddress GetPeerId(string publicKey, string ipAddress, int port)
         {
             return GetPeerId(publicKey, IPAddress.Parse(ipAddress), port);
         }
 
-        public static IPeerSettings ToSubstitutedPeerSettings(this PeerId peerId)
+        public static IPeerSettings ToSubstitutedPeerSettings(this MultiAddress peerId)
         {
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.PeerId.Returns(peerId);
-            peerSettings.BindAddress.Returns(peerId.IpAddress);
-            peerSettings.Port.Returns((int) peerId.Port);
-            peerSettings.PublicKey.Returns(peerId.PublicKey.KeyToString());
+            peerSettings.BindAddress.Returns(IPAddress.Parse(peerId.GetIpAddress().ToString()));
+            peerSettings.Port.Returns((int) peerId.GetPort());
+            peerSettings.PublicKey.Returns(peerId.GetPublicKey());
             return peerSettings;
         }
     }

@@ -22,6 +22,7 @@
 #endregion
 
 using Catalyst.Core.Lib.Cryptography.Proto;
+using Catalyst.Core.Lib.Util;
 using MultiFormats;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.X509;
@@ -77,7 +78,8 @@ namespace Catalyst.Core.Lib.Extensions
             };
             using var ms = new MemoryStream();
             Serializer.Serialize(ms, pk);
-            return Convert.ToBase64String(ms.ToArray());
+            var id = new MultiHash("id", ms.ToArray());
+            return id.ToString();
         }
 
         public static string ToPeerId(this AsymmetricKeyParameter publicKeyParameter)

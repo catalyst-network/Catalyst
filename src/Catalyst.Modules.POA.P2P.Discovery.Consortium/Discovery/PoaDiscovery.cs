@@ -34,6 +34,7 @@ using Catalyst.Core.Lib.Util;
 using Newtonsoft.Json;
 using Serilog;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Lib.Extensions;
 
 namespace Catalyst.Modules.POA.P2P.Discovery
 {
@@ -78,23 +79,25 @@ namespace Catalyst.Modules.POA.P2P.Discovery
             foreach (var peer in poaPeers.Select(poaPeer => new Peer
             {
                 IsPoaNode = true,
-                PeerId = poaPeer.MultiAddress
+                PeerId = poaPeer.Address
             }))
             {
                 //Don't add your own peer id even if you are a POA node.
-                if (_peerSettings.PeerId == peer.PeerId)
-                {
-                    continue;
-                }
+                //if (_peerSettings.PeerId == peer.PeerId)
+                //{
+                //    continue;
+                //}
 
-                //todo
-                //_logger.Information(
-                //    $"Adding POA Peer: {peer.PeerId.IpAddress} Public Key: {peer.PeerId.PublicKey.KeyToString()}");
+                _logger.Information(
+                    $"Adding POA Peer: {peer.PeerId.GetIpAddress()} Public Key: {peer.PeerId.GetPublicKey()}");
 
                 if (!_peerRepository.Exists(peer.DocumentId))
                 {
                     _peerRepository.Add(peer);
                 }
+                //todo
+                //var a = _peerRepository.GetAll();
+                //var b = 0;
             }
 
             return Task.CompletedTask;

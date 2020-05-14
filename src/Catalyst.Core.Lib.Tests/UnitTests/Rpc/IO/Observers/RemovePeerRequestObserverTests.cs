@@ -42,6 +42,8 @@ using Serilog;
 using SharpRepository.InMemoryRepository;
 using NUnit.Framework;
 using Catalyst.Core.Lib.P2P.Repository;
+using Org.BouncyCastle.Utilities.Net;
+using Catalyst.Core.Lib.Util;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -116,8 +118,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             var removePeerRequest = new RemovePeerRequest
             {
-                PeerIp = targetPeerToDelete.PeerId.Ip,
-                PublicKey = withPublicKey ? targetPeerToDelete.PeerId.PublicKey : ByteString.Empty
+                PeerIp = targetPeerToDelete.PeerId.GetIpAddress().GetAddressBytes().ToByteString(),
+                PublicKey = withPublicKey ? targetPeerToDelete.PeerId.GetPublicKey().KeyToByteString() : ByteString.Empty
             };
 
             var protocolMessage = removePeerRequest.ToProtocolMessage(peerId);

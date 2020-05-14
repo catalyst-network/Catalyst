@@ -54,7 +54,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Extensions
             var wrapped = new PeerId().ToProtocolMessage(peerId, guid);
 
             wrapped.CorrelationId.ToCorrelationId().Id.Should().Be(guid.Id);
-            wrapped.PeerId.Should().Be(peerId);
+            wrapped.PeerId.Should().Be(peerId.ToString());
             wrapped.TypeUrl.Should().Be(PeerId.Descriptor.ShortenedFullName());
         }
 

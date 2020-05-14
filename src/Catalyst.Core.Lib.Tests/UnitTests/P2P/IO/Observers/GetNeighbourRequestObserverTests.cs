@@ -39,6 +39,7 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 {
@@ -46,7 +47,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
     {
         private readonly TestScheduler _testScheduler;
         private readonly ILogger _subbedLogger;
-        private readonly PeerId _peerId;
+        private readonly MultiAddress _peerId;
         private readonly IPeerRepository _subbedPeerRepository;
 
         public GetNeighbourRequestObserverTests()
@@ -101,7 +102,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 
             for (var i = 0; i < 5; i++)
             {
-                peerNeighborsResponseMessage.Peers.Add(PeerIdHelper.GetPeerId());
+                peerNeighborsResponseMessage.Peers.Add(PeerIdHelper.GetPeerId().ToString());
             }
 
             _testScheduler.Start();

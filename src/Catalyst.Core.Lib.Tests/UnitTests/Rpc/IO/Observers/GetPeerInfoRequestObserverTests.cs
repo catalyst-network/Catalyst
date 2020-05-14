@@ -43,6 +43,8 @@ using Serilog;
 using SharpRepository.InMemoryRepository;
 using NUnit.Framework;
 using Catalyst.Core.Lib.P2P.Repository;
+using MultiFormats;
+using Catalyst.Core.Lib.Util;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -112,8 +114,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             foreach (var peerInfo in responseContent.PeerInfo)
             {
-                peerInfo.PeerId.Ip.ToByteArray().Should().BeEquivalentTo(peerId.Ip.ToByteArray());
-                peerInfo.PeerId.PublicKey.ToByteArray().Should().BeEquivalentTo(peerId.PublicKey.ToByteArray());
+                peerInfo.PeerId.ToString().Should().Be(peerId.ToString());
             }
         }
 
@@ -138,14 +139,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         ///     Tests the data/communication through protobuf
         /// </summary>
         /// <returns></returns>
-        private GetPeerInfoResponse GetPeerInfoTest(PeerId peerId)
+        private GetPeerInfoResponse GetPeerInfoTest(MultiAddress peerId)
         {
             var testScheduler = new TestScheduler();
 
             _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
             var senderPeerIdentifier = PeerIdHelper.GetPeerId("sender");
-            var getPeerInfoRequest = new GetPeerInfoRequest {PublicKey = peerId.PublicKey, Ip = peerId.Ip};
+            var getPeerInfoRequest = new GetPeerInfoRequest {PublicKey = peerId.GetPublicKey().KeyToByteString(), Ip = peerId.GetIpAddress().GetAddressBytes().ToByteString()};
 
             var protocolMessage =
                 getPeerInfoRequest.ToProtocolMessage(senderPeerIdentifier);

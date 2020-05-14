@@ -35,6 +35,7 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 {
@@ -65,7 +66,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             {
                 Peers =
                 {
-                    peers
+                    peers.ToString()
                 }
             };
             var protocolMessage =
@@ -92,10 +93,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             }
         }
 
-        private bool test(IMessage msg, PeerId peerId)
+        private bool test(IMessage msg, MultiAddress peerId)
         {
             var x = (PeerNeighborsResponse) msg;
-            return x.Peers.Contains(peerId);
+            return x.Peers.Contains(peerId.ToString());
         }
 
         public void Dispose() { _observer?.Dispose(); }

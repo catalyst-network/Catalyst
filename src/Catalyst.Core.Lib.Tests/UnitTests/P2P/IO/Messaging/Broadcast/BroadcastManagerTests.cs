@@ -42,6 +42,7 @@ using Serilog;
 using SharpRepository.InMemoryRepository;
 using NUnit.Framework;
 using Catalyst.Core.Lib.P2P.Repository;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
 {
@@ -50,7 +51,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
         private IPeerRepository _peers;
         private IMemoryCache _cache;
         private FakeKeySigner _keySigner;
-        private PeerId _senderPeerId;
+        private MultiAddress _senderPeerId;
         private IPeerSettings _peerSettings;
 
         [SetUp]
@@ -89,7 +90,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
                 peerCount).ConfigureAwait(false);
         }
 
-        private async Task TestBroadcast(int peerCount, PeerId broadcaster, int expectedBroadcastCount)
+        private async Task TestBroadcast(int peerCount, MultiAddress broadcaster, int expectedBroadcastCount)
         {
             PopulatePeers(peerCount);
             var correlationId = await BroadcastMessage(broadcaster)
@@ -142,7 +143,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
             value.ReceivedCount.Should().Be(receivedCount + 1);
         }
 
-        private async Task<ICorrelationId> BroadcastMessage(PeerId broadcaster)
+        private async Task<ICorrelationId> BroadcastMessage(MultiAddress broadcaster)
         {
             var gossipMessageHandler = new
                 BroadcastManager(

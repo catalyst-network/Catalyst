@@ -82,17 +82,15 @@ namespace Catalyst.Core.Lib.P2P.Protocols
 
                 _logger.Verbose($"Sending peer challenge request to IP: {recipientPeerId}");
                 _peerClient.SendMessage(messageDto);
-                //todo
-                //using (var cancellationTokenSource =
-                //    new CancellationTokenSource(TimeSpan.FromSeconds(_ttl)))
-                //{
-                //    await ChallengeResponseMessageStreamer
-                //       .FirstAsync(a => a != null
-                //         && a.PeerId.PublicKey.SequenceEqual(recipientPeerId.PublicKey)
-                //         && a.PeerId.Ip.SequenceEqual(recipientPeerId.Ip))
-                //       .ToTask(cancellationTokenSource.Token)
-                //       .ConfigureAwait(false);
-                //}
+
+                using (var cancellationTokenSource =
+                    new CancellationTokenSource(TimeSpan.FromSeconds(_ttl)))
+                {
+                    await ChallengeResponseMessageStreamer
+                       .FirstAsync(a => a != null && a.PeerId == recipientPeerId)
+                       .ToTask(cancellationTokenSource.Token)
+                       .ConfigureAwait(false);
+                }
             }
             catch (OperationCanceledException)
             {

@@ -21,9 +21,11 @@
 
 #endregion
 
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Authentication.Models;
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 using SharpRepository.Repository;
 using System.Linq;
 
@@ -43,10 +45,10 @@ namespace Catalyst.Core.Modules.Authentication.Repository
             _repository.Add(authCredentials);
         }
 
-        public bool TryFind(PeerId peerIdentifier, out AuthCredentials authCredentials)
+        public bool TryFind(MultiAddress peerIdentifier, out AuthCredentials authCredentials)
         {
-            return _repository.TryFind(t => t.IpAddress.Equals(peerIdentifier.Ip.ToString()) &&
-                t.PublicKey.KeyToBytes().SequenceEqual(peerIdentifier.PublicKey), out authCredentials);
+            return _repository.TryFind(t => t.IpAddress.Equals(peerIdentifier.GetIpAddress()) &&
+                t.PublicKey.Equals(peerIdentifier.GetPublicKey()), out authCredentials);
         }
 
         public void Dispose()
