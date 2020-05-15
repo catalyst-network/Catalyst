@@ -144,8 +144,6 @@ namespace Catalyst.Core.Modules.Dfs
         /// </summary>
         public DfsOptions Options { get; set; }
 
-        //private IKeyStoreService _keyStoreService;
-
         private async Task InitAsync()
         {
             //Swarm
@@ -168,7 +166,6 @@ namespace Catalyst.Core.Modules.Dfs
 
             Log.Debug("Building PubSub service");
 
-            //PubSubService.LocalPeer = LocalPeer;
             Log.Debug("Built PubSub service");
         }
 

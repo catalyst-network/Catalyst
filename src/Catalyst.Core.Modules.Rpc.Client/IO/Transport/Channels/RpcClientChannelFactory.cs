@@ -43,6 +43,7 @@ using Catalyst.Protocol.Wire;
 using DotNetty.Buffers;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels
 {
@@ -106,11 +107,10 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels
         /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Local TLS certificate</param>
         public override async Task<IObservableChannel> BuildChannelAsync(IEventLoopGroupFactory eventLoopGroupFactory,
-            IPAddress targetAddress,
-            int targetPort,
+            MultiAddress address,
             X509Certificate2 certificate = null)
         {
-            var channel = await BootstrapAsync(eventLoopGroupFactory, targetAddress, targetPort, certificate).ConfigureAwait(false);
+            var channel = await BootstrapAsync(eventLoopGroupFactory, address, certificate).ConfigureAwait(false);
 
             var messageStream = _observableServiceHandler.MessageStream;
 

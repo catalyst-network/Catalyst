@@ -66,15 +66,8 @@ namespace Catalyst.TestUtils
                 publicKey = ((Ed25519PublicKeyParameters) keyPair.Public).GetEncoded();
             }
 
-            //var peerIdentifier = new PeerId
-            //{
-            //    PublicKey = publicKey.ToByteString(),
-            //    Ip = (ipAddress ?? IPAddress.Loopback).To16Bytes().ToByteString(),
-            //    Port = (ushort) port
-            //};
             var address = new MultiAddress($"/ip4/{ipAddress ?? IPAddress.Loopback}/tcp/{port}/ipfs/{publicKey.ToPeerId()}");
             return address;
-            //return peerIdentifier;
         }
 
         public static MultiAddress GetPeerId(string publicKeySeed,

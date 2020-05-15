@@ -23,18 +23,19 @@
 
 using Catalyst.Protocol.Peer;
 using Catalyst.Simulator.Interfaces;
+using MultiFormats;
 
 namespace Catalyst.Simulator
 {
     public class ClientRpcInfo
     {
-        public ClientRpcInfo(PeerId peerIdentifier, IRpcClient rpcClient)
+        public ClientRpcInfo(MultiAddress peerIdentifier, IRpcClient rpcClient)
         {
             PeerId = peerIdentifier;
             RpcClient = rpcClient;
         }
 
-        public PeerId PeerId { get; }
+        public MultiAddress PeerId { get; }
         public IRpcClient RpcClient { get; }
     }
 }

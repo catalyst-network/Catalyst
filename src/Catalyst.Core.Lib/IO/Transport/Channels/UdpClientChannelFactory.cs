@@ -26,6 +26,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Transport.Channels;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.IO.Transport.Channels
 {
@@ -37,8 +38,7 @@ namespace Catalyst.Core.Lib.IO.Transport.Channels
         /// <param name="certificate">Ignored</param>
         /// <returns></returns>
         public abstract Task<IObservableChannel> BuildChannelAsync(IEventLoopGroupFactory handlerEventLoopGroupFactory,
-            IPAddress targetAddress,
-            int targetPort,
+            MultiAddress address,
             X509Certificate2 certificate = null);
     }
 }

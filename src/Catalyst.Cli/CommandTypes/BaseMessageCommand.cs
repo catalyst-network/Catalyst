@@ -65,10 +65,7 @@ namespace Catalyst.Cli.CommandTypes
             {
                 if (_recipientPeerId != null) return _recipientPeerId;
                 var rpcClientConfig = CommandContext.GetNodeConfig(Options.Node);
-                //todo
-                //_recipientPeerId =
-                //    rpcClientConfig.PublicKey.BuildPeerIdFromBase58Key(rpcClientConfig.HostAddress,
-                //        rpcClientConfig.Port);
+                _recipientPeerId = rpcClientConfig.PeerId;
                 return _recipientPeerId;
             }
         }

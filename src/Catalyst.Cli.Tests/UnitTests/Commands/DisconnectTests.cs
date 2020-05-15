@@ -31,6 +31,7 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using Catalyst.Core.Lib.Extensions;
 
 namespace Catalyst.Cli.Tests.UnitTests.Commands
 {
@@ -50,8 +51,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands
             var socketClientRegistry = TestCommandHelpers.AddClientSocketRegistry(commandContext, _testScheduler);
 
             var clientHashCode =
-                socketClientRegistry.GenerateClientHashCode(
-                    EndpointBuilder.BuildNewEndPoint(rpcNodeConfig.HostAddress, rpcNodeConfig.Port));
+                socketClientRegistry.GenerateClientHashCode(rpcNodeConfig.PeerId.GetIPEndPoint());
             socketClientRegistry.AddClientToRegistry(clientHashCode, nodeRpcClient);
 
             var commands = new List<ICommand> {new DisconnectCommand(commandContext, Substitute.For<ILogger>())};

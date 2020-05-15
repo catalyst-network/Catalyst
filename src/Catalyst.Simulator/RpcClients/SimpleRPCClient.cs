@@ -125,7 +125,7 @@ namespace Catalyst.Simulator.RpcClients
             //_senderPeerId = publicKey.BuildPeerIdFromPublicKey(IPAddress.Any, 1026);
         }
 
-        public async Task<bool> ConnectRetryAsync(PeerId peerIdentifier, int retryAttempts = 5)
+        public async Task<bool> ConnectRetryAsync(MultiAddress peerIdentifier, int retryAttempts = 5)
         {
             var retryCountDown = retryAttempts;
             while (retryCountDown > 0)

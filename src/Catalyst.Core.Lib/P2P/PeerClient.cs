@@ -57,10 +57,7 @@ namespace Catalyst.Core.Lib.P2P
 
         public override async Task StartAsync()
         {
-            var bindingEndpoint = new IPEndPoint(_peerSettings.BindAddress, IPEndPoint.MinPort);
-            var observableChannel = await ChannelFactory.BuildChannelAsync(EventLoopGroupFactory,
-                    bindingEndpoint.Address,
-                    bindingEndpoint.Port)
+            var observableChannel = await ChannelFactory.BuildChannelAsync(EventLoopGroupFactory, _peerSettings.PeerId)
                .ConfigureAwait(false);
 
             Channel = observableChannel.Channel;

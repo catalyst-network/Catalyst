@@ -42,11 +42,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport.Channels
             };
 
             var eventLoopGroupFactory = new TcpClientEventLoopGroupFactory(eventLoopGroupFactoryConfiguration);
-            var ipAddress = IPAddress.Loopback;
-            var port = 9000;
+            var address = "/ip4/127.0.0.1/tcp/9000";
 
             var testTcpClientChannelFactory = new TestTcpClientChannelFactory();
-            var channel = await testTcpClientChannelFactory.BuildChannelAsync(eventLoopGroupFactory, ipAddress, port).ConfigureAwait(false);
+            var channel = await testTcpClientChannelFactory.BuildChannelAsync(eventLoopGroupFactory, address).ConfigureAwait(false);
 
             channel.Should().BeOfType<ObservableChannel>();
         }

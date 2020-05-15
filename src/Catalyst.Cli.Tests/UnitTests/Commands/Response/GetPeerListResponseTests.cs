@@ -30,6 +30,7 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using Catalyst.TestUtils;
 
 namespace Catalyst.Cli.Tests.UnitTests.Commands.Response
 {
@@ -41,7 +42,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands.Response
         public void GetPeerListResponse_Can_Get_Output()
         {
             var getPeerListResponse = new GetPeerListResponse();
-            getPeerListResponse.Peers.Add(new PeerId());
+            getPeerListResponse.Peers.Add(PeerIdHelper.GetPeerId().ToString());
 
             var commandContext = TestCommandHelpers.GenerateCliResponseCommandContext(_testScheduler);
 

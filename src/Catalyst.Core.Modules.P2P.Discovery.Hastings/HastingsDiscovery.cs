@@ -292,7 +292,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
             do
             {
                 responsiveNeighbours = CurrentStep.Neighbours
-                   .Where(n => !n.PeerId.Equals(unresponsiveNeighbour)
+                   .Where(n => n.PeerId != unresponsiveNeighbour
                      && n.StateTypes == NeighbourStateTypes.Responsive)
                    .ToList();
 

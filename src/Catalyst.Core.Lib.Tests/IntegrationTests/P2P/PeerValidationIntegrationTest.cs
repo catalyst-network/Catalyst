@@ -57,7 +57,7 @@ using Serilog;
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 {
     [TestFixture]
-    [Category(Traits.IntegrationTest)] 
+    [Category(Traits.IntegrationTest)]
     public sealed class PeerValidationIntegrationTest : FileSystemBasedTest
     {
         private IPeerService _peerService;
@@ -96,7 +96,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
                 return new PeerChallengeRequest(logger, peerClient, _peerSettings, 10);
             }).As<IPeerChallengeRequest>().SingleInstance();
 
-            
+
             _peerChallengeRequest = ContainerProvider.Container.Resolve<IPeerChallengeRequest>();
 
             var eventLoopGroupFactoryConfiguration = new EventLoopGroupFactoryConfiguration
@@ -123,6 +123,12 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
                 ContainerProvider.Container.Resolve<IHealthChecker>());
 
             _peerService.StartAsync().Wait();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            this.Dispose();
         }
 
         // [Fact(Skip = "this wont work as it tries to connect to a real node!! We need to instantiate two sockets here")]
@@ -152,9 +158,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             TestContext.WriteLine(publicKey);
             TestContext.WriteLine(ip.ToString());
             TestContext.WriteLine(port.ToString());
-
-            //todo
-            //var recipient = publicKey.BuildPeerIdFromBase58Key(ip, port);
 
             var recipient = PeerIdHelper.GetPeerId(publicKey, ip, port);
             return await _peerChallengeRequest.ChallengePeerAsync(recipient);

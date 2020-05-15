@@ -22,6 +22,7 @@
 #endregion
 
 using System.Reflection;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Protocol.Wire
@@ -32,9 +33,10 @@ namespace Catalyst.Protocol.Wire
 
         public bool IsValid()
         {
-            if (ProducerId == null)
+            var address = MultiAddress.TryCreate(ProducerId);
+            if (address==null || !address.HasPeerId)
             {
-                Logger.Debug("{field} cannot be null", nameof(ProducerId));
+                Logger.Debug("{field} is a invalid multi address with peerId", nameof(ProducerId));
                 return false;
             }
 

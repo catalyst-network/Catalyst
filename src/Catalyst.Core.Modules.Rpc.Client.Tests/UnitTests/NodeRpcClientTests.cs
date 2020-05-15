@@ -69,14 +69,13 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
             var mockEventStream = _mockSocketReplySubject.AsObservable();
             var observableChannel = new ObservableChannel(mockEventStream, mockChannel);
 
-            _channelFactory.BuildChannelAsync(_clientEventLoopGroupFactory, Arg.Any<IPAddress>(), Arg.Any<int>(),
+            _channelFactory.BuildChannelAsync(_clientEventLoopGroupFactory, Arg.Any<MultiAddress>(),
                 Arg.Any<X509Certificate2>()).Returns(observableChannel);
 
             _rpcClientConfig = Substitute.For<IRpcClientConfig>();
-            _rpcClientConfig.HostAddress = IPAddress.Any;
             _rpcClientConfig.NodeId = "0";
             _rpcClientConfig.PfxFileName = "pfx";
-            _rpcClientConfig.Port = 9000;
+            _rpcClientConfig.PeerId = new MultiAddress("/ip4/127.0.0.1/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdwu2yu3QMzKa2BDkb5C5pcuhtrH1G9HHbztbbxA8tGmf4");
         }
 
         private readonly ILogger _logger;

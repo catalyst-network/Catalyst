@@ -29,6 +29,7 @@ using Catalyst.Core.Lib.IO.Transport.Channels;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
+using MultiFormats;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -44,23 +45,21 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport.Channels
             };
 
             _eventLoopGroupFactory = new TcpServerEventLoopGroupFactory(eventLoopGroupFactoryConfiguration);
-            _ipAddress = IPAddress.Loopback;
-            _port = 9000;
+            _address = "/ip4/127.0.0.1/tcp/9000";
 
             _testTcServerChannelFactory = new TestTcpServerChannelFactory();
         }
 
         private readonly TestTcpServerChannelFactory _testTcServerChannelFactory;
         private readonly TcpServerEventLoopGroupFactory _eventLoopGroupFactory;
-        private readonly IPAddress _ipAddress;
-        private readonly int _port;
+        private readonly MultiAddress _address;
 
         [Test]
         public async Task Bootstrap_Should_Return_Channel()
         {
             var certificate = Substitute.For<X509Certificate2>();
             var channel =
-                await _testTcServerChannelFactory.BootstrapAsync(_eventLoopGroupFactory, _ipAddress, _port, certificate);
+                await _testTcServerChannelFactory.BootstrapAsync(_eventLoopGroupFactory, _address, certificate);
 
             channel.Should().BeAssignableTo<IChannel>();
         }
@@ -69,7 +68,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport.Channels
         public async Task BuildChannel_Should_Return_IObservableChannel()
         {
             var observableChannel =
-                await _testTcServerChannelFactory.BuildChannelAsync(_eventLoopGroupFactory, _ipAddress, _port).ConfigureAwait(false);
+                await _testTcServerChannelFactory.BuildChannelAsync(_eventLoopGroupFactory, _address).ConfigureAwait(false);
 
             observableChannel.Should().BeOfType<ObservableChannel>();
         }

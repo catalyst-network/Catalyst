@@ -49,7 +49,7 @@ namespace Catalyst.Simulator.Simulations
                .ConnectRetryAsync(clientRpcInfo.PeerId).ConfigureAwait(false);
             if (!isConnectionSuccessful)
             {
-                _userOutput.WriteLine($"Could not connect to node: {clientRpcInfo.PeerId.Ip}:{clientRpcInfo.PeerId.Port}");
+                //_userOutput.WriteLine($"Could not connect to node: {clientRpcInfo.PeerId.Ip}:{clientRpcInfo.PeerId.Port}");
                 return false;
             }
 

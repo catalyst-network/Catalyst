@@ -56,7 +56,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 
             _endOfTestCancellationSource = new CancellationTokenSource();
 
-            var poaNodeDetails = Enumerable.Range(0, 3).Select(i =>
+            var poaNodeDetails = Enumerable.Range(0, 2).Select(i =>
             {
                 var fileSystem = Substitute.For<IFileSystem>();
                 var path = Path.Combine(FileSystem.GetCatalystDataDir().FullName, $"producer{i}");
@@ -80,9 +80,9 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             _nodes.AsParallel()
                .ForAll(n =>
                 {
-                    n.PeerActive += (peerAddress, peerId) =>
+                    n.PeerActive += (peerAddress) =>
                     {
-                        _nodes.ForEach(node => node.RegisterPeerAddress(peerAddress, peerId));
+                        _nodes.ForEach(node => node.RegisterPeerAddress(peerAddress));
                     };
 
                     n?.RunAsync(_endOfTestCancellationSource.Token);

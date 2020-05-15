@@ -52,8 +52,6 @@ namespace Catalyst.TestUtils
                 "seed4.catalystnetwork.io",
                 "seed5.catalystnetwork.io"
             });
-            //todo
-            //peerSettings.PeerId.Returns(finalPublicKey.BuildPeerIdFromPublicKey(IPAddress.Loopback, port));
 
             peerSettings.PeerId.Returns(peerId);
             return peerSettings;

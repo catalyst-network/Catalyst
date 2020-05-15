@@ -76,7 +76,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
             _peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
             _peerSettings.Port.Returns(1234);
 
-            _udpServerServerChannelFactory.BuildChannelAsync(Arg.Any<IEventLoopGroupFactory>(), _peerSettings.BindAddress, _peerSettings.Port)
+            _udpServerServerChannelFactory.BuildChannelAsync(Arg.Any<IEventLoopGroupFactory>(), _peerSettings.PeerId)
                .Returns(_serverChannel);
 
             _peerDiscovery = Substitute.For<IPeerDiscovery>();

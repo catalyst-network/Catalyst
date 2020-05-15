@@ -31,6 +31,7 @@ using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Transport;
 using Catalyst.Protocol.Wire;
 using Serilog;
@@ -62,7 +63,7 @@ namespace Catalyst.Core.Lib.P2P
 
         public override async Task StartAsync()
         {
-            var observableChannel = await ChannelFactory.BuildChannelAsync(EventLoopGroupFactory, _peerSettings.BindAddress, _peerSettings.Port).ConfigureAwait(false);
+            var observableChannel = await ChannelFactory.BuildChannelAsync(EventLoopGroupFactory, _peerSettings.PeerId).ConfigureAwait(false);
             Channel = observableChannel.Channel;
 
             MessageStream = observableChannel.MessageStream;

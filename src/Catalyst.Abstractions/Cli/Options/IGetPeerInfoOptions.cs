@@ -37,7 +37,7 @@ namespace Catalyst.Abstractions.Cli.Options
         /// Gets or sets the address.
         /// </summary>
         /// <value>
-        /// The ip address.
+        /// The multi address.
         /// </value>
         public string Address { get; set; }
     }
