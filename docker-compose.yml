@@ -1,0 +1,16 @@
+version: "3"
+
+services:
+  db:
+    image: mongo:3.2
+    ports:
+      - 27017
+  app:
+    image: catalyst
+    links:
+      - db
+    build: 
+        context: .
+        dockerfile: Dockerfile
+    ports:
+      - 5000:80
