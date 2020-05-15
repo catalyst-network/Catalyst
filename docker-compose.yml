@@ -16,6 +16,6 @@ services:
         dockerfile: Dockerfile
     depends_on:
       - db
-    entrypoint: /bin/bash
+    command: /bin/bash
     ports:
       - 5000:80
