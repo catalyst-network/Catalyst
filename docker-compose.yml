@@ -7,10 +7,13 @@ services:
       - 27017
   app:
     image: catalyst
+    stdin_open: true
+    tty: true
     links:
       - db
     build: 
         context: .
         dockerfile: Dockerfile
+    entrypoint: /bin/sh
     ports:
       - 5000:80
