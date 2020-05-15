@@ -21,26 +21,23 @@
 
 #endregion
 
-using System;
-using System.Collections.Generic;
 using System.Threading.Tasks;
+using Catalyst.UPnP.Tests.TestUtils;
+using FluentAssertions;
 using Mono.Nat;
 using NSubstitute;
-using NSubstitute.ReceivedExtensions;
 using NUnit.Framework;
 using Serilog;
-
 
 namespace Catalyst.Modules.UPnP.Tests.UnitTests
 {
     public class PortMapperTests
     {
-        private readonly INatUtilityProvider _natUtilityProvider = Substitute.For<INatUtilityProvider>();
-        private ILogger _logger;
+        private const int SecondsTimeout = 5;
+        private readonly ILogger _logger = Substitute.For<ILogger>();
         private Mapping _mappingA;
         private Mapping _mappingB;
         private Mapping _mappingC;
-
 
         [SetUp]
         public void Init()
@@ -50,72 +47,69 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             _mappingA = new Mapping(Mono.Nat.Protocol.Tcp, portA, portA);
             _mappingB = new Mapping(Mono.Nat.Protocol.Tcp, portB, portB);
             _mappingC = new Mapping(Mono.Nat.Protocol.Tcp, portB, portA);
-            _logger = Substitute.For<ILogger>();
         }
 
         [Test]
         public async Task PortMapper_Stops_Searching_After_Timeout()
         {
-            const int secondsTimeout = 5;
-            var portMapper = new PortMapper(_natUtilityProvider, _logger);
-            portMapper.AddPortMappings(new Mapping[]{}, secondsTimeout);
-            await Task.Delay(TimeSpan.FromSeconds(secondsTimeout + 1));
-            _natUtilityProvider.Received(1).StartDiscovery();
-            _natUtilityProvider.Received(1).StopDiscovery();
+            var natUtilityProvider = Substitute.For<INatUtilityProvider>();
+            var portMapper = new PortMapper(natUtilityProvider, _logger);
+            var outcome = await portMapper.MapPorts(new Mapping[]{}, SecondsTimeout);
+            outcome.Should().Be(PortMapperConstants.Result.Timeout);
+            natUtilityProvider.Received(1).StartDiscovery();
+            natUtilityProvider.Received(1).StopDiscovery();
+        }
+        
+        [Test]
+        public async Task PortMapper_Stops_Searching_After_Task_Finished()
+        {
+            var device = Substitute.For<INatDevice>();
+            var natUtilityProvider = new TestNatUtilityProvider(device);
+            var portMapper = new PortMapper(natUtilityProvider, _logger);
+            var outcome = await portMapper.MapPorts(new Mapping[]{}, SecondsTimeout);
+            outcome.Should().Be(PortMapperConstants.Result.TaskFinished);
         }
 
         [Test]
         public async Task Adds_Mapping_If_Mapping_Doesnt_Exist()
         {
-            var secondsTimeout = 5;
-            
             Mapping[] existingMappings = {_mappingA};
             Mapping[] attemptedMappings = {_mappingB};
             
-            var device = Substitute.For<INatDevice>();
-            device.GetAllMappingsAsync()
-                .Returns(Task.FromResult(existingMappings));
+            var device = TestUtils.GetTestDeviceWithExistingMappings(existingMappings);
             
             var portMapper = new PortMapper(new TestNatUtilityProvider(device), _logger);
             
-            await portMapper.AddPortMappings(attemptedMappings, secondsTimeout);
+            await portMapper.MapPorts(attemptedMappings, SecondsTimeout);
             await device.Received(1).CreatePortMapAsync(Arg.Is(attemptedMappings[0]));
         }
         
         [Test]
         public async Task Can_Add_Multiple_Mappings()
         {
-            var secondsTimeout = 5;
-            
             Mapping[] existingMappings = {};
             Mapping[] attemptedMappings = {_mappingA,_mappingB};
             
-            var device = Substitute.For<INatDevice>();
-            device.GetAllMappingsAsync()
-                .Returns(Task.FromResult(existingMappings));
-            device.CreatePortMapAsync(_mappingA)
-                .Returns(Task.FromResult(_mappingA));
+            var device = TestUtils.GetTestDeviceWithExistingMappings(existingMappings);
 
             var portMapper = new PortMapper(new TestNatUtilityProvider(device), _logger);
             
-            await portMapper.AddPortMappings(attemptedMappings, secondsTimeout);
-            await device.Received(2).CreatePortMapAsync(Arg.Any<Mapping>());
+            await portMapper.MapPorts(attemptedMappings, SecondsTimeout);
+            await device.Received(1).CreatePortMapAsync(_mappingA);
+            await device.Received(1).CreatePortMapAsync(_mappingB);
         }
         
         [Test]
         public async Task Does_Not_Add_Mapping_If_Mapping_Exists()
         {
-            var secondsTimeout = 5;
-            
+
             Mapping[] existingMappings = {_mappingA, _mappingB};
             Mapping[] attemptedMappings = {_mappingA};
-            var device = Substitute.For<INatDevice>();
-            device.GetAllMappingsAsync()
-                .Returns(Task.FromResult(existingMappings));
-            device.CreatePortMapAsync(default)
-                .Returns(Task.FromResult(_mappingA));
+            
+            var device = TestUtils.GetTestDeviceWithExistingMappings(existingMappings);
+            
             var portMapper = new PortMapper(new TestNatUtilityProvider(device), _logger);
-            await portMapper.AddPortMappings(attemptedMappings, secondsTimeout);
+            await portMapper.MapPorts(attemptedMappings, SecondsTimeout);
 
             await device.Received(0).CreatePortMapAsync(Arg.Is(attemptedMappings[0]));
         }
@@ -123,72 +117,59 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
         [Test]
         public async Task Does_Not_Add_Mapping_If_Mapping_Partially_Exists()
         {
-            var secondsTimeout = 5;
             Mapping[] existingMappings = {_mappingA};
             Mapping[] attemptedMappings = {_mappingC};  //mapping C has one port shared with mapping A
-            var device = Substitute.For<INatDevice>();
-            device.GetAllMappingsAsync()
-                .Returns(Task.FromResult(existingMappings));
+            
+            var device = TestUtils.GetTestDeviceWithExistingMappings(existingMappings);
+            
             var portMapper = new PortMapper(new TestNatUtilityProvider(device), _logger);
-            await portMapper.AddPortMappings(attemptedMappings, secondsTimeout);
+            await portMapper.MapPorts(attemptedMappings, SecondsTimeout);
 
             await device.Received(0).CreatePortMapAsync(Arg.Is(attemptedMappings[0]));
         }
         
         [Test]
+        public async Task If_Alternative_Mapping_Added_By_Device_It_Is_Subsequently_Deleted()
+        {
+            Mapping[] existingMappings = {};
+            Mapping[] attemptedMappings = {_mappingA};
+
+            var device = TestUtils.GetTestDeviceWithExistingMappings(existingMappings);
+            device.CreatePortMapAsync(_mappingA)
+                .Returns(Task.FromResult(_mappingB));
+
+            var portMapper = new PortMapper(new TestNatUtilityProvider(device), _logger);
+            
+            await portMapper.MapPorts(attemptedMappings, SecondsTimeout);
+            await device.Received(1).DeletePortMapAsync(_mappingB);
+        }
+        
+        [Test]
         public async Task Can_Remove_Mapped_Port_If_Mapping_Exists()
         {
-            var secondsTimeout = 5;
-            
             Mapping[] existingMappings = {_mappingA};
             Mapping[] mappingsToDelete = {_mappingA};
             
-            var device = Substitute.For<INatDevice>();
-            device.GetAllMappingsAsync()
-                .Returns(Task.FromResult(existingMappings));
+            var device = TestUtils.GetTestDeviceWithExistingMappings(existingMappings);
             
             var portMapper = new PortMapper(new TestNatUtilityProvider(device), _logger);
             
-            await portMapper.DeletePortMappings(mappingsToDelete, secondsTimeout);
-            await device.Received(1).DeletePortMapAsync(Arg.Is(mappingsToDelete[0]));
+            await portMapper.MapPorts(mappingsToDelete, SecondsTimeout, true);
+            await device.Received(1).DeletePortMapAsync(Arg.Is(_mappingA));
         }
         
         [Test]
         public async Task Does_Not_Attempt_Remove_Mapped_Port_If_Mapping_Doesnt_Exist()
         {
-            var secondsTimeout = 5;
-            
             Mapping[] existingMappings = {_mappingA};
             Mapping[] mappingsToDelete = {_mappingB};
             
-            var device = Substitute.For<INatDevice>();
-            device.GetAllMappingsAsync()
-                .Returns(Task.FromResult(existingMappings));
+            var device = TestUtils.GetTestDeviceWithExistingMappings(existingMappings);
             
             var portMapper = new PortMapper(new TestNatUtilityProvider(device), _logger);
             
-            await portMapper.DeletePortMappings(mappingsToDelete, secondsTimeout);
-            await device.Received(0).DeletePortMapAsync(Arg.Is(mappingsToDelete[0]));
+            await portMapper.MapPorts(mappingsToDelete, SecondsTimeout, true);
+            await device.Received(0).DeletePortMapAsync(Arg.Is(_mappingB));
         }
-
-
-        private class TestNatUtilityProvider : INatUtilityProvider
-        {
-            private readonly INatDevice _device;
-            public TestNatUtilityProvider(INatDevice device)
-            {
-                _device = device;
-            }
-            public event EventHandler<DeviceEventArgs> DeviceFound;
-            public void StartDiscovery()
-            {
-                DeviceFound?.Invoke(this, new DeviceEventArgs(_device));
-            }
-
-            public void StopDiscovery()
-            {
-            }
-        }
-        
     }
 }
