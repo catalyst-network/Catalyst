@@ -40,6 +40,8 @@ using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class KeyApiTest : FileSystemBasedTest
     {
         private IKeyStoreService _keyStoreService;
@@ -49,8 +51,8 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
         {
             Setup(TestContext.CurrentContext);
 
-            var dfsOptions = new DfsOptions(new BlockOptions(), new DiscoveryOptions(), new RepositoryOptions(FileSystem, Constants.DfsDataSubDir), Substitute.For<KeyChainOptions>(), Substitute.For<SwarmOptions>(), Substitute.For<IDnsClient>());
-            _keyStoreService = new KeyStoreService(dfsOptions);
+            var keyChain = Substitute.For<KeyChainOptions>();
+            _keyStoreService = new KeyStoreService(keyChain, new KeyFileStore(new RepositoryOptions(FileSystem, Constants.DfsDataSubDir)));
             _keyStoreService.SetPassphraseAsync(new SecureString()).Wait();
         }
 
@@ -154,7 +156,7 @@ Rw==
             Assert.AreEqual("jsipfs", key.Name);
             Assert.AreEqual("QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb", key.Id.ToString());
 
-            var pubKey = await _keyStoreService.GetPublicKeyAsync("jsipfs");
+            var pubKey = await _keyStoreService.GetIpfsPublicKeyAsync("jsipfs");
             Assert.AreEqual(spki, pubKey);
         }
 
@@ -309,7 +311,7 @@ MIIFDTA/BgkqhkiG9w0BBQ0wMjAaBgkqhkiG9w0BBQwwDQQILdGJynKmkrMCAWQw
 
                 var priv = await _keyStoreService.GetPrivateKeyAsync(name);
                 Assert.NotNull(priv);
-                var pub = await _keyStoreService.GetPublicKeyAsync(name);
+                var pub = await _keyStoreService.GetIpfsPublicKeyAsync(name);
                 Assert.NotNull(pub);
 
                 // Verify key can be used as peer ID.

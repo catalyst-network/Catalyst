@@ -21,30 +21,14 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
-using System.Threading.Tasks;
 using Autofac;
-using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.FileSystem;
-using Catalyst.Abstractions.Hashing;
-using Catalyst.Abstractions.Ledger;
-using Catalyst.Abstractions.Options;
-using Catalyst.Abstractions.Sync.Interfaces;
-using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Core.Modules.Dfs.Extensions;
-using Catalyst.Core.Modules.Dfs.Tests.Utils;
-using Catalyst.Node.POA.CE.Tests.IntegrationTests;
-using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
-using Google.Protobuf;
-using Google.Protobuf.WellKnownTypes;
-using Nethermind.Core.Crypto;
 using NSubstitute;
 using NUnit.Framework;
 

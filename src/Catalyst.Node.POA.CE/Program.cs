@@ -27,7 +27,9 @@ using Catalyst.Abstractions;
 using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.DAO;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib;
 using Catalyst.Core.Lib.Cli;
@@ -52,12 +54,14 @@ using Catalyst.Modules.POA.P2P;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Network;
 using CommandLine;
+using Lib.P2P;
 using MultiFormats;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -198,7 +202,7 @@ namespace Catalyst.Node.POA.CE
                    .WithPersistenceConfiguration()
                    .BuildKernel(options.OverwriteConfig)
                    .WithPassword(PasswordRegistryTypes.DefaultNodePassword, options.NodePassword)
-                   .WithPassword(PasswordRegistryTypes.IpfsPassword, options.IpfsPassword)
+                   .WithPassword(PasswordRegistryTypes.DefaultNodePassword, options.IpfsPassword)
                    .WithPassword(PasswordRegistryTypes.CertificatePassword, options.SslCertPassword)
                    .Reset(options.Reset)
                    .StartCustomAsync(CustomBootLogicAsync);

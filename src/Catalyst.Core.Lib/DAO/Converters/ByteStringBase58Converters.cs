@@ -21,34 +21,26 @@
 
 #endregion
 
-using Catalyst.Protocol.Rpc.Node;
-using Catalyst.TestUtils;
-using FluentAssertions;
-using NUnit.Framework;
+using AutoMapper;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Util;
+using Google.Protobuf;
 
-namespace Catalyst.Cli.Tests.IntegrationTests.Commands
+namespace Catalyst.Core.Lib.DAO.Converters
 {
-    [TestFixture]
-    [Category(Traits.IntegrationTest)] 
-    public sealed class GetPeerInfoCommandTests : CliCommandTestsBase
+    public class ByteStringToBase58Converter : IValueConverter<ByteString, string>
     {
-        [SetUp]
-        public void Init()
+        public string Convert(ByteString sourceMember, ResolutionContext context)
         {
-            Setup(TestContext.CurrentContext);
+            return sourceMember.ToByteArray().KeyToString();
         }
+    }
 
-        [Test]
-        public void Cli_Can_Send_Get_Peer_Info_Request()
+    public class Base58ToByteStringFormatter : IValueConverter<string, ByteString>
+    {
+        public ByteString Convert(string sourceMember, ResolutionContext context)
         {
-            var publicKey = "fake_public_key";
-            var ipAddress = "127.0.0.1";
-
-            var result = Shell.ParseCommand("getpeerinfo", NodeArgumentPrefix, ServerNodeName, "-i", ipAddress, "-p",
-                publicKey);
-            result.Should().BeTrue();
-
-            AssertSentMessageAndGetMessageContent<GetPeerInfoRequest>();
+            return sourceMember.KeyToBytes().ToByteString();
         }
     }
 }

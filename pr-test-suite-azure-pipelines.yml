@@ -42,7 +42,7 @@ steps:
     inputs:
       version: 3.1.201
       failOnStandardError: 'true'
-
+      
   - script: |
       curl https://sh.rustup.rs -sSf | sh -s -- -y --default-toolchain nightly
       echo "##vso[task.setvariable variable=PATH;]$PATH:$HOME/.cargo/bin"
@@ -56,6 +56,16 @@ steps:
   - script: |
       rustup override set nightly
     displayName: rustup override set nightly  
+    
+  - script: |
+      sudo apt-get install libsnappy-dev
+    displayName: Install snappy
+    condition: eq( variables['Agent.OS'], 'Linux' )
+    
+  - script: |
+      brew install snappy
+    displayName: Install snappy
+    condition: eq( variables['Agent.OS'], 'Darwin' )
 
   - task: DotNetCoreCLI@2
     displayName: 'Build solution'
@@ -73,7 +83,7 @@ steps:
     inputs:
       command: test
       projects: 'src/*[Tt]ests/*.csproj'
-      arguments: '--filter TestType!=IntegrationTest --configuration $(BuildConfiguration)'
+      arguments: '--filter TestCategory!=IntegrationTest --configuration $(BuildConfiguration)'
       failOnStandardError: 'true'
     timeoutInMinutes: 20
     condition: ne( variables['Agent.OS'], 'Windows_NT' )
@@ -83,7 +93,7 @@ steps:
     inputs:
       command: test
       projects: 'src/*[Tt]ests/*.csproj'
-      arguments: '--filter TestType!=IntegrationTest --configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:UseSourceLink=true /p:Exclude="\"[Catalyst.Tools*]Catalyst.Tools*[Catalyst.Protocol*]Catalyst.Protocol*,[Catalyst.Simulator*]Catalyst.Simulator*,[Catalyst.TestUtils*]Catalyst.TestUtils*\"" /p:Include="\"[Catalyst.Core.*]Catalyst.Core.*,[Catalyst.Modules.*]Catalyst.Modules.*\"" /p:Threshold=0 /p:ThresholdType=line /p:ThresholdStat=total'
+      arguments: '--filter TestCategory!=IntegrationTest --configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:UseSourceLink=true /p:Exclude="\"[Catalyst.Tools*]Catalyst.Tools*[Catalyst.Protocol*]Catalyst.Protocol*,[Catalyst.Simulator*]Catalyst.Simulator*,[Catalyst.TestUtils*]Catalyst.TestUtils*\"" /p:Include="\"[Catalyst.Core.*]Catalyst.Core.*,[Catalyst.Modules.*]Catalyst.Modules.*\"" /p:Threshold=0 /p:ThresholdType=line /p:ThresholdStat=total'
       failOnStandardError: 'true'
     timeoutInMinutes: 20
     condition: eq( variables['Agent.OS'], 'Windows_NT' )
@@ -93,7 +103,7 @@ steps:
     inputs:
       command: test
       projects: 'src/*[Tt]ests/*.csproj'
-      arguments: '--filter TestType=IntegrationTest --configuration $(BuildConfiguration)'
+      arguments: '--filter TestCategory=IntegrationTest --configuration $(BuildConfiguration)'
       failOnStandardError: 'true'
     timeoutInMinutes: 20
 

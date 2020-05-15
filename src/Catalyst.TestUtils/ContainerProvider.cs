@@ -32,6 +32,8 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Core.Lib;
+using Catalyst.Core.Lib.Cryptography;
+using Catalyst.Core.Lib.FileSystem;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.Hashing;
@@ -39,6 +41,7 @@ using Catalyst.Core.Modules.KeySigner;
 using Catalyst.Core.Modules.Keystore;
 using DotNetty.Common.Internal.Logging;
 using Microsoft.Extensions.Configuration;
+using Nethermind.Db;
 using NUnit.Framework;
 using Serilog;
 using Serilog.Core;
@@ -54,7 +57,7 @@ namespace Catalyst.TestUtils
     {
         private readonly IEnumerable<string> _configFilesUsed;
         private readonly IFileSystem _fileSystem;
-        private readonly TestContext  _output;
+        private readonly TestContext _output;
         private IConfigurationRoot _configRoot;
         public ContainerBuilder ContainerBuilder { get; } = new ContainerBuilder();
         private IContainer _container;
@@ -123,6 +126,12 @@ namespace Catalyst.TestUtils
             ContainerBuilder.RegisterModule(new KeystoreModule());
             ContainerBuilder.RegisterModule(new KeySignerModule());
             ContainerBuilder.RegisterModule(new HashingModule());
+
+            ContainerBuilder.RegisterInstance(new MemDb()).As<IDb>().SingleInstance();
+            ContainerBuilder.RegisterInstance(new StateDb()).As<ISnapshotableDb>().SingleInstance();
+
+            var inMemoryStore = new InMemoryStore<string, EncryptedKey>();
+            ContainerBuilder.RegisterInstance(inMemoryStore).As<IStore<string, EncryptedKey>>().SingleInstance();
 
             ConfigureLogging(writeLogsToTestOutput, writeLogsToFile, logDotNettyTraffic);
         }

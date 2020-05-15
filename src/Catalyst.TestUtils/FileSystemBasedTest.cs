@@ -44,7 +44,7 @@ namespace Catalyst.TestUtils
     ///     A base test class that can be used to offer inheriting tests a folder on which
     ///     to create files, logs, etc.
     /// </summary>
-    [Property(Traits.TestType, Traits.IntegrationTest)]
+   
     public class FileSystemBasedTest : IDisposable
     {
         protected string CurrentTestName;

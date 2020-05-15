@@ -39,10 +39,14 @@ using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
-
+using Catalyst.Abstractions.Keystore;
+using Catalyst.Abstractions.Options;
+using Catalyst.Core.Lib.FileSystem;
 
 namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class KeySignerIntegrationTests : FileSystemBasedTest
     {
         [SetUp]
@@ -50,23 +54,22 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
         {
             this.Setup(TestContext.CurrentContext);
 
-            var logger = Substitute.For<ILogger>();
-
-            var passwordManager = Substitute.For<IPasswordManager>();
-
             var cryptoContext = new FfiWrapper();
 
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.NetworkType.Returns(NetworkType.Devnet);
 
-            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
-
-            var keystore = new LocalKeyStore(passwordManager, cryptoContext, FileSystem, hashProvider,
-                logger);
-
             var keyRegistry = new KeyRegistry();
 
-            _keySigner = new KeySigner(keystore, cryptoContext, keyRegistry);
+            var inMemoryStore = new InMemoryStore<string, EncryptedKey>();
+            var keyStoreService = new KeyStoreService(new KeyChainOptions { DefaultKeyType = "ed25519" }, inMemoryStore);
+            var keyApi = new KeyApi(keyStoreService);
+
+            var secureString = TestPasswordReader.BuildSecureStringPassword("password");
+            keyApi.SetPassphraseAsync(secureString).GetAwaiter().GetResult();
+            keyApi.CreateAsync("self", "ed25519", 0).GetAwaiter().GetResult();
+
+            _keySigner = new KeySigner(cryptoContext, keyApi, keyRegistry);
         }
 
         private IKeySigner _keySigner;
@@ -84,14 +87,12 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void KeySigner_Can_Sign_If_There_Is_No_Keystore_File()
         {
             _keySigner.Sign(Encoding.UTF8.GetBytes("sign this plz"), new SigningContext());
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void KeySigner_Can_Sign_If_There_Is_An_Existing_Keystore_File()
         {
             Ensure_A_KeyStore_File_Exists();
@@ -99,7 +100,6 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void KeySigner_Can_Verify_A_Signature()
         {
             var toSign = Encoding.UTF8.GetBytes("sign this plz");
@@ -109,7 +109,6 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void KeySigner_Cant_Verify_An_Incorrect_Signature()
         {
             var toSign = Encoding.UTF8.GetBytes("sign this plz");
@@ -124,7 +123,6 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void KeySigner_Can_Verify_A_Signature_With_Non_Default_Context()
         {
             var toSign = Encoding.UTF8.GetBytes("sign this plz");

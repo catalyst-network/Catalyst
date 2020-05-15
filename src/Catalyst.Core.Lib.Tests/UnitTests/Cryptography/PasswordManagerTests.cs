@@ -71,7 +71,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
         {
             _passwordReader.ReadSecurePassword().ReturnsForAnyArgs(_secureString);
 
-            var registryType = PasswordRegistryTypes.IpfsPassword;
+            var registryType = PasswordRegistryTypes.DefaultNodePassword;
             _passwordReader.ReadSecurePassword(Arg.Any<string>()).Returns((SecureString) null);
 
             var retrievedPassword = _passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(registryType);
@@ -112,7 +112,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
         [Test]
         public void RetrieveOrPromptPassword_When_Pass_Not_In_Registry_Should_Prompt_Password_From_Console()
         {
-            var registryType = PasswordRegistryTypes.IpfsPassword;
+            var registryType = PasswordRegistryTypes.DefaultNodePassword;
             
             _passwordRegistry.GetItemFromRegistry(
                 Arg.Is(registryType)).Returns((SecureString) null);

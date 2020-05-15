@@ -21,11 +21,14 @@
 
 #endregion
 
+using Catalyst.TestUtils;
 using FluentAssertions;
 using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class ConnectNodeTests : CliCommandTestsBase
     {
         [SetUp]

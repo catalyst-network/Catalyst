@@ -30,6 +30,8 @@ using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class PeerSettingsTests : FileSystemBasedTest
     {
         [SetUp]
@@ -39,7 +41,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void CanResolveIPeerSettings()
         {
             ContainerProvider.ConfigureContainerBuilder();

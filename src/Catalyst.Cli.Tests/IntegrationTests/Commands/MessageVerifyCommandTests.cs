@@ -22,11 +22,13 @@
 #endregion
 
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
+    [Category(Traits.IntegrationTest)] 
     public sealed class MessageVerifyCommandTests : CliCommandTestsBase
     {
         [SetUp]

@@ -60,6 +60,7 @@ using DnsClient;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
 using Catalyst.Core.Lib.P2P.Repository;
+using LibP2P = Lib.P2P;
 
 // ReSharper disable WrongIndentSize
 
@@ -73,6 +74,9 @@ namespace Catalyst.Core.Lib
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<LocalPeer>().As<LibP2P.Peer>()
+               .SingleInstance();
+
             // Register IO.EventLoop
             builder.RegisterType<UdpClientEventLoopGroupFactory>().As<IUdpClientEventLoopGroupFactory>()
                .SingleInstance();

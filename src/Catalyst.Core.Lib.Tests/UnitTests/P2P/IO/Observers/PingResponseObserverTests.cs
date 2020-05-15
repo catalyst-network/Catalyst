@@ -46,7 +46,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         public PingResponseObserverTests()
         {
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _observer = new PingResponseObserver(Substitute.For<IPeerChallengeRequest>(), Substitute.For<IPeerRepository>(), Substitute.For<ILogger>());
+            _observer = new PingResponseObserver(Substitute.For<IPeerChallengeRequest>(), Substitute.For<ILogger>());
         }
 
         [Test]

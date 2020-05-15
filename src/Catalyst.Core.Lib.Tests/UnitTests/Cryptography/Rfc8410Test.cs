@@ -44,11 +44,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
         [SetUp]
         public void Init()
         {
-            var dfsOptions = new DfsOptions(new BlockOptions(), new DiscoveryOptions(), new RepositoryOptions(FileSystem, Constants.DfsDataSubDir), Substitute.For<KeyChainOptions>(), Substitute.For<SwarmOptions>(), Substitute.For<IDnsClient>());
-            _keyStoreService = new KeyStoreService(dfsOptions)
-            {
-                Options = dfsOptions.KeyChain
-            };
+            var keyChain = Substitute.For<KeyChainOptions>();
+            _keyStoreService = new KeyStoreService(keyChain, new KeyFileStore(new RepositoryOptions(FileSystem, Constants.DfsDataSubDir)));
             var securePassword = new SecureString();
 
             "mypassword".ToList().ForEach(c => securePassword.AppendChar(c));

@@ -32,6 +32,7 @@ using Catalyst.Core.Lib;
 using Catalyst.Core.Lib.Cli;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.KeySigner;
 using Catalyst.Core.Modules.Keystore;
 using Catalyst.Core.Modules.Rpc.Client;
@@ -41,6 +42,8 @@ using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.IntegrationTests.Config
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class GlobalConfigTests : FileSystemBasedTest
     {
         public static readonly List<object[]> Networks =
@@ -54,7 +57,6 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Config
         }
 
         [TestCaseSource(nameof(Networks))]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public void Registering_All_Configs_Should_Allow_Resolving_ICatalystCli(NetworkType network)
         {
             var configFilesUsed = new[]
@@ -74,6 +76,7 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Config
                 containerBuilder.RegisterModule(new KeySignerModule());
                 containerBuilder.RegisterModule(new BulletProofsModule());
                 containerBuilder.RegisterModule(new RpcClientModule());
+                containerBuilder.RegisterModule(new DfsModule());
 
                 containerBuilder.RegisterType<ConsoleUserOutput>().As<IUserOutput>();
                 containerBuilder.RegisterType<CatalystCli>().As<ICatalystCli>();

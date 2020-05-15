@@ -45,7 +45,7 @@ namespace Catalyst.Core.Lib.IO.Handlers
             Logger.Verbose("Received {msg}", signedMessage);
             if (!Verify(signedMessage))
             {
-                // Logger.Warning("Failed to verify {msg} signature.", signedMessage);
+                Logger.Warning("Failed to verify {msg} signature.", signedMessage);
                 return;
             }
 
@@ -71,11 +71,14 @@ namespace Catalyst.Core.Lib.IO.Handlers
 
             var sig = signedMessage.Signature.RawBytes.ToByteArray();
             var pub = signedMessage.PeerId.PublicKey.ToByteArray();
+
             var signature = _keySigner.CryptoContext.GetSignatureFromBytes(sig, pub);
             var messageWithoutSig = signedMessage.Clone();
             messageWithoutSig.Signature = null;
 
-            return _keySigner.Verify(signature, messageWithoutSig, signedMessage.Signature.SigningContext);
+            var verified = _keySigner.Verify(signature, messageWithoutSig, signedMessage.Signature.SigningContext);
+
+            return verified;
         }
     }
 }

@@ -52,6 +52,8 @@ using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class SignMessageRequestObserverTests : FileSystemBasedTest
     {
         private TestScheduler _testScheduler;
@@ -92,7 +94,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         [TestCase("Hello Catalyst")]
         [TestCase("")]
         [TestCase("Hello&?!1253Catalyst")]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
+       
         public async Task RpcServer_Can_Handle_SignMessageRequest(string message)
         {
             var sender = PeerIdHelper.GetPeerId("sender");
@@ -107,7 +109,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
                 signMessageRequest.ToProtocolMessage(sender);
 
             await TaskHelper.WaitForAsync(
-                () => _keySigner.KeyStore.KeyStoreDecrypt(KeyRegistryTypes.DefaultKey) != null, 
+                () => _keySigner.GetPrivateKey(KeyRegistryTypes.DefaultKey) != null, 
                 TimeSpan.FromSeconds(2));
 
             var messageStream =

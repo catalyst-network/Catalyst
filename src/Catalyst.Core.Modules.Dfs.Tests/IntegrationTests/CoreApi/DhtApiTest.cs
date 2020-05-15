@@ -23,7 +23,7 @@
 
 using System.Linq;
 using Catalyst.Abstractions.Dfs;
-using Catalyst.Core.Modules.Dfs.Tests.Utils;
+using Catalyst.TestUtils;
 using Lib.P2P;
 using MultiFormats;
 using NUnit.Framework;

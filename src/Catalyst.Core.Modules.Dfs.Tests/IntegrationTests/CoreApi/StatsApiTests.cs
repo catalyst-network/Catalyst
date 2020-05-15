@@ -23,11 +23,13 @@
 
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
-using Catalyst.Core.Modules.Dfs.Tests.Utils;
+using Catalyst.TestUtils;
 using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class StatsApiTest
     {
         private readonly IDfsService _dfs;

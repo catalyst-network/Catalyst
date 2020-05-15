@@ -24,6 +24,7 @@
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using MultiFormats;
 using MultiFormats.Registry;
@@ -31,6 +32,8 @@ using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class GetDeltaCommandTests : CliCommandTestsBase
     {
         [SetUp]

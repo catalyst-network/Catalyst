@@ -21,34 +21,28 @@
 
 #endregion
 
-using Catalyst.Protocol.Rpc.Node;
-using Catalyst.TestUtils;
-using FluentAssertions;
-using NUnit.Framework;
+using Catalyst.Abstractions.Options;
+using Catalyst.Core.Lib.Cryptography;
+using Catalyst.Core.Lib.FileSystem;
+using MultiFormats;
+using System.IO;
+using System.Text;
 
-namespace Catalyst.Cli.Tests.IntegrationTests.Commands
+namespace Catalyst.Core.Modules.Keystore
 {
-    [TestFixture]
-    [Category(Traits.IntegrationTest)] 
-    public sealed class GetPeerInfoCommandTests : CliCommandTestsBase
+    public class KeyFileStore : FileStore<string, EncryptedKey>
     {
-        [SetUp]
-        public void Init()
+        public KeyFileStore(RepositoryOptions repositoryOptions)
         {
-            Setup(TestContext.CurrentContext);
-        }
+            var folder = Path.Combine(repositoryOptions.Folder, "keys");
+            if (!Directory.Exists(folder))
+            {
+                Directory.CreateDirectory(folder);
+            }
 
-        [Test]
-        public void Cli_Can_Send_Get_Peer_Info_Request()
-        {
-            var publicKey = "fake_public_key";
-            var ipAddress = "127.0.0.1";
-
-            var result = Shell.ParseCommand("getpeerinfo", NodeArgumentPrefix, ServerNodeName, "-i", ipAddress, "-p",
-                publicKey);
-            result.Should().BeTrue();
-
-            AssertSentMessageAndGetMessageContent<GetPeerInfoRequest>();
+            Folder = folder;
+            NameToKey = name => Encoding.UTF8.GetBytes(name).ToBase32();
+            KeyToName = key => Encoding.UTF8.GetString(Base32.Decode(key));
         }
     }
 }

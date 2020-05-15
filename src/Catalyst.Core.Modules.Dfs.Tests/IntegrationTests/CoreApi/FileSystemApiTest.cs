@@ -31,8 +31,8 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Options;
-using Catalyst.Core.Modules.Dfs.Tests.Utils;
 using Catalyst.Core.Modules.Dfs.UnixFs;
+using Catalyst.TestUtils;
 using FluentAssertions;
 using ICSharpCode.SharpZipLib.Tar;
 using Lib.P2P;
@@ -49,7 +49,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         [SetUp]
         public void Init()
         {
-            ipfs = TestDfs.GetTestDfs(null, "sha2-256");
+            ipfs = TestDfs.GetTestDfs(null, "sha2-256", "rsa");
         }
         
         [Test]
@@ -610,6 +610,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         }
 
         [Test]
+        [Ignore("To be fixed in issue #1241")]
         public async Task AddFile_WithProgress()
         {
             var path = Path.GetTempFileName();

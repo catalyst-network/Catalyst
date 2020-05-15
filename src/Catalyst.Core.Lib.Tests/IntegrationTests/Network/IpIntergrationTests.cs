@@ -34,32 +34,34 @@ using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Network
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class IpIntegrationTests
     {
+        //todo issue: https://github.com/catalyst-network/Catalyst/issues/1234
+        //[Test]
+        //[Property(Traits.TestType, Traits.IntegrationTest)]
+        //public async Task GetPublicIp_should_not_wait_for_longest_response()
+        //{
+        //    var delayedObservable = Ip.DefaultIpEchoUrls
+        //       .Select((o, i) =>
+        //        {
+        //            return i != 2
+        //                ? Observable.Timer(TimeSpan.FromSeconds(5)).Select(_ => o)
+        //                : Observable.Return(o);
+        //        }).Merge();
+
+        //    var stopWatch = new Stopwatch();
+
+        //    stopWatch.Start();
+        //    var myIp = await Ip.GetPublicIpAsync(delayedObservable);
+        //    stopWatch.Stop();
+
+        //    myIp.Should().NotBe(default(IPAddress));
+        //    stopWatch.Elapsed.Should().BeLessThan(TimeSpan.FromSeconds(3));
+        //}
+
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
-        public async Task GetPublicIp_should_not_wait_for_longest_response()
-        {
-            var delayedObservable = Ip.DefaultIpEchoUrls
-               .Select((o, i) =>
-                {
-                    return i != 2
-                        ? Observable.Timer(TimeSpan.FromSeconds(5)).Select(_ => o)
-                        : Observable.Return(o);
-                }).Merge();
-
-            var stopWatch = new Stopwatch();
-
-            stopWatch.Start();
-            var myIp = await Ip.GetPublicIpAsync(delayedObservable);
-            stopWatch.Stop();
-
-            myIp.Should().NotBe(default(IPAddress));
-            stopWatch.Elapsed.Should().BeLessThan(TimeSpan.FromSeconds(3));
-        }
-
-        [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public async Task GetPublicIp_should_tolerate_echo_failure()
         {
             var echoUrlWithFailure = new[] {"https://this.will.fail.for.sure"}
@@ -69,7 +71,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Network
         }
 
         [Test]
-        [Property(Traits.TestType, Traits.IntegrationTest)]
         public async Task GetPublicIp_should_usually_return_a_valid_ip()
         {
             var myIp = await Ip.GetPublicIpAsync();

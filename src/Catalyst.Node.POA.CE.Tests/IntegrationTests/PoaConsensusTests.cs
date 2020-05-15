@@ -32,19 +32,19 @@ using Autofac;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Core.Modules.Consensus.Cycle;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Core.Modules.Dfs.Tests.Utils;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
-
+using Org.BouncyCastle.Crypto.Parameters;
 
 namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public sealed class PoaConsensusTests : FileSystemBasedTest
     {
         private CancellationTokenSource _endOfTestCancellationSource;
-        private ILifetimeScope _scope;
         private List<PoaTestNode> _nodes;
 
         [SetUp]
@@ -53,7 +53,6 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             this.Setup(TestContext.CurrentContext);
 
             ContainerProvider.ConfigureContainerBuilder(true, true, true);
-            _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);
 
             var context = new FfiWrapper();
 
@@ -65,12 +64,16 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
                 var path = Path.Combine(FileSystem.GetCatalystDataDir().FullName, $"producer{i}");
                 fileSystem.GetCatalystDataDir().Returns(new DirectoryInfo(path));
 
-                var privateKey = context.GeneratePrivateKey();
+                var dfs = TestDfs.GetTestDfs(fileSystem);
+
+                var privateKeyParameters = ((Ed25519PrivateKeyParameters) dfs.KeyApi.GetPrivateKeyAsync("self").GetAwaiter().GetResult());
+                var privateKey = context.GetPrivateKeyFromBytes(privateKeyParameters.GetEncoded());
                 var publicKey = privateKey.GetPublicKey();
+
                 var nodeSettings = PeerSettingsHelper.TestPeerSettings(publicKey.Bytes, 2000 + i);
                 var peerIdentifier = nodeSettings.PeerId;
                 var name = $"producer{i.ToString()}";
-                var dfs = TestDfs.GetTestDfs(fileSystem);
+
                 return new { index = i, name, privateKey, nodeSettings, peerIdentifier, dfs, fileSystem };
             }
             ).ToList();
@@ -93,6 +96,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
         }
 
         [Test]
+        [Ignore("To be fixed in issue #1241")]
         public async Task Run_ConsensusAsync()
         {
             _nodes.AsParallel()
@@ -128,16 +132,6 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
         protected override void Dispose(bool disposing)
         {
             base.Dispose(disposing);
-            if (!disposing) return;
-
-            if (_endOfTestCancellationSource.Token.IsCancellationRequested
-             && _endOfTestCancellationSource.Token.CanBeCanceled)
-                _endOfTestCancellationSource.Cancel();
-
-            _endOfTestCancellationSource.Dispose();
-            _nodes.AsParallel().ForAll(n => n.Dispose());
-
-            _scope.Dispose();
         }
     }
 }
