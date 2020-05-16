@@ -43,6 +43,7 @@ using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
 using Catalyst.Core.Lib.P2P.Protocols;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.KeySigner;
 using Catalyst.Core.Modules.Keystore;
@@ -79,6 +80,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             ContainerProvider.ContainerBuilder.RegisterModule(new KeySignerModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new HashingModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new BulletProofsModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new DfsModule());
 
             ContainerProvider.ContainerBuilder.RegisterType<ConsoleUserOutput>().As<IUserOutput>();
             ContainerProvider.ContainerBuilder.RegisterType<ConsoleUserInput>().As<IUserInput>();

@@ -49,6 +49,7 @@ using NSubstitute;
 using Serilog;
 using NUnit.Framework;
 using Google.Protobuf;
+using Catalyst.Core.Modules.Dfs;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 {
@@ -81,6 +82,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             ContainerProvider.ContainerBuilder.RegisterModule(new KeySignerModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new BulletProofsModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new HashingModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new DfsModule());
             ContainerProvider.ConfigureContainerBuilder();
 
             _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);

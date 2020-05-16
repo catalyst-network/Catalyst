@@ -37,6 +37,8 @@ using NUnit.Framework;
 using NSubstitute;
 using Lib.P2P;
 using Catalyst.Abstractions.Dfs.CoreApi;
+using Newtonsoft.Json.Linq;
+using MultiFormats;
 
 namespace Catalyst.Node.POA.CE.Tests.UnitTests.Config
 {
@@ -46,7 +48,7 @@ namespace Catalyst.Node.POA.CE.Tests.UnitTests.Config
 
         static NetworkConfigTests()
         {
-            NetworkFiles = new List<NetworkType> {NetworkType.Devnet, NetworkType.Mainnet, NetworkType.Testnet}
+            NetworkFiles = new List<NetworkType> { NetworkType.Devnet, NetworkType.Mainnet, NetworkType.Testnet }
                .Select(n => new[]
                 {
                     Path.Combine(Constants.ConfigSubFolder, Constants.NetworkConfigFile(n)) as object
@@ -77,11 +79,18 @@ namespace Catalyst.Node.POA.CE.Tests.UnitTests.Config
             containerBuilder.RegisterModule(configModule);
             containerBuilder.RegisterInstance(configRoot).As<IConfigurationRoot>();
 
+            var address = new MultiAddress("/ip4/192.168.0.181/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdwu2yu3QMzKa2BDkb5C5pcuhtrH1G9HHbztbbxA8tGmf4");
             var peer = new Peer
             {
-                PublicKey = "CAESLDAqMAUGAytlcAMhADyXIeZUUBKx3OiDdhDb5GGrDUPOhhzJWPf80Iqam3lr"
+                PublicKey = "CAESLDAqMAUGAytlcAMhADyXIeZUUBKx3OiDdhDb5GGrDUPOhhzJWPf80Iqam3lr",
+                Addresses = new[] { address },
+                Id = address.PeerId
             };
-            var peerSettings = new PeerSettings(configRoot, peer, Substitute.For<IConfigApi>());
+
+            var config = Substitute.For<IConfigApi>();
+            var swarm = JToken.FromObject(new List<string> { $"/ip4/0.0.0.0/tcp/4100" });
+            config.GetAsync("Addresses.Swarm").Returns(swarm);
+            var peerSettings = new PeerSettings(configRoot, peer, config);
 
             peerSettings.Should().NotBeNull();
             peerSettings.NetworkType.Should().NotBeNull();

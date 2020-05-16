@@ -122,7 +122,7 @@ namespace Catalyst.TestUtils
             ContainerBuilder.RegisterInstance(keyRegistry).As<IKeyRegistry>();
 
             //todo
-            ContainerBuilder.RegisterModule(new DfsModule());
+            //ContainerBuilder.RegisterModule(new DfsModule());
             ContainerBuilder.RegisterModule(new BulletProofsModule());
             ContainerBuilder.RegisterModule(new KeystoreModule());
             ContainerBuilder.RegisterModule(new KeySignerModule());

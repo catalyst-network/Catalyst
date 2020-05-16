@@ -209,11 +209,11 @@ namespace Catalyst.TestUtils
 
             await StartSocketsAsync().ConfigureAwait(false);
 
-            var peerCount = _dfsService.SwarmApi.PeersAsync().GetAwaiter().GetResult().Count();
-            while (peerCount < 1)
+            var peers = _dfsService.SwarmApi.PeersAsync().GetAwaiter().GetResult();
+            while (peers.Count() < 2)
             {
                 await Task.Delay(300, cancellationSourceToken);
-                peerCount = _dfsService.SwarmApi.PeersAsync().GetAwaiter().GetResult().Count();
+                peers = _dfsService.SwarmApi.PeersAsync().GetAwaiter().GetResult();
             }
 
             Consensus.StartProducing();
