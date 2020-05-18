@@ -69,6 +69,7 @@ namespace Catalyst.Core.Modules.Dfs
         private readonly DfsState _dfsState;
         private readonly IHashProvider _hashProvider;
         private ConcurrentBag<Func<Task>> _stopTasks = new ConcurrentBag<Func<Task>>();
+        private readonly IPeerRepository _peerRepository;
 
         public DfsService(
             Peer localPeer,
@@ -96,7 +97,8 @@ namespace Catalyst.Core.Modules.Dfs
             IHashProvider hashProvider,
             DfsOptions dfsOptions,
             DfsState dfsState,
-            IMigrationManager migrationManager)
+            IMigrationManager migrationManager,
+            IPeerRepository peerRepository)
         {
             LocalPeer = localPeer;
 
@@ -126,6 +128,8 @@ namespace Catalyst.Core.Modules.Dfs
             _hashProvider = hashProvider;
             _dfsState = dfsState;
             MigrationManager = migrationManager;
+
+            _peerRepository = peerRepository;
 
             InitAsync().Wait();
         }

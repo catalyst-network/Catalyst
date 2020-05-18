@@ -35,6 +35,7 @@ using Catalyst.Core.Lib;
 using Catalyst.Core.Lib.Cli;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Kernel;
+using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Modules.Authentication;
 using Catalyst.Core.Modules.Consensus;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
@@ -56,6 +57,8 @@ using Catalyst.Protocol.Network;
 using CommandLine;
 using Lib.P2P;
 using MultiFormats;
+using SharpRepository.MongoDbRepository;
+using SharpRepository.Repository;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -123,7 +126,6 @@ namespace Catalyst.Node.POA.CE
                 {typeof(LedgerModule), () => new LedgerModule()},
                 {typeof(HashingModule), () => new HashingModule()},
                 {typeof(DiscoveryHastingModule), () => new DiscoveryHastingModule()},
-                //{typeof(RpcServerModule), () => new RpcServerModule()},
                 {typeof(BulletProofsModule), () => new BulletProofsModule()},
                 {typeof(KeystoreModule), () => new KeystoreModule()},
                 {typeof(KeySignerModule), () => new KeySignerModule()},
@@ -145,6 +147,8 @@ namespace Catalyst.Node.POA.CE
             containerBuilder.RegisterType<CatalystNodePoa>().As<ICatalystNode>();
             containerBuilder.RegisterType<ConsoleUserOutput>().As<IUserOutput>();
             containerBuilder.RegisterType<ConsoleUserInput>().As<IUserInput>();
+
+            //containerBuilder.RegisterType<MongoDbRepository<Core.Lib.P2P.Models.Peer, string>>().As<IRepository<Core.Lib.P2P.Models.Peer, string>>().SingleInstance();
 
             // message handlers
             containerBuilder.RegisterAssemblyTypes(typeof(CoreLibProvider).Assembly)
