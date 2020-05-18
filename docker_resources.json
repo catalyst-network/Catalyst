@@ -1,0 +1,14 @@
+{
+    "080844BC-8AE0-44E8-8C1F-F3E75F781A9A": {
+        "readModels": {
+            "host": "mongodb://127.15.0.2:27017",
+            "database": "my_project_read_models",
+            "useSSL": false
+        },
+        "eventStore": {
+            "host": "mongodb://127.15.0.2:27017",
+            "database": "my_project_event_store",
+            "useSSL": false
+        }
+    }
+}
