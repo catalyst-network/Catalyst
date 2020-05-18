@@ -23,5 +23,6 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Catalyst.Modules.UPnP\Catalyst.Modules.UPnP.csproj" />
+        <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
     </ItemGroup>
 </Project>

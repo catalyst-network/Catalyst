@@ -22,11 +22,11 @@
 #endregion
 
 using System.Threading.Tasks;
+using Catalyst.TestUtils;
 using Catalyst.UPnP.Tests.TestUtils;
 using FluentAssertions;
 using Mono.Nat;
 using NSubstitute;
-using NSubstitute.Exceptions;
 using NUnit.Framework;
 using Serilog;
 
@@ -35,6 +35,8 @@ using Serilog;
 
 namespace Catalyst.Modules.UPnP.Tests.IntegrationTests
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)] 
     public class PortMapperTests
     {
         private ILogger _logger;
@@ -74,14 +76,5 @@ namespace Catalyst.Modules.UPnP.Tests.IntegrationTests
            
            device.GetAllMappingsAsync().Result.Should().HaveCount(0);
         }
-
-
-
-
-
-
-
-
-
     }
 }
