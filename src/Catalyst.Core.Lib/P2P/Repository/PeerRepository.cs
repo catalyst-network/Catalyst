@@ -66,7 +66,7 @@ namespace Catalyst.Core.Lib.P2P.Repository
 
         public IEnumerable<Peer> GetPeersByPeerId(MultiAddress address)
         {
-            return _repository.FindAll(m => m.PeerId == address);
+            return _repository.FindAll(m => m.PeerId.PeerId == address.PeerId);
         }
 
         public IEnumerable<Peer> TakeHighestReputationPeers(int page, int count)

@@ -148,15 +148,9 @@ namespace Catalyst.Node.POA.CE
             containerBuilder.RegisterType<ConsoleUserOutput>().As<IUserOutput>();
             containerBuilder.RegisterType<ConsoleUserInput>().As<IUserInput>();
 
-            //containerBuilder.RegisterType<MongoDbRepository<Core.Lib.P2P.Models.Peer, string>>().As<IRepository<Core.Lib.P2P.Models.Peer, string>>().SingleInstance();
-
             // message handlers
             containerBuilder.RegisterAssemblyTypes(typeof(CoreLibProvider).Assembly)
                .AssignableTo<IP2PMessageObserver>().As<IP2PMessageObserver>();
-
-            //containerBuilder.RegisterAssemblyTypes(typeof(RpcServerModule).Assembly)
-            //   .AssignableTo<IRpcRequestObserver>().As<IRpcRequestObserver>()
-            //   .PublicOnly();
 
             // DAO MapperInitialisers
             containerBuilder.RegisterAssemblyTypes(typeof(CoreLibProvider).Assembly)
