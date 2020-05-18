@@ -20,28 +20,20 @@
 */
 #endregion
 
-using System;
-using Catalyst.Modules.UPnP;
 using Mono.Nat;
+using NSubstitute;
 
-namespace Catalyst.UPnP.Tests.TestUtils
+namespace Catalyst.UPnP.Tests.Utils
 {
-    public class TestNatUtilityProvider : INatUtilityProvider
+    public static class Utils
     {
-        private readonly INatDevice _device;
-        public TestNatUtilityProvider(INatDevice device)
+        public static INatDevice GetTestDeviceWithExistingMappings(Mapping[] existingMappings)
         {
-            _device = device;
-        }
-        public event EventHandler<DeviceEventArgs> DeviceFound;
-        public void StartDiscovery()
-        {
-            DeviceFound?.Invoke(this, new DeviceEventArgs(_device));
-        }
-
-        public void StopDiscovery()
-        {
+            var device = Substitute.For<INatDevice>();
+            device.GetAllMappingsAsync().Returns(existingMappings);
+            device.CreatePortMapAsync(Arg.Any<Mapping>()).ReturnsForAnyArgs(x => x.Arg<Mapping>());
+            device.DeletePortMapAsync(Arg.Any<Mapping>()).ReturnsForAnyArgs(x => x.Arg<Mapping>());
+            return device;
         }
     }
-
 }

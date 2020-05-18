@@ -22,7 +22,7 @@
 #endregion
 
 using System.Threading.Tasks;
-using Catalyst.UPnP.Tests.TestUtils;
+using Catalyst.UPnP.Tests.Utils;
 using FluentAssertions;
 using Mono.Nat;
 using NSubstitute;
@@ -76,7 +76,7 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             Mapping[] existingMappings = {_mappingA};
             Mapping[] attemptedMappings = {_mappingB};
             
-            var device = TestUtils.GetTestDeviceWithExistingMappings(existingMappings);
+            var device = Utils.GetTestDeviceWithExistingMappings(existingMappings);
             
             var portMapper = new PortMapper(new TestNatUtilityProvider(device), _logger);
             
@@ -90,7 +90,7 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             Mapping[] existingMappings = {};
             Mapping[] attemptedMappings = {_mappingA,_mappingB};
             
-            var device = TestUtils.GetTestDeviceWithExistingMappings(existingMappings);
+            var device = Utils.GetTestDeviceWithExistingMappings(existingMappings);
 
             var portMapper = new PortMapper(new TestNatUtilityProvider(device), _logger);
             
@@ -106,7 +106,7 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             Mapping[] existingMappings = {_mappingA, _mappingB};
             Mapping[] attemptedMappings = {_mappingA};
             
-            var device = TestUtils.GetTestDeviceWithExistingMappings(existingMappings);
+            var device = Utils.GetTestDeviceWithExistingMappings(existingMappings);
             
             var portMapper = new PortMapper(new TestNatUtilityProvider(device), _logger);
             await portMapper.MapPorts(attemptedMappings, SecondsTimeout);
@@ -120,7 +120,7 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             Mapping[] existingMappings = {_mappingA};
             Mapping[] attemptedMappings = {_mappingC};  //mapping C has one port shared with mapping A
             
-            var device = TestUtils.GetTestDeviceWithExistingMappings(existingMappings);
+            var device = Utils.GetTestDeviceWithExistingMappings(existingMappings);
             
             var portMapper = new PortMapper(new TestNatUtilityProvider(device), _logger);
             await portMapper.MapPorts(attemptedMappings, SecondsTimeout);
@@ -134,7 +134,7 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             Mapping[] existingMappings = {};
             Mapping[] attemptedMappings = {_mappingA};
 
-            var device = TestUtils.GetTestDeviceWithExistingMappings(existingMappings);
+            var device = Utils.GetTestDeviceWithExistingMappings(existingMappings);
             device.CreatePortMapAsync(_mappingA)
                 .Returns(Task.FromResult(_mappingB));
 
@@ -150,7 +150,7 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             Mapping[] existingMappings = {_mappingA};
             Mapping[] mappingsToDelete = {_mappingA};
             
-            var device = TestUtils.GetTestDeviceWithExistingMappings(existingMappings);
+            var device = Utils.GetTestDeviceWithExistingMappings(existingMappings);
             
             var portMapper = new PortMapper(new TestNatUtilityProvider(device), _logger);
             
@@ -164,7 +164,7 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             Mapping[] existingMappings = {_mappingA};
             Mapping[] mappingsToDelete = {_mappingB};
             
-            var device = TestUtils.GetTestDeviceWithExistingMappings(existingMappings);
+            var device = Utils.GetTestDeviceWithExistingMappings(existingMappings);
             
             var portMapper = new PortMapper(new TestNatUtilityProvider(device), _logger);
             

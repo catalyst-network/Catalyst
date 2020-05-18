@@ -23,7 +23,7 @@
 
 using System.Threading.Tasks;
 using Catalyst.TestUtils;
-using Catalyst.UPnP.Tests.TestUtils;
+using Catalyst.UPnP.Tests.Utils;
 using FluentAssertions;
 using Mono.Nat;
 using NSubstitute;

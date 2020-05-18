@@ -35,8 +35,8 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             var json = @"{'CatalystNodeConfiguration': { 'Peer': {'Port': 42076},'Rpc': {'Port': 42066}}}";
             var mappings = PortMappingParser.ParseJson(PortMapperConstants.DefaultTcpProperty, PortMapperConstants.DefaultUdpProperty,
                 json);
-            mappings.Should().Contain(new Mapping(Protocol.Tcp, 42076, 42076));
-            mappings.Should().Contain(new Mapping(Protocol.Udp, 42066, 42066));
+            mappings.Should().Contain(new Mapping(Mono.Nat.Protocol.Tcp, 42076, 42076));
+            mappings.Should().Contain(new Mapping(Mono.Nat.Protocol.Udp, 42066, 42066));
         }
         
         [Test]
@@ -45,7 +45,7 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             var json = @"{'Peer': { 'Port': {'Port1': 42076}}}";
             var mappings = PortMappingParser.ParseJson("Peer.Port.Port1", PortMapperConstants.DefaultUdpProperty,
                 json);
-            mappings.Should().Contain(new Mapping(Protocol.Tcp, 42076, 42076));
+            mappings.Should().Contain(new Mapping(Mono.Nat.Protocol.Tcp, 42076, 42076));
         }
         
         [Test]
@@ -54,8 +54,8 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             var json = @"{'Peer': { 'Port': {'Port1': 42076, 'Port2': 27676}}}";
             var mappings = PortMappingParser.ParseJson("Peer.Port.Port1,Peer.Port.Port2", PortMapperConstants.DefaultUdpProperty,
                 json);
-            mappings.Should().Contain(new Mapping(Protocol.Tcp, 42076, 42076));
-            mappings.Should().Contain(new Mapping(Protocol.Tcp, 27676, 27676));
+            mappings.Should().Contain(new Mapping(Mono.Nat.Protocol.Tcp, 42076, 42076));
+            mappings.Should().Contain(new Mapping(Mono.Nat.Protocol.Tcp, 27676, 27676));
         }
         
         [Test]

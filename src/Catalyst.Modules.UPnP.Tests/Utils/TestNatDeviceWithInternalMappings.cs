@@ -27,7 +27,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Mono.Nat;
 
-namespace Catalyst.UPnP.Tests.TestUtils
+namespace Catalyst.UPnP.Tests.Utils
 {
     public class TestNatDeviceWithInternalMappings : INatDevice
     {
