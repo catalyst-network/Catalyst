@@ -61,7 +61,7 @@ namespace Catalyst.UPnP.Tests.TestUtils
             throw new NotImplementedException();
         }
 
-        public Task<Mapping> GetSpecificMappingAsync(Protocol protocol, int publicPort)
+        public Task<Mapping> GetSpecificMappingAsync(Mono.Nat.Protocol protocol, int publicPort)
         {
             throw new NotImplementedException();
         }
