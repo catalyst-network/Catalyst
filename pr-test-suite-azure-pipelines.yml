@@ -3,15 +3,15 @@ strategy:
     Windows-VS2019:
       imageName: 'vs2017-win2016'
       netcore_sdk: 3.1.201
-      rustup_toolchain: nightly
+      rustup_toolchain: nightly-2020-01-07
     Osx-Mojave:
       imageName: 'macos-10.14'
       netcore_sdk: 3.1.201
-      rustup_toolchain: nightly
+      rustup_toolchain: nightly-2020-01-07
     Ubuntu-1804:
       imageName: 'ubuntu-18.04'
       netcore_sdk: 3.1.201
-      rustup_toolchain: nightly
+      rustup_toolchain: nightly-2020-01-07
   maxParallel: 3
 
 variables:
