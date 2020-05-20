@@ -25,6 +25,7 @@ namespace Catalyst.Modules.UPnP
     public static class PortMapperConstants
     {
         public const string CouldNotCommunicateWithRouter = "Sorry, it wasn't possible to communicate with your router.";
+        public const string CouldNotCommunicateWithRouterException = "Sorry, it wasn't possible to communicate with your router, recieved error message: {0}";
         public const string NoExistingMapping = "There is no existing mapping for protocol = {0}, public port = {1}, private port = {2}.";
         public const string DeletedMapping =
             "Deleted the mapping for protocol = {0}, public port = {1}, private port = {2}.";

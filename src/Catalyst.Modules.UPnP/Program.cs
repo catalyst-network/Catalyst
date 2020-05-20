@@ -24,6 +24,7 @@ using System;
 using CommandLine;
 using System.Collections.Generic;
 using System.IO;
+using System.Threading;
 using System.Threading.Tasks;
 using Mono.Nat;
 using Newtonsoft.Json;
@@ -82,7 +83,7 @@ namespace Catalyst.Modules.UPnP
             
             var timeout = options.Timeout > 0 ? options.Timeout : PortMapperConstants.DefaultTimeout;
 
-            await portMapper.MapPorts(mappings.ToArray(), timeout, options.IsMappingDeletion);
+            await portMapper.MapPorts(mappings.ToArray(), new CancellationTokenSource(), timeout, options.IsMappingDeletion);
             return 0;
         }
 
@@ -102,15 +103,23 @@ namespace Catalyst.Modules.UPnP
         
         private static List<Mapping> ParseJsonWithLogging(string tcp, string udp, string json, ILogger logger)
         {
+            List<Mapping> mappings;
             try
-            {
-                return PortMappingParser.ParseJson(tcp, udp, json);
+            { 
+                mappings = PortMappingParser.ParseJson(tcp, udp, json);
             }
             catch(JsonReaderException)
             {
                 logger.Error("The file did not contain valid json");
                 return null;
             }
+            
+            if (mappings?.Count>0)
+            {
+                return mappings;
+            }
+            logger.Error("No information in the file matched the parameters supplied.");
+            return null;
         }
     }
 }

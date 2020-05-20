@@ -40,6 +40,13 @@ namespace Catalyst.Modules.UPnP
             _natUtilityProvider = natUtilityProvider;
             _logger = logger;
         }
+        
+        public Task<PortMapperConstants.Result> MapPorts(Mapping[] ports, CancellationTokenSource tokenSource,
+            int timeoutInSeconds = PortMapperConstants.DefaultTimeout, bool delete = false)
+        {
+            var remappingLogic = delete ? (Func<Mapping[], Mapping[], INatDevice, Task>)DeletePortMappingsIfExisting : AddMappingsIfNotPreExisting;
+            return PerformEventOnDeviceFound(timeoutInSeconds, tokenSource.Token, device => ReMapPorts(device, ports, tokenSource, remappingLogic));
+        }
 
         private async Task<PortMapperConstants.Result> PerformEventOnDeviceFound(int timeoutInSeconds, CancellationToken token, Action<INatDevice> onDeviceFound)
         {
@@ -75,15 +82,6 @@ namespace Catalyst.Modules.UPnP
             return PortMapperConstants.Result.Timeout;
         }
 
-        public Task<PortMapperConstants.Result> MapPorts(Mapping[] ports,
-            int timeoutInSeconds = PortMapperConstants.DefaultTimeout, bool delete = false)
-        {
-            var tokenSource = new CancellationTokenSource();
-            
-            var remappingLogic = delete ? (Func<Mapping[], Mapping[], INatDevice, Task>)DeletePortMappingsIfExisting : AddMappingsIfNotPreExisting;
-            return PerformEventOnDeviceFound(timeoutInSeconds, tokenSource.Token, device => ReMapPorts(device, ports, tokenSource, remappingLogic));
-        }
-        
         private async void ReMapPorts(INatDevice device, Mapping[] newMappings, CancellationTokenSource tokenSource, Func<Mapping[], Mapping[], INatDevice, Task> remappingLogic)
         {
             await _locker.WaitAsync();
@@ -92,9 +90,9 @@ namespace Catalyst.Modules.UPnP
                 var existingMappings = await device.GetAllMappingsAsync();
                 await remappingLogic(existingMappings, newMappings, device);
             }
-            catch
+            catch(Exception e)
             {
-                _logger.Information(PortMapperConstants.CouldNotCommunicateWithRouter);
+                _logger.Information(PortMapperConstants.CouldNotCommunicateWithRouterException, e.ToString());
             }
             finally
             {
