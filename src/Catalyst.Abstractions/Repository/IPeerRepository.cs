@@ -39,7 +39,7 @@ namespace Catalyst.Abstractions.P2P.Repository
         IEnumerable<Peer> GetActivePoaPeers();
         IEnumerable<Peer> GetRandomPeers(int count);
         IEnumerable<Peer> GetPeersByAddress(MultiAddress address);
-        IEnumerable<Peer> GetPeersByPublicKey(string publicKeyBase58);
+        IEnumerable<Peer> GetPoaPeersByPublicKey(string publicKeyBase58);
 
         void Add(Peer peer);
         void Add(IEnumerable<Peer> peer);

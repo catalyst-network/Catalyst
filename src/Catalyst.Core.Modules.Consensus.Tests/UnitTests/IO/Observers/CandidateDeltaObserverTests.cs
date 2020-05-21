@@ -70,7 +70,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _producerId = PeerIdHelper.GetPeerId("candidate delta producer");
 
             var peerRepository = Substitute.For<IPeerRepository>();
-            peerRepository.GetPeersByAddress(Arg.Any<MultiAddress>()).Returns(new List<Lib.P2P.Models.Peer> { new Lib.P2P.Models.Peer() });
+            peerRepository.GetPoaPeersByPublicKey(Arg.Any<string>()).Returns(new List<Lib.P2P.Models.Peer> { new Lib.P2P.Models.Peer() });
 
             var deltaIndexService = Substitute.For<IDeltaIndexService>();
             deltaIndexService.LatestDeltaIndex().Returns(new Lib.DAO.Ledger.DeltaIndexDao() { Cid = _prevHash, Height = 0 });

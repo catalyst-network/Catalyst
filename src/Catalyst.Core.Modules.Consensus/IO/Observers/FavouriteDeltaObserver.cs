@@ -80,7 +80,7 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
                 }
 
                 var multiAddress = new MultiAddress(messageDto.Payload.PeerId);
-                var messagePoaNode = _peerRepository.GetPeersByPublicKey(multiAddress.GetPublicKey()).FirstOrDefault();
+                var messagePoaNode = _peerRepository.GetPoaPeersByPublicKey(multiAddress.GetPublicKey()).FirstOrDefault();
                 if (messagePoaNode == null)
                 {
                     Logger.Error($"Message from IP address '{multiAddress.GetIpAddress()}' with public key '{multiAddress.GetPublicKey()}' is not found in producer node list.");

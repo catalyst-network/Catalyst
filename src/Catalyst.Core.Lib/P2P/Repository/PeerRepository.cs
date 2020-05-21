@@ -69,9 +69,9 @@ namespace Catalyst.Core.Lib.P2P.Repository
             return _repository.FindAll(m => m.Address == address);
         }
 
-        public IEnumerable<Peer> GetPeersByPublicKey(string publicKeyBase58)
+        public IEnumerable<Peer> GetPoaPeersByPublicKey(string publicKeyBase58)
         {
-            return _repository.FindAll(m => m.Address.GetPublicKey() == publicKeyBase58);
+            return _repository.FindAll(m => m.IsPoaNode && m.Address.GetPublicKey() == publicKeyBase58);
         }
 
         public IEnumerable<Peer> TakeHighestReputationPeers(int page, int count)
