@@ -43,7 +43,7 @@ namespace Catalyst.Core.Lib.P2P.Repository
         public Peer Get(string id) { return _repository.Get(id); }
 
         public Peer Get(PeerId id) {
-            return _repository.Find(x => x.PeerId.Equals(id)); 
+            return _repository.Find(x => x.Address.Equals(id)); 
         }
 
         public IEnumerable<Peer> GetAll() { return _repository.GetAll(); }
@@ -64,9 +64,14 @@ namespace Catalyst.Core.Lib.P2P.Repository
                .ToList();
         }
 
-        public IEnumerable<Peer> GetPeersByPeerId(MultiAddress address)
+        public IEnumerable<Peer> GetPeersByAddress(MultiAddress address)
         {
-            return _repository.FindAll(m => m.PeerId.PeerId == address.PeerId);
+            return _repository.FindAll(m => m.Address == address);
+        }
+
+        public IEnumerable<Peer> GetPeersByPublicKey(string publicKeyBase58)
+        {
+            return _repository.FindAll(m => m.Address.GetPublicKey() == publicKeyBase58);
         }
 
         public IEnumerable<Peer> TakeHighestReputationPeers(int page, int count)
@@ -82,10 +87,10 @@ namespace Catalyst.Core.Lib.P2P.Repository
 
         public void Update(Peer peer) { _repository.Update(peer); }
 
-        public uint DeletePeersByPeerId(MultiAddress address)
+        public uint DeletePeersByAddress(MultiAddress address)
         {
             var peerDeletedCount = 0u;
-            var peersToDelete = GetPeersByPeerId(address);
+            var peersToDelete = GetPeersByAddress(address);
 
             foreach (var peerToDelete in peersToDelete)
             {

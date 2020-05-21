@@ -80,13 +80,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var blacklistedPeers = Enumerable.Range(0, 5).Select(i => new Peer
             {
                 Reputation = 0,
-                PeerId = PeerIdHelper.GetPeerId($"blacklisted-{i}"),
+                Address = PeerIdHelper.GetPeerId($"blacklisted-{i}"),
                 BlackListed = true
             });
             var goodPeers = Enumerable.Range(0, 23).Select(i => new Peer
             {
                 Reputation = 125,
-                PeerId = PeerIdHelper.GetPeerId($"good-{i}")
+                Address = PeerIdHelper.GetPeerId($"good-{i}")
             });
 
             var fakePeers = blacklistedPeers.Concat(goodPeers).ToArray();

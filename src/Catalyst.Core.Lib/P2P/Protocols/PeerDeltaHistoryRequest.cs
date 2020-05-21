@@ -49,7 +49,7 @@ namespace Catalyst.Core.Lib.P2P.Protocols
             ILibP2PPeerClient peerClient,
             IPeerSettings peerSettings,
             ICancellationTokenProvider cancellationTokenProvider,
-            IScheduler observableScheduler = null) : base(logger, peerSettings.PeerId, cancellationTokenProvider, peerClient)
+            IScheduler observableScheduler = null) : base(logger, peerSettings.Address, cancellationTokenProvider, peerClient)
         {
             DeltaHistoryResponseMessageStreamer = new ReplaySubject<IPeerDeltaHistoryResponse>(1, observableScheduler ?? Scheduler.Default);
         }

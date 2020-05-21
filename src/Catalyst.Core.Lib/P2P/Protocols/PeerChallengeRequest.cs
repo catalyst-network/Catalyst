@@ -57,13 +57,13 @@ namespace Catalyst.Core.Lib.P2P.Protocols
             int ttl,
             IScheduler scheduler = null)
             : base(logger,
-                peerSettings.PeerId,
+                peerSettings.Address,
                 new CancellationTokenProvider(ttl),
                 peerClient)
         {
             var observableScheduler = scheduler ?? Scheduler.Default;
             ChallengeResponseMessageStreamer = new ReplaySubject<IPeerChallengeResponse>(1, observableScheduler);
-            _senderIdentifier = peerSettings.PeerId;
+            _senderIdentifier = peerSettings.Address;
             _logger = logger;
             _peerClient = peerClient;
             _ttl = ttl;

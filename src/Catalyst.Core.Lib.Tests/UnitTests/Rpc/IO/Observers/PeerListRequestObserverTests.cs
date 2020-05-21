@@ -87,7 +87,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 {
                     Reputation = 0,
                     LastSeen = DateTime.Now,
-                    PeerId = PeerIdHelper.GetPeerId(fakePeer)
+                    Address = PeerIdHelper.GetPeerId(fakePeer)
                 });
             });
 

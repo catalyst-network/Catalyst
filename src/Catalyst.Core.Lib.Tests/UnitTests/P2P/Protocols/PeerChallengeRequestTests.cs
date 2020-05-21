@@ -66,7 +66,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
             await _peerChallengeRequest.ChallengePeerAsync(recipientPeerId).ConfigureAwait(false);
             var expectedDto = Substitute.For<IMessageDto<ProtocolMessage>>();
             expectedDto.RecipientPeerIdentifier.Returns(recipientPeerId);
-            expectedDto.SenderPeerIdentifier.Returns(_testSettings.PeerId);
+            expectedDto.SenderPeerIdentifier.Returns(_testSettings.Address);
             _peerChallengeRequest.PeerClient.ReceivedWithAnyArgs(1).SendMessage(Arg.Is(expectedDto));
         }
         

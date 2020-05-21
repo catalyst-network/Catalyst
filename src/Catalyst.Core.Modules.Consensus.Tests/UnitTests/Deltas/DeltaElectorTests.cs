@@ -201,8 +201,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         {
             var favourite = DeltaHelper.GetFavouriteDelta(_hashProvider);
 
-            var peer = new Peer { Reputation = 100, PeerId = favourite.VoterId };
-            _reputationManager.PeerRepository.Add(new Peer { Reputation = 100, PeerId = favourite.VoterId });
+            var peer = new Peer { Reputation = 100, Address = favourite.VoterId };
+            _reputationManager.PeerRepository.Add(new Peer { Reputation = 100, Address = favourite.VoterId });
 
             var expectedReputation = peer.Reputation + ReputationEventType.VoterIsNotProducer.Amount;
 

@@ -85,7 +85,7 @@ namespace Catalyst.TestUtils
         public static IPeerSettings ToSubstitutedPeerSettings(this MultiAddress peerId)
         {
             var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.PeerId.Returns(peerId);
+            peerSettings.Address.Returns(peerId);
             peerSettings.BindAddress.Returns(IPAddress.Parse(peerId.GetIpAddress().ToString()));
             peerSettings.Port.Returns((int) peerId.GetPort());
             peerSettings.PublicKey.Returns(peerId.GetPublicKey());

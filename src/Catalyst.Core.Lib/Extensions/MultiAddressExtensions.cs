@@ -44,6 +44,11 @@ namespace Catalyst.Core.Lib.Extensions
             return address.PeerId.GetPublicKeyBytesFromPeerId().KeyToString();
         }
 
+        public static byte[] GetPublicKeyBytes(this MultiAddress address)
+        {
+            return address.PeerId.GetPublicKeyBytesFromPeerId();
+        }
+
         public static IPEndPoint GetIPEndPoint(this MultiAddress address)
         {
             return new IPEndPoint(address.GetIpAddress(), address.GetPort());

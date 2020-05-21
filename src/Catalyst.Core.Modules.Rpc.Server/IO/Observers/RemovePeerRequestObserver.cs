@@ -74,7 +74,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Debug("Received message of type RemovePeerRequest");
 
-            var peerDeletedCount = _peerRepository.DeletePeersByPeerId(removePeerRequest.PeerId);
+            var peerDeletedCount = _peerRepository.DeletePeersByAddress(removePeerRequest.PeerId);
 
             return new RemovePeerResponse
             {

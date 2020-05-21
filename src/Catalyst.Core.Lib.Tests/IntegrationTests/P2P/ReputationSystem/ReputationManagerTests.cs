@@ -56,7 +56,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
         {
             var subbedPeer = new Peer
             {
-                PeerId = pid,
+                Address = pid,
                 Reputation = initialRep
             };
             _reputationManager.PeerRepository.Add(subbedPeer);

@@ -58,7 +58,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.IntegrationTests
                     var privateKey = context.GeneratePrivateKey();
                     var publicKey = privateKey.GetPublicKey();
                     var nodeSettings = PeerSettingsHelper.TestPeerSettings(publicKey.Bytes, 2000 + i);
-                    var peerIdentifier = nodeSettings.PeerId;
+                    var peerIdentifier = nodeSettings.Address;
                     var name = $"producer{i.ToString()}";
                     var dfs = TestDfs.GetTestDfs(fileSystem);
                     return new { index = i, name, privateKey, nodeSettings, peerIdentifier, dfs, fileSystem };

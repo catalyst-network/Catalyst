@@ -57,7 +57,7 @@ namespace Catalyst.Core.Lib.P2P
 
         public override async Task StartAsync()
         {
-            var observableChannel = await ChannelFactory.BuildChannelAsync(EventLoopGroupFactory, _peerSettings.PeerId)
+            var observableChannel = await ChannelFactory.BuildChannelAsync(EventLoopGroupFactory, _peerSettings.Address)
                .ConfigureAwait(false);
 
             Channel = observableChannel.Channel;
@@ -65,7 +65,7 @@ namespace Catalyst.Core.Lib.P2P
 
         public void SendMessageToPeers(IMessage message, IEnumerable<MultiAddress> peers)
         {
-            var protocolMessage = message.ToProtocolMessage(_peerSettings.PeerId);
+            var protocolMessage = message.ToProtocolMessage(_peerSettings.Address);
             foreach (var peer in peers)
             {
                 SendMessage(new MessageDto(

@@ -62,7 +62,7 @@ namespace Catalyst.Core.Lib.P2P
 
         public void SendMessageToPeers(IMessage message, IEnumerable<MultiAddress> peers)
         {
-            var protocolMessage = message.ToProtocolMessage(_peerSettings.PeerId);
+            var protocolMessage = message.ToProtocolMessage(_peerSettings.Address);
             foreach (var peer in peers)
             {
                 SendMessage(new MessageDto(

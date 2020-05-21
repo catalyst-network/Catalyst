@@ -53,7 +53,7 @@ namespace Catalyst.TestUtils
                 "seed5.catalystnetwork.io"
             });
 
-            peerSettings.PeerId.Returns(peerId);
+            peerSettings.Address.Returns(peerId);
             return peerSettings;
         }
     }

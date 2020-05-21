@@ -79,10 +79,10 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
                     return;
                 }
 
-                var messagePoaNode = _peerRepository.GetPeersByPeerId(messageDto.Payload.PeerId).FirstOrDefault();
+                var multiAddress = new MultiAddress(messageDto.Payload.PeerId);
+                var messagePoaNode = _peerRepository.GetPeersByPublicKey(multiAddress.GetPublicKey()).FirstOrDefault();
                 if (messagePoaNode == null)
                 {
-                    var multiAddress = new MultiAddress(messageDto.Payload.PeerId);
                     Logger.Error($"Message from IP address '{multiAddress.GetIpAddress()}' with public key '{multiAddress.GetPublicKey()}' is not found in producer node list.");
                     return;
                 }

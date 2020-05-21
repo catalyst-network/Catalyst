@@ -56,7 +56,7 @@ namespace Catalyst.Core.Lib.P2P
         public IPAddress BindAddress { get; }
         public IList<string> SeedServers { get; }
         public IPEndPoint[] DnsServers { get; }
-        public MultiAddress PeerId { set; get; }
+        public MultiAddress Address { set; get; }
 
         public IEnumerable<MultiAddress> GetAddresses(MultiAddress address, Peer localPeer)
         {
@@ -135,7 +135,7 @@ namespace Catalyst.Core.Lib.P2P
                 addresses.AddRange(GetAddresses(a, localPeer));
             }
 
-            PeerId = addresses.First();
+            Address = addresses.First();
         }
 
         //public PeerSettings(IConfigurationRoot rootSection, Peer localPeer, IConfigApi configApi)

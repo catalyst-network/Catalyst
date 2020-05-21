@@ -72,11 +72,11 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Debug("received message of type GetPeerInfoRequest");
 
-            var peerInfo = _peerRepository.GetPeersByPeerId(getPeerInfoRequest.PeerId)
+            var peerInfo = _peerRepository.GetPeersByAddress(getPeerInfoRequest.PeerId)
                .Select(x =>
                     new PeerInfo
                     {
-                        PeerId = x.PeerId.ToString(),
+                        PeerId = x.Address.ToString(),
                         Reputation = x.Reputation,
                         IsBlacklisted = x.BlackListed,
                         IsUnreachable = x.IsAwolPeer,

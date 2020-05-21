@@ -53,7 +53,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
 
             var subbedPeerClient = Substitute.For<ILibP2PPeerClient>();
             _testSettings = PeerSettingsHelper.TestPeerSettings();
-            _recipientPeerId = _testSettings.PeerId;
+            _recipientPeerId = _testSettings.Address;
 
             _cancellationProvider = new CancellationTokenProvider(TimeSpan.FromSeconds(10));
 
@@ -71,7 +71,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
             await _peerQueryTipRequest.QueryPeerTipAsync(_recipientPeerId).ConfigureAwait(false);
             var expectedDto = Substitute.For<IMessageDto<ProtocolMessage>>();
             expectedDto.RecipientPeerIdentifier.Returns(_recipientPeerId);
-            expectedDto.SenderPeerIdentifier.Returns(_testSettings.PeerId);
+            expectedDto.SenderPeerIdentifier.Returns(_testSettings.Address);
             _peerQueryTipRequest.PeerClient.ReceivedWithAnyArgs(1).SendMessage(Arg.Is(expectedDto));
         }
 

@@ -166,7 +166,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
             {
                 _peers.Add(new Peer
                 {
-                    PeerId = PeerIdHelper.GetPeerId(i.ToString())
+                    Address = PeerIdHelper.GetPeerId(i.ToString())
                 });
             }
         }

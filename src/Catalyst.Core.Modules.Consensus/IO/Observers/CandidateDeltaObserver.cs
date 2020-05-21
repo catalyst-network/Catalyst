@@ -97,7 +97,7 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
                     return;
                 }
 
-                var messagePoaNode = _peerRepository.GetPeersByPeerId(messageDto.Payload.PeerId).FirstOrDefault();
+                var messagePoaNode = _peerRepository.GetPeersByPublicKey(multiAddress.GetPublicKey()).FirstOrDefault();
                 if (messagePoaNode == null)
                 {
                     Logger.Error($"Message from IP address '{multiAddress.GetIpAddress()}' with public key '{multiAddress.GetPublicKey()}' is not found in producer node list.");

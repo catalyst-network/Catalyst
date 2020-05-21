@@ -93,7 +93,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
             _discoveredPeerInCurrentWalk = 0;
 
             // build the initial step proposal for the walk, which is our node and seed nodes
-            _ownNode = peerSettings.PeerId;
+            _ownNode = peerSettings.Address;
 
             var neighbours = dns.GetSeedNodesFromDnsAsync(peerSettings.SeedServers)
                .ConfigureAwait(false)
@@ -486,7 +486,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
             {
                 Reputation = 0,
                 LastSeen = DateTime.UtcNow,
-                PeerId = neighbour.PeerId
+                Address = neighbour.PeerId
             });
 
             Interlocked.Add(ref _discoveredPeerInCurrentWalk, 1);

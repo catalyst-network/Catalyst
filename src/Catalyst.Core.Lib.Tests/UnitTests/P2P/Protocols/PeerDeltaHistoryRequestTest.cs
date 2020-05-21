@@ -74,7 +74,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
             await _peerDeltaHistoryRequest.DeltaHistoryAsync(recipientPeerId).ConfigureAwait(false);
             var expectedDto = Substitute.For<IMessageDto<ProtocolMessage>>();
             expectedDto.RecipientPeerIdentifier.Returns(recipientPeerId);
-            expectedDto.SenderPeerIdentifier.Returns(_testSettings.PeerId);
+            expectedDto.SenderPeerIdentifier.Returns(_testSettings.Address);
             _peerDeltaHistoryRequest.PeerClient.ReceivedWithAnyArgs(1).SendMessage(Arg.Is(expectedDto));
         }
 

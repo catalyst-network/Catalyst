@@ -79,7 +79,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
             {
                 var peer = new Peer
                 {
-                    PeerId = PeerIdHelper.GetPeerId(port: i)
+                    Address = PeerIdHelper.GetPeerId(port: i)
                 };
                 _peerRepository.Add(peer);
             }

@@ -64,7 +64,7 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
             ILogger logger)
         {
             _logger = logger;
-            _selfAsPeer = new Peer { PeerId = peerSettings.PeerId };
+            _selfAsPeer = new Peer { Address = peerSettings.Address };
             PeerRepository = peerRepository;
             _hashProvider = hashProvider;
             _cacheEntryOptions = new MemoryCacheEntryOptions()
@@ -95,15 +95,15 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
 
             var peerIdsInPriorityOrder = allPeers.Select(p =>
                 {
-                    var ranking = _hashProvider.ComputeMultiHash(p.PeerId, previous).ToArray();
+                    var ranking = _hashProvider.ComputeMultiHash(p.Address, previous).ToArray();
                     return new
                     {
-                        p.PeerId,
+                        p.Address,
                         ranking
                     };
                 })
                .OrderBy(h => h.ranking, ByteUtil.ByteListMinSizeComparer.Default)
-               .Select(h => h.PeerId)
+               .Select(h => h.Address)
                .ToList();
 
             _logger.Information("Adding favourite delta producers for the successor of {0} to cache.",

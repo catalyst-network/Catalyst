@@ -89,7 +89,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 {
                     Reputation = 0,
                     LastSeen = DateTime.Now,
-                    PeerId = PeerIdHelper.GetPeerId(i.ToString())
+                    Address = PeerIdHelper.GetPeerId(i.ToString())
                 });
             }
 

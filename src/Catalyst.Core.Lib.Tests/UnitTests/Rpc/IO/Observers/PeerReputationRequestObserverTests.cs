@@ -75,7 +75,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var knownPeers = Enumerable.Range(0, 5).Select(i => new Peer
             {
                 Reputation = i,
-                PeerId = PeerIdHelper.GetPeerId($"peer-{i}")
+                Address = PeerIdHelper.GetPeerId($"peer-{i}")
             });
 
             var fakePeers = knownPeers.ToArray();

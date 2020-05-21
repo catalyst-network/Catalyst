@@ -38,7 +38,7 @@ namespace Catalyst.Abstractions.P2P
         IList<string> SeedServers { get; }
         NetworkType NetworkType { get; }
         IPEndPoint[] DnsServers { get; }
-        MultiAddress PeerId { get; }
+        MultiAddress Address { get; }
     }
 }
 

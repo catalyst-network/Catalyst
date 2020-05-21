@@ -117,7 +117,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
             _peerSettings = Substitute.For<IPeerSettings>();
-            _peerSettings.PeerId.Returns(PeerIdHelper.GetPeerId());
+            _peerSettings.Address.Returns(PeerIdHelper.GetPeerId());
 
             _deltaDfsReader = Substitute.For<IDeltaDfsReader>();
             _deltaDfsReader.TryReadDeltaFromDfs(Arg.Any<Cid>(), out Arg.Any<Delta>()).Returns(x => true);
@@ -159,7 +159,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
             });
 
             _peerRepository = new PeerRepository(new InMemoryRepository<Peer, string>());
-            Enumerable.Repeat(new Peer { PeerId = PeerIdHelper.GetPeerId() }, 5).ToList().ForEach(_peerRepository.Add);
+            Enumerable.Repeat(new Peer { Address = PeerIdHelper.GetPeerId() }, 5).ToList().ForEach(_peerRepository.Add);
 
             _deltaHeightReplaySubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1);
             _deltaHistoryReplaySubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1);

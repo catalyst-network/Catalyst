@@ -97,9 +97,10 @@ namespace Catalyst.Core.Modules.Dfs
             IHashProvider hashProvider,
             DfsOptions dfsOptions,
             DfsState dfsState,
-            IMigrationManager migrationManager,
-            IPeerRepository peerRepository)
+            IMigrationManager migrationManager
+            )
         {
+            //IPeerRepository peerRepository
             LocalPeer = localPeer;
 
             BitSwapService = bitSwapService;
@@ -129,7 +130,7 @@ namespace Catalyst.Core.Modules.Dfs
             _dfsState = dfsState;
             MigrationManager = migrationManager;
 
-            _peerRepository = peerRepository;
+            //_peerRepository = peerRepository;
 
             InitAsync().Wait();
         }

@@ -60,13 +60,13 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
             var peerSettings = PeerIdHelper.GetPeerId("TEST").ToSubstitutedPeerSettings();
-            _selfAsPeer = new Peer { PeerId = peerSettings.PeerId };
+            _selfAsPeer = new Peer { Address = peerSettings.Address };
             var rand = new Random();
             _peers = Enumerable.Range(0, 5)
                .Select(_ =>
                 {
                     var peerIdentifier = PeerIdHelper.GetPeerId(rand.Next().ToString());
-                    var peer = new Peer { PeerId = peerIdentifier, LastSeen = DateTime.UtcNow };
+                    var peer = new Peer { Address = peerIdentifier, LastSeen = DateTime.UtcNow };
                     return peer;
                 }).ToList();
 
@@ -96,10 +96,10 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
 
             var expectedProducers = peers.Select(p =>
                 {
-                    var ranking = _hashProvider.ComputeMultiHash(p.PeerId, _previousDeltaHash.ToArray()).ToArray();
+                    var ranking = _hashProvider.ComputeMultiHash(p.Address, _previousDeltaHash.ToArray()).ToArray();
                     return new
                     {
-                        PeerIdentifier = p.PeerId,
+                        PeerIdentifier = p.Address,
                         ranking
                     };
                 })

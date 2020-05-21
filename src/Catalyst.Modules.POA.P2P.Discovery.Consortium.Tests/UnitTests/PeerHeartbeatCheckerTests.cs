@@ -54,7 +54,7 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
             _peerClient = Substitute.For<ILibP2PPeerClient>();
             _testPeer = new Peer
             {
-                PeerId = PeerIdHelper.GetPeerId("TestPeer")
+                Address = PeerIdHelper.GetPeerId("TestPeer")
             };
         }
 
@@ -96,7 +96,7 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
         private async Task RunHeartbeatChecker(bool sendResponse = false, int maxNonResponsiveCounter = 1)
         {
             var peers = new List<Peer> {_testPeer};
-            var peerSettings = _testPeer.PeerId.ToSubstitutedPeerSettings();
+            var peerSettings = _testPeer.Address.ToSubstitutedPeerSettings();
             var peerChallenger = new PeerChallengeRequest(
                 Substitute.For<ILogger>(),
                 _peerClient,
@@ -105,7 +105,7 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
 
             if (sendResponse)
             {
-                peerChallenger.ChallengeResponseMessageStreamer.OnNext(new PeerChallengeResponse(_testPeer.PeerId));
+                peerChallenger.ChallengeResponseMessageStreamer.OnNext(new PeerChallengeResponse(_testPeer.Address));
             }
 
             _peerRepository.GetAll().Returns(peers);

@@ -35,7 +35,7 @@ namespace Catalyst.Core.Modules.Sync.Extensions
     {
         public static void SendMessageToPeers(this ILibP2PPeerClient peerClient, IPeerSettings peerSettings, IMessage message, IEnumerable<MultiAddress> peers)
         {
-            var protocolMessage = message.ToProtocolMessage(peerSettings.PeerId);
+            var protocolMessage = message.ToProtocolMessage(peerSettings.Address);
             foreach (var peer in peers)
             {
                 peerClient.SendMessage(new MessageDto(

@@ -66,7 +66,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             ILogger logger)
         {
             _broadcastManager = broadcastManager;
-            _peerId = peerSettings.PeerId;
+            _peerId = peerSettings.Address;
             _dfsService = dfsService;
             _hashProvider = hashProvider;
             _logger = logger;

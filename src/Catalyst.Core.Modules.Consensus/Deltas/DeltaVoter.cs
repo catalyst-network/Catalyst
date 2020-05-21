@@ -76,7 +76,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         {
             _candidatesCache = candidatesCache;
             _deltaProducersProvider = deltaProducersProvider;
-            _localPeerIdentifier = peerSettings.PeerId;
+            _localPeerIdentifier = peerSettings.Address;
             _cacheEntryOptions = () => new MemoryCacheEntryOptions()
                .AddExpirationToken(
                     new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(3)).Token));

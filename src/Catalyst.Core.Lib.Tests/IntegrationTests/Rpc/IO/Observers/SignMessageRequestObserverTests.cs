@@ -101,7 +101,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         {
             var sender = PeerIdHelper.GetPeerId("sender");
             var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.PeerId.Returns(sender);
+            peerSettings.Address.Returns(sender);
             var signMessageRequest = new SignMessageRequest
             {
                 Message = message.ToUtf8ByteString(),

@@ -72,11 +72,11 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Information("received message of type PeerBlackListingRequest");
 
-            var peerItem = _peerRepository.GetAll().FirstOrDefault(m => m.PeerId == setPeerBlackListRequest.PeerId);
+            var peerItem = _peerRepository.GetAll().FirstOrDefault(m => m.Address == setPeerBlackListRequest.PeerId);
 
             return peerItem == null
                 ? ReturnResponse(false, string.Empty)
-                : ReturnResponse(setPeerBlackListRequest.Blacklist, peerItem.PeerId.ToString());
+                : ReturnResponse(setPeerBlackListRequest.Blacklist, peerItem.Address.ToString());
         }
 
         /// <summary>

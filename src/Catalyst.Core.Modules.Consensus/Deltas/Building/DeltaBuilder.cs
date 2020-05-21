@@ -62,7 +62,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
             _transactionRetriever = transactionRetriever;
             _randomFactory = randomFactory;
             _hashProvider = hashProvider;
-            _producerUniqueId = peerSettings.PeerId;
+            _producerUniqueId = peerSettings.Address;
             _deltaCache = deltaCache;
             _dateTimeProvider = dateTimeProvider;
             _stateProvider = stateProvider;

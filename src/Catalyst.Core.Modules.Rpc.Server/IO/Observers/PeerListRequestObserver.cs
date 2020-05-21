@@ -80,7 +80,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Debug("received message of type PeerListRequest");
 
-            var peers = _peerRepository.GetAll().Select(x => x.PeerId.ToString());
+            var peers = _peerRepository.GetAll().Select(x => x.Address.ToString());
 
             var response = new GetPeerListResponse();
             response.Peers.AddRange(peers);

@@ -64,7 +64,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
             var results = new List<Peer>();
             var subbedPeer = new Peer
             {
-                PeerId = pid
+                Address = pid
             };
             results.Add(subbedPeer);
             SetRepoReturnValue(results);
@@ -91,7 +91,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
             var results = new List<Peer>();
             var subbedPeer = new Peer
             {
-                PeerId = pid,
+                Address = pid,
                 Reputation = 100
             };
             results.Add(subbedPeer);
@@ -119,7 +119,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
             var results = new List<Peer>();
             var subbedPeer = new Peer
             {
-                PeerId = pid,
+                Address = pid,
                 Reputation = 100
             };
             results.Add(subbedPeer);
@@ -146,7 +146,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
 
             var subbedPeer1 = new Peer
             {
-                PeerId = pid1,
+                Address = pid1,
                 Reputation = 100
             };
 
@@ -155,7 +155,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
 
             var subbedPeer2 = new Peer
             {
-                PeerId = pid2,
+                Address = pid2,
                 Reputation = 200
             };
 

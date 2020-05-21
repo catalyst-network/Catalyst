@@ -38,7 +38,8 @@ namespace Catalyst.Abstractions.P2P.Repository
         IEnumerable<Peer> GetActivePeers(int count);
         IEnumerable<Peer> GetActivePoaPeers();
         IEnumerable<Peer> GetRandomPeers(int count);
-        IEnumerable<Peer> GetPeersByPeerId(MultiAddress address);
+        IEnumerable<Peer> GetPeersByAddress(MultiAddress address);
+        IEnumerable<Peer> GetPeersByPublicKey(string publicKeyBase58);
 
         void Add(Peer peer);
         void Add(IEnumerable<Peer> peer);
@@ -50,7 +51,7 @@ namespace Catalyst.Abstractions.P2P.Repository
         void Delete(Peer peer);
         void Delete(string id);
 
-        uint DeletePeersByPeerId(MultiAddress address);
+        uint DeletePeersByAddress(MultiAddress address);
 
         bool Exists(string id);
 

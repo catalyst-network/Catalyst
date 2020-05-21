@@ -68,7 +68,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _producerId = PeerIdHelper.GetPeerId("candidate delta producer");
 
             var peerRepository = Substitute.For<IPeerRepository>();
-            peerRepository.GetPeersByPeerId(Arg.Any<MultiAddress>()).Returns(new List<Peer> { new Peer() });
+            peerRepository.GetPeersByAddress(Arg.Any<MultiAddress>()).Returns(new List<Peer> { new Peer() });
 
             _favouriteDeltaObserver = new FavouriteDeltaObserver(_deltaElector, new SyncState() { IsSynchronized = true }, peerRepository, hashProvider, logger);
             _newHash = MultiBase.Decode(hashProvider.ComputeUtf8MultiHash("newHash").ToCid());

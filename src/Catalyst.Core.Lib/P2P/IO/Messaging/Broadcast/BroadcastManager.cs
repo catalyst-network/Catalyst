@@ -99,7 +99,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
             ILogger logger)
         {
             _logger = logger;
-            _peerId = peerSettings.PeerId;
+            _peerId = peerSettings.Address;
             _pendingRequests = memoryCache;
             _peers = peers;
             _signingContext = new SigningContext
@@ -227,7 +227,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
         /// <returns></returns>
         private List<MultiAddress> GetRandomPeers(int count)
         {
-            return _peers.GetRandomPeers(count).Select(p => p.PeerId).ToList();
+            return _peers.GetRandomPeers(count).Select(p => p.Address).ToList();
         }
 
         /// <summary>Determines whether this instance can gossip the specified correlation identifier.</summary>

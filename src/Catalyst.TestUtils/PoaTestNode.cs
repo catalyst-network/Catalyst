@@ -205,7 +205,7 @@ namespace Catalyst.TestUtils
 
             await _dfsService.StartAsync().ConfigureAwait(false);
 
-            PeerActive(peerSettings.PeerId);
+            PeerActive(peerSettings.Address);
 
             await StartSocketsAsync().ConfigureAwait(false);
 
@@ -230,7 +230,7 @@ namespace Catalyst.TestUtils
             {
                 _peerRepository.Add(new Peer
                 {
-                    PeerId = multiAddress,
+                    Address = multiAddress,
                     IsPoaNode = true,
                     LastSeen = DateTime.UtcNow
                 });
@@ -263,14 +263,6 @@ namespace Catalyst.TestUtils
             _containerProvider.ContainerBuilder.RegisterType<TestFileSystem>().As<IFileSystem>()
                .WithParameter("rootPath", _nodeDirectory.FullName);
             _containerProvider.ContainerBuilder.RegisterInstance(Substitute.For<IPeerDiscovery>()).As<IPeerDiscovery>();
-
-            //_containerProvider.ContainerBuilder.RegisterBuildCallback(container =>
-            //{
-            //    var peer = container.Resolve<Lib.P2P.Peer>();
-            //    var publicKey = peer.Id.Digest.GetPublicKeyBytesFromPeerId();
-            //    var nodeSettings = PeerSettingsHelper.TestPeerSettings(publicKey, 2000 + NodeNumber);
-            //    _containerProvider.ContainerBuilder.RegisterInstance(nodeSettings).As<IPeerSettings>().SingleInstance();
-            //});
 
             var config = Substitute.For<IConfigApi>();
             var swarm = JToken.FromObject(new List<string> { $"/ip4/0.0.0.0/tcp/410{NodeNumber}" });

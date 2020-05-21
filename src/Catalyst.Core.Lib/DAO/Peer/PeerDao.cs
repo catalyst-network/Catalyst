@@ -67,7 +67,7 @@ namespace Catalyst.Core.Lib.DAO.Peer
                .ForMember(e => e.Created, opt => opt.UseDestinationValue())
                .ForMember(e => e.Modified, opt => opt.UseDestinationValue())
                .ForMember(e => e.LastSeen, opt => opt.UseDestinationValue())
-               .ForMember(e => e.PeerId, opt => opt.UseDestinationValue());
+               .ForMember(e => e.Address, opt => opt.UseDestinationValue());
         }
     }
 }

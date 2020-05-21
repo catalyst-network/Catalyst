@@ -107,7 +107,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
                         using (var fileTransferInformation = new UploadFileTransferInformation(
                             stream,
                             senderPeerId,
-                            PeerSettings.PeerId,
+                            PeerSettings.Address,
                             channelHandlerContext.Channel,
                             correlationId
                         ))

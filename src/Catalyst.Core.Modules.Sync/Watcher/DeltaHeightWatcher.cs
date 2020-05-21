@@ -129,7 +129,7 @@ namespace Catalyst.Core.Modules.Sync.Watcher
             var totalPages = GetPageCount();
             _page %= totalPages;
             _page++;
-            var peers = DeltaHeightRanker.GetPeers().Union(_peerRepository.TakeHighestReputationPeers(_page, _peersPerCycle).Select(x => x.PeerId));
+            var peers = DeltaHeightRanker.GetPeers().Union(_peerRepository.TakeHighestReputationPeers(_page, _peersPerCycle).Select(x => x.Address));
             _peerClient.SendMessageToPeers(new LatestDeltaHashRequest(), peers);
 
             if (_page >= totalPages && DeltaHeightRanker.GetPeers().Count() >= _minimumPeers)

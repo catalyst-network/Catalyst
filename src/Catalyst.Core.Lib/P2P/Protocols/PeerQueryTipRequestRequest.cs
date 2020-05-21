@@ -57,7 +57,7 @@ namespace Catalyst.Core.Lib.P2P.Protocols
             ILibP2PPeerClient peerClient,
             IPeerSettings peerSettings,
             ICancellationTokenProvider cancellationTokenProvider,
-            IScheduler scheduler = null) : base(logger, peerSettings.PeerId, cancellationTokenProvider, peerClient)
+            IScheduler scheduler = null) : base(logger, peerSettings.Address, cancellationTokenProvider, peerClient)
         {
             QueryTipResponseMessageStreamer = new ReplaySubject<IPeerQueryTipResponse>(1, scheduler ?? Scheduler.Default);
         }

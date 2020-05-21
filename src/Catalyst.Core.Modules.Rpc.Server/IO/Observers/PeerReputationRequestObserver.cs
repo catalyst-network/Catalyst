@@ -73,7 +73,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
             return new GetPeerReputationResponse
             {
-                Reputation = _peerRepository.GetAll().Where(m => m.PeerId == getPeerReputationRequest.PeerId)
+                Reputation = _peerRepository.GetAll().Where(m => m.Address == getPeerReputationRequest.PeerId)
                    .Select(x => x.Reputation).DefaultIfEmpty(int.MinValue).First()
             };
         }
