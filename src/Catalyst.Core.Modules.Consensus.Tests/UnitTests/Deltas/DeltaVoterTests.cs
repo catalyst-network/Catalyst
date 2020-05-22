@@ -75,7 +75,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                .Shuffle();
             _producersProvider = Substitute.For<IDeltaProducersProvider>();
             _producersProvider.GetDeltaProducersFromPreviousDelta(Arg.Any<Cid>())
-               .Returns(_producerIds);
+               .Returns(_producerIds.Select(x => x.GetPublicKey()).ToList());
 
             _localIdentifier = PeerIdHelper.GetPeerId("myself, a producer");
             _peerSettings = _localIdentifier.ToSubstitutedPeerSettings();
@@ -132,8 +132,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             _cache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
             _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());
-        }     
-        
+        }
+
         [Test]
         public void When_candidate_hash_is_empty_should_log_and_return_without_hitting_the_cache()
         {

@@ -28,6 +28,7 @@ using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Types;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.P2P.ReputationSystem;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Dfs.Extensions;
@@ -36,6 +37,7 @@ using Dawn;
 using Lib.P2P;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
@@ -90,9 +92,11 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 Guard.Argument(candidate, nameof(candidate)).NotNull().Require(f => f.IsValid());
 
                 var cid = candidate.Candidate.PreviousDeltaDfsHash.ToByteArray().ToCid();
+                var candidateAddress = new MultiAddress(candidate.VoterId);
+                var candidatePublicKey = candidateAddress.GetPublicKey();
                 if (!_deltaProducersProvider
                    .GetDeltaProducersFromPreviousDelta(cid)
-                   .Any(p => p.Equals(candidate.VoterId)))
+                   .Any(p => p.Equals(candidatePublicKey)))
                 {
                     var reputationChange = new ReputationChange(candidate.VoterId, ReputationEventType.VoterIsNotProducer);
                     _reputationManager.OnNext(reputationChange);

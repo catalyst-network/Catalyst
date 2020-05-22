@@ -28,6 +28,7 @@ using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Peer;
@@ -180,8 +181,11 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         {
             var preferredProducers = _deltaProducersProvider
                .GetDeltaProducersFromPreviousDelta(candidate.PreviousDeltaDfsHash.ToByteArray().ToCid());
+
+            var address = new MultiAddress(candidate.ProducerId);
+            var candidatePublicKey = address.GetPublicKey();
             var ranking = preferredProducers.ToList()
-               .FindIndex(p => p.Equals(candidate.ProducerId));
+               .FindIndex(p => p.Equals(candidatePublicKey));
 
             var identifier = candidate.ProducerId;
             _logger.Verbose("ranking for block produced by {producerId} = {ranking}",

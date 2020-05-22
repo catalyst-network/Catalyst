@@ -23,6 +23,7 @@
 
 using System.Buffers;
 using System.Text;
+using DotNetty.Common.Utilities;
 using Google.Protobuf;
 using MultiFormats;
 
@@ -63,19 +64,21 @@ namespace Catalyst.Abstractions.Hashing
             }
         }
 
-        public static MultiHash ComputeMultiHash(this IHashProvider provider, MultiAddress address, byte[] suffix)
+        public static MultiHash ComputeMultiHash(this IHashProvider provider, string message, byte[] suffix)
         {
-            ProtoPreconditions.CheckNotNull(address, nameof(address));
-            var addressBytes = Encoding.UTF8.GetBytes(address.ToString());
+            return ComputeMultiHash(provider, Encoding.UTF8.GetBytes(message), suffix);
+        }
 
-            var calculateSize = addressBytes.Length;
+        public static MultiHash ComputeMultiHash(this IHashProvider provider, byte[] message, byte[] suffix)
+        {
+            var calculateSize = message.Length;
 
             var required = calculateSize + suffix.Length;
             var array = ArrayPool<byte>.Shared.Rent(required);
 
             try
             {
-                suffix.CopyTo(addressBytes, 0);
+                message.CopyTo(array, 0);
                 suffix.CopyTo(array, calculateSize);
 
                 var result = provider.ComputeMultiHash(array, 0, required);
@@ -85,6 +88,11 @@ namespace Catalyst.Abstractions.Hashing
             {
                 ArrayPool<byte>.Shared.Return(array);
             }
+        }
+
+        public static MultiHash ComputeMultiHash(this IHashProvider provider, MultiAddress address, byte[] suffix)
+        {
+            return ComputeMultiHash(provider, address.ToArray(), suffix);
         }
 
         /// <summary>

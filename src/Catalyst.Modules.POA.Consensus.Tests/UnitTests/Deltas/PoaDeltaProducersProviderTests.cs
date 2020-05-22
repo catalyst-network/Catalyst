@@ -42,6 +42,7 @@ using Serilog;
 using NUnit.Framework;
 using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
 using MultiFormats;
+using Catalyst.Core.Lib.Extensions;
 
 namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
 {
@@ -92,14 +93,14 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
         {
             _producersByPreviousDelta.TryGetValue(Arg.Any<string>(), out Arg.Any<object>()).Returns(false);
 
-            var peers = _peers.Concat(new[] { _selfAsPeer });
+            var peers = _peers.Select(x=>x.Address.GetPublicKey()).Concat(new[] { _selfAsPeer.Address.GetPublicKey() });
 
             var expectedProducers = peers.Select(p =>
                 {
-                    var ranking = _hashProvider.ComputeMultiHash(p.Address, _previousDeltaHash.ToArray()).ToArray();
+                    var ranking = _hashProvider.ComputeMultiHash(p, _previousDeltaHash.ToArray()).ToArray();
                     return new
                     {
-                        PeerIdentifier = p.Address,
+                        PeerIdentifier = p,
                         ranking
                     };
                 })
@@ -129,7 +130,7 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
                     out Arg.Any<object>())
                .Returns(ci =>
                 {
-                    ci[1] = new List<MultiAddress>();
+                    ci[1] = new List<string>();
                     return true;
                 });
 
