@@ -77,8 +77,11 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
 
             _catalystProtocol.MessageStream.Subscribe(message =>
             {
-                _messageSubject.OnNext(new ObserverDto(null, message));
+                var innerGossipMessageSigned = ProtocolMessage.Parser.ParseFrom(message.Value);
+                _messageSubject.OnNext(new ObserverDto(null, innerGossipMessageSigned));
             });
+
+            var a = 0;
         }
 
         /// <param name="handlerEventLoopGroupFactory"></param>

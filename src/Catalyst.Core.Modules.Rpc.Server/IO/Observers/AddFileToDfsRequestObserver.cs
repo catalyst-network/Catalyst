@@ -43,6 +43,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
+using Lib.P2P.Protocols;
 using Microsoft.Reactive.Testing;
 using MultiFormats;
 using Serilog;
@@ -73,9 +74,10 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <param name="logger">The logger.</param>
         public AddFileToDfsRequestObserver(IDfsService dfsService,
             IPeerSettings peerSettings,
+            ILibP2PPeerClient peerClient,
             IDownloadFileTransferFactory fileTransferFactory,
             IHashProvider hashProvider,
-            ILogger logger) : base(logger, peerSettings)
+            ILogger logger) : base(logger, peerSettings, peerClient)
         {
             _fileTransferFactory = fileTransferFactory;
             _dfsService = dfsService;

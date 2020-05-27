@@ -30,6 +30,7 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
+using Lib.P2P.Protocols;
 using MultiFormats;
 using Serilog;
 
@@ -40,8 +41,9 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             IRpcRequestObserver
     {
         public GetVersionRequestObserver(IPeerSettings peerSettings,
+            ILibP2PPeerClient peerClient,
             ILogger logger)
-            : base(logger, peerSettings) { }
+            : base(logger, peerSettings, peerClient) { }
 
         /// <summary>
         /// 

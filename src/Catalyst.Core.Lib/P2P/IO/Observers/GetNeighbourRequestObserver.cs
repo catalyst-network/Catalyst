@@ -32,6 +32,7 @@ using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using DotNetty.Transport.Channels;
+using Lib.P2P.Protocols;
 using MultiFormats;
 using Serilog;
 
@@ -45,8 +46,9 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
 
         public GetNeighbourRequestObserver(IPeerSettings peerSettings,
             IPeerRepository repository,
+            ILibP2PPeerClient peerClient,
             ILogger logger)
-            : base(logger, peerSettings)
+            : base(logger, peerSettings, peerClient)
         {
             _repository = repository;
         }

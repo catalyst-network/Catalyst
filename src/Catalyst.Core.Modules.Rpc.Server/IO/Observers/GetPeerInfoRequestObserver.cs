@@ -34,6 +34,7 @@ using DotNetty.Transport.Channels;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
 using MultiFormats;
+using Lib.P2P.Protocols;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
@@ -48,8 +49,9 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
         public GetPeerInfoRequestObserver(IPeerSettings peerSettings,
             ILogger logger,
-            IPeerRepository peerRepository)
-            : base(logger, peerSettings)
+            IPeerRepository peerRepository,
+            ILibP2PPeerClient peerClient)
+            : base(logger, peerSettings, peerClient)
         {
             _peerRepository = peerRepository;
         }

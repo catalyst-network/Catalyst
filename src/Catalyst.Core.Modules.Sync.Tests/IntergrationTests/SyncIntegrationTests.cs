@@ -181,7 +181,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.IntegrationTests
                 _nodes[2].RunAsync(_endOfTestCancellationSource.Token);
             });
 
-            manualResetEvent.WaitOne(TimeSpan.FromMinutes(5));
+            manualResetEvent.WaitOne(TimeSpan.FromMinutes(15));
         }
     }
 }

@@ -32,6 +32,7 @@ using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using DotNetty.Transport.Channels;
+using Lib.P2P.Protocols;
 using MultiFormats;
 using Serilog;
 using System;
@@ -45,8 +46,9 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         private readonly IPeerRepository _peerRepository;
         public PingRequestObserver(IPeerSettings peerSettings, 
             IPeerRepository peerRepository,
+            ILibP2PPeerClient peerClient,
             ILogger logger)
-            : base(logger, peerSettings) {
+            : base(logger, peerSettings, peerClient) {
             _peerRepository = peerRepository;
         }
         

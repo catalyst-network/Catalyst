@@ -33,6 +33,7 @@ using Dawn;
 using DotNetty.Transport.Channels;
 using Serilog;
 using MultiFormats;
+using Lib.P2P.Protocols;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
@@ -56,9 +57,10 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <param name="logger">The logger.</param>
         /// <param name="peerRepository"></param>
         public PeerListRequestObserver(IPeerSettings peerSettings,
+            ILibP2PPeerClient peerClient,
             ILogger logger,
             IPeerRepository peerRepository)
-            : base(logger, peerSettings)
+            : base(logger, peerSettings, peerClient)
         {
             _peerRepository = peerRepository;
         }

@@ -32,6 +32,7 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
+using Lib.P2P.Protocols;
 using MultiFormats;
 using Serilog;
 
@@ -46,9 +47,10 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         private const string SignatureInvalid = "Invalid Signature";
 
         public VerifyMessageRequestObserver(IPeerSettings peerSettings,
+            ILibP2PPeerClient peerClient,
             ILogger logger,
             IKeySigner keySigner)
-            : base(logger, peerSettings)
+            : base(logger, peerSettings, peerClient)
         {
             _keySigner = keySigner;
         }

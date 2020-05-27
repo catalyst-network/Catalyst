@@ -29,6 +29,7 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
+using Lib.P2P.Protocols;
 using Microsoft.Extensions.Configuration;
 using MultiFormats;
 using Newtonsoft.Json;
@@ -43,8 +44,9 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         private readonly IConfigurationRoot _config;
 
         public GetInfoRequestObserver(IPeerSettings peerSettings,
+            ILibP2PPeerClient peerClient,
             IConfigurationRoot config,
-            ILogger logger) : base(logger, peerSettings)
+            ILogger logger) : base(logger, peerSettings, peerClient)
         {
             _config = config;
         }

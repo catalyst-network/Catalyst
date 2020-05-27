@@ -34,6 +34,7 @@ using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using DotNetty.Transport.Channels;
+using Lib.P2P.Protocols;
 using MultiFormats;
 using Serilog;
 
@@ -49,8 +50,9 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         public DeltaHistoryRequestObserver(IPeerSettings peerSettings,
             IDeltaIndexService deltaIndexService,
             IMapperProvider mapperProvider,
+            ILibP2PPeerClient peerClient,
             ILogger logger)
-            : base(logger, peerSettings)
+            : base(logger, peerSettings, peerClient)
         {
             _deltaIndexService = deltaIndexService;
             _mapperProvider = mapperProvider;
@@ -67,7 +69,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             ICorrelationId correlationId)
         {
             Guard.Argument(deltaHeightRequest, nameof(deltaHeightRequest)).NotNull();
-            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            //Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
 
             Logger.Debug("PeerId: {0} requests: {1} deltas from height: {2}", senderPeerId, deltaHeightRequest.Range,

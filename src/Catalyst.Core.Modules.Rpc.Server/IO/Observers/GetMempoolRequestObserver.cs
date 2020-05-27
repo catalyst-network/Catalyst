@@ -35,6 +35,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using Dawn;
 using DotNetty.Transport.Channels;
+using Lib.P2P.Protocols;
 using MultiFormats;
 using Serilog;
 
@@ -48,10 +49,11 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         private readonly IMapperProvider _mappingProvider;
 
         public GetMempoolRequestObserver(IPeerSettings peerSettings,
+            ILibP2PPeerClient peerClient,
             IMempool<PublicEntryDao> mempool,
             IMapperProvider mappingProvider,
             ILogger logger)
-            : base(logger, peerSettings)
+            : base(logger, peerSettings, peerClient)
         {
             _mempool = mempool;
             _mappingProvider = mappingProvider;

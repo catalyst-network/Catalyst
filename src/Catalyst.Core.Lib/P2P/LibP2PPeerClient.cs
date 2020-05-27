@@ -76,8 +76,7 @@ namespace Catalyst.Core.Lib.P2P
 
         public void SendMessage<T>(IMessageDto<T> message) where T : IMessage<T>
         {
-            var bytes = message.Content.ToProtocolMessage(_peerSettings.Address).ToByteArray();
-            _catalystProtocol.SendAsync(message.RecipientPeerIdentifier, message.Content.ToProtocolMessage(_peerSettings.Address)).GetAwaiter().GetResult();
+            _catalystProtocol.SendAsync(message.RecipientPeerIdentifier.PeerId, message.Content.ToProtocolMessage(_peerSettings.Address)).GetAwaiter().GetResult();
         }
 
         public void BroadcastMessage<T>(IMessageDto<T> message) where T : IMessage<T>

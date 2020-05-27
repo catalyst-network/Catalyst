@@ -42,6 +42,7 @@ using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Lib.P2P;
+using Lib.P2P.Protocols;
 using MultiFormats;
 using Serilog;
 
@@ -68,8 +69,9 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <param name="logger">The logger.</param>
         public GetFileFromDfsRequestObserver(IDfsService dfsService,
             IPeerSettings peerSettings,
+            ILibP2PPeerClient peerClient,
             IUploadFileTransferFactory fileTransferFactory,
-            ILogger logger) : base(logger, peerSettings)
+            ILogger logger) : base(logger, peerSettings, peerClient)
         {
             _fileTransferFactory = fileTransferFactory;
             _dfsService = dfsService;

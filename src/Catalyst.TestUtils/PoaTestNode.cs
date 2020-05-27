@@ -149,7 +149,7 @@ namespace Catalyst.TestUtils
             containerBuilder.RegisterType<ConsoleUserOutput>().As<IUserOutput>();
             containerBuilder.RegisterType<ConsoleUserInput>().As<IUserInput>();
 
-            containerBuilder.RegisterType<CatalystProtocol>().AsImplementedInterfaces();
+            containerBuilder.RegisterType<CatalystProtocol>().AsImplementedInterfaces().SingleInstance();
 
             // message handlers
             containerBuilder.RegisterAssemblyTypes(typeof(CoreLibProvider).Assembly)

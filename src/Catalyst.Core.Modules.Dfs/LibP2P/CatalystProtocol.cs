@@ -62,7 +62,7 @@ namespace Lib.P2P.Protocols
         public override string ToString() { return $"/{Name}/{Version}"; }
 
         public ReplaySubject<ProtocolMessage> ResponseMessageSubject { get; }
-        public IObservable<ProtocolMessage> MessageStream => ResponseMessageSubject.AsObservable();
+        public IObservable<ProtocolMessage> MessageStream { get; }
 
         /// <summary>
         /// 
@@ -72,6 +72,7 @@ namespace Lib.P2P.Protocols
         {
             SwarmService = swarmService;
             ResponseMessageSubject = new ReplaySubject<ProtocolMessage>(1);
+            MessageStream = ResponseMessageSubject.AsObservable();
         }
 
         /// <inheritdoc />
@@ -86,19 +87,25 @@ namespace Lib.P2P.Protocols
                 //var b2 = await Message.ReadBytesAsync(stream);
                 //var a = Serializer.DeserializeWithLengthPrefix<ProtocolMessage>(stream, PrefixStyle.Base128);
 
-                //var intSize = sizeof(int) - 1;
-                //var length = await stream.ReadVarint32Async(cancel).ConfigureAwait(false);
-                //var bytes = new byte[length - intSize];
-                //await stream.ReadExactAsync(bytes, 0, length - intSize, cancel).ConfigureAwait(false);
+                var intSize = sizeof(int) - 1;
+                var length = await stream.ReadVarint32Async(cancel).ConfigureAwait(false);
+                var realLength = length - intSize;
+                var bytes = new byte[length];
+                await stream.ReadExactAsync(bytes, 0, length, cancel).ConfigureAwait(false);
 
-                //await using (var ms = new MemoryStream(bytes, false))
+                var newArray = new byte[realLength];
+                Array.Copy(bytes, intSize, newArray, 0, realLength);
+
+                var protocolMessage = ProtocolMessage.Parser.ParseFrom(newArray);
+
+                //await using (var ms = new MemoryStream(bytes, intSize, realLength))
                 //{
                 //    var protocolMessage = ProtocolMessage.Parser.ParseFrom(ms);
                 //    var b = 0;
                 //}
-                var request = await ProtoBufHelper.ReadMessageAsync<PeerId>(stream, cancel).ConfigureAwait(false);
-                var a = 0;
-                //ResponseMessageSubject.OnNext(request);
+                //var request = await ProtoBufHelper.ReadMessageAsync<PeerId>(stream, cancel).ConfigureAwait(false);
+                //var a = 0;
+                ResponseMessageSubject.OnNext(protocolMessage);
             }
         }
 
@@ -174,9 +181,7 @@ namespace Lib.P2P.Protocols
         {
             await using (var stream = await SwarmService.DialAsync(peer, ToString(), cancel))
             {
-                var message2 = new Test() { full = true };
-
-                Serializer.SerializeWithLengthPrefix(stream, new PeerId() { Port = 1001 }, PrefixStyle.Base128);
+                Serializer.SerializeWithLengthPrefix(stream, message.ToByteArray(), PrefixStyle.Base128);
 
                 //var bytes = message.ToByteArray();
                 //Serializer.SerializeWithLengthPrefix(stream, bytes, PrefixStyle.Base128);

@@ -30,6 +30,7 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
+using Lib.P2P.Protocols;
 using MultiFormats;
 using Serilog;
 
@@ -41,9 +42,10 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
     {
         private readonly IFileSystem _fileSystem;
 
-        public ChangeDataFolderRequestObserver(IPeerSettings peerSettings, 
+        public ChangeDataFolderRequestObserver(IPeerSettings peerSettings,
+            ILibP2PPeerClient peerClient,
             IFileSystem fileSystem,
-            ILogger logger) : base(logger, peerSettings)
+            ILogger logger) : base(logger, peerSettings, peerClient)
         {
             _fileSystem = fileSystem;
         }

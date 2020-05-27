@@ -35,6 +35,7 @@ using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Serilog;
 using MultiFormats;
+using Lib.P2P.Protocols;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
@@ -48,9 +49,10 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         private readonly IPeerRepository _peerRepository;
 
         public PeerBlackListingRequestObserver(IPeerSettings peerSettings,
+            ILibP2PPeerClient peerClient,
             ILogger logger,
             IPeerRepository peerRepository)
-            : base(logger, peerSettings)
+            : base(logger, peerSettings, peerClient)
         {
             _peerRepository = peerRepository;
         }

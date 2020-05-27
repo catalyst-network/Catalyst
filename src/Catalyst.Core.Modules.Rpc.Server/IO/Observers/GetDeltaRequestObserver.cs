@@ -31,6 +31,7 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
+using Lib.P2P.Protocols;
 using MultiFormats;
 using Serilog;
 
@@ -43,7 +44,8 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
         public GetDeltaRequestObserver(IDeltaCache deltaCache,
             IPeerSettings peerSettings,
-            ILogger logger) : base(logger, peerSettings)
+            ILibP2PPeerClient peerClient,
+            ILogger logger) : base(logger, peerSettings, peerClient)
         {
             _deltaCache = deltaCache;
         }
