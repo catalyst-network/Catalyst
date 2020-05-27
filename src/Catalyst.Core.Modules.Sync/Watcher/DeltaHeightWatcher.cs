@@ -61,7 +61,7 @@ namespace Catalyst.Core.Modules.Sync.Watcher
             ILibP2PPeerService peerService,
             ICatalystProtocol catalystProtocol,
             double threshold = 0.5d,
-            int minimumPeers = 2)
+            int minimumPeers = 0)
         {
             _peerClient = peerClient;
             DeltaHeightRanker = new DeltaHeightRanker(peerRepository, 100, threshold);
