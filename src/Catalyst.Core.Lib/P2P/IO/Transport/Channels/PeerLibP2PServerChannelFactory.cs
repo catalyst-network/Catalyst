@@ -31,6 +31,7 @@ using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
 using Lib.P2P;
+using Lib.P2P.Protocols;
 using System;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
@@ -49,6 +50,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
         private readonly SigningContext _signingContext;
         private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _messageSubject;
         private readonly IPubSubApi _pubSubApi;
+        private readonly ICatalystProtocol _catalystProtocol;
         private readonly Peer _localPeer;
         public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
 
@@ -59,6 +61,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
             IPeerSettings peerSettings,
             Peer localPeer,
             IPubSubApi pubSubApi,
+            ICatalystProtocol catalystProtocol,
         IScheduler scheduler = null)
         {
             _scheduler = scheduler ?? Scheduler.Default;
@@ -68,8 +71,14 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
             _signingContext = new SigningContext { NetworkType = peerSettings.NetworkType, SignatureType = SignatureType.ProtocolPeer };
             _localPeer = localPeer;
             _pubSubApi = pubSubApi;
+            _catalystProtocol = catalystProtocol;
             _messageSubject = new ReplaySubject<IObserverDto<ProtocolMessage>>();
             MessageStream = _messageSubject.AsObservable();
+
+            _catalystProtocol.MessageStream.Subscribe(message =>
+            {
+                _messageSubject.OnNext(new ObserverDto(null, message));
+            });
         }
 
         /// <param name="handlerEventLoopGroupFactory"></param>

@@ -72,6 +72,7 @@ namespace Catalyst.Node.POA.CE
         private readonly IPeerRepository _peerRepository;
         private readonly IKeyApi _keyApi;
         private readonly IPubSubService _messageRouter;
+        private readonly ICatalystProtocol _catalystProtocol;
 
         public CatalystNodePoa(IKeySigner keySigner,
             ILibP2PPeerService peer,
@@ -86,6 +87,7 @@ namespace Catalyst.Node.POA.CE
             IPeerRepository peerRepository,
             IKeyApi keyApi,
             IPubSubService messageRouter,
+            ICatalystProtocol catalystProtocol,
             IContract contract = null)
         {
             Guard.Argument(peerRepository, nameof(peerRepository)).NotNull();
@@ -104,9 +106,11 @@ namespace Catalyst.Node.POA.CE
             _peerRepository = peerRepository;
             _keyApi = keyApi;
             _messageRouter = messageRouter;
+            _catalystProtocol = catalystProtocol;
 
             var privateKey = keySigner.GetPrivateKey(KeyRegistryTypes.DefaultKey);
             _publicKey = keySigner.CryptoContext.GetPublicKeyFromPrivateKey(privateKey);
+
         }
 
         public async Task StartSocketsAsync()

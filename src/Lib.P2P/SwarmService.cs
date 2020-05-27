@@ -608,7 +608,10 @@ namespace Lib.P2P
 
                 await Message.WriteAsync(protocol, stream, cancel).ConfigureAwait(false);
                 var result = await Message.ReadStringAsync(stream, cancel).ConfigureAwait(false);
-                if (result != protocol) throw new Exception($"Protocol '{protocol}' not supported by '{peer}'.");
+                if (result != protocol)
+                {
+                    throw new Exception($"Protocol '{protocol}' not supported by '{peer}'.");
+                }
 
                 return stream;
             }

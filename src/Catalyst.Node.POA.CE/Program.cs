@@ -56,6 +56,7 @@ using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Network;
 using CommandLine;
 using Lib.P2P;
+using Lib.P2P.Protocols;
 using MultiFormats;
 using SharpRepository.MongoDbRepository;
 using SharpRepository.Repository;
@@ -147,6 +148,8 @@ namespace Catalyst.Node.POA.CE
             containerBuilder.RegisterType<CatalystNodePoa>().As<ICatalystNode>();
             containerBuilder.RegisterType<ConsoleUserOutput>().As<IUserOutput>();
             containerBuilder.RegisterType<ConsoleUserInput>().As<IUserInput>();
+
+            containerBuilder.RegisterType<CatalystProtocol>().AsImplementedInterfaces();
 
             // message handlers
             containerBuilder.RegisterAssemblyTypes(typeof(CoreLibProvider).Assembly)

@@ -97,6 +97,7 @@ namespace Catalyst.Core.Modules.Dfs
             IHashProvider hashProvider,
             DfsOptions dfsOptions,
             DfsState dfsState,
+            IEnumerable<IService> pluginServices,
             IMigrationManager migrationManager
             )
         {
@@ -129,6 +130,7 @@ namespace Catalyst.Core.Modules.Dfs
             _hashProvider = hashProvider;
             _dfsState = dfsState;
             MigrationManager = migrationManager;
+            PluginServices = pluginServices;
 
             //_peerRepository = peerRepository;
 
@@ -143,6 +145,8 @@ namespace Catalyst.Core.Modules.Dfs
                 RawLeaves = true
             };
         }
+
+        public IEnumerable<IService> PluginServices { set; get; }
 
         /// <summary>
         ///     The configuration options.
@@ -235,6 +239,14 @@ namespace Catalyst.Core.Modules.Dfs
                     await PubSubService.StartAsync().ConfigureAwait(false);
                 }
             };
+
+            foreach(var service in PluginServices) {
+                tasks.Add(async () =>
+                {
+                    _stopTasks.Add(async () => await service.StopAsync().ConfigureAwait(false));
+                    await service.StartAsync().ConfigureAwait(false);
+                });
+            }
 
             Log.Debug("waiting for services to start");
             await Task.WhenAll(tasks.Select(t => t())).ConfigureAwait(false);

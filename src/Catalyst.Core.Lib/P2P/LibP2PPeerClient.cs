@@ -30,6 +30,7 @@ using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
+using Lib.P2P.Protocols;
 using MultiFormats;
 using System;
 using System.Collections.Generic;
@@ -41,6 +42,7 @@ namespace Catalyst.Core.Lib.P2P
     {
         private readonly IPeerSettings _peerSettings;
         private readonly IPubSubApi _pubSubApi;
+        private readonly ICatalystProtocol _catalystProtocol;
         private readonly PeerLibP2PClientChannelFactory _peerLibP2PChannelFactory;
 
         public IObservable<ProtocolMessage> MessageStream { private set; get; }
@@ -48,11 +50,12 @@ namespace Catalyst.Core.Lib.P2P
         /// <param name="clientChannelFactory">A factory used to build the appropriate kind of channel for a udp client.</param>
         /// <param name="eventLoopGroupFactory"></param>
         /// <param name="peerSettings"></param>
-        public LibP2PPeerClient(IPeerSettings peerSettings, PeerLibP2PClientChannelFactory peerLibP2PChannelFactory, IPubSubApi pubSubApi)
+        public LibP2PPeerClient(IPeerSettings peerSettings, PeerLibP2PClientChannelFactory peerLibP2PChannelFactory, IPubSubApi pubSubApi, ICatalystProtocol catalystProtocol)
         {
             _peerSettings = peerSettings;
             _peerLibP2PChannelFactory = peerLibP2PChannelFactory;
             _pubSubApi = pubSubApi;
+            _catalystProtocol = catalystProtocol;
         }
 
         public async Task StartAsync()
@@ -72,6 +75,12 @@ namespace Catalyst.Core.Lib.P2P
         }
 
         public void SendMessage<T>(IMessageDto<T> message) where T : IMessage<T>
+        {
+            var bytes = message.Content.ToProtocolMessage(_peerSettings.Address).ToByteArray();
+            _catalystProtocol.SendAsync(message.RecipientPeerIdentifier, message.Content.ToProtocolMessage(_peerSettings.Address)).GetAwaiter().GetResult();
+        }
+
+        public void BroadcastMessage<T>(IMessageDto<T> message) where T : IMessage<T>
         {
             _pubSubApi.PublishAsync("catalyst", message.Content.ToByteArray());
         }

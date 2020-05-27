@@ -82,6 +82,8 @@ using Newtonsoft.Json.Linq;
 using MultiFormats;
 using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.Extensions;
+using Lib.P2P.Protocols;
+using Catalyst.Abstractions.Sync.Interfaces;
 
 namespace Catalyst.TestUtils
 {
@@ -99,6 +101,11 @@ namespace Catalyst.TestUtils
         private readonly ContainerProvider _containerProvider;
         private readonly IDeltaByNumberRepository _deltaByNumber;
         private Lib.P2P.Peer _localPeer;
+
+        public ContainerProvider GetContainerProvider()
+        {
+            return _containerProvider;
+        }
 
         public PoaTestNode(int nodeNumber,
             IFileSystem parentTestFileSystem)
@@ -141,6 +148,8 @@ namespace Catalyst.TestUtils
             containerBuilder.RegisterType<CatalystNodePoa>().As<ICatalystNode>();
             containerBuilder.RegisterType<ConsoleUserOutput>().As<IUserOutput>();
             containerBuilder.RegisterType<ConsoleUserInput>().As<IUserInput>();
+
+            containerBuilder.RegisterType<CatalystProtocol>().AsImplementedInterfaces();
 
             // message handlers
             containerBuilder.RegisterAssemblyTypes(typeof(CoreLibProvider).Assembly)
@@ -199,6 +208,7 @@ namespace Catalyst.TestUtils
         public async Task RunAsync(CancellationToken cancellationSourceToken)
         {
             _localPeer = _scope.Resolve<Lib.P2P.Peer>();
+            var synchronizer = _scope.Resolve<ISynchroniser>();
             var peerSettings = _scope.Resolve<IPeerSettings>();
             var config = _scope.Resolve<IConfigApi>();
             _dfsService = _scope.Resolve<IDfsService>();
@@ -216,7 +226,13 @@ namespace Catalyst.TestUtils
                 peers = _dfsService.SwarmApi.PeersAsync().GetAwaiter().GetResult();
             }
 
-            Consensus.StartProducing();
+            synchronizer.StartAsync().ConfigureAwait(false);
+            synchronizer.SyncCompleted.Subscribe((x) =>
+            {
+                Consensus.StartProducing();
+            });
+
+            //Consensus.StartProducing();
 
             do
             {
@@ -246,7 +262,9 @@ namespace Catalyst.TestUtils
         {
             var builder = _containerProvider.ContainerBuilder;
 
-            builder.RegisterInstance(new SyncState { IsSynchronized = true }).As<SyncState>();
+            builder.RegisterType<CatalystProtocol>().As<CatalystProtocol>();
+            //todo
+            builder.RegisterInstance(new SyncState { IsSynchronized = false }).As<SyncState>();
             builder.RegisterInstance(_deltaByNumber).As<IDeltaByNumberRepository>();
             builder.RegisterInstance(new MemDb()).As<IDb>().SingleInstance();
             builder.RegisterInstance(new StateDb()).As<ISnapshotableDb>().SingleInstance();

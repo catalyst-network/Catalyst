@@ -51,6 +51,7 @@ using System.Threading.Tasks;
 using Catalyst.Core.Lib.P2P.Repository;
 using NUnit.Framework;
 using MultiFormats;
+using Lib.P2P.Protocols;
 
 namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 {
@@ -106,7 +107,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
                   }
               });
 
-            var deltaHeightWatcher = new DeltaHeightWatcher(_peerClient, _peerRepository, _peerService, minimumPeers: 0);
+            var deltaHeightWatcher = new DeltaHeightWatcher(_peerClient, _peerRepository, _peerService, Substitute.For<CatalystProtocol>(), minimumPeers: 0);
             deltaHeightWatcher.Start();
 
             var deltaIndex = await deltaHeightWatcher.GetHighestDeltaIndexAsync();
@@ -150,7 +151,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
                 }
             });
 
-            var deltaHeightWatcher = new DeltaHeightWatcher(_peerClient, _peerRepository, _peerService, minimumPeers: 0);
+            var deltaHeightWatcher = new DeltaHeightWatcher(_peerClient, _peerRepository, _peerService, Substitute.For<CatalystProtocol>(), minimumPeers: 0);
             deltaHeightWatcher.Start();
 
             var deltaIndex = await deltaHeightWatcher.GetHighestDeltaIndexAsync();

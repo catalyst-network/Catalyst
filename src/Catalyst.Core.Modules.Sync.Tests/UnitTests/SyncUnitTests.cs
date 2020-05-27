@@ -68,6 +68,7 @@ using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
 using Catalyst.Core.Lib.P2P.Repository;
 using NUnit.Framework;
 using MultiFormats;
+using Lib.P2P.Protocols;
 
 namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 {
@@ -176,7 +177,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 
             _userOutput = Substitute.For<IUserOutput>();
 
-            _deltaHeightWatcher = new DeltaHeightWatcher(_peerClient, _peerRepository, _peerService, minimumPeers: 0);
+            _deltaHeightWatcher = new DeltaHeightWatcher(_peerClient, _peerRepository, _peerService, Substitute.For<CatalystProtocol>(), minimumPeers: 0);
 
             var dfsService = Substitute.For<IDfsService>();
 

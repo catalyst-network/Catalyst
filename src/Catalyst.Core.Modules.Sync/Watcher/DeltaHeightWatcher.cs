@@ -34,6 +34,7 @@ using Catalyst.Core.Modules.Sync.Manager;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Wire;
+using Lib.P2P.Protocols;
 
 namespace Catalyst.Core.Modules.Sync.Watcher
 {
@@ -46,6 +47,7 @@ namespace Catalyst.Core.Modules.Sync.Watcher
         private readonly IPeerRepository _peerRepository;
         private readonly ILibP2PPeerService _peerService;
         private readonly ILibP2PPeerClient _peerClient;
+        private readonly ICatalystProtocol _catalystProtocol;
 
         public DeltaIndex LatestDeltaHash { set; get; }
 
@@ -57,6 +59,7 @@ namespace Catalyst.Core.Modules.Sync.Watcher
         public DeltaHeightWatcher(ILibP2PPeerClient peerClient,
             IPeerRepository peerRepository,
             ILibP2PPeerService peerService,
+            ICatalystProtocol catalystProtocol,
             double threshold = 0.5d,
             int minimumPeers = 0)
         {
@@ -65,6 +68,8 @@ namespace Catalyst.Core.Modules.Sync.Watcher
             _peerRepository = peerRepository;
             _peerService = peerService;
             _manualResetEventSlim = new ManualResetEventSlim(false);
+            _catalystProtocol = catalystProtocol;
+
             _threshold = threshold;
             _minimumPeers = minimumPeers;
         }
@@ -124,12 +129,19 @@ namespace Catalyst.Core.Modules.Sync.Watcher
             return null;
         }
 
-        private void RequestDeltaHeightFromPeers()
+        private async Task RequestDeltaHeightFromPeers()
         {
             var totalPages = GetPageCount();
             _page %= totalPages;
             _page++;
+            
             var peers = DeltaHeightRanker.GetPeers().Union(_peerRepository.TakeHighestReputationPeers(_page, _peersPerCycle).Select(x => x.Address));
+            //foreach (var peer in peers)
+            //{
+            //    await _catalystProtocol.SendAsync(peer, new LatestDeltaHashRequest());
+            //    var a = 0;
+            //}
+
             _peerClient.SendMessageToPeers(new LatestDeltaHashRequest(), peers);
 
             if (_page >= totalPages && DeltaHeightRanker.GetPeers().Count() >= _minimumPeers)

@@ -21,16 +21,29 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Autofac;
+using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.FileSystem;
+using Catalyst.Abstractions.Hashing;
+using Catalyst.Abstractions.Ledger;
+using Catalyst.Abstractions.Options;
+using Catalyst.Abstractions.Sync.Interfaces;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Protocol.Deltas;
 using Catalyst.TestUtils;
+using Google.Protobuf;
+using Google.Protobuf.WellKnownTypes;
 using NSubstitute;
 using NUnit.Framework;
+using Catalyst.Core.Modules.Dfs.Extensions;
 
 namespace Catalyst.Core.Modules.Sync.Tests.IntegrationTests
 {
@@ -79,74 +92,96 @@ namespace Catalyst.Core.Modules.Sync.Tests.IntegrationTests
         }
 
         //todo
-        //[Fact]
-        //public async Task Can_Sync_From_Another_Nodes()
-        //{
-        //    var manualResetEvent = new ManualResetEvent(false);
-        //    var tasks = _nodes.Count();
-        //    var utcNow = DateTime.UtcNow;
-        //    var cids = new List<string>();
-        //    Delta previousDelta = null;
-        //    for (var j = 0; j < _nodes.Count(); j++)
-        //    {
-        //        var nodeJ = _nodes[j];
-        //        var ledger = nodeJ.ContainerProvider.Container.Resolve<ILedger>();
-        //        var deltaHashProvider = nodeJ.ContainerProvider.Container.Resolve<IDeltaHashProvider>();
-        //        var hashProvider = nodeJ.ContainerProvider.Container.Resolve<IHashProvider>();
-        //        var dfsService = nodeJ.ContainerProvider.Container.Resolve<IDfsService>();
-        //        var deltaCache = nodeJ.ContainerProvider.Container.Resolve<IDeltaCache>();
-        //        var sync = nodeJ.ContainerProvider.Container.Resolve<ISynchroniser>();
-        //        sync.SyncCompleted.Subscribe(x =>
-        //        {
-        //            tasks--;
-        //            if (tasks <= 0)
-        //            {
-        //                _endOfTestCancellationSource.Cancel();
-        //                manualResetEvent.Set();
-        //            }
-        //        });
+        [Test]
+        public async Task Can_Sync_From_Another_Nodes()
+        {
+            var manualResetEvent = new ManualResetEvent(false);
+            var tasks = _nodes.Count();
+            var utcNow = DateTime.UtcNow;
+            var cids = new List<string>();
+            Delta previousDelta = null;
+            for (var j = 0; j < _nodes.Count(); j++)
+            {
+                var nodeJ = _nodes[j];
+                var ledger = nodeJ.GetContainerProvider().Container.Resolve<ILedger>();
+                var deltaHashProvider = nodeJ.GetContainerProvider().Container.Resolve<IDeltaHashProvider>();
+                var hashProvider = nodeJ.GetContainerProvider().Container.Resolve<IHashProvider>();
+                var dfsService = nodeJ.GetContainerProvider().Container.Resolve<IDfsService>();
+                var deltaCache = nodeJ.GetContainerProvider().Container.Resolve<IDeltaCache>();
+                var sync = nodeJ.GetContainerProvider().Container.Resolve<ISynchroniser>();
+                sync.SyncCompleted.Subscribe(x =>
+                {
+                    tasks--;
+                    if (tasks <= 0)
+                    {
+                        _endOfTestCancellationSource.Cancel();
+                        manualResetEvent.Set();
+                    }
+                });
 
-        //        if (previousDelta == null)
-        //        {
-        //            deltaCache.TryGetOrAddConfirmedDelta(deltaCache.GenesisHash, out previousDelta);
-        //        }
+                if (previousDelta == null)
+                {
+                    deltaCache.TryGetOrAddConfirmedDelta(deltaCache.GenesisHash, out previousDelta);
+                }
 
-        //        for (var i = 1; i < 25; i++)
-        //        {
-        //            if (j == 2)
-        //            {
-        //                break;
-        //            }
+                for (var i = 1; i < 25; i++)
+                {
+                    if (j == 2)
+                    {
+                        break;
+                    }
 
-        //            if (j == 1 && i > 15)
-        //            {
-        //                break;
-        //            }
+                    if (j == 1 && i > 15)
+                    {
+                        break;
+                    }
 
-        //            var delta = new Delta
-        //            {
-        //                StateRoot = previousDelta.StateRoot.ToByteString(),
-        //                PreviousDeltaDfsHash = ledger.LatestKnownDelta.ToArray().ToByteString(),
-        //                MerkleRoot = hashProvider.ComputeMultiHash(ledger.LatestKnownDelta.ToArray()).ToCid().ToArray()
-        //                   .ToByteString(),
-        //                TimeStamp = Timestamp.FromDateTime(utcNow.AddMilliseconds(i + 1))
-        //            };
+                    var delta = new Delta
+                    {
+                        StateRoot = previousDelta.StateRoot.ToByteString(),
+                        PreviousDeltaDfsHash = ledger.LatestKnownDelta.ToArray().ToByteString(),
+                        MerkleRoot = hashProvider.ComputeMultiHash(ledger.LatestKnownDelta.ToArray()).ToCid().ToArray()
+                           .ToByteString(),
+                        TimeStamp = Timestamp.FromDateTime(utcNow.AddMilliseconds(i + 1))
+                    };
 
-        //            var node = await dfsService.UnixFsApi.AddAsync(delta.ToByteArray().ToMemoryStream(), string.Empty,
-        //                    new AddFileOptions { Hash = hashProvider.HashingAlgorithm.Name }, CancellationToken.None)
-        //               .ConfigureAwait(false);
+                    var node = await dfsService.UnixFsApi.AddAsync(delta.ToByteArray().ToMemoryStream(), string.Empty,
+                            new AddFileOptions { Hash = hashProvider.HashingAlgorithm.Name }, CancellationToken.None)
+                       .ConfigureAwait(false);
 
-        //            cids.Add(node.Id.Hash.ToBase32());
+                    cids.Add(node.Id.Hash.ToBase32());
 
-        //            deltaHashProvider.TryUpdateLatestHash(ledger.LatestKnownDelta, node.Id);
-        //        }
-        //    }
+                    deltaHashProvider.TryUpdateLatestHash(ledger.LatestKnownDelta, node.Id);
+                }
+            }
 
-        //    Task.Run(() => _nodes[0].RunAsync(_endOfTestCancellationSource.Token));
-        //    Task.Run(() => _nodes[1].RunAsync(_endOfTestCancellationSource.Token));
-        //    Task.Run(() => _nodes[2].RunAsync(_endOfTestCancellationSource.Token));
+            Task.Run(() =>
+            {
+                _nodes[0].PeerActive += (peerAddress) =>
+                {
+                    _nodes.ForEach(node => node.RegisterPeerAddress(peerAddress));
+                };
+                _nodes[0].RunAsync(_endOfTestCancellationSource.Token);
+            });
+            Task.Run(() =>
+            {
+                _nodes[1].PeerActive += (peerAddress) =>
+                {
+                    _nodes.ForEach(node => node.RegisterPeerAddress(peerAddress));
+                };
+                _nodes[1].RunAsync(_endOfTestCancellationSource.Token);
+            });
 
-        //    manualResetEvent.WaitOne(TimeSpan.FromMinutes(5));
-        //}
+            Task.Run(() =>
+            {
+                _nodes[2].PeerActive += (peerAddress) =>
+                {
+                    _nodes.ForEach(node => node.RegisterPeerAddress(peerAddress));
+                };
+                _nodes[2].RunAsync(_endOfTestCancellationSource.Token);
+            });
+
+            manualResetEvent.WaitOne(TimeSpan.FromMinutes(5));
+        }
     }
 }
