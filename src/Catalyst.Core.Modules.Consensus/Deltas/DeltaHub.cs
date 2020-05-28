@@ -55,11 +55,13 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         private readonly MultiAddress _peerId;
         private readonly IDfsService _dfsService;
         private readonly IHashProvider _hashProvider;
+        private readonly ILibP2PPeerClient _peerClient;
         private readonly ILogger _logger;
 
         protected virtual AsyncRetryPolicy<IFileSystemNode> DfsRetryPolicy { get; }
 
         public DeltaHub(IBroadcastManager broadcastManager,
+            ILibP2PPeerClient peerClient,
             IPeerSettings peerSettings,
             IDfsService dfsService,
             IHashProvider hashProvider,
@@ -69,6 +71,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             _peerId = peerSettings.Address;
             _dfsService = dfsService;
             _hashProvider = hashProvider;
+            _peerClient = peerClient;
             _logger = logger;
 
             DfsRetryPolicy = Polly.Policy<IFileSystemNode>.Handle<Exception>()
@@ -90,7 +93,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             }
 
             var protocolMessage = candidate.ToProtocolMessage(_peerId, CorrelationId.GenerateCorrelationId());
-            _broadcastManager.BroadcastAsync(protocolMessage).ConfigureAwait(false);
+            _peerClient.BroadcastAsync(protocolMessage).ConfigureAwait(false);
 
             _logger.Debug("Broadcast candidate {0} done.", candidate);
         }
@@ -101,7 +104,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             Guard.Argument(favourite, nameof(favourite)).NotNull().Require(c => c.IsValid());
 
             var protocolMessage = favourite.ToProtocolMessage(_peerId, CorrelationId.GenerateCorrelationId());
-            _broadcastManager.BroadcastAsync(protocolMessage).ConfigureAwait(false);
+            _peerClient.BroadcastAsync(protocolMessage).ConfigureAwait(false);
 
             _logger.Debug("Started broadcasting favourite candidate {0}", favourite);
         }
@@ -153,7 +156,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                     PreviousDeltaDfsHash = previousDeltaHash
                 }.ToProtocolMessage(_peerId, CorrelationId.GenerateCorrelationId());
 
-                await _broadcastManager.BroadcastAsync(newDeltaHashOnDfs).ConfigureAwait(false);
+                await _peerClient.BroadcastAsync(newDeltaHashOnDfs).ConfigureAwait(false);
             }
             catch (Exception exception)
             {

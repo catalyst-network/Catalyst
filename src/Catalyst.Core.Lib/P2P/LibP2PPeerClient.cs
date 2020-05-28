@@ -86,9 +86,9 @@ namespace Catalyst.Core.Lib.P2P
             }
         }
 
-        public void BroadcastMessage<T>(IMessageDto<T> message) where T : IMessage<T>
+        public async Task BroadcastAsync(ProtocolMessage message)
         {
-            _pubSubApi.PublishAsync("catalyst", message.Content.ToByteArray());
+            await _pubSubApi.PublishAsync("catalyst", message.ToByteArray());
         }
     }
 }

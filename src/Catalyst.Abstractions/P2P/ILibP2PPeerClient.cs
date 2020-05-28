@@ -23,6 +23,7 @@
 
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Protocol.Peer;
+using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using MultiFormats;
 using System.Collections.Generic;
@@ -34,6 +35,7 @@ namespace Catalyst.Abstractions.P2P
     {
         void SendMessageToPeers(IMessage message, IEnumerable<MultiAddress> peers);
         void SendMessage<T>(IMessageDto<T> message) where T : IMessage<T>;
+        Task BroadcastAsync(ProtocolMessage message);
         Task StartAsync();
     }
 }
