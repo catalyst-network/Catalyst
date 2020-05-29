@@ -48,6 +48,7 @@ using NSubstitute.ExceptionExtensions;
 using Serilog;
 using NUnit.Framework;
 using MultiFormats;
+using Catalyst.Abstractions.P2P;
 
 //@TODO should be in rpc module test
 
@@ -76,6 +77,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
             _nodeFileTransferFactory = Substitute.For<IDownloadFileTransferFactory>();
             _addFileToDfsRequestObserver = new AddFileToDfsRequestObserver(_fakeDfsService,
                 peerSettings,
+                 Substitute.For<ILibP2PPeerClient>(),
                 _nodeFileTransferFactory,
                 _hashProvider,
                 logger);

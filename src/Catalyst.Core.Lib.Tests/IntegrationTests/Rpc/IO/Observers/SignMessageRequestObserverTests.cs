@@ -62,6 +62,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         private ILogger _logger;
         private IKeySigner _keySigner;
         private IChannelHandlerContext _fakeContext;
+        private ILibP2PPeerClient _peerClient;
 
         public SignMessageRequestObserverTests() : base(new[]
         {
@@ -91,6 +92,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
+            _peerClient = Substitute.For<ILibP2PPeerClient>();
         }
 
         [TestCase("Hello Catalyst")]
@@ -115,15 +117,15 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
                 TimeSpan.FromSeconds(2));
 
             var messageStream =
-                MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
+                MessageStreamHelper.CreateStreamWithMessage(_testScheduler, protocolMessage);
             var handler =
-                new SignMessageRequestObserver(peerSettings, _logger, _keySigner);
+                new SignMessageRequestObserver(peerSettings, _peerClient, _logger, _keySigner);
 
             handler.StartObserving(messageStream);
 
             _testScheduler.Start();
 
-            var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
+            var receivedCalls = _peerClient.ReceivedCalls().ToList();
             _logger.DidNotReceiveWithAnyArgs().Error((Exception) default, default);
             receivedCalls.Count.Should().Be(1);
 

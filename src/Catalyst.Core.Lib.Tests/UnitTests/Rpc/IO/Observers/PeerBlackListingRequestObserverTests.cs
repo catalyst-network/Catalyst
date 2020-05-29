@@ -40,6 +40,7 @@ using Serilog;
 using NUnit.Framework;
 using MultiFormats;
 using Catalyst.Core.Lib.Util;
+using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -137,7 +138,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
 
             var peerSettings = _senderId.ToSubstitutedPeerSettings();
-            var handler = new PeerBlackListingRequestObserver(peerSettings, _logger, _peerRepository);
+            var handler = new PeerBlackListingRequestObserver(peerSettings, Substitute.For<ILibP2PPeerClient>(), _logger, _peerRepository);
             handler.StartObserving(messageStream);
 
             _testScheduler.Start();

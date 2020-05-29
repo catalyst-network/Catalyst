@@ -100,6 +100,7 @@ namespace Catalyst.TestUtils
         private readonly ILifetimeScope _scope;
         private readonly ContainerProvider _containerProvider;
         private readonly IDeltaByNumberRepository _deltaByNumber;
+        private readonly bool _isSynchronized;
         private Lib.P2P.Peer _localPeer;
 
         public ContainerProvider GetContainerProvider()
@@ -107,10 +108,11 @@ namespace Catalyst.TestUtils
             return _containerProvider;
         }
 
-        public PoaTestNode(int nodeNumber,
+        public PoaTestNode(int nodeNumber, bool isSynchronized,
             IFileSystem parentTestFileSystem)
         {
             NodeNumber = nodeNumber;
+            _isSynchronized = isSynchronized;
 
             _nodeDirectory = parentTestFileSystem.GetCatalystDataDir();
 
@@ -226,13 +228,18 @@ namespace Catalyst.TestUtils
                 peers = _dfsService.SwarmApi.PeersAsync().GetAwaiter().GetResult();
             }
 
-            synchronizer.StartAsync().ConfigureAwait(false);
-            synchronizer.SyncCompleted.Subscribe((x) =>
+            if (!_isSynchronized)
+            {
+                await synchronizer.StartAsync().ConfigureAwait(false);
+                synchronizer.SyncCompleted.Subscribe((x) =>
+                {
+                    Consensus.StartProducing();
+                });
+            }
+            else
             {
                 Consensus.StartProducing();
-            });
-
-            //Consensus.StartProducing();
+            }
 
             do
             {
@@ -240,7 +247,7 @@ namespace Catalyst.TestUtils
             } while (!cancellationSourceToken.IsCancellationRequested);
         }
 
-        public void RegisterPeerAddress(MultiAddress multiAddress)
+        public async Task RegisterPeerAddress(MultiAddress multiAddress)
         {
             if (_localPeer.Id != multiAddress.PeerId)
             {
@@ -250,7 +257,7 @@ namespace Catalyst.TestUtils
                     IsPoaNode = true,
                     LastSeen = DateTime.UtcNow
                 });
-                _dfsService.SwarmService.ConnectAsync(multiAddress).GetAwaiter().GetResult();
+                await _dfsService.SwarmService.ConnectAsync(multiAddress).ConfigureAwait(false);
             }
         }
 
@@ -262,9 +269,7 @@ namespace Catalyst.TestUtils
         {
             var builder = _containerProvider.ContainerBuilder;
 
-            builder.RegisterType<CatalystProtocol>().As<CatalystProtocol>();
-            //todo
-            builder.RegisterInstance(new SyncState { IsSynchronized = false }).As<SyncState>();
+            builder.RegisterInstance(new SyncState { IsSynchronized = _isSynchronized }).As<SyncState>();
             builder.RegisterInstance(_deltaByNumber).As<IDeltaByNumberRepository>();
             builder.RegisterInstance(new MemDb()).As<IDb>().SingleInstance();
             builder.RegisterInstance(new StateDb()).As<ISnapshotableDb>().SingleInstance();

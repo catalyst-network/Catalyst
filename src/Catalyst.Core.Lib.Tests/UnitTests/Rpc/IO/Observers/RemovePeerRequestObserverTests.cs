@@ -44,6 +44,7 @@ using NUnit.Framework;
 using Catalyst.Core.Lib.P2P.Repository;
 using Org.BouncyCastle.Utilities.Net;
 using Catalyst.Core.Lib.Util;
+using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -127,7 +128,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
             var peerSettings = peerId.ToSubstitutedPeerSettings();
-            var handler = new RemovePeerRequestObserver(peerSettings, peerRepository, _logger);
+            var handler = new RemovePeerRequestObserver(peerSettings, peerRepository, Substitute.For<ILibP2PPeerClient>(),_logger);
             handler.StartObserving(messageStream);
 
             testScheduler.Start();

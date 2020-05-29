@@ -26,11 +26,11 @@ using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Modules.Sync.Manager;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Wire;
@@ -48,6 +48,7 @@ namespace Catalyst.Core.Modules.Sync.Watcher
         private readonly ILibP2PPeerService _peerService;
         private readonly ILibP2PPeerClient _peerClient;
         private readonly ICatalystProtocol _catalystProtocol;
+        private readonly ISwarmApi _swarmApi;
 
         public DeltaIndex LatestDeltaHash { set; get; }
 
@@ -57,9 +58,9 @@ namespace Catalyst.Core.Modules.Sync.Watcher
         private readonly int _minimumPeers;
 
         public DeltaHeightWatcher(ILibP2PPeerClient peerClient,
+            ISwarmApi swarmApi,
             IPeerRepository peerRepository,
             ILibP2PPeerService peerService,
-            ICatalystProtocol catalystProtocol,
             double threshold = 0.5d,
             int minimumPeers = 0)
         {
@@ -68,7 +69,7 @@ namespace Catalyst.Core.Modules.Sync.Watcher
             _peerRepository = peerRepository;
             _peerService = peerService;
             _manualResetEventSlim = new ManualResetEventSlim(false);
-            _catalystProtocol = catalystProtocol;
+            _swarmApi = swarmApi;
 
             _threshold = threshold;
             _minimumPeers = minimumPeers;
@@ -134,15 +135,9 @@ namespace Catalyst.Core.Modules.Sync.Watcher
             var totalPages = GetPageCount();
             _page %= totalPages;
             _page++;
-            
-            var peers = DeltaHeightRanker.GetPeers().Union(_peerRepository.TakeHighestReputationPeers(_page, _peersPerCycle).Select(x => x.Address));
-            //foreach (var peer in peers)
-            //{
-            //    await _catalystProtocol.SendAsync(peer, new LatestDeltaHashRequest());
-            //    var a = 0;
-            //}
 
-            _peerClient.SendMessageToPeers(new LatestDeltaHashRequest(), peers);
+            var peers = await _swarmApi.PeersAsync();
+            await _peerClient.SendMessageToPeersAsync(new LatestDeltaHashRequest(), peers.Select(x => x.ConnectedAddress)).ConfigureAwait(false);
 
             if (_page >= totalPages && DeltaHeightRanker.GetPeers().Count() >= _minimumPeers)
             {

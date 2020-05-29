@@ -31,9 +31,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Abstractions.Dfs;
-using Catalyst.Abstractions.Hashing;
-using Catalyst.Abstractions.Options;
 using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.DAO;
@@ -49,6 +46,7 @@ namespace Catalyst.Core.Modules.Sync
     public class Synchroniser : ISynchroniser
     {
         public SyncState State { set; get; }
+        public bool IsRunning { private set; get; }
         private bool _disposed;
         private readonly int _rangeSize;
         private readonly IUserOutput _userOutput;
@@ -79,7 +77,7 @@ namespace Catalyst.Core.Modules.Sync
             IMapperProvider mapperProvider,
             IUserOutput userOutput,
             ILogger logger,
-            int rangeSize = 20, //cannot go over 20 until udp network fragmentation is fixed
+            int rangeSize = 100,
             IScheduler scheduler = null)
         {
             State = syncState;
@@ -134,13 +132,13 @@ namespace Catalyst.Core.Modules.Sync
 
         public async Task StartAsync(CancellationToken cancellationToken = default)
         {
-            if (State.IsRunning)
+            if (IsRunning)
             {
                 _userOutput.WriteLine("Sync is already running.");
                 return;
             }
 
-            State.IsRunning = true;
+            IsRunning = true;
             _previousHash = _deltaIndexService.LatestDeltaIndex().Cid;
             _userOutput.WriteLine("Starting Sync...");
 
@@ -195,7 +193,7 @@ namespace Catalyst.Core.Modules.Sync
                 {
                     try
                     {
-                        if(DeltaCache.TryGetOrAddConfirmedDelta(deltaIndex.Cid, out Delta _))
+                        if (DeltaCache.TryGetOrAddConfirmedDelta(deltaIndex.Cid, out Delta _))
                         {
                             break;
                         }
@@ -211,12 +209,12 @@ namespace Catalyst.Core.Modules.Sync
         {
             var percentageSync = _deltaIndexService.Height() /
                 _deltaHeightWatcher.GetHighestDeltaIndexAsync().GetAwaiter().GetResult().Height * 100;
-            return (int)percentageSync;
+            return (int) percentageSync;
         }
 
         public async Task StopAsync(CancellationToken cancellationToken = default)
         {
-            if (!State.IsRunning)
+            if (!IsRunning)
             {
                 _userOutput.WriteLine("Sync is not currently running.");
                 return;
@@ -227,7 +225,7 @@ namespace Catalyst.Core.Modules.Sync
 
             _userOutput.WriteLine("Sync has been stopped");
 
-            State.IsRunning = false;
+            IsRunning = false;
         }
 
         private void Progress(ulong index, int range)
@@ -265,7 +263,7 @@ namespace Catalyst.Core.Modules.Sync
 
         private async Task Completed()
         {
-           State.IsSynchronized = true;
+            State.IsSynchronized = true;
             _syncCompletedReplaySubject.OnNext(CurrentHighestDeltaIndexStored);
             await StopAsync();
         }
