@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using MultiFormats;
@@ -31,8 +32,8 @@ namespace Catalyst.Abstractions.P2P
 {
     public interface ILibP2PPeerClient
     {
-        Task SendMessageToPeersAsync<T>(T message, IEnumerable<MultiAddress> peers) where T : IMessage<T>;
-        Task SendMessageAsync<T>(T message, MultiAddress recipient) where T : IMessage<T>;
+        Task SendMessageToPeersAsync(IMessage message, IEnumerable<MultiAddress> peers);
+        Task SendMessageAsync<T>(IMessageDto<T> message) where T : IMessage<T>;
         Task BroadcastAsync(ProtocolMessage message);
         Task StartAsync();
     }

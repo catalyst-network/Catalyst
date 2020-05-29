@@ -38,7 +38,7 @@ namespace Catalyst.Core.Modules.Sync.Extensions
             var protocolMessage = message.ToProtocolMessage(peerSettings.Address);
             foreach (var peer in peers)
             {
-                peerClient.SendMessage(new MessageDto(
+                peerClient.SendMessageAsync(new MessageDto(
                     protocolMessage,
                     peer));
             }

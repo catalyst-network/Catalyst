@@ -45,14 +45,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         private readonly TestScheduler _testScheduler;
         private readonly ILogger _subbedLogger;
         private readonly PingRequestObserver _pingRequestObserver;
-        private readonly ILibP2PPeerClient _peerClient;
+        private ILibP2PPeerClient _peerClient;
 
         public PingRequestObserverTests()
         {
+            _peerClient = Substitute.For<ILibP2PPeerClient>();
             _testScheduler = new TestScheduler();
             _subbedLogger = Substitute.For<ILogger>();
             var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
-            _peerClient = Substitute.For<ILibP2PPeerClient>();
             _pingRequestObserver = new PingRequestObserver(peerSettings, Substitute.For<IPeerRepository>(), _peerClient, _subbedLogger);
         }
 
@@ -61,17 +61,16 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         {
             var pingRequestMessage = new PingRequest();
             
-            //var fakeContext = Substitute.For<IChannelHandlerContext>();
-            var channeledAny = new ObserverDto(null, pingRequestMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId()));
+            var fakeContext = Substitute.For<IChannelHandlerContext>();
+            var channeledAny = new ObserverDto(fakeContext, pingRequestMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId()));
             var observableStream = new[] {channeledAny}.ToObservable(_testScheduler);
             
             _pingRequestObserver.StartObserving(observableStream);
 
             _testScheduler.Start();
 
-            //todo
-            //await _peerClient.ReceivedWithAnyArgs(1).SendMessage()
-               //.WriteAndFlushAsync(new PingResponse().ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId()));
+            await fakeContext.Channel.ReceivedWithAnyArgs(1)
+               .WriteAndFlushAsync(new PingResponse().ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId()));
             
             _subbedLogger.ReceivedWithAnyArgs(1);
         }

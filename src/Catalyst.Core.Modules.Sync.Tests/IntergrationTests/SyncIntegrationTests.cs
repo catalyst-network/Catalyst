@@ -159,7 +159,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.IntegrationTests
             {
                 _nodes[0].PeerActive += (peerAddress) =>
                 {
-                    _nodes.ForEach(node => node.RegisterPeerAddress(peerAddress));
+                    _nodes.ForEach(async node => await node.RegisterPeerAddressAsync(peerAddress));
                 };
                 _nodes[0].RunAsync(_endOfTestCancellationSource.Token);
             });
@@ -167,7 +167,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.IntegrationTests
             {
                 _nodes[1].PeerActive += (peerAddress) =>
                 {
-                    _nodes.ForEach(node => node.RegisterPeerAddress(peerAddress));
+                    _nodes.ForEach(async node => await node.RegisterPeerAddressAsync(peerAddress));
                 };
                 _nodes[1].RunAsync(_endOfTestCancellationSource.Token);
             });
@@ -176,7 +176,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.IntegrationTests
             {
                 _nodes[2].PeerActive += (peerAddress) =>
                 {
-                    _nodes.ForEach(node => node.RegisterPeerAddress(peerAddress));
+                    _nodes.ForEach(async node => await node.RegisterPeerAddressAsync(peerAddress));
                 };
                 _nodes[2].RunAsync(_endOfTestCancellationSource.Token);
             });

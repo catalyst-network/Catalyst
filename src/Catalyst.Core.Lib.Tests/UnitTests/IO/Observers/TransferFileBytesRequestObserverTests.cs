@@ -48,17 +48,19 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
         private TransferFileBytesRequestObserver _observer;
         private IDownloadFileTransferFactory _downloadFileTransferFactory;
         private IChannelHandlerContext _context;
+        private ILibP2PPeerClient _peerClient;
 
         [SetUp]
         public void Init()
         {
+            _peerClient = Substitute.For<ILibP2PPeerClient>();
             _context = Substitute.For<IChannelHandlerContext>();
             _context.Channel.Returns(Substitute.For<IChannel>());
             _downloadFileTransferFactory = Substitute.For<IDownloadFileTransferFactory>();
             var peerSettings = PeerIdHelper.GetPeerId("Test").ToSubstitutedPeerSettings();
             _observer = new TransferFileBytesRequestObserver(_downloadFileTransferFactory,
                 peerSettings,
-                 Substitute.For<ILibP2PPeerClient>(),
+                _peerClient,
                 Substitute.For<ILogger>());
         }
 
@@ -76,7 +78,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
             _downloadFileTransferFactory.DownloadChunk(Arg.Any<TransferFileBytesRequest>())
                .Returns(FileTransferResponseCodeTypes.Successful);
 
-            request.SendToHandler(_observer);
+            request.SendToHandler(_context, _observer);
             _downloadFileTransferFactory.Received(1).DownloadChunk(Arg.Any<TransferFileBytesRequest>());
         }
 
@@ -91,13 +93,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
             var requestDto = new MessageDto(new TransferFileBytesRequest().ToProtocolMessage(sender)
               , PeerIdHelper.GetPeerId("recipient"));
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(testScheduler, requestDto.Content);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_context, testScheduler, requestDto.Content);
 
             _observer.StartObserving(messageStream);
 
             testScheduler.Start();
 
-            var receivedCalls = _context.Channel.ReceivedCalls().ToList();
+            var receivedCalls = _peerClient.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
             var transferFileBytesResponse = sentResponseDto.Content.FromProtocolMessage<TransferFileBytesResponse>();

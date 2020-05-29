@@ -44,11 +44,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
+        private readonly ILibP2PPeerClient _peerClient;
 
         public GetVersionRequestObserverTests()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
+            _peerClient = Substitute.For<ILibP2PPeerClient>();
 
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
@@ -69,7 +71,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             );
 
             var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
-            var handler = new GetVersionRequestObserver(peerSettings, Substitute.For<ILibP2PPeerClient>(), _logger);
+            var handler = new GetVersionRequestObserver(peerSettings, _peerClient, _logger);
 
             handler.StartObserving(messageStream);
 

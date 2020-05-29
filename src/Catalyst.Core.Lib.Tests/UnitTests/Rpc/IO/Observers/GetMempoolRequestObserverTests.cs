@@ -49,11 +49,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         private ILogger _logger;
         private IChannelHandlerContext _fakeContext;
         private TestMapperProvider _mapperProvider;
+        private ILibP2PPeerClient _peerClient;
 
         [SetUp]
         public void Init()
         {
             _logger = Substitute.For<ILogger>();
+            _peerClient = Substitute.For<ILibP2PPeerClient>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
@@ -93,7 +95,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
             var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
-            var handler = new GetMempoolRequestObserver(peerSettings, Substitute.For<ILibP2PPeerClient>(), mempool, _mapperProvider, _logger);
+            var handler = new GetMempoolRequestObserver(peerSettings, _peerClient, mempool, _mapperProvider, _logger);
 
             handler.StartObserving(messageStream);
 

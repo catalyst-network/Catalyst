@@ -41,7 +41,7 @@ using NSubstitute;
 using Serilog;
 using NUnit.Framework;
 using Catalyst.Abstractions.P2P;
-using MultiFormats;
+using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 {
@@ -53,6 +53,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IConfigurationRoot _config;
+        private ILibP2PPeerClient _peerClient;
 
         public GetInfoRequestObserverTests()
         {
@@ -62,6 +63,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
                .Build();
             
             _logger = Substitute.For<ILogger>();
+            _peerClient = Substitute.For<ILibP2PPeerClient>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
 
             var fakeChannel = Substitute.For<IChannel>();
@@ -81,24 +83,22 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
                .SerializeObject(_config.GetSection("CatalystNodeConfiguration").AsEnumerable(),
                     Formatting.Indented);
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_testScheduler,
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler,
                 protocolMessage
             );
 
-            var peerClient = Substitute.For<ILibP2PPeerClient>();
             var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
             var handler = new GetInfoRequestObserver(
-                peerSettings, peerClient, _config, _logger);
+                peerSettings, _peerClient, _config, _logger);
 
             handler.StartObserving(messageStream);
 
             _testScheduler.Start();
 
-            await peerClient.Received(1).SendMessageAsync(Arg.Any<ProtocolMessage>(), Arg.Any<MultiAddress>());
-            //await _fakeContext.Channel.Received(1).WriteAndFlushAsync(Arg.Any<object>());
+            await _peerClient.Received(1).SendMessageAsync(Arg.Any<IMessageDto<ProtocolMessage>>());
 
-            var receivedCalls = peerClient.ReceivedCalls().ToList();
-            receivedCalls.Count.Should().Be(1,
+            var receivedCalls = _peerClient.ReceivedCalls().ToList();
+            receivedCalls.Count.Should().Be(1, 
                 "the only call should be the one we checked above");
 
             var response = ((IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments()[0])

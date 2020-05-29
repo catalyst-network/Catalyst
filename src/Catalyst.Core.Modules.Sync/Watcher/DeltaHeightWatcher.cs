@@ -22,13 +22,13 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Deltas;
@@ -44,62 +44,41 @@ namespace Catalyst.Core.Modules.Sync.Watcher
         private readonly double _threshold;
         public IDeltaHeightRanker DeltaHeightRanker { private set; get; }
         private IDisposable _deltaHeightSubscription;
-        private readonly IPeerRepository _peerRepository;
         private readonly ILibP2PPeerService _peerService;
         private readonly ILibP2PPeerClient _peerClient;
-        private readonly ICatalystProtocol _catalystProtocol;
         private readonly ISwarmApi _swarmApi;
 
         public DeltaIndex LatestDeltaHash { set; get; }
 
         private Timer _requestDeltaHeightTimer;
         private ManualResetEventSlim _manualResetEventSlim;
-        private readonly int _peersPerCycle = 50;
-        private readonly int _minimumPeers;
 
         public DeltaHeightWatcher(ILibP2PPeerClient peerClient,
             ISwarmApi swarmApi,
-            IPeerRepository peerRepository,
             ILibP2PPeerService peerService,
-            double threshold = 0.5d,
-            int minimumPeers = 0)
+            double threshold = 0.5d)
         {
             _peerClient = peerClient;
-            DeltaHeightRanker = new DeltaHeightRanker(peerRepository, 100, threshold);
-            _peerRepository = peerRepository;
+            DeltaHeightRanker = new DeltaHeightRanker(swarmApi, 100, threshold);
             _peerService = peerService;
             _manualResetEventSlim = new ManualResetEventSlim(false);
             _swarmApi = swarmApi;
 
             _threshold = threshold;
-            _minimumPeers = minimumPeers;
         }
 
-        private int _page;
-        private bool _hasLooped = false;
-
-        public void RequestDeltaHeightTimerCallback(object state)
+        public async void RequestDeltaHeightTimerCallback(object state)
         {
-            //Can improve this later when networking layers get reduced
+            var connectedPeers = _swarmApi.PeersAsync().ConfigureAwait(false).GetAwaiter().GetResult();
             var peerCount = DeltaHeightRanker.GetPeers().Count();
-            if (_hasLooped && peerCount >= _minimumPeers)
+            var confirmCount = connectedPeers.Count();
+            if (confirmCount > 0) confirmCount /= 2;
+            if (peerCount >= confirmCount)
             {
                 _manualResetEventSlim.Set();
             }
 
-            RequestDeltaHeightFromPeers();
-        }
-
-        private int GetPageCount()
-        {
-            var peerCount = _peerRepository.Count();
-            if (peerCount == 0)
-            {
-                return 1;
-            }
-
-            var pages = (int) Math.Ceiling(peerCount / (decimal) _peersPerCycle);
-            return pages;
+            await RequestDeltaHeightFromPeers();
         }
 
         public async Task<DeltaIndex> GetHighestDeltaIndexAsync()
@@ -119,7 +98,6 @@ namespace Catalyst.Core.Modules.Sync.Watcher
                 return highestRankedSyncResponse;
             }
 
-
             //Responses that have not fully sync
             var highestRankedUnSyncResponse = rankedResponses.FirstOrDefault();
             if (highestRankedUnSyncResponse != null)
@@ -132,31 +110,14 @@ namespace Catalyst.Core.Modules.Sync.Watcher
 
         private async Task RequestDeltaHeightFromPeers()
         {
-            var totalPages = GetPageCount();
-            _page %= totalPages;
-            _page++;
-
-            var peers = await _swarmApi.PeersAsync();
-            await _peerClient.SendMessageToPeersAsync(new LatestDeltaHashRequest(), peers.Select(x => x.ConnectedAddress)).ConfigureAwait(false);
-
-            if (_page >= totalPages && DeltaHeightRanker.GetPeers().Count() >= _minimumPeers)
-            {
-                _hasLooped = true;
-            }
+            var connectedPeers = await _swarmApi.PeersAsync().ConfigureAwait(false);
+            await _peerClient.SendMessageToPeersAsync(new LatestDeltaHashRequest(), connectedPeers.Select(x => x.ConnectedAddress)).ConfigureAwait(false);
         }
 
         private void DeltaHeightOnNext(ProtocolMessage protocolMessage)
         {
             var peerId = protocolMessage.PeerId;
             var latestDeltaHash = protocolMessage.FromProtocolMessage<LatestDeltaHashResponse>();
-
-            var peer = _peerRepository.Get(peerId);
-            if (peer != null)
-            {
-                peer.Touch();
-                _peerRepository.Update(peer);
-            }
-
             DeltaHeightRanker.Add(peerId, latestDeltaHash);
         }
 

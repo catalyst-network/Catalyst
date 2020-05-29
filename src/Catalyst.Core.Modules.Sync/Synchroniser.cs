@@ -148,7 +148,7 @@ namespace Catalyst.Core.Modules.Sync
 
             await _peerSyncManager.WaitForPeersAsync(cancellationToken).ConfigureAwait(false);
 
-            var highestDeltaIndex = await _deltaHeightWatcher.GetHighestDeltaIndexAsync();
+            var highestDeltaIndex = await _deltaHeightWatcher.GetHighestDeltaIndexAsync().ConfigureAwait(false);
             if (highestDeltaIndex == null || highestDeltaIndex.Height <= CurrentHighestDeltaIndexStored)
             {
                 await Completed().ConfigureAwait(false);
@@ -212,12 +212,12 @@ namespace Catalyst.Core.Modules.Sync
             return (int) percentageSync;
         }
 
-        public async Task StopAsync(CancellationToken cancellationToken = default)
+        public Task StopAsync(CancellationToken cancellationToken = default)
         {
             if (!IsRunning)
             {
                 _userOutput.WriteLine("Sync is not currently running.");
-                return;
+                return Task.CompletedTask;
             }
 
             _deltaHeightWatcher.Stop();
@@ -226,6 +226,8 @@ namespace Catalyst.Core.Modules.Sync
             _userOutput.WriteLine("Sync has been stopped");
 
             IsRunning = false;
+
+            return Task.CompletedTask;
         }
 
         private void Progress(ulong index, int range)

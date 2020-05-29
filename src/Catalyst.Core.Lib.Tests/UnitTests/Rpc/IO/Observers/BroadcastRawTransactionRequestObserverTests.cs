@@ -40,9 +40,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
     {
         private readonly BroadcastRawTransactionRequestObserver _broadcastRawTransactionRequestObserver;
         private readonly ITransactionReceivedEvent _transactionReceivedEvent;
+        private readonly ILibP2PPeerClient _peerClient;
 
         public BroadcastRawTransactionRequestObserverTests()
         {
+            _peerClient = Substitute.For<ILibP2PPeerClient>();
             _transactionReceivedEvent = Substitute.For<ITransactionReceivedEvent>();
 
             var peerSettings = PeerIdHelper.GetPeerId("Test").ToSubstitutedPeerSettings();
@@ -50,7 +52,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             _broadcastRawTransactionRequestObserver = new BroadcastRawTransactionRequestObserver(
                 Substitute.For<ILogger>(),
                 peerSettings,
-                 Substitute.For<ILibP2PPeerClient>(),
+                _peerClient,
                 _transactionReceivedEvent);
         }
 

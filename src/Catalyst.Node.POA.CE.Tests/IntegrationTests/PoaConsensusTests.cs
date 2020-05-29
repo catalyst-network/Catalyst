@@ -82,7 +82,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
                 {
                     n.PeerActive += (peerAddress) =>
                     {
-                        _nodes.ForEach(node => node.RegisterPeerAddress(peerAddress));
+                        _nodes.ForEach(async node => await node.RegisterPeerAddressAsync(peerAddress));
                     };
 
                     n?.RunAsync(_endOfTestCancellationSource.Token);

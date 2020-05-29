@@ -151,8 +151,6 @@ namespace Catalyst.TestUtils
             containerBuilder.RegisterType<ConsoleUserOutput>().As<IUserOutput>();
             containerBuilder.RegisterType<ConsoleUserInput>().As<IUserInput>();
 
-            containerBuilder.RegisterType<CatalystProtocol>().AsImplementedInterfaces().SingleInstance();
-
             // message handlers
             containerBuilder.RegisterAssemblyTypes(typeof(CoreLibProvider).Assembly)
                 .AssignableTo<IP2PMessageObserver>().As<IP2PMessageObserver>();
@@ -221,11 +219,11 @@ namespace Catalyst.TestUtils
 
             await StartSocketsAsync().ConfigureAwait(false);
 
-            var peers = _dfsService.SwarmApi.PeersAsync().GetAwaiter().GetResult();
+            var peers = await _dfsService.SwarmApi.PeersAsync().ConfigureAwait(false);
             while (peers.Count() < 2)
             {
-                await Task.Delay(300, cancellationSourceToken);
-                peers = _dfsService.SwarmApi.PeersAsync().GetAwaiter().GetResult();
+                peers = await _dfsService.SwarmApi.PeersAsync().ConfigureAwait(false);
+                await Task.Delay(100);
             }
 
             if (!_isSynchronized)
@@ -247,7 +245,7 @@ namespace Catalyst.TestUtils
             } while (!cancellationSourceToken.IsCancellationRequested);
         }
 
-        public async Task RegisterPeerAddress(MultiAddress multiAddress)
+        public async Task RegisterPeerAddressAsync(MultiAddress multiAddress)
         {
             if (_localPeer.Id != multiAddress.PeerId)
             {
@@ -257,6 +255,7 @@ namespace Catalyst.TestUtils
                     IsPoaNode = true,
                     LastSeen = DateTime.UtcNow
                 });
+
                 await _dfsService.SwarmService.ConnectAsync(multiAddress).ConfigureAwait(false);
             }
         }

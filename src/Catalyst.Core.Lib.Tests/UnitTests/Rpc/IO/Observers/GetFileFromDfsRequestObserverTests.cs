@@ -54,15 +54,17 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         private IUploadFileTransferFactory _fileTransferFactory;
         private IDfsService _dfsService;
         private GetFileFromDfsRequestObserver _observer;
+        private ILibP2PPeerClient _peerClient;
 
         [SetUp]
         public void Init()
         {
+            _peerClient = Substitute.For<ILibP2PPeerClient>();
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _fileTransferFactory = Substitute.For<IUploadFileTransferFactory>();
             _dfsService = Substitute.For<IDfsService>();
             var peerSettings = PeerIdHelper.GetPeerId("test").ToSubstitutedPeerSettings();
-            _observer = new GetFileFromDfsRequestObserver(_dfsService, peerSettings, Substitute.For<ILibP2PPeerClient>(), _fileTransferFactory,
+            _observer = new GetFileFromDfsRequestObserver(_dfsService, peerSettings, _peerClient, _fileTransferFactory,
                 Substitute.For<ILogger>());
         }
 

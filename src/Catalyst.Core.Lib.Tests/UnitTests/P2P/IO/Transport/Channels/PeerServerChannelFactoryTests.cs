@@ -75,6 +75,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
         }
 
         private TestScheduler _testScheduler;
+        private ILibP2PPeerClient _peerClient;
         private IPeerMessageCorrelationManager _correlationManager;
         private IBroadcastManager _gossipManager;
         private FakeKeySigner _keySigner;
@@ -87,9 +88,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
         public void Init()
         {
             _testScheduler = new TestScheduler();
+            _peerClient = Substitute.For<ILibP2PPeerClient>();
             _correlationManager = Substitute.For<IPeerMessageCorrelationManager>();
             _gossipManager = Substitute.For<IBroadcastManager>();
             _keySigner = Substitute.For<FakeKeySigner>();
+
 
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.NetworkType.Returns(NetworkType.Devnet);
@@ -161,7 +164,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
 
             var serverIdentifier = PeerIdHelper.GetPeerId("server");
             var peerSettings = serverIdentifier.ToSubstitutedPeerSettings();
-            using (var badHandler = new FailingRequestObserver(Substitute.For<ILogger>(), peerSettings, Substitute.For<ILibP2PPeerClient>()))
+            using (var badHandler = new FailingRequestObserver(Substitute.For<ILogger>(), peerSettings, _peerClient))
             {
                 var messageStream = GetObservableServiceHandler().MessageStream;
                 badHandler.StartObserving(messageStream);

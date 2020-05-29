@@ -58,11 +58,11 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
     {
         private IKeySigner _keySigner;
         private IChannelHandlerContext _fakeContext;
-        private ILibP2PPeerClient _peerClient;
         private IRpcRequestObserver _verifyMessageRequestObserver;
         private ILifetimeScope _scope;
         private MultiAddress _peerId;
         private ByteString _testMessageToSign;
+        private ILibP2PPeerClient _peerClient;
 
         [SetUp]
         public void Init()
@@ -70,6 +70,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             Setup(TestContext.CurrentContext);
 
             _testMessageToSign = ByteString.CopyFromUtf8("TestMsg");
+            _peerClient = Substitute.For<ILibP2PPeerClient>();
 
             ContainerProvider.ContainerBuilder.RegisterInstance(TestKeyRegistry.MockKeyRegistry()).As<IKeyRegistry>();
             ContainerProvider.ContainerBuilder.RegisterModule(new KeystoreModule());
@@ -82,6 +83,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             ContainerProvider.ContainerBuilder.RegisterModule(new AuthenticationModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new HashingModule());
             ContainerProvider.ContainerBuilder.RegisterType<VerifyMessageRequestObserver>().As<IRpcRequestObserver>();
+            ContainerProvider.ContainerBuilder.RegisterInstance(_peerClient).As<ILibP2PPeerClient>();
 
             ContainerProvider.ContainerBuilder.RegisterInstance(PeerIdHelper.GetPeerId("Test"))
                .As<MultiAddress>();
@@ -91,9 +93,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);
             _keySigner = ContainerProvider.Container.Resolve<IKeySigner>();
             _peerId = ContainerProvider.Container.Resolve<MultiAddress>();
+
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            _peerClient = Substitute.For<ILibP2PPeerClient>();
-            ContainerProvider.ContainerBuilder.RegisterInstance(_peerClient).As<ILibP2PPeerClient>().SingleInstance();
 
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
@@ -120,7 +121,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             };
 
             _verifyMessageRequestObserver
-               .OnNext(requestMessage.ToProtocolMessage(_peerId));
+               .OnNext(new ObserverDto(_fakeContext,
+                    requestMessage.ToProtocolMessage(_peerId)));
             AssertVerifyResponse(true);
         }
 
@@ -136,13 +138,13 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             };
 
             _verifyMessageRequestObserver
-               .OnNext(requestMessage.ToProtocolMessage(_peerId));
+               .OnNext(new ObserverDto(_fakeContext,
+                    requestMessage.ToProtocolMessage(_peerId)));
             AssertVerifyResponse(false);
         }
 
         private void AssertVerifyResponse(bool valid)
         {
-            //var responseList = _fakeContext.Channel.ReceivedCalls().ToList();
             var responseList = _peerClient.ReceivedCalls().ToList();
             var response = ((MessageDto) responseList[0].GetArguments()[0]).Content
                .FromProtocolMessage<VerifyMessageResponse>();

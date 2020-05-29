@@ -51,12 +51,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         private TestScheduler _testScheduler;
         private IPeerRepository _peerRepository;
         private MultiAddress _senderId;
+        private ILibP2PPeerClient _peerClient;
 
         [SetUp]
         public void Init()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
+            _peerClient = Substitute.For<ILibP2PPeerClient>();
 
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
@@ -104,7 +106,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
 
             var peerSettings = _senderId.ToSubstitutedPeerSettings();
-            var handler = new PeerReputationRequestObserver(peerSettings, Substitute.For<ILibP2PPeerClient>(), _logger, _peerRepository);
+            var handler = new PeerReputationRequestObserver(peerSettings, _peerClient, _logger, _peerRepository);
             handler.StartObserving(messageStream);
 
             _testScheduler.Start();

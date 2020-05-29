@@ -52,6 +52,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         private MultiAddress _testPeerId;
         private VerifyMessageRequest _verifyMessageRequest;
         private SigningContext _signingContext;
+        private ILibP2PPeerClient _peerClient;
 
         [SetUp]
         public void Init()
@@ -61,6 +62,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 NetworkType = NetworkType.Devnet,
                 SignatureType = SignatureType.ProtocolRpc
             };
+
+            _peerClient = Substitute.For<ILibP2PPeerClient>();
 
             _testPeerId = PeerIdHelper.GetPeerId("TestPeerIdentifier");
 
@@ -74,7 +77,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
-            _verifyMessageRequestObserver = new VerifyMessageRequestObserver(peerSettings, Substitute.For<ILibP2PPeerClient>(), logger, _keySigner);
+            _verifyMessageRequestObserver = new VerifyMessageRequestObserver(peerSettings, _peerClient, logger, _keySigner);
 
             _verifyMessageRequest = GetValidVerifyMessageRequest();
         }

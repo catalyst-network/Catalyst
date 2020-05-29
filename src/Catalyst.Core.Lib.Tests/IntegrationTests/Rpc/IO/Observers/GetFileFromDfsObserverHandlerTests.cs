@@ -57,6 +57,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         private IDownloadFileTransferFactory _fileDownloadFactory;
         private IDfsService _dfsService;
         private IHashProvider _hashProvider;
+        private ILibP2PPeerClient _peerClient;
 
         [SetUp]
         public void Init()
@@ -69,6 +70,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             _fileDownloadFactory = new DownloadFileTransferFactory(_logger);
             _logger = Substitute.For<ILogger>();
             _dfsService = Substitute.For<IDfsService>();
+            _peerClient = Substitute.For<ILibP2PPeerClient>();
         }
 
         [TestCase(1000L)]
@@ -96,7 +98,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
                 var getFileFromDfsResponseHandler =
                     new GetFileFromDfsResponseObserver(_logger, _fileDownloadFactory);
                 var transferBytesHandler =
-                    new TransferFileBytesRequestObserver(_fileDownloadFactory, peerSettings, Substitute.For<ILibP2PPeerClient>(), _logger);
+                    new TransferFileBytesRequestObserver(_fileDownloadFactory, peerSettings, _peerClient, _logger);
 
                 _fileDownloadFactory.RegisterTransfer(fileDownloadInformation);
 

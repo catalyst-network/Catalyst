@@ -65,7 +65,6 @@ namespace Catalyst.Core.Modules.Sync.Manager
         private readonly IDeltaHeightWatcher _deltaHeightWatcher;
 
         public PeerSyncManager(ILibP2PPeerClient peerClient,
-            IPeerRepository peerRepository,
             ILibP2PPeerService peerService,
             IUserOutput userOutput,
             IDeltaHeightWatcher deltaHeightWatcher,
@@ -75,7 +74,6 @@ namespace Catalyst.Core.Modules.Sync.Manager
             IScheduler scheduler = null)
         {
             _peerClient = peerClient;
-            _peerRepository = peerRepository;
             _peerService = peerService;
             _userOutput = userOutput;
             _deltaHeightWatcher = deltaHeightWatcher;

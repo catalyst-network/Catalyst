@@ -59,14 +59,14 @@ namespace Catalyst.Core.Lib.P2P.Protocols
             IPeerDeltaHistoryResponse history;
             try
             {
-                await PeerClient.SendMessageAsync(
+                await PeerClient.SendMessageAsync(new MessageDto(
                     new DeltaHistoryRequest
                     {
                         Range = range,
                         Height = height
                     }.ToProtocolMessage(PeerId, CorrelationId.GenerateCorrelationId()),
                     recipientPeerId
-                );
+                ));
 
                 using (CancellationTokenProvider.CancellationTokenSource)
                 {

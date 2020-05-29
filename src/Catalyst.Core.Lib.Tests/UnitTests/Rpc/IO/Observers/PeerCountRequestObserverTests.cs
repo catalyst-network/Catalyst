@@ -56,6 +56,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         /// <summary>The fake channel context</summary>
         private IChannelHandlerContext _fakeContext;
 
+        private ILibP2PPeerClient _peerClient;
+
         /// <summary>
         ///     Initializes a new instance of the
         ///     <see>
@@ -69,6 +71,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             _testScheduler = new TestScheduler();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
+            _peerClient = Substitute.For<ILibP2PPeerClient>();
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
         }
@@ -107,7 +110,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
 
             var peerSettings = sendPeerId.ToSubstitutedPeerSettings();
-            var handler = new PeerCountRequestObserver(peerSettings, Substitute.For<ILibP2PPeerClient>(), peerService, _logger);
+            var handler = new PeerCountRequestObserver(peerSettings, _peerClient, peerService, _logger);
             handler.StartObserving(messageStream);
 
             _testScheduler.Start();

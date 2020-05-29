@@ -50,6 +50,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         private readonly ILogger _subbedLogger;
         private readonly MultiAddress _peerId;
         private readonly IPeerRepository _subbedPeerRepository;
+        private ILibP2PPeerClient _peerClient;
 
         public GetNeighbourRequestObserverTests()
         {
@@ -57,6 +58,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _subbedLogger = Substitute.For<ILogger>();
             _subbedPeerRepository = Substitute.For<IPeerRepository>();
             _peerId = PeerIdHelper.GetPeerId("testPeer");
+            _peerClient = Substitute.For<ILibP2PPeerClient>();
         }
 
         private static void AddMockPeerToDbAndSetReturnExpectation(IReadOnlyList<Peer> peer,
@@ -86,7 +88,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             var peerSettings = _peerId.ToSubstitutedPeerSettings();
             var neighbourRequestHandler = new GetNeighbourRequestObserver(peerSettings,
                 _subbedPeerRepository,
-                 Substitute.For<ILibP2PPeerClient>(),
+                _peerClient,
                 _subbedLogger
             );
 

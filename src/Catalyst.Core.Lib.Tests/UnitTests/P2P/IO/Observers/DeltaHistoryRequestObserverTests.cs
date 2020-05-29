@@ -52,6 +52,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         private readonly TestScheduler _testScheduler;
         private readonly ILogger _subbedLogger;
         private readonly DeltaHistoryRequestObserver _deltaHistoryRequestObserver;
+        private readonly ILibP2PPeerClient _peerClient;
 
         public DeltaHistoryRequestObserverTests()
         {
@@ -64,7 +65,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _deltaHistoryRequestObserver = new DeltaHistoryRequestObserver(peerSettings,
                 deltaIndexService,
                 new TestMapperProvider(),
-                 Substitute.For<ILibP2PPeerClient>(),
+                _peerClient,
                 _subbedLogger
             );
         }

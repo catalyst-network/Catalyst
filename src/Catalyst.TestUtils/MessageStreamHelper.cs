@@ -40,44 +40,49 @@ namespace Catalyst.TestUtils
     public static class MessageStreamHelper
     {
         public static void SendToHandler(this ProtocolMessage messages,
+            IChannelHandlerContext fakeContext,
             MessageObserverBase handler)
         {
-            handler.OnNext(messages);
+            handler.OnNext(CreateChanneledMessage(fakeContext, messages));
         }
 
         //Force test scheduler for testing streams
-        public static IObservable<ProtocolMessage> CreateStreamWithMessage(
+        public static IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithMessage(IChannelHandlerContext fakeContext,
             TestScheduler testScheduler,
             ProtocolMessage response)
         {
-            var messageStream = new[] { response }.ToObservable(testScheduler);
+            var channeledAny = new ObserverDto(fakeContext, response);
+            var messageStream = new[] {channeledAny}.ToObservable(testScheduler);
             return messageStream;
         }
 
-        public static IObservable<ProtocolMessage> CreateStreamWithMessages<T>(TestScheduler testScheduler,
+        public static IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithMessages<T>(TestScheduler testScheduler,
             params T[] messages)
             where T : IMessage<T>, IMessage
         {
             var protoMessages = messages.Select(m =>
                 m.ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId()));
 
-            return CreateStreamWithMessages(testScheduler, protoMessages.ToArray());
+            var context = Substitute.For<IChannelHandlerContext>();
+
+            return CreateStreamWithMessages(context, testScheduler, protoMessages.ToArray());
         }
 
-        public static IObservable<ProtocolMessage> CreateStreamWithMessages(TestScheduler testScheduler,
+        public static IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithMessages(IChannelHandlerContext fakeContext,
+            TestScheduler testScheduler,
             params ProtocolMessage[] responseMessages)
         {
             var stream = responseMessages
-               .Select(message => message);
+               .Select(message => new ObserverDto(fakeContext, message));
 
             var messageStream = stream.ToObservable(testScheduler);
             return messageStream;
         }
 
-        //private static ObserverDto CreateChanneledMessage(
-        //    ProtocolMessage responseMessage)
-        //{
-        //    return new ObserverDto(fakeContext, responseMessage);
-        //}
+        private static ObserverDto CreateChanneledMessage(IChannelHandlerContext fakeContext,
+            ProtocolMessage responseMessage)
+        {
+            return new ObserverDto(fakeContext, responseMessage);
+        }
     }
 }

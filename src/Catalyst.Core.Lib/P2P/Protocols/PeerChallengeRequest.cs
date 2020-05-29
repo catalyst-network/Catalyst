@@ -75,13 +75,13 @@ namespace Catalyst.Core.Lib.P2P.Protocols
             {
                 var correlationId = CorrelationId.GenerateCorrelationId();
                 var protocolMessage = new PingRequest().ToProtocolMessage(_senderIdentifier, correlationId);
-                //var messageDto = new MessageDto(
-                //    protocolMessage,
-                //    recipientPeerId
-                //);
+                var messageDto = new MessageDto(
+                    protocolMessage,
+                    recipientPeerId
+                );
 
                 _logger.Verbose($"Sending peer challenge request to IP: {recipientPeerId}");
-                await _peerClient.SendMessageAsync(protocolMessage, recipientPeerId);
+                await _peerClient.SendMessageAsync(messageDto).ConfigureAwait(false);
 
                 using (var cancellationTokenSource =
                     new CancellationTokenSource(TimeSpan.FromSeconds(_ttl)))
