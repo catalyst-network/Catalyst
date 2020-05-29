@@ -69,7 +69,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             _nodes = new List<PoaTestNode>();
             foreach (var nodeDetails in poaNodeDetails)
             {
-                var node = new PoaTestNode(nodeDetails.index, nodeDetails.fileSystem);
+                var node = new PoaTestNode(nodeDetails.index, true, nodeDetails.fileSystem);
                 _nodes.Add(node);
             }
         }

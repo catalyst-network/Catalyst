@@ -26,6 +26,7 @@ using System.Linq;
 using System.Net;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.Mempool;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Extensions;
@@ -92,7 +93,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
             var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
-            var handler = new GetMempoolRequestObserver(peerSettings, mempool, _mapperProvider, _logger);
+            var handler = new GetMempoolRequestObserver(peerSettings, Substitute.For<ILibP2PPeerClient>(), mempool, _mapperProvider, _logger);
 
             handler.StartObserving(messageStream);
 

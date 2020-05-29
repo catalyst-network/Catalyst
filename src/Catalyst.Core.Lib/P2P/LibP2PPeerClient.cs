@@ -22,12 +22,9 @@
 #endregion
 
 using Catalyst.Abstractions.Dfs.CoreApi;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Lib.P2P.Protocols;
@@ -63,22 +60,19 @@ namespace Catalyst.Core.Lib.P2P
             MessageStream = await _peerLibP2PChannelFactory.BuildMessageStreamAsync();
         }
 
-        public void SendMessageToPeers(IMessage message, IEnumerable<MultiAddress> peers)
+        public async Task SendMessageToPeersAsync<T>(T message, IEnumerable<MultiAddress> peers) where T : IMessage<T>
         {
-            var protocolMessage = message.ToProtocolMessage(_peerSettings.Address);
             foreach (var peer in peers)
             {
-                SendMessage(new MessageDto(
-                    protocolMessage,
-                    peer));
+                await SendMessageAsync(message, peer);
             }
         }
 
-        public void SendMessage<T>(IMessageDto<T> message) where T : IMessage<T>
+        public async Task SendMessageAsync<T>(T message, MultiAddress recipient) where T : IMessage<T>
         {
             try
             {
-                _catalystProtocol.SendAsync(message.RecipientPeerIdentifier, message.Content.ToProtocolMessage(_peerSettings.Address)).GetAwaiter().GetResult();
+                await _catalystProtocol.SendAsync(recipient, message.ToProtocolMessage(_peerSettings.Address)).ConfigureAwait(false);
             }
             catch(Exception exc)
             {

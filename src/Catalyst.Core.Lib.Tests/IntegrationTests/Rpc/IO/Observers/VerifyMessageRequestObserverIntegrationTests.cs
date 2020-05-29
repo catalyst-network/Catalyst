@@ -50,6 +50,7 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Core.Modules.Authentication;
 using Catalyst.Core.Modules.Hashing;
 using MultiFormats;
+using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 {
@@ -57,11 +58,12 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
     {
         private IKeySigner _keySigner;
         private IChannelHandlerContext _fakeContext;
+        private ILibP2PPeerClient _peerClient;
         private IRpcRequestObserver _verifyMessageRequestObserver;
         private ILifetimeScope _scope;
         private MultiAddress _peerId;
         private ByteString _testMessageToSign;
-        
+
         [SetUp]
         public void Init()
         {
@@ -90,6 +92,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             _keySigner = ContainerProvider.Container.Resolve<IKeySigner>();
             _peerId = ContainerProvider.Container.Resolve<MultiAddress>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
+            _peerClient = Substitute.For<ILibP2PPeerClient>();
+            ContainerProvider.ContainerBuilder.RegisterInstance(_peerClient).As<ILibP2PPeerClient>().SingleInstance();
 
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
@@ -116,8 +120,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             };
 
             _verifyMessageRequestObserver
-               .OnNext(new ObserverDto(_fakeContext,
-                    requestMessage.ToProtocolMessage(_peerId)));
+               .OnNext(requestMessage.ToProtocolMessage(_peerId));
             AssertVerifyResponse(true);
         }
 
@@ -133,14 +136,14 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             };
 
             _verifyMessageRequestObserver
-               .OnNext(new ObserverDto(_fakeContext,
-                    requestMessage.ToProtocolMessage(_peerId)));
+               .OnNext(requestMessage.ToProtocolMessage(_peerId));
             AssertVerifyResponse(false);
         }
 
         private void AssertVerifyResponse(bool valid)
         {
-            var responseList = _fakeContext.Channel.ReceivedCalls().ToList();
+            //var responseList = _fakeContext.Channel.ReceivedCalls().ToList();
+            var responseList = _peerClient.ReceivedCalls().ToList();
             var response = ((MessageDto) responseList[0].GetArguments()[0]).Content
                .FromProtocolMessage<VerifyMessageResponse>();
             response.IsSignedByKey.Should().Be(valid);

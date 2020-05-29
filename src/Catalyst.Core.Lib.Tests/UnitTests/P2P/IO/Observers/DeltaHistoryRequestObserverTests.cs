@@ -43,6 +43,7 @@ using NSubstitute;
 using Serilog;
 using SharpRepository.InMemoryRepository;
 using NUnit.Framework;
+using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 {
@@ -62,7 +63,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 
             _deltaHistoryRequestObserver = new DeltaHistoryRequestObserver(peerSettings,
                 deltaIndexService,
-                new TestMapperProvider(), 
+                new TestMapperProvider(),
+                 Substitute.For<ILibP2PPeerClient>(),
                 _subbedLogger
             );
         }

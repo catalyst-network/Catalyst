@@ -66,10 +66,10 @@ namespace Catalyst.Core.Lib.P2P.Protocols
         {
             try
             {
-                PeerClient.SendMessage(new MessageDto(
+                await PeerClient.SendMessageAsync(
                     new LatestDeltaHashRequest().ToProtocolMessage(PeerId, CorrelationId.GenerateCorrelationId()),
                     recipientPeerId
-                ));
+                );
 
                 using (CancellationTokenProvider.CancellationTokenSource)
                 {

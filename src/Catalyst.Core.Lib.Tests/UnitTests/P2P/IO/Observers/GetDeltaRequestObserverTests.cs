@@ -41,6 +41,7 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 {
@@ -67,7 +68,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             var peerIdentifier = PeerIdHelper.GetPeerId("responder");
             var peerSettings = peerIdentifier.ToSubstitutedPeerSettings();
             _deltaCache = Substitute.For<IDeltaCache>();
-            _observer = new GetDeltaRequestObserver(_deltaCache, peerSettings, logger);
+            _observer = new GetDeltaRequestObserver(_deltaCache, peerSettings, Substitute.For<ILibP2PPeerClient>(), logger);
             _fakeContext = Substitute.For<IChannelHandlerContext>();
         }
 
@@ -110,13 +111,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
                     pm.Content.FromProtocolMessage<GetDeltaResponse>().Delta == null));
         }
 
-        private IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithDeltaRequest(Cid cid)
+        private IObservable<ProtocolMessage> CreateStreamWithDeltaRequest(Cid cid)
         {
             var deltaRequest = new GetDeltaRequest {DeltaDfsHash = cid.ToArray().ToByteString()};
 
             var message = deltaRequest.ToProtocolMessage(PeerIdHelper.GetPeerId("sender"));
 
-            var observable = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, message);
+            var observable = MessageStreamHelper.CreateStreamWithMessage(_testScheduler, message);
             return observable;
         }
 

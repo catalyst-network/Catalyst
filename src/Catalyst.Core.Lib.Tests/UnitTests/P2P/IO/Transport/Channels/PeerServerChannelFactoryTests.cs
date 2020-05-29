@@ -161,7 +161,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
 
             var serverIdentifier = PeerIdHelper.GetPeerId("server");
             var peerSettings = serverIdentifier.ToSubstitutedPeerSettings();
-            using (var badHandler = new FailingRequestObserver(Substitute.For<ILogger>(), peerSettings))
+            using (var badHandler = new FailingRequestObserver(Substitute.For<ILogger>(), peerSettings, Substitute.For<ILibP2PPeerClient>()))
             {
                 var messageStream = GetObservableServiceHandler().MessageStream;
                 badHandler.StartObserving(messageStream);

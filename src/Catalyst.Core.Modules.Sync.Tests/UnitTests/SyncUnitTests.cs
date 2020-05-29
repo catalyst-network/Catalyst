@@ -69,6 +69,7 @@ using Catalyst.Core.Lib.P2P.Repository;
 using NUnit.Framework;
 using MultiFormats;
 using Lib.P2P.Protocols;
+using Catalyst.Abstractions.Dfs.CoreApi;
 
 namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 {
@@ -177,12 +178,12 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 
             _userOutput = Substitute.For<IUserOutput>();
 
-            _deltaHeightWatcher = new DeltaHeightWatcher(_peerClient, _peerRepository, _peerService, Substitute.For<CatalystProtocol>(), minimumPeers: 0);
+            _deltaHeightWatcher = new DeltaHeightWatcher(_peerClient, Substitute.For<ISwarmApi>(), _peerRepository, _peerService, minimumPeers: 0);
 
             var dfsService = Substitute.For<IDfsService>();
 
             _peerSyncManager = new PeerSyncManager(_peerClient, _peerRepository,
-                _peerService, _userOutput, _deltaHeightWatcher, Substitute.For<IDfsService>(), 0.7, 0);
+                _peerService, _userOutput, _deltaHeightWatcher, Substitute.For<ISwarmApi>(), 0.7, 0);
         }
 
         private DeltaHistoryResponse GenerateSampleData(int height, int range, int maxHeight = -1)
@@ -212,7 +213,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
         private void ModifyPeerClient<TRequest>(Action<TRequest, MultiAddress> callback) where TRequest : IMessage<TRequest>
         {
             _peerClient.When(x =>
-                x.SendMessageToPeers(
+                x.SendMessageToPeersAsync(
                     Arg.Is<IMessage>(y => y.Descriptor.ClrType.Name.EndsWith(typeof(TRequest).Name)), Arg.Any<IEnumerable<MultiAddress>>())).Do(
                 z =>
                 {
@@ -236,7 +237,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 
             await sync.StartAsync(CancellationToken.None);
 
-            sync.State.IsRunning.Should().BeTrue();
+            sync.IsRunning.Should().BeTrue();
         }
 
         [Test]
@@ -249,10 +250,10 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
                 _deltaIndexService, _mapperProvider, _userOutput, Substitute.For<ILogger>());
 
             await sync.StartAsync(CancellationToken.None);
-            sync.State.IsRunning.Should().BeTrue();
+            sync.IsRunning.Should().BeTrue();
 
             await sync.StopAsync(CancellationToken.None);
-            sync.State.IsRunning.Should().BeFalse();
+            sync.IsRunning.Should().BeFalse();
         }
 
         [Test]
@@ -268,7 +269,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 
             _userOutput.Received(1).WriteLine("Sync is not currently running.");
 
-            sync.State.IsRunning.Should().BeFalse();
+            sync.IsRunning.Should().BeFalse();
         }
 
         [Test]

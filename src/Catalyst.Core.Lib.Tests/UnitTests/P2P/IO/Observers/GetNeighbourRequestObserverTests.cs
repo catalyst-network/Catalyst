@@ -40,6 +40,7 @@ using NSubstitute;
 using Serilog;
 using NUnit.Framework;
 using MultiFormats;
+using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 {
@@ -85,6 +86,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             var peerSettings = _peerId.ToSubstitutedPeerSettings();
             var neighbourRequestHandler = new GetNeighbourRequestObserver(peerSettings,
                 _subbedPeerRepository,
+                 Substitute.For<ILibP2PPeerClient>(),
                 _subbedLogger
             );
 
