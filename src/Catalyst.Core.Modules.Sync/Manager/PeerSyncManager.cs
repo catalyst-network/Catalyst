@@ -31,7 +31,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Dfs;
-using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Abstractions.Sync.Interfaces;
@@ -51,7 +50,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
         private readonly IPeerRepository _peerRepository;
         private readonly ILibP2PPeerService _peerService;
         private readonly IUserOutput _userOutput;
-        private readonly ISwarmApi _swarmApi;
+        private readonly IDfsService _dfsService;
         private readonly ReplaySubject<IEnumerable<DeltaIndex>> _scoredDeltaIndexRangeSubject;
 
         private IDisposable _deltaHistorySubscription;
@@ -69,7 +68,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
             ILibP2PPeerService peerService,
             IUserOutput userOutput,
             IDeltaHeightWatcher deltaHeightWatcher,
-            ISwarmApi swarmApi,
+            IDfsService dfsService,
             double threshold = 0.5d,
             int minimumPeers = 0,
             IScheduler scheduler = null)
@@ -79,7 +78,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
             _peerService = peerService;
             _userOutput = userOutput;
             _deltaHeightWatcher = deltaHeightWatcher;
-            _swarmApi = swarmApi;
+            _dfsService = dfsService;
             _scoredDeltaIndexRangeSubject =
                 new ReplaySubject<IEnumerable<DeltaIndex>>(1, scheduler ?? Scheduler.Default);
             ScoredDeltaIndexRange = _scoredDeltaIndexRangeSubject.AsObservable();
@@ -90,7 +89,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
 
         public bool PeersAvailable()
         {
-            return _swarmApi.PeersAsync().ConfigureAwait(false).GetAwaiter().GetResult().Count() >= _minimumPeers;
+            return _dfsService.SwarmApi.PeersAsync().ConfigureAwait(false).GetAwaiter().GetResult().Count() >= _minimumPeers;
         }
 
         public bool ContainsPeerHistory() { return _peerRepository.GetAll().Any(); }
@@ -107,7 +106,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
         public void GetDeltaIndexRangeFromPeers(ulong index, int range)
         {
             var deltaHistoryRequest = new DeltaHistoryRequest
-            { Height = (uint) index, Range = (uint) range };
+            { Height = (uint)index, Range = (uint)range };
 
             _deltaHistoryRanker = new DeltaHistoryRanker(deltaHistoryRequest);
         }
@@ -130,8 +129,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
             {
                 if (_deltaHistoryRanker != null)
                 {
-                    //var peers = _deltaHeightWatcher.DeltaHeightRanker.GetPeers();
-                    var peers = await _swarmApi.PeersAsync().ConfigureAwait(false);
+                    var peers = _deltaHeightWatcher.DeltaHeightRanker.GetPeers();
                     var messageCount = Math.Min(_minimumPeers, 50);
                     var minimumThreshold = messageCount * _threshold;
                     var score = _deltaHistoryRanker.GetHighestScore();
@@ -142,7 +140,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
                         _scoredDeltaIndexRangeSubject.OnNext(deltaIndexes);
                         continue;
                     }
-                    await _peerClient.SendMessageToPeersAsync(_deltaHistoryRanker.DeltaHistoryRequest, peers.Select(x => x.ConnectedAddress)).ConfigureAwait(false);
+                    _peerClient.SendMessageToPeers(_deltaHistoryRanker.DeltaHistoryRequest, peers);
                 }
                 await Task.Delay(2000);
             }
@@ -157,12 +155,12 @@ namespace Catalyst.Core.Modules.Sync.Manager
             }
 
             var deltaHistoryRanker = _deltaHistoryRanker;
-            if (deltaHistoryRanker == null)
+            if(deltaHistoryRanker == null)
             {
                 return;
             }
 
-            var startHeight = (int) deltaHistoryResponse.DeltaIndex.FirstOrDefault()?.Height;
+            var startHeight = (int)deltaHistoryResponse.DeltaIndex.FirstOrDefault()?.Height;
             if (startHeight == deltaHistoryRanker.Height)
             {
                 deltaHistoryRanker.Add(deltaHistoryResponse.DeltaIndex);

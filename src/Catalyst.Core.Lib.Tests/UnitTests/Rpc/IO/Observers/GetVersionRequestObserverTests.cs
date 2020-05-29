@@ -36,7 +36,6 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
-using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -69,7 +68,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             );
 
             var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
-            var handler = new GetVersionRequestObserver(peerSettings, Substitute.For<ILibP2PPeerClient>(), _logger);
+            var handler = new GetVersionRequestObserver(peerSettings, _logger);
 
             handler.StartObserving(messageStream);
 

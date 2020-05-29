@@ -39,7 +39,6 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
-using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
 {
@@ -58,7 +57,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
             var peerSettings = PeerIdHelper.GetPeerId("Test").ToSubstitutedPeerSettings();
             _observer = new TransferFileBytesRequestObserver(_downloadFileTransferFactory,
                 peerSettings,
-                 Substitute.For<ILibP2PPeerClient>(),
                 Substitute.For<ILogger>());
         }
 
@@ -76,7 +74,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
             _downloadFileTransferFactory.DownloadChunk(Arg.Any<TransferFileBytesRequest>())
                .Returns(FileTransferResponseCodeTypes.Successful);
 
-            request.SendToHandler(_observer);
+            request.SendToHandler(_context, _observer);
             _downloadFileTransferFactory.Received(1).DownloadChunk(Arg.Any<TransferFileBytesRequest>());
         }
 
@@ -91,7 +89,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
             var requestDto = new MessageDto(new TransferFileBytesRequest().ToProtocolMessage(sender)
               , PeerIdHelper.GetPeerId("recipient"));
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(testScheduler, requestDto.Content);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_context, testScheduler, requestDto.Content);
 
             _observer.StartObserving(messageStream);
 

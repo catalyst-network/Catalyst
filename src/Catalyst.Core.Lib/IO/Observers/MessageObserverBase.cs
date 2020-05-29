@@ -23,6 +23,7 @@
 
 using System;
 using System.Reactive.Linq;
+using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Protocol.Wire;
 using Serilog;
@@ -41,7 +42,7 @@ namespace Catalyst.Core.Lib.IO.Observers
             _filterMessageType = filterMessageType;
         }
 
-        public void StartObserving(IObservable<ProtocolMessage> messageStream)
+        public void StartObserving(IObservable<IObserverDto<ProtocolMessage>> messageStream)
         {
             if (MessageSubscription != null)
             {
@@ -50,12 +51,12 @@ namespace Catalyst.Core.Lib.IO.Observers
 
             MessageSubscription = messageStream
                .Where(m => {
-                   return m.TypeUrl != null && m.TypeUrl == _filterMessageType;
+                   return m.Payload?.TypeUrl != null && m.Payload.TypeUrl == _filterMessageType;
                  })
                .Subscribe(this);
         }
 
-        public abstract void OnNext(ProtocolMessage message);
+        public abstract void OnNext(IObserverDto<ProtocolMessage> messageDto);
 
         public virtual void OnCompleted()
         {

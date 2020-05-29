@@ -117,8 +117,6 @@ namespace Catalyst.Core.Modules.Dfs
             builder.RegisterType<Ping1>()
                .As<Ping1>();
 
-            builder.RegisterType<CatalystProtocol>().AsImplementedInterfaces().SingleInstance();
-
             builder.RegisterType<MigrationManager>()
                .As<IMigrationManager>();
         }

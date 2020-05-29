@@ -96,7 +96,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
                 var getFileFromDfsResponseHandler =
                     new GetFileFromDfsResponseObserver(_logger, _fileDownloadFactory);
                 var transferBytesHandler =
-                    new TransferFileBytesRequestObserver(_fileDownloadFactory, peerSettings, Substitute.For<ILibP2PPeerClient>(), _logger);
+                    new TransferFileBytesRequestObserver(_fileDownloadFactory, peerSettings, _logger);
 
                 _fileDownloadFactory.RegisterTransfer(fileDownloadInformation);
 

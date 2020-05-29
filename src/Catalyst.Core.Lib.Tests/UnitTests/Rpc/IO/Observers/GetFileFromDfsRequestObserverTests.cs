@@ -44,7 +44,6 @@ using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
-using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -62,7 +61,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             _fileTransferFactory = Substitute.For<IUploadFileTransferFactory>();
             _dfsService = Substitute.For<IDfsService>();
             var peerSettings = PeerIdHelper.GetPeerId("test").ToSubstitutedPeerSettings();
-            _observer = new GetFileFromDfsRequestObserver(_dfsService, peerSettings, Substitute.For<ILibP2PPeerClient>(), _fileTransferFactory,
+            _observer = new GetFileFromDfsRequestObserver(_dfsService, peerSettings, _fileTransferFactory,
                 Substitute.For<ILogger>());
         }
 

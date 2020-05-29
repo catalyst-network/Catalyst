@@ -23,14 +23,18 @@
 
 using System;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
+using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.IO.Messaging.Dto;
+using Catalyst.Core.Lib.P2P;
 using Catalyst.Protocol.Wire;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
+using Lib.P2P.Protocols;
 using MultiFormats;
 using Serilog;
 
@@ -54,26 +58,25 @@ namespace Catalyst.Core.Lib.IO.Observers
 
         protected abstract TProtoRes HandleRequest(TProtoReq messageDto, IChannelHandlerContext channelHandlerContext, MultiAddress senderPeerId, ICorrelationId correlationId);
 
-        public override void OnNext(ProtocolMessage message)
+        public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
         {
             Logger.Verbose("Pre Handle Message Called");
 
             try
             {
-                var correlationId = message.CorrelationId.ToCorrelationId();
-                var recipientPeerId = new MultiAddress(message.PeerId);
+                var correlationId = messageDto.Payload.CorrelationId.ToCorrelationId();
+                var recipientPeerId = new MultiAddress(messageDto.Payload.PeerId);
 
-                var response = HandleRequest(message.FromProtocolMessage<TProtoReq>(),
-                    null,
+                var response = HandleRequest(messageDto.Payload.FromProtocolMessage<TProtoReq>(),
+                    messageDto.Context,
                     recipientPeerId,
                     correlationId);
 
-                //var responseDto = new MessageDto(
-                //    response.ToProtocolMessage(PeerSettings.Address, correlationId),
-                //    recipientPeerId);
+                var responseDto = new MessageDto(
+                    response.ToProtocolMessage(PeerSettings.Address, correlationId),
+                    recipientPeerId);
 
-                var responseMessage = response.ToProtocolMessage(PeerSettings.Address, correlationId);
-                _peerClient.SendMessageAsync(responseMessage, recipientPeerId);
+                _peerClient.SendMessage(responseDto);
 
                 //todo
                 //messageDto.Context.Channel?.WriteAndFlushAsync(responseDto).ConfigureAwait(false).GetAwaiter().GetResult();

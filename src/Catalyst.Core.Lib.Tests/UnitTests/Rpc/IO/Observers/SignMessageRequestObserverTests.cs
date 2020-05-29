@@ -41,7 +41,6 @@ using NSubstitute;
 using Serilog;
 using NUnit.Framework;
 using Google.Protobuf;
-using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -87,7 +86,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
             var handler =
-                new SignMessageRequestObserver(peerSettings, Substitute.For<ILibP2PPeerClient>(), _logger, _keySigner);
+                new SignMessageRequestObserver(peerSettings, _logger, _keySigner);
 
             handler.StartObserving(messageStream);
 

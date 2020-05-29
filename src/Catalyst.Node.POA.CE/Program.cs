@@ -149,6 +149,8 @@ namespace Catalyst.Node.POA.CE
             containerBuilder.RegisterType<ConsoleUserOutput>().As<IUserOutput>();
             containerBuilder.RegisterType<ConsoleUserInput>().As<IUserInput>();
 
+            containerBuilder.RegisterType<CatalystProtocol>().AsImplementedInterfaces().SingleInstance();
+
             // message handlers
             containerBuilder.RegisterAssemblyTypes(typeof(CoreLibProvider).Assembly)
                .AssignableTo<IP2PMessageObserver>().As<IP2PMessageObserver>();

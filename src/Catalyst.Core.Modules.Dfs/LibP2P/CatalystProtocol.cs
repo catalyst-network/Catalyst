@@ -27,10 +27,13 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.IPPN;
+using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Common.Logging;
 using Google.Protobuf;
-using Microsoft.VisualBasic;
 using MultiFormats;
 using ProtoBuf;
 using Semver;
@@ -38,7 +41,7 @@ using Semver;
 namespace Lib.P2P.Protocols
 {
     /// <summary>
-    ///   Catalyst Protocol version 1.0
+    ///   Ping Protocol version 1.0
     /// </summary>
     public class CatalystProtocol : ICatalystProtocol, IPeerProtocol, IService
     {
@@ -81,6 +84,9 @@ namespace Lib.P2P.Protocols
 
             while (true)
             {
+                //var b2 = await Message.ReadBytesAsync(stream);
+                //var a = Serializer.DeserializeWithLengthPrefix<ProtocolMessage>(stream, PrefixStyle.Base128);
+
                 var intSize = sizeof(int) - 1;
                 var length = await stream.ReadVarint32Async(cancel).ConfigureAwait(false);
                 var realLength = length - intSize;
@@ -92,6 +98,13 @@ namespace Lib.P2P.Protocols
 
                 var protocolMessage = ProtocolMessage.Parser.ParseFrom(newArray);
 
+                //await using (var ms = new MemoryStream(bytes, intSize, realLength))
+                //{
+                //    var protocolMessage = ProtocolMessage.Parser.ParseFrom(ms);
+                //    var b = 0;
+                //}
+                //var request = await ProtoBufHelper.ReadMessageAsync<PeerId>(stream, cancel).ConfigureAwait(false);
+                //var a = 0;
                 ResponseMessageSubject.OnNext(protocolMessage);
             }
         }
@@ -117,19 +130,20 @@ namespace Lib.P2P.Protocols
         }
 
         /// <summary>
-        ///   Send a catalyst message request to a peer.
+        ///   Send echo requests to a peer.
         /// </summary>
         /// <param name="peerId">
-        ///   The peer ID to receive the message requests.
+        ///   The peer ID to receive the echo requests.
         /// </param>
-        /// <param name="message">
-        ///   The message request to send.
+        /// <param name="count">
+        ///   The number of echo requests to send.  Defaults to 10.
         /// </param>
         /// <param name="cancel">
         ///   Is used to stop the task.  When cancelled, the <see cref="TaskCanceledException"/> is raised.
         /// </param>
         /// <returns>
-        ///   A task that represents the asynchronous operation.
+        ///   A task that represents the asynchronous operation. The task's value is
+        ///   the sequence of <see cref="PingResult"/>.
         /// </returns>
         public async Task SendAsync(MultiHash peerId,
             ProtocolMessage message,
@@ -140,19 +154,20 @@ namespace Lib.P2P.Protocols
         }
 
         /// <summary>
-        ///   Send a catalyst message request to a peer.
+        ///   Send echo requests to a peer.
         /// </summary>
         /// <param name="address">
         ///   The address of a peer to receive the echo requests.
         /// </param>
-        /// <param name="message">
-        ///   The message request to send.
+        /// <param name="count">
+        ///   The number of echo requests to send.  Defaults to 10.
         /// </param>
         /// <param name="cancel">
         ///   Is used to stop the task.  When cancelled, the <see cref="TaskCanceledException"/> is raised.
         /// </param>
         /// <returns>
-        ///   A task that represents the asynchronous operation.
+        ///   A task that represents the asynchronous operation. The task's value is
+        ///   the sequence of <see cref="PingResult"/>.
         /// </returns>
         public async Task SendAsync(MultiAddress address,
             ProtocolMessage message,
@@ -166,10 +181,19 @@ namespace Lib.P2P.Protocols
         {
             await using (var stream = await SwarmService.DialAsync(peer, ToString(), cancel))
             {
-                var b = message.ToByteArray();
                 Serializer.SerializeWithLengthPrefix(stream, message.ToByteArray(), PrefixStyle.Base128);
+
+                //var bytes = message.ToByteArray();
+                //Serializer.SerializeWithLengthPrefix(stream, bytes, PrefixStyle.Base128);
                 await stream.FlushAsync(cancel).ConfigureAwait(false);
             }
+        }
+
+        [ProtoContract]
+        private sealed class Test
+        {
+            [ProtoMember(1)]
+            public bool full;
         }
     }
 }

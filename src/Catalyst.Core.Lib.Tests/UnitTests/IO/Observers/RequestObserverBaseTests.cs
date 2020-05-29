@@ -29,7 +29,6 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
-using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
 {
@@ -43,7 +42,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
             var peerSettings = PeerIdHelper.GetPeerId("server").ToSubstitutedPeerSettings();
             var messageStream = MessageStreamHelper.CreateStreamWithMessages(testScheduler, candidateDeltaMessages);
             using (var observer = new FailingRequestObserver(Substitute.For<ILogger>(),
-                peerSettings, Substitute.For<ILibP2PPeerClient>()))
+                peerSettings))
             {
                 observer.StartObserving(messageStream);
 

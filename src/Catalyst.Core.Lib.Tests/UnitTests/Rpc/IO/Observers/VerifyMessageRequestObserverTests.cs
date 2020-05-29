@@ -40,7 +40,6 @@ using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils.Fakes;
 using NUnit.Framework;
 using MultiFormats;
-using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -74,7 +73,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
-            _verifyMessageRequestObserver = new VerifyMessageRequestObserver(peerSettings, Substitute.For<ILibP2PPeerClient>(), logger, _keySigner);
+            _verifyMessageRequestObserver = new VerifyMessageRequestObserver(peerSettings, logger, _keySigner);
 
             _verifyMessageRequest = GetValidVerifyMessageRequest();
         }

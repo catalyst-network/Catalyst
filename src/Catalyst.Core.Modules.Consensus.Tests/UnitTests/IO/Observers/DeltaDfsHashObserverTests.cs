@@ -60,7 +60,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
             _fakeChannelContext = Substitute.For<IChannelHandlerContext>();
-            _syncState = new SyncState { IsSynchronized = true };
+            _syncState = new SyncState {IsSynchronized = true, IsRunning = true};
             _logger = Substitute.For<ILogger>();
             _peerRepository = Substitute.For<IPeerRepository>();
         }

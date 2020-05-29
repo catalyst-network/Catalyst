@@ -66,7 +66,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
             _deltaHub = Substitute.For<IDeltaHub>();
             var deltaHashProvider = Substitute.For<IDeltaHashProvider>();
             var logger = Substitute.For<ILogger>();
-            _syncState = new SyncState { IsSynchronized = true };
+            _syncState = new SyncState {IsSynchronized = true, IsRunning = true};
             _ledger = Substitute.For<ILedger>();
             _consensus = new Consensus(
                 _deltaBuilder,

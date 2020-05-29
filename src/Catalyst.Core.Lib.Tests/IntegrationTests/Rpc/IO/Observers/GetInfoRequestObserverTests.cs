@@ -40,8 +40,6 @@ using Newtonsoft.Json;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
-using Catalyst.Abstractions.P2P;
-using MultiFormats;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 {
@@ -81,24 +79,22 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
                .SerializeObject(_config.GetSection("CatalystNodeConfiguration").AsEnumerable(),
                     Formatting.Indented);
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_testScheduler,
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler,
                 protocolMessage
             );
 
-            var peerClient = Substitute.For<ILibP2PPeerClient>();
             var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
             var handler = new GetInfoRequestObserver(
-                peerSettings, peerClient, _config, _logger);
+                peerSettings, _config, _logger);
 
             handler.StartObserving(messageStream);
 
             _testScheduler.Start();
 
-            await peerClient.Received(1).SendMessageAsync(Arg.Any<ProtocolMessage>(), Arg.Any<MultiAddress>());
-            //await _fakeContext.Channel.Received(1).WriteAndFlushAsync(Arg.Any<object>());
+            await _fakeContext.Channel.Received(1).WriteAndFlushAsync(Arg.Any<object>());
 
-            var receivedCalls = peerClient.ReceivedCalls().ToList();
-            receivedCalls.Count.Should().Be(1,
+            var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
+            receivedCalls.Count.Should().Be(1, 
                 "the only call should be the one we checked above");
 
             var response = ((IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments()[0])
