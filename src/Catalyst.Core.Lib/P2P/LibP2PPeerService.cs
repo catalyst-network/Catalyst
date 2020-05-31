@@ -26,12 +26,8 @@ using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
-using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
-using Google.Protobuf;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -42,11 +38,8 @@ namespace Catalyst.Core.Lib.P2P
 {
     public class LibP2PPeerService : ILibP2PPeerService
     {
-        private readonly IPeerSettings _peerSettings;
-        private readonly IPubSubApi _pubSubApi;
         private readonly PeerLibP2PServerChannelFactory _peerLibP2PChannelFactory;
         private readonly IEnumerable<IP2PMessageObserver> _messageHandlers;
-        private readonly IPeerDiscovery _peerDiscovery;
         private readonly IHealthChecker _healthChecker;
         private readonly ILogger _logger;
 
@@ -63,10 +56,8 @@ namespace Catalyst.Core.Lib.P2P
             ILogger logger
             )
         {
-            _peerSettings = peerSettings;
             _peerLibP2PChannelFactory = peerLibP2PChannelFactory;
             _messageHandlers = messageHandlers;
-            _peerDiscovery = peerDiscovery;
             _healthChecker = healthChecker;
             _logger = logger;
         }

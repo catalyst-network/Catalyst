@@ -81,16 +81,18 @@ namespace Lib.P2P.Protocols
 
             while (true)
             {
-                var intSize = sizeof(int) - 1;
-                var length = await stream.ReadVarint32Async(cancel).ConfigureAwait(false);
-                var realLength = length - intSize;
-                var bytes = new byte[length];
-                await stream.ReadExactAsync(bytes, 0, length, cancel).ConfigureAwait(false);
+                //var intSize = sizeof(int) - 1;
+                //var length = await stream.ReadVarint32Async(cancel).ConfigureAwait(false);
+                //var realLength = length - intSize;
+                //var bytes = new byte[length];
+                //await stream.ReadExactAsync(bytes, 0, length, cancel).ConfigureAwait(false);
 
-                var newArray = new byte[realLength];
-                Array.Copy(bytes, intSize, newArray, 0, realLength);
+                //var newArray = new byte[realLength];
+                //Array.Copy(bytes, intSize, newArray, 0, realLength);
 
-                var protocolMessage = ProtocolMessage.Parser.ParseFrom(newArray);
+                var request = await ProtoBufHelper.ReadMessageAsync<CatalystByteMessage>(stream, cancel).ConfigureAwait(false);
+
+                var protocolMessage = ProtocolMessage.Parser.ParseFrom(request.Message);
 
                 ResponseMessageSubject.OnNext(protocolMessage);
             }
@@ -167,10 +169,21 @@ namespace Lib.P2P.Protocols
         {
             await using (var stream = await SwarmService.DialAsync(peer, ToString(), cancel))
             {
-                var b = message.ToByteArray();
-                Serializer.SerializeWithLengthPrefix(stream, message.ToByteArray(), PrefixStyle.Base128);
+                var catalystByteMessage = new CatalystByteMessage
+                {
+                    Message = message.ToByteArray()
+                };
+
+                Serializer.SerializeWithLengthPrefix(stream, catalystByteMessage, PrefixStyle.Base128);
                 await stream.FlushAsync(cancel).ConfigureAwait(false);
             }
+        }
+
+        [ProtoContract]
+        public sealed class CatalystByteMessage
+        {
+            [ProtoMember(1)]
+            public byte[] Message;
         }
     }
 }
