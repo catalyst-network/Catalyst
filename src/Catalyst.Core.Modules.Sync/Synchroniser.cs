@@ -77,7 +77,7 @@ namespace Catalyst.Core.Modules.Sync
             IMapperProvider mapperProvider,
             IUserOutput userOutput,
             ILogger logger,
-            int rangeSize = 100,
+            int rangeSize = 20,
             IScheduler scheduler = null)
         {
             State = syncState;
@@ -146,21 +146,14 @@ namespace Catalyst.Core.Modules.Sync
 
             _deltaHeightWatcher.Start();
 
-
-            using (CancellationTokenSource cts = new CancellationTokenSource())
+            using (var WaitForPeersCancellationSource = new CancellationTokenSource())
             {
+                using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, WaitForPeersCancellationSource.Token);
                 cts.CancelAfter(TimeSpan.FromSeconds(10));
                 await _peerSyncManager.WaitForPeersAsync(cts.Token).ConfigureAwait(false);
             }
 
-            //DeltaIndex highestDeltaIndex = null;
-            //using (CancellationTokenSource cts = new CancellationTokenSource())
-            //{
-            //    cts.CancelAfter(TimeSpan.FromSeconds(10));
-            //    highestDeltaIndex = await _deltaHeightWatcher.GetHighestDeltaIndexAsync().ConfigureAwait(false);
-            //}
-
-            var highestDeltaIndex = await _deltaHeightWatcher.GetHighestDeltaIndexAsync().ConfigureAwait(false);
+            var highestDeltaIndex = await _deltaHeightWatcher.GetHighestDeltaIndexAsync(TimeSpan.FromSeconds(30), cancellationToken).ConfigureAwait(false);
             if (highestDeltaIndex == null || highestDeltaIndex.Height <= CurrentHighestDeltaIndexStored)
             {
                 await Completed().ConfigureAwait(false);

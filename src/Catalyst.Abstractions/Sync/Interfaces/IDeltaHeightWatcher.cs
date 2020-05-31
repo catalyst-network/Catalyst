@@ -32,7 +32,7 @@ namespace Catalyst.Abstractions.Sync.Interfaces
     {
         IDeltaHeightRanker DeltaHeightRanker { get; }
         DeltaIndex LatestDeltaHash { get; }
-        Task<DeltaIndex> GetHighestDeltaIndexAsync(CancellationToken cancellationToken = default);
+        Task<DeltaIndex> GetHighestDeltaIndexAsync(TimeSpan timeout = default, CancellationToken cancellationToken = default);
         void Start();
         void Stop();
     }

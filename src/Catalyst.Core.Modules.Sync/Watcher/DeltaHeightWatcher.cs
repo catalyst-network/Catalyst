@@ -35,6 +35,7 @@ using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Wire;
 using Lib.P2P.Protocols;
+using Nethermind.Core.Extensions;
 
 namespace Catalyst.Core.Modules.Sync.Watcher
 {
@@ -52,7 +53,7 @@ namespace Catalyst.Core.Modules.Sync.Watcher
         public DeltaIndex LatestDeltaHash { set; get; }
 
         private Timer _requestDeltaHeightTimer;
-        private ManualResetEventSlim _manualResetEventSlim;
+        private AutoResetEvent _autoResetEvent;
 
         public DeltaHeightWatcher(ILibP2PPeerClient peerClient,
             ISwarmApi swarmApi,
@@ -62,7 +63,7 @@ namespace Catalyst.Core.Modules.Sync.Watcher
             _peerClient = peerClient;
             DeltaHeightRanker = new DeltaHeightRanker(swarmApi, 100, threshold);
             _peerService = peerService;
-            _manualResetEventSlim = new ManualResetEventSlim(false);
+            _autoResetEvent = new AutoResetEvent(false);
             _swarmApi = swarmApi;
 
             _threshold = threshold;
@@ -70,20 +71,19 @@ namespace Catalyst.Core.Modules.Sync.Watcher
 
         public async void RequestDeltaHeightTimerCallback(object state)
         {
-            var peers = await _swarmApi.PeersAsync().ConfigureAwait(false);
-            if (DeltaHeightRanker.GetPeers().Count() > 1)
-            {
-                _manualResetEventSlim.Set();
-            }
+            //var peers = await _swarmApi.PeersAsync().ConfigureAwait(false);
+            //if (DeltaHeightRanker.GetPeers().Count() > 0)
+            //{
+            //    _manualResetEventSlim.Set();
+            //}
 
             await RequestDeltaHeightFromPeers();
         }
 
-        public Task<DeltaIndex> GetHighestDeltaIndexAsync(CancellationToken cancellationToken = default)
+        public async Task<DeltaIndex> GetHighestDeltaIndexAsync(TimeSpan timeout = default, CancellationToken cancellationToken = default)
         {
-            _manualResetEventSlim.Wait(cancellationToken);
-            var highestDeltaIndex = GetMostPopularMessage()?.Item.DeltaIndex;
-            return Task.FromResult(highestDeltaIndex);
+            await _autoResetEvent.WaitOneAsync(timeout, cancellationToken);
+            return GetMostPopularMessage()?.Item.DeltaIndex;
         }
 
         private IRankedItem<LatestDeltaHashResponse> GetMostPopularMessage()
