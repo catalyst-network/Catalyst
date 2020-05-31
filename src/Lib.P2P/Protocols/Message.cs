@@ -101,7 +101,8 @@ namespace Lib.P2P.Protocols
         public static async Task<string> ReadStringAsync(Stream stream,
             CancellationToken cancel = default)
         {
-            var payload = Encoding.UTF8.GetString(await ReadBytesAsync(stream, cancel).ConfigureAwait(false));
+            var bytes = await ReadBytesAsync(stream, cancel).ConfigureAwait(false);
+            var payload = Encoding.UTF8.GetString(bytes);
 
             _log.Trace("received " + payload);
             return payload;

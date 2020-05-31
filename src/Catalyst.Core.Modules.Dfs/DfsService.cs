@@ -98,10 +98,10 @@ namespace Catalyst.Core.Modules.Dfs
             DfsOptions dfsOptions,
             DfsState dfsState,
             IEnumerable<IService> pluginServices,
-            IMigrationManager migrationManager
+            IMigrationManager migrationManager,
+            IPeerRepository peerRepository
             )
         {
-            //IPeerRepository peerRepository
             LocalPeer = localPeer;
 
             BitSwapService = bitSwapService;
@@ -111,7 +111,7 @@ namespace Catalyst.Core.Modules.Dfs
             SwarmService = swarmService;
 
             BootstrapApi = bootstrapApi;
-            ConfigApi = configApi;     
+            ConfigApi = configApi;
             BitSwapApi = bitSwapApi;
             BlockApi = blockApi;
             BlockRepositoryApi = blockRepositoryApi;
@@ -132,7 +132,7 @@ namespace Catalyst.Core.Modules.Dfs
             MigrationManager = migrationManager;
             PluginServices = pluginServices;
 
-            //_peerRepository = peerRepository;
+            _peerRepository = peerRepository;
 
             InitAsync().Wait();
         }
@@ -240,7 +240,8 @@ namespace Catalyst.Core.Modules.Dfs
                 }
             };
 
-            foreach(var service in PluginServices) {
+            foreach (var service in PluginServices)
+            {
                 tasks.Add(async () =>
                 {
                     _stopTasks.Add(async () => await service.StopAsync().ConfigureAwait(false));
@@ -298,7 +299,7 @@ namespace Catalyst.Core.Modules.Dfs
                 {
                     var bootstrap = new Bootstrap
                     {
-                        Addresses = await BootstrapApi.ListAsync()
+                        Addresses = Options.Discovery.UsePeerRepository ? _peerRepository.GetAll().Select(x=>x.Address) : await BootstrapApi.ListAsync()
                     };
                     bootstrap.PeerDiscovered += OnPeerDiscovered;
                     _stopTasks.Add(async () => await bootstrap.StopAsync().ConfigureAwait(false));
@@ -400,6 +401,19 @@ namespace Catalyst.Core.Modules.Dfs
             try
             {
                 SwarmService.RegisterPeer(peer);
+
+                if (Options.Discovery.UsePeerRepository)
+                {
+                    var address = peer.Addresses.FirstOrDefault();
+                    if (address != null)
+                    {
+                        var newPeer = new Lib.P2P.Models.Peer
+                        {
+                            Address = address
+                        };
+                        _peerRepository.Add(newPeer);
+                    }
+                }
             }
             catch (Exception ex)
             {

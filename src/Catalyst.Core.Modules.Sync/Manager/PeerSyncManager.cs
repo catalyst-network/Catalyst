@@ -86,19 +86,20 @@ namespace Catalyst.Core.Modules.Sync.Manager
             _minimumPeers = minimumPeers;
         }
 
-        public bool PeersAvailable()
-        {
-            return _swarmApi.PeersAsync().ConfigureAwait(false).GetAwaiter().GetResult().Count() >= _minimumPeers;
-        }
-
-        public bool ContainsPeerHistory() { return _peerRepository.GetAll().Any(); }
-
         public async Task WaitForPeersAsync(CancellationToken cancellationToken = default)
         {
-            while (!PeersAvailable() && !cancellationToken.IsCancellationRequested)
+            try
             {
-                _userOutput.WriteLine("Waiting for peers..");
-                await Task.Delay(1000, cancellationToken);
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    var peers = await _swarmApi.PeersAsync().ConfigureAwait(false);
+                    _userOutput.WriteLine($"Peers discovered for Sync: {peers.Count()}");
+                    await Task.Delay(1000, cancellationToken);
+                }
+            }
+            catch(TaskCanceledException)
+            {
+
             }
         }
 

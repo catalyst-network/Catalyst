@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Protocol.Deltas;
 
@@ -31,7 +32,7 @@ namespace Catalyst.Abstractions.Sync.Interfaces
     {
         IDeltaHeightRanker DeltaHeightRanker { get; }
         DeltaIndex LatestDeltaHash { get; }
-        Task<DeltaIndex> GetHighestDeltaIndexAsync();
+        Task<DeltaIndex> GetHighestDeltaIndexAsync(CancellationToken cancellationToken = default);
         void Start();
         void Stop();
     }

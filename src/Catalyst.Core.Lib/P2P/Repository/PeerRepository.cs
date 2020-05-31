@@ -42,8 +42,9 @@ namespace Catalyst.Core.Lib.P2P.Repository
 
         public Peer Get(string id) { return _repository.Get(id); }
 
-        public Peer Get(PeerId id) {
-            return _repository.Find(x => x.Address.Equals(id)); 
+        public Peer Get(PeerId id)
+        {
+            return _repository.Find(x => x.Address.Equals(id));
         }
 
         public IEnumerable<Peer> GetAll() { return _repository.GetAll(); }
@@ -71,7 +72,9 @@ namespace Catalyst.Core.Lib.P2P.Repository
 
         public IEnumerable<Peer> GetPoaPeersByPublicKey(string publicKeyBase58)
         {
-            return _repository.FindAll(m => m.IsPoaNode && m.Address.GetPublicKey() == publicKeyBase58);
+            var a = _repository.GetAll().Select(x => x.Address.GetPublicKey());
+            return _repository.FindAll(m => m.IsPoaNode).Where(m => m.Address.GetPublicKey() == publicKeyBase58);
+            //return _repository.FindAll(m => m.IsPoaNode && m.Address.GetPublicKey() == publicKeyBase58);
         }
 
         public IEnumerable<Peer> TakeHighestReputationPeers(int page, int count)
@@ -106,7 +109,7 @@ namespace Catalyst.Core.Lib.P2P.Repository
         public void Delete(string id) { _repository.Delete(id); }
 
         public int Count() { return _repository.Count(); }
-        public int CountActivePeers() { return _repository.FindAll(x=>!x.IsAwolPeer).Count(); }
+        public int CountActivePeers() { return _repository.FindAll(x => !x.IsAwolPeer).Count(); }
 
         public void Dispose() { _repository.Dispose(); }
     }

@@ -75,7 +75,6 @@ namespace Catalyst.Core.Lib.P2P
         {
             MessageStream = await _peerLibP2PChannelFactory.BuildMessageStreamAsync();
             _messageHandlers.ToList().ForEach(h => h.StartObserving(MessageStream));
-            _peerDiscovery?.DiscoveryAsync();
             _healthChecker.Run();
         }
     }

@@ -47,6 +47,7 @@ namespace Catalyst.Core.Modules.Sync.Watcher
         private readonly ILibP2PPeerService _peerService;
         private readonly ILibP2PPeerClient _peerClient;
         private readonly ISwarmApi _swarmApi;
+        private int _countDown = 2;
 
         public DeltaIndex LatestDeltaHash { set; get; }
 
@@ -69,11 +70,8 @@ namespace Catalyst.Core.Modules.Sync.Watcher
 
         public async void RequestDeltaHeightTimerCallback(object state)
         {
-            var connectedPeers = _swarmApi.PeersAsync().ConfigureAwait(false).GetAwaiter().GetResult();
-            var peerCount = DeltaHeightRanker.GetPeers().Count();
-            var confirmCount = connectedPeers.Count();
-            if (confirmCount > 0) confirmCount /= 2;
-            if (peerCount >= confirmCount)
+            var peers = await _swarmApi.PeersAsync().ConfigureAwait(false);
+            if (DeltaHeightRanker.GetPeers().Count() > 1)
             {
                 _manualResetEventSlim.Set();
             }
@@ -81,11 +79,11 @@ namespace Catalyst.Core.Modules.Sync.Watcher
             await RequestDeltaHeightFromPeers();
         }
 
-        public async Task<DeltaIndex> GetHighestDeltaIndexAsync()
+        public Task<DeltaIndex> GetHighestDeltaIndexAsync(CancellationToken cancellationToken = default)
         {
-            _manualResetEventSlim.Wait();
+            _manualResetEventSlim.Wait(cancellationToken);
             var highestDeltaIndex = GetMostPopularMessage()?.Item.DeltaIndex;
-            return highestDeltaIndex;
+            return Task.FromResult(highestDeltaIndex);
         }
 
         private IRankedItem<LatestDeltaHashResponse> GetMostPopularMessage()

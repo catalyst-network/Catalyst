@@ -95,9 +95,6 @@ namespace Catalyst.Modules.POA.P2P.Discovery
                 {
                     _peerRepository.Add(peer);
                 }
-                //todo
-                //var a = _peerRepository.GetAll();
-                //var b = 0;
             }
 
             return Task.CompletedTask;

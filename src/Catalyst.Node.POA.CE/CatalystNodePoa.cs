@@ -36,6 +36,7 @@ using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Abstractions.Types;
@@ -72,7 +73,7 @@ namespace Catalyst.Node.POA.CE
         private readonly IPeerRepository _peerRepository;
         private readonly IKeyApi _keyApi;
         private readonly IPubSubService _messageRouter;
-        private readonly ICatalystProtocol _catalystProtocol;
+        private readonly IPeerDiscovery _peerDiscovery;
 
         public CatalystNodePoa(IKeySigner keySigner,
             ILibP2PPeerService peer,
@@ -87,7 +88,7 @@ namespace Catalyst.Node.POA.CE
             IPeerRepository peerRepository,
             IKeyApi keyApi,
             IPubSubService messageRouter,
-            ICatalystProtocol catalystProtocol,
+            IPeerDiscovery peerDiscovery,
             IContract contract = null)
         {
             Guard.Argument(peerRepository, nameof(peerRepository)).NotNull();
@@ -106,7 +107,7 @@ namespace Catalyst.Node.POA.CE
             _peerRepository = peerRepository;
             _keyApi = keyApi;
             _messageRouter = messageRouter;
-            _catalystProtocol = catalystProtocol;
+            _peerDiscovery = peerDiscovery;
 
             var privateKey = keySigner.GetPrivateKey(KeyRegistryTypes.DefaultKey);
             _publicKey = keySigner.CryptoContext.GetPublicKeyFromPrivateKey(privateKey);
@@ -115,7 +116,7 @@ namespace Catalyst.Node.POA.CE
 
         public async Task StartSocketsAsync()
         {
-            _messageRouter.Routers.ForEach(x => x.JoinTopicAsync("catalyst", CancellationToken.None).GetAwaiter().GetResult());
+            _messageRouter.Routers.ForEach(async x => await x.JoinTopicAsync("catalyst", CancellationToken.None).ConfigureAwait(false));
             await _peerClient.StartAsync().ConfigureAwait(false);
             await _peer.StartAsync().ConfigureAwait(false);
         }
@@ -128,6 +129,8 @@ namespace Catalyst.Node.POA.CE
 
             _logger.Information($"***** using PeerId: {peerId} *****");
             _logger.Information($"***** using PublicKey: {_publicKey.Bytes.ToBase58()} *****");
+
+            await _peerDiscovery?.DiscoveryAsync();
 
             await _dfsService.StartAsync().ConfigureAwait(false);
 

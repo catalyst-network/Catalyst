@@ -146,7 +146,19 @@ namespace Catalyst.Core.Modules.Sync
 
             _deltaHeightWatcher.Start();
 
-            await _peerSyncManager.WaitForPeersAsync(cancellationToken).ConfigureAwait(false);
+
+            using (CancellationTokenSource cts = new CancellationTokenSource())
+            {
+                cts.CancelAfter(TimeSpan.FromSeconds(10));
+                await _peerSyncManager.WaitForPeersAsync(cts.Token).ConfigureAwait(false);
+            }
+
+            //DeltaIndex highestDeltaIndex = null;
+            //using (CancellationTokenSource cts = new CancellationTokenSource())
+            //{
+            //    cts.CancelAfter(TimeSpan.FromSeconds(10));
+            //    highestDeltaIndex = await _deltaHeightWatcher.GetHighestDeltaIndexAsync().ConfigureAwait(false);
+            //}
 
             var highestDeltaIndex = await _deltaHeightWatcher.GetHighestDeltaIndexAsync().ConfigureAwait(false);
             if (highestDeltaIndex == null || highestDeltaIndex.Height <= CurrentHighestDeltaIndexStored)
@@ -205,10 +217,10 @@ namespace Catalyst.Core.Modules.Sync
             });
         }
 
-        private int GetSyncProgressPercentage()
+        private async Task<int> GetSyncProgressPercentageAsync()
         {
-            var percentageSync = _deltaIndexService.Height() /
-                _deltaHeightWatcher.GetHighestDeltaIndexAsync().GetAwaiter().GetResult().Height * 100;
+            var currentDeltaIndex = await _deltaHeightWatcher.GetHighestDeltaIndexAsync();
+            var percentageSync = _deltaIndexService.Height() / currentDeltaIndex.Height * 100;
             return (int) percentageSync;
         }
 
@@ -254,12 +266,12 @@ namespace Catalyst.Core.Modules.Sync
 
             if (CurrentHighestDeltaIndexStored >= highestDeltaIndex.Height)
             {
-                _userOutput.WriteLine($"Sync Progress: {GetSyncProgressPercentage()}%");
+                _userOutput.WriteLine($"Sync Progress: { await GetSyncProgressPercentageAsync()}%");
                 await Completed().ConfigureAwait(false);
                 return true;
             }
 
-            _userOutput.WriteLine($"Sync Progress: {GetSyncProgressPercentage()}%");
+            _userOutput.WriteLine($"Sync Progress: {await GetSyncProgressPercentageAsync()}%");
             return false;
         }
 

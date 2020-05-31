@@ -29,9 +29,11 @@ using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Dfs.Migration;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Kernel;
 using Catalyst.Core.Lib.P2P;
+using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Modules.Dfs.BlockExchange;
 using Catalyst.Core.Modules.Dfs.CoreApi;
 using Catalyst.Core.Modules.Dfs.Migration;
@@ -41,6 +43,8 @@ using Lib.P2P.Protocols;
 using Lib.P2P.PubSub;
 using Lib.P2P.Routing;
 using Makaretu.Dns;
+using SharpRepository.InMemoryRepository;
+using SharpRepository.Repository;
 
 namespace Catalyst.Core.Modules.Dfs
 {
@@ -119,6 +123,9 @@ namespace Catalyst.Core.Modules.Dfs
 
             builder.RegisterType<CatalystProtocol>().AsImplementedInterfaces().SingleInstance();
 
+            builder.RegisterType<InMemoryRepository<Lib.P2P.Models.Peer, string>>().As<IRepository<Lib.P2P.Models.Peer, string>>().SingleInstance();
+            builder.RegisterType<PeerRepository>().As<IPeerRepository>().SingleInstance();
+
             builder.RegisterType<MigrationManager>()
                .As<IMigrationManager>();
         }
@@ -130,7 +137,7 @@ namespace Catalyst.Core.Modules.Dfs
             builder.RegisterType<RepositoryOptions>().SingleInstance()
                .WithParameter("dfsDirectory", Constants.DfsDataSubDir);
             //Disable Mdns in dfs as it causes a memoryleak/outofmemory exception
-            builder.RegisterType<DiscoveryOptions>().SingleInstance().WithProperty("DisableMdns", true);
+            builder.RegisterType<DiscoveryOptions>().SingleInstance().WithProperty("DisableMdns", true).WithProperty("UsePeerRepository", true);
             builder.RegisterType<KeyChainOptions>().SingleInstance().WithProperty("DefaultKeyType", "ed25519");
             builder.RegisterType<SwarmOptions>().SingleInstance();
         }

@@ -159,6 +159,7 @@ namespace Lib.P2P.Protocols
             CancellationToken cancel = default)
         {
             var peer = SwarmService.RegisterPeerAddress(address);
+
             await SendAsync(peer, message, cancel).ConfigureAwait(false);
         }
 
