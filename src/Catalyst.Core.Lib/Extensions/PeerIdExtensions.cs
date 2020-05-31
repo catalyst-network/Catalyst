@@ -67,7 +67,7 @@ namespace Catalyst.Core.Lib.Extensions
             }
         }
 
-        public static string ToPeerId(this byte[] publicKeyBytes)
+        public static MultiHash ToPeerId(this byte[] publicKeyBytes)
         {
             var publicKey = new Ed25519PublicKeyParameters(publicKeyBytes, 0);
             var pksi = SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(publicKey).GetDerEncoded();
@@ -79,10 +79,10 @@ namespace Catalyst.Core.Lib.Extensions
             using var ms = new MemoryStream();
             Serializer.Serialize(ms, pk);
             var id = new MultiHash("id", ms.ToArray());
-            return id.ToString();
+            return id;
         }
 
-        public static string ToPeerId(this AsymmetricKeyParameter publicKeyParameter)
+        public static MultiHash ToPeerId(this AsymmetricKeyParameter publicKeyParameter)
         {
             var ed25519PublicKeyParameter = (Ed25519PublicKeyParameters) publicKeyParameter;
             return ToPeerId(ed25519PublicKeyParameter.GetEncoded());

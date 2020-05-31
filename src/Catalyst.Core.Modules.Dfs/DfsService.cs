@@ -411,7 +411,10 @@ namespace Catalyst.Core.Modules.Dfs
                         {
                             Address = address
                         };
-                        _peerRepository.Add(newPeer);
+                        if (!_peerRepository.Exists(newPeer.DocumentId))
+                        {
+                            _peerRepository.Add(newPeer);
+                        }
                     }
                 }
             }
