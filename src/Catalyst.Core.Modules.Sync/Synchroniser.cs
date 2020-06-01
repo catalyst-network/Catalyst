@@ -67,6 +67,9 @@ namespace Catalyst.Core.Modules.Sync
         public IObservable<ulong> SyncCompleted { get; }
         private readonly ReplaySubject<ulong> _syncCompletedReplaySubject;
 
+        private readonly int _peerDiscoveryDelay;
+        private readonly int _deltaHeightDelay;
+
         public Synchroniser(SyncState syncState,
             IPeerSyncManager peerSyncManager,
             IDeltaCache deltaCache,
@@ -77,7 +80,9 @@ namespace Catalyst.Core.Modules.Sync
             IMapperProvider mapperProvider,
             IUserOutput userOutput,
             ILogger logger,
-            int rangeSize = 20,
+            int rangeSize = 100,
+            int peerDiscoveryDelay = 10,
+            int deltaHeightDelay = 30,
             IScheduler scheduler = null)
         {
             State = syncState;
@@ -95,6 +100,9 @@ namespace Catalyst.Core.Modules.Sync
 
             _syncCompletedReplaySubject = new ReplaySubject<ulong>(1, scheduler ?? Scheduler.Default);
             SyncCompleted = _syncCompletedReplaySubject.AsObservable();
+
+            _peerDiscoveryDelay = peerDiscoveryDelay;
+            _deltaHeightDelay = deltaHeightDelay;
         }
 
         public void UpdateState(ulong _latestKnownDeltaNumber)
@@ -149,11 +157,11 @@ namespace Catalyst.Core.Modules.Sync
             using (var WaitForPeersCancellationSource = new CancellationTokenSource())
             {
                 using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, WaitForPeersCancellationSource.Token);
-                cts.CancelAfter(TimeSpan.FromSeconds(10));
+                cts.CancelAfter(TimeSpan.FromSeconds(_peerDiscoveryDelay));
                 await _peerSyncManager.WaitForPeersAsync(cts.Token).ConfigureAwait(false);
             }
 
-            var highestDeltaIndex = await _deltaHeightWatcher.GetHighestDeltaIndexAsync(TimeSpan.FromSeconds(30), cancellationToken).ConfigureAwait(false);
+            var highestDeltaIndex = await _deltaHeightWatcher.GetHighestDeltaIndexAsync(TimeSpan.FromSeconds(_deltaHeightDelay), cancellationToken).ConfigureAwait(false);
             if (highestDeltaIndex == null || highestDeltaIndex.Height <= CurrentHighestDeltaIndexStored)
             {
                 await Completed().ConfigureAwait(false);

@@ -111,9 +111,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 
             _testScheduler.Start();
 
-            await fakeContext.Channel.ReceivedWithAnyArgs(1)
-               .WriteAndFlushAsync(
-                    peerNeighborsResponseMessage.ToProtocolMessage(_peerId, CorrelationId.GenerateCorrelationId()));
+            var dtoResponse = new MessageDto(peerNeighborsResponseMessage.ToProtocolMessage(_peerId, CorrelationId.GenerateCorrelationId()),
+            _peerId);
+
+            await _peerClient.ReceivedWithAnyArgs(1).SendMessageAsync(dtoResponse).ConfigureAwait(false);
         }
 
         public void Dispose() { _subbedPeerRepository?.Dispose(); }

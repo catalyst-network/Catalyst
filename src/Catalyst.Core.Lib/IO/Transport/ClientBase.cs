@@ -45,7 +45,6 @@ namespace Catalyst.Core.Lib.IO.Transport
 
         public virtual void SendMessage<T>(IMessageDto<T> message) where T : IMessage<T>
         {
-            //_pubSubApi.PublishAsync("catalyst", message.Content.ToByteArray()).GetAwaiter().GetResult();
             Channel.WriteAsync(message).ConfigureAwait(false);
         }
     }

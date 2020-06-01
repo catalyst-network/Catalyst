@@ -25,8 +25,6 @@ using System;
 using Catalyst.Abstractions.Lib.Util;
 using Catalyst.Abstractions.P2P.Models;
 using Catalyst.Abstractions.Service.Attributes;
-using Catalyst.Protocol.Peer;
-using Google.Protobuf;
 using MultiFormats;
 using SharpRepository.Repository;
 

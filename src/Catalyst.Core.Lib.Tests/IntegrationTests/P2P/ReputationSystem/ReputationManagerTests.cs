@@ -26,6 +26,7 @@ using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.P2P.ReputationSystem;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.ReputationSystem;
+using Catalyst.Core.Modules.Dfs;
 using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -48,6 +49,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
             Setup(TestContext.CurrentContext);
 
             ContainerProvider.ConfigureContainerBuilder();
+            ContainerProvider.ContainerBuilder.RegisterModule<DfsModule>();
             _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);
             _reputationManager = _scope.Resolve<IReputationManager>();
         }

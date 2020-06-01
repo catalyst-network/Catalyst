@@ -41,6 +41,7 @@ using Serilog;
 using SharpRepository.InMemoryRepository;
 using NUnit.Framework;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Abstractions.IO.Messaging.Dto;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 {
@@ -81,12 +82,15 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             var hash = MultiHash.ComputeHash(new byte[32]);
             var cid = new Cid { Hash = hash };
 
-            await fakeContext.Channel.ReceivedWithAnyArgs(1)
-               .WriteAndFlushAsync(new LatestDeltaHashResponse
-               {
-                   DeltaIndex = new DeltaIndex { Cid = cid.ToArray().ToByteString(), Height = 100 }
-               }.ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId()))
-               .ConfigureAwait(false);
+            var responder = PeerIdHelper.GetPeerId();
+            var dtoResponse = new MessageDto(new LatestDeltaHashResponse
+            {
+                DeltaIndex = new DeltaIndex { Cid = cid.ToArray().ToByteString(), Height = 100 }
+            }.ToProtocolMessage(responder, CorrelationId.GenerateCorrelationId()),
+            responder);
+
+            await _peerClient.ReceivedWithAnyArgs(1).SendMessageAsync(dtoResponse)
+                .ConfigureAwait(false);
 
             _subbedLogger.ReceivedWithAnyArgs(1);
         }

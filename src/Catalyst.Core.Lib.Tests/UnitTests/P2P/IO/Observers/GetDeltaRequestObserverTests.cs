@@ -88,10 +88,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _deltaCache.Received(1).TryGetOrAddConfirmedDelta(Arg.Is<Cid>(
                 s => s.Equals(cid)), out Arg.Any<Delta>());
 
-            await _fakeContext.Channel.ReceivedWithAnyArgs(1)
-               .WriteAndFlushAsync(Arg.Is<IMessageDto<ProtocolMessage>>(pm =>
+            await _peerClient.ReceivedWithAnyArgs(1).SendMessageAsync(Arg.Is<IMessageDto<ProtocolMessage>>(pm =>
                     pm.Content.FromProtocolMessage<GetDeltaResponse>().Delta.PreviousDeltaDfsHash ==
-                    delta.PreviousDeltaDfsHash));
+                    delta.PreviousDeltaDfsHash)).ConfigureAwait(false);
         }
 
         [Test]
@@ -108,14 +107,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _deltaCache.Received(1).TryGetOrAddConfirmedDelta(Arg.Is<Cid>(
                 s => s.Equals(cid)), out Arg.Any<Delta>());
 
-            await _fakeContext.Channel.ReceivedWithAnyArgs(1)
-               .WriteAndFlushAsync(Arg.Is<IMessageDto<ProtocolMessage>>(pm =>
-                    pm.Content.FromProtocolMessage<GetDeltaResponse>().Delta == null));
+            await _peerClient.ReceivedWithAnyArgs(1).SendMessageAsync(Arg.Is<IMessageDto<ProtocolMessage>>(pm =>
+                    pm.Content.FromProtocolMessage<GetDeltaResponse>().Delta == null)).ConfigureAwait(false);
         }
 
         private IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithDeltaRequest(Cid cid)
         {
-            var deltaRequest = new GetDeltaRequest {DeltaDfsHash = cid.ToArray().ToByteString()};
+            var deltaRequest = new GetDeltaRequest { DeltaDfsHash = cid.ToArray().ToByteString() };
 
             var message = deltaRequest.ToProtocolMessage(PeerIdHelper.GetPeerId("sender"));
 

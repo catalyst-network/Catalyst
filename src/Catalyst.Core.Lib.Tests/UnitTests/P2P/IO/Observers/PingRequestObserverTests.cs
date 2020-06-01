@@ -69,9 +69,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 
             _testScheduler.Start();
 
-            await fakeContext.Channel.ReceivedWithAnyArgs(1)
-               .WriteAndFlushAsync(new PingResponse().ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId()));
-            
+            var responder = PeerIdHelper.GetPeerId();
+            var dtoResponse = new MessageDto(new PingResponse().ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId()),
+            responder);
+
+            await _peerClient.ReceivedWithAnyArgs(1).SendMessageAsync(dtoResponse).ConfigureAwait(false);
+
             _subbedLogger.ReceivedWithAnyArgs(1);
         }
         
