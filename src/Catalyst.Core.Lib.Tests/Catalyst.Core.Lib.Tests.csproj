@@ -12,6 +12,14 @@
     </PropertyGroup>
     <Import Project="../Common.TestProjects.props" />
     <ItemGroup>
+      <Compile Remove="IntegrationTests\Rpc\IO\Observers\**" />
+      <Compile Remove="UnitTests\Rpc\IO\Observers\**" />
+      <EmbeddedResource Remove="IntegrationTests\Rpc\IO\Observers\**" />
+      <EmbeddedResource Remove="UnitTests\Rpc\IO\Observers\**" />
+      <None Remove="IntegrationTests\Rpc\IO\Observers\**" />
+      <None Remove="UnitTests\Rpc\IO\Observers\**" />
+    </ItemGroup>
+    <ItemGroup>
         <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.6" />
         <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="2.2.6" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
