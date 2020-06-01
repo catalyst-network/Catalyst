@@ -57,7 +57,7 @@ namespace Catalyst.Core.Lib.P2P
         /// <param name="eventLoopGroupFactory"></param>
         /// <param name="peerSettings"></param>
         public LibP2PPeerClient(
-            IPeerMessageCorrelationManager messageCorrelationManager, 
+            IPeerMessageCorrelationManager messageCorrelationManager,
             IKeySigner keySigner,
             IPeerSettings peerSettings,
             IPubSubApi pubSubApi,
@@ -85,27 +85,30 @@ namespace Catalyst.Core.Lib.P2P
             var protocolMessage = message.ToProtocolMessage(_peerSettings.Address);
             foreach (var peer in peers)
             {
-                await SendMessageAsync(new MessageDto(
-                    protocolMessage,
-                    peer));
+                await SendMessageAsync(peer, protocolMessage);
             }
         }
 
         public async Task SendMessageAsync<T>(IMessageDto<T> message) where T : IMessage<T>
         {
+            var protocolMessage = ProtocolMessage.Parser.ParseFrom(message.Content.ToByteArray());
+            await _catalystProtocol.SendAsync(message.RecipientPeerIdentifier, protocolMessage).ConfigureAwait(false);
+        }
+
+        private async Task SendMessageAsync(MultiAddress receiver, ProtocolMessage message)
+        {
             try
             {
-                var protocolMessage = message.Content.ToProtocolMessage(_peerSettings.Address);
                 foreach (var handler in _handlers)
                 {
-                    var result = await handler.ProcessAsync(protocolMessage);
+                    var result = await handler.ProcessAsync(message);
                     if (!result)
                     {
                         return;
                     }
                 }
 
-                await _catalystProtocol.SendAsync(message.RecipientPeerIdentifier, protocolMessage).ConfigureAwait(false);
+                await _catalystProtocol.SendAsync(receiver, message).ConfigureAwait(false);
             }
             catch (Exception exc)
             {
@@ -128,3 +131,4 @@ namespace Catalyst.Core.Lib.P2P
         }
     }
 }
+

@@ -85,6 +85,12 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
                 new ProtocolMessageVerifyHandler(_keySigner),
                 new CorrelationHandler<IPeerMessageCorrelationManager>(_messageCorrelationManager)
             };
+
+            _catalystProtocol.MessageStream.Subscribe(async message =>
+            {
+                await ProcessMessageAsync(UnwrapBroadcast(message));
+            });
+
         }
 
         /// <param name="handlerEventLoopGroupFactory"></param>
@@ -94,7 +100,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
         /// <returns></returns>
         public async Task<IObservable<IObserverDto<ProtocolMessage>>> BuildMessageStreamAsync()
         {
-            await SubscribeToCatalystLibP2PProtocol();
+            //await SubscribeToCatalystLibP2PProtocol();
 
             await SubscribeToCatalystPubSub();
 
@@ -118,21 +124,25 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
                 if (msg.Sender.Id != _localPeer.Id)
                 {
                     var protocolMessage = ProtocolMessage.Parser.ParseFrom(msg.DataStream);
-                    if (protocolMessage.IsBroadCastMessage())
-                    {
-                        var innerGossipMessageSigned = ProtocolMessage.Parser.ParseFrom(protocolMessage.Value);
-                        await ProcessMessageAsync(innerGossipMessageSigned);
-                        return;
-                    }
-
-                    await ProcessMessageAsync(protocolMessage);
+                    await ProcessMessageAsync(UnwrapBroadcast(protocolMessage));
                 }
             }, CancellationToken.None);
         }
 
+        private ProtocolMessage UnwrapBroadcast(ProtocolMessage message)
+        {
+            if (message.IsBroadCastMessage())
+            {
+                var innerGossipMessageSigned = ProtocolMessage.Parser.ParseFrom(message.Value);
+                return innerGossipMessageSigned; 
+            }
+
+            return message;
+        }
+
         private async Task ProcessMessageAsync(ProtocolMessage message)
         {
-            foreach(var handler in _handlers)
+            foreach (var handler in _handlers)
             {
                 var result = await handler.ProcessAsync(message);
                 if (!result)
