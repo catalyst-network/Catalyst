@@ -85,12 +85,6 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
                 new ProtocolMessageVerifyHandler(_keySigner),
                 new CorrelationHandler<IPeerMessageCorrelationManager>(_messageCorrelationManager)
             };
-
-            _catalystProtocol.MessageStream.Subscribe(async message =>
-            {
-                await ProcessMessageAsync(UnwrapBroadcast(message));
-            });
-
         }
 
         /// <param name="handlerEventLoopGroupFactory"></param>
@@ -100,7 +94,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
         /// <returns></returns>
         public async Task<IObservable<IObserverDto<ProtocolMessage>>> BuildMessageStreamAsync()
         {
-            //await SubscribeToCatalystLibP2PProtocol();
+            await SubscribeToCatalystLibP2PProtocol();
 
             await SubscribeToCatalystPubSub();
 

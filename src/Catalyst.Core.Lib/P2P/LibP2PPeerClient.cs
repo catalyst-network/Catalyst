@@ -46,7 +46,8 @@ namespace Catalyst.Core.Lib.P2P
         private readonly IPubSubApi _pubSubApi;
         private readonly ICatalystProtocol _catalystProtocol;
         private readonly SigningContext _signingContext;
-        private readonly IList<IMessageHandler> _handlers;
+        private readonly IList<IMessageHandler> _catalystProtocolHandlers;
+        private readonly IList<IMessageHandler> _catalystPubSubHandlers;
 
         public IObservable<ProtocolMessage> MessageStream { private set; get; }
 
@@ -65,10 +66,15 @@ namespace Catalyst.Core.Lib.P2P
             _catalystProtocol = catalystProtocol;
             _signingContext = new SigningContext { NetworkType = peerSettings.NetworkType, SignatureType = SignatureType.ProtocolPeer };
 
-            _handlers = new List<IMessageHandler>
+            _catalystProtocolHandlers = new List<IMessageHandler>
             {
                 new ProtocolMessageSignHandler(keySigner, _signingContext),
                 new CorrelatableHandler<IPeerMessageCorrelationManager>(messageCorrelationManager)
+            };
+
+            _catalystPubSubHandlers = new List<IMessageHandler>
+            {
+                new ProtocolMessageSignHandler(keySigner, _signingContext)
             };
         }
 
@@ -94,17 +100,13 @@ namespace Catalyst.Core.Lib.P2P
 
         private async Task SendMessageAsync(MultiAddress receiver, ProtocolMessage message)
         {
+            if (!await ProcessHandlersAsync(_catalystProtocolHandlers, message))
+            {
+                return;
+            }
+
             try
             {
-                foreach (var handler in _handlers)
-                {
-                    var result = await handler.ProcessAsync(message).ConfigureAwait(false);
-                    if (!result)
-                    {
-                        return;
-                    }
-                }
-
                 await _catalystProtocol.SendAsync(receiver, message).ConfigureAwait(false);
             }
             catch (Exception exc)
@@ -115,16 +117,26 @@ namespace Catalyst.Core.Lib.P2P
 
         public async Task BroadcastAsync(ProtocolMessage message)
         {
-            foreach (var handler in _handlers)
+            if (!await ProcessHandlersAsync(_catalystPubSubHandlers, message))
+            {
+                return;
+            }
+
+            await _pubSubApi.PublishAsync("catalyst", message.ToByteArray()).ConfigureAwait(false);
+        }
+
+        private async Task<bool> ProcessHandlersAsync(IList<IMessageHandler> handlers, ProtocolMessage message)
+        {
+            foreach (var handler in handlers)
             {
                 var result = await handler.ProcessAsync(message).ConfigureAwait(false);
                 if (!result)
                 {
-                    return;
+                    return false;
                 }
             }
 
-            await _pubSubApi.PublishAsync("catalyst", message.ToByteArray()).ConfigureAwait(false);
+            return true;
         }
     }
 }
