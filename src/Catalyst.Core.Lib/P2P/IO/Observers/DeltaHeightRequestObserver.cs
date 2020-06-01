@@ -73,8 +73,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             ICorrelationId correlationId)
         {
             Guard.Argument(deltaHeightRequest, nameof(deltaHeightRequest)).NotNull();
-            //todo
-            //Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
 
             Logger.Debug("PeerId: {0} wants to know your current chain height", senderPeerId);

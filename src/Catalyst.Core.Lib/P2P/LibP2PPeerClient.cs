@@ -29,10 +29,7 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.LibP2PHandlers;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
 using Catalyst.Protocol.Cryptography;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Lib.P2P.Protocols;
@@ -85,14 +82,14 @@ namespace Catalyst.Core.Lib.P2P
             var protocolMessage = message.ToProtocolMessage(_peerSettings.Address);
             foreach (var peer in peers)
             {
-                await SendMessageAsync(peer, protocolMessage);
+                await SendMessageAsync(peer, protocolMessage).ConfigureAwait(false);
             }
         }
 
         public async Task SendMessageAsync<T>(IMessageDto<T> message) where T : IMessage<T>
         {
             var protocolMessage = ProtocolMessage.Parser.ParseFrom(message.Content.ToByteArray());
-            await _catalystProtocol.SendAsync(message.RecipientPeerIdentifier, protocolMessage).ConfigureAwait(false);
+            await SendMessageAsync(message.RecipientPeerIdentifier, protocolMessage).ConfigureAwait(false);
         }
 
         private async Task SendMessageAsync(MultiAddress receiver, ProtocolMessage message)
@@ -101,7 +98,7 @@ namespace Catalyst.Core.Lib.P2P
             {
                 foreach (var handler in _handlers)
                 {
-                    var result = await handler.ProcessAsync(message);
+                    var result = await handler.ProcessAsync(message).ConfigureAwait(false);
                     if (!result)
                     {
                         return;
@@ -120,14 +117,14 @@ namespace Catalyst.Core.Lib.P2P
         {
             foreach (var handler in _handlers)
             {
-                var result = await handler.ProcessAsync(message);
+                var result = await handler.ProcessAsync(message).ConfigureAwait(false);
                 if (!result)
                 {
                     return;
                 }
             }
 
-            await _pubSubApi.PublishAsync("catalyst", message.ToByteArray());
+            await _pubSubApi.PublishAsync("catalyst", message.ToByteArray()).ConfigureAwait(false);
         }
     }
 }
