@@ -115,6 +115,15 @@ namespace Catalyst.Core.Lib.P2P
 
         public async Task BroadcastAsync(ProtocolMessage message)
         {
+            foreach (var handler in _handlers)
+            {
+                var result = await handler.ProcessAsync(message);
+                if (!result)
+                {
+                    return;
+                }
+            }
+
             await _pubSubApi.PublishAsync("catalyst", message.ToByteArray());
         }
     }
