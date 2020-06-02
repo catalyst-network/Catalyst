@@ -21,118 +21,119 @@
 
 #endregion
 
-using Catalyst.Abstractions.KeySigner;
-using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
-using Catalyst.Protocol.Rpc.Node;
-using Catalyst.TestUtils;
-using DotNetty.Transport.Channels;
-using FluentAssertions;
-using Google.Protobuf;
-using NSubstitute;
-using Serilog;
-using System.Linq;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Protocol.Cryptography;
-using Catalyst.Protocol.Network;
-using Catalyst.Protocol.Peer;
-using Catalyst.TestUtils.Fakes;
-using NUnit.Framework;
-using MultiFormats;
-using Catalyst.Abstractions.P2P;
+//depricated
+//using Catalyst.Abstractions.KeySigner;
+//using Catalyst.Core.Lib.Extensions;
+//using Catalyst.Core.Modules.Cryptography.BulletProofs;
+//using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
+//using Catalyst.Protocol.Rpc.Node;
+//using Catalyst.TestUtils;
+//using DotNetty.Transport.Channels;
+//using FluentAssertions;
+//using Google.Protobuf;
+//using NSubstitute;
+//using Serilog;
+//using System.Linq;
+//using Catalyst.Core.Lib.IO.Messaging.Dto;
+//using Catalyst.Protocol.Cryptography;
+//using Catalyst.Protocol.Network;
+//using Catalyst.Protocol.Peer;
+//using Catalyst.TestUtils.Fakes;
+//using NUnit.Framework;
+//using MultiFormats;
+//using Catalyst.Abstractions.P2P;
 
-namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
-{
-    public sealed class VerifyMessageRequestObserverTests
-    {
-        private IKeySigner _keySigner;
-        private VerifyMessageRequestObserver _verifyMessageRequestObserver;
-        private IChannelHandlerContext _fakeContext;
-        private MultiAddress _testPeerId;
-        private VerifyMessageRequest _verifyMessageRequest;
-        private SigningContext _signingContext;
-        private ILibP2PPeerClient _peerClient;
+//namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
+//{
+//    public sealed class VerifyMessageRequestObserverTests
+//    {
+//        private IKeySigner _keySigner;
+//        private VerifyMessageRequestObserver _verifyMessageRequestObserver;
+//        private IChannelHandlerContext _fakeContext;
+//        private MultiAddress _testPeerId;
+//        private VerifyMessageRequest _verifyMessageRequest;
+//        private SigningContext _signingContext;
+//        private ILibP2PPeerClient _peerClient;
 
-        [SetUp]
-        public void Init()
-        {
-            _signingContext = new SigningContext
-            {
-                NetworkType = NetworkType.Devnet,
-                SignatureType = SignatureType.ProtocolRpc
-            };
+//        [SetUp]
+//        public void Init()
+//        {
+//            _signingContext = new SigningContext
+//            {
+//                NetworkType = NetworkType.Devnet,
+//                SignatureType = SignatureType.ProtocolRpc
+//            };
 
-            _peerClient = Substitute.For<ILibP2PPeerClient>();
+//            _peerClient = Substitute.For<ILibP2PPeerClient>();
 
-            _testPeerId = PeerIdHelper.GetPeerId("TestPeerIdentifier");
+//            _testPeerId = PeerIdHelper.GetPeerId("TestPeerIdentifier");
 
-            var peerSettings = _testPeerId.ToSubstitutedPeerSettings();
+//            var peerSettings = _testPeerId.ToSubstitutedPeerSettings();
 
-            _keySigner = Substitute.For<FakeKeySigner>();
-            _keySigner.CryptoContext.Returns(new FfiWrapper());
+//            _keySigner = Substitute.For<FakeKeySigner>();
+//            _keySigner.CryptoContext.Returns(new FfiWrapper());
 
-            var logger = Substitute.For<ILogger>();
+//            var logger = Substitute.For<ILogger>();
 
-            _verifyMessageRequestObserver = new VerifyMessageRequestObserver(peerSettings, _peerClient, logger, _keySigner);
+//            _verifyMessageRequestObserver = new VerifyMessageRequestObserver(peerSettings, _peerClient, logger, _keySigner);
 
-            _verifyMessageRequest = GetValidVerifyMessageRequest();
-        }
+//            _verifyMessageRequest = GetValidVerifyMessageRequest();
+//        }
 
-        [Test]
-        public void VerifyMessageRequestObserver_Can_Reject_Invalid_Public_Key_Length()
-        {
-            _verifyMessageRequest.PublicKey = ByteString.CopyFrom(new byte[new FfiWrapper().PublicKeyLength + 1]);
+//        [Test]
+//        public void VerifyMessageRequestObserver_Can_Reject_Invalid_Public_Key_Length()
+//        {
+//            _verifyMessageRequest.PublicKey = ByteString.CopyFrom(new byte[new FfiWrapper().PublicKeyLength + 1]);
 
-            AssertVerifyResponse(false);
-        }
+//            AssertVerifyResponse(false);
+//        }
 
-        [Test]
-        public void VerifyMessageRequestObserver_Can_Reject_Invalid_Signature_Length()
-        {
-            _verifyMessageRequest.Signature = ByteString.CopyFrom(new byte[new FfiWrapper().SignatureLength + 1]);
-            AssertVerifyResponse(false);
-        }
+//        [Test]
+//        public void VerifyMessageRequestObserver_Can_Reject_Invalid_Signature_Length()
+//        {
+//            _verifyMessageRequest.Signature = ByteString.CopyFrom(new byte[new FfiWrapper().SignatureLength + 1]);
+//            AssertVerifyResponse(false);
+//        }
 
-        [Test]
-        public void VerifyMessageRequestObserver_Can_Send_True_If_Valid_Signature()
-        {
-            _keySigner.Verify(default, default, default).ReturnsForAnyArgs(true);
-            AssertVerifyResponse(true);
-        }
+//        [Test]
+//        public void VerifyMessageRequestObserver_Can_Send_True_If_Valid_Signature()
+//        {
+//            _keySigner.Verify(default, default, default).ReturnsForAnyArgs(true);
+//            AssertVerifyResponse(true);
+//        }
 
-        [Test]
-        public void VerifyMessageRequestObserver_Can_Send_False_Response_If_Verify_Fails()
-        {
-            _keySigner.Verify(default, default, default).ReturnsForAnyArgs(false);
-            AssertVerifyResponse(false);
-        }
+//        [Test]
+//        public void VerifyMessageRequestObserver_Can_Send_False_Response_If_Verify_Fails()
+//        {
+//            _keySigner.Verify(default, default, default).ReturnsForAnyArgs(false);
+//            AssertVerifyResponse(false);
+//        }
 
-        private VerifyMessageRequest GetValidVerifyMessageRequest()
-        {
-            var privateKey = _keySigner.CryptoContext.GeneratePrivateKey();
-            var publicKey = privateKey.GetPublicKey();
-            var messageToSign = ByteString.CopyFromUtf8("A Message to Sign");
+//        private VerifyMessageRequest GetValidVerifyMessageRequest()
+//        {
+//            var privateKey = _keySigner.CryptoContext.GeneratePrivateKey();
+//            var publicKey = privateKey.GetPublicKey();
+//            var messageToSign = ByteString.CopyFromUtf8("A Message to Sign");
 
-            var verifyMessageRequest = new VerifyMessageRequest
-            {
-                Message = messageToSign,
-                PublicKey = publicKey.Bytes.ToByteString(),
-                Signature = _keySigner.CryptoContext.Sign(privateKey, messageToSign.ToByteArray(), _signingContext.ToByteArray()).SignatureBytes.ToByteString(),
-                SigningContext = _signingContext
-            };
+//            var verifyMessageRequest = new VerifyMessageRequest
+//            {
+//                Message = messageToSign,
+//                PublicKey = publicKey.Bytes.ToByteString(),
+//                Signature = _keySigner.CryptoContext.Sign(privateKey, messageToSign.ToByteArray(), _signingContext.ToByteArray()).SignatureBytes.ToByteString(),
+//                SigningContext = _signingContext
+//            };
 
-            return verifyMessageRequest;
-        }
+//            return verifyMessageRequest;
+//        }
 
-        private void AssertVerifyResponse(bool valid)
-        {
-            _verifyMessageRequestObserver.OnNext(new ObserverDto(_fakeContext, _verifyMessageRequest.ToProtocolMessage(_testPeerId)));
+//        private void AssertVerifyResponse(bool valid)
+//        {
+//            _verifyMessageRequestObserver.OnNext(new ObserverDto(_fakeContext, _verifyMessageRequest.ToProtocolMessage(_testPeerId)));
 
-            var responseList = _peerClient.ReceivedCalls().ToList();
-            var response = ((MessageDto) responseList[0].GetArguments()[0]).Content
-               .FromProtocolMessage<VerifyMessageResponse>();
-            response.IsSignedByKey.Should().Be(valid);
-        }
-    }
-}
+//            var responseList = _peerClient.ReceivedCalls().ToList();
+//            var response = ((MessageDto) responseList[0].GetArguments()[0]).Content
+//               .FromProtocolMessage<VerifyMessageResponse>();
+//            response.IsSignedByKey.Should().Be(valid);
+//        }
+//    }
+//}
