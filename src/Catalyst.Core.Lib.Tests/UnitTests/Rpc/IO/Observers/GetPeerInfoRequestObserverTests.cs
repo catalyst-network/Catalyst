@@ -144,8 +144,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         {
             var testScheduler = new TestScheduler();
 
-            _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
-
             var senderPeerIdentifier = PeerIdHelper.GetPeerId("sender");
             var getPeerInfoRequest = new GetPeerInfoRequest {PeerId = peerId.ToString()};
 
