@@ -120,18 +120,18 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         //    FavouriteByHashAndVoterComparer.Default.Equals(x, y).Should().Be(comparisonResult);
         //}
 
-        [TestCaseSource(nameof(FavouritesComparisonData))]
-        public void FavouriteByHashComparer_should_differentiate_by_candidate_hash_and_voter_only(FavouriteDeltaBroadcast x, FavouriteDeltaBroadcast y, bool comparisonResult)
-        {
-            var xHashCode = FavouriteByHashAndVoterComparer.Default.GetHashCode(x);
-            var yHashCode = FavouriteByHashAndVoterComparer.Default.GetHashCode(y);
-            if (xHashCode != 0 && yHashCode != 0)
-            {
-                xHashCode.Equals(yHashCode).Should().Be(comparisonResult);
-            }
+        //[TestCaseSource(nameof(FavouritesComparisonData))]
+        //public void FavouriteByHashComparer_should_differentiate_by_candidate_hash_and_voter_only(FavouriteDeltaBroadcast x, FavouriteDeltaBroadcast y, bool comparisonResult)
+        //{
+        //    var xHashCode = FavouriteByHashAndVoterComparer.Default.GetHashCode(x);
+        //    var yHashCode = FavouriteByHashAndVoterComparer.Default.GetHashCode(y);
+        //    if (xHashCode != 0 && yHashCode != 0)
+        //    {
+        //        xHashCode.Equals(yHashCode).Should().Be(comparisonResult);
+        //    }
 
-            FavouriteByHashAndVoterComparer.Default.Equals(x, y).Should().Be(comparisonResult);
-        }
+        //    FavouriteByHashAndVoterComparer.Default.Equals(x, y).Should().Be(comparisonResult);
+        //}
 
         //[TestCaseSource(nameof(FavouritesComparisonData))]
         //public void FavouriteByHashComparer_should_differentiate_by_candidate_hash_and_voter_only(FavouriteDeltaBroadcast x, FavouriteDeltaBroadcast y, bool comparisonResult)
