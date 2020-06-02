@@ -132,7 +132,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         {
             _verifyMessageRequestObserver.OnNext(new ObserverDto(_fakeContext, _verifyMessageRequest.ToProtocolMessage(_testPeerId)));
 
-            var responseList = _fakeContext.Channel.ReceivedCalls().ToList();
+            var responseList = _peerClient.ReceivedCalls().ToList();
             var response = ((MessageDto) responseList[0].GetArguments()[0]).Content
                .FromProtocolMessage<VerifyMessageResponse>();
             response.IsSignedByKey.Should().Be(valid);

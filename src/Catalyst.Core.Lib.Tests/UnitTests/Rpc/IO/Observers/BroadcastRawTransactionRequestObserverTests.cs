@@ -22,6 +22,7 @@
 #endregion
 
 using Catalyst.Abstractions.IO.Events;
+using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
@@ -38,11 +39,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
     public class BroadcastRawTransactionRequestObserverTests
     {
-        private readonly BroadcastRawTransactionRequestObserver _broadcastRawTransactionRequestObserver;
-        private readonly ITransactionReceivedEvent _transactionReceivedEvent;
-        private readonly ILibP2PPeerClient _peerClient;
+        private BroadcastRawTransactionRequestObserver _broadcastRawTransactionRequestObserver;
+        private ITransactionReceivedEvent _transactionReceivedEvent;
+        private ILibP2PPeerClient _peerClient;
 
-        public BroadcastRawTransactionRequestObserverTests()
+        [SetUp]
+        public void Init()
         {
             _peerClient = Substitute.For<ILibP2PPeerClient>();
             _transactionReceivedEvent = Substitute.For<ITransactionReceivedEvent>();
@@ -72,10 +74,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                .Returns(expectedResponse);
             _broadcastRawTransactionRequestObserver
                .OnNext(new ObserverDto(channelContext,
-                    new BroadcastRawTransactionRequest {Transaction = new TransactionBroadcast()}.ToProtocolMessage(
+                    new BroadcastRawTransactionRequest { Transaction = new TransactionBroadcast() }.ToProtocolMessage(
                         PeerIdHelper.GetPeerId("FakeSender"))));
-            channelContext.Channel.Received(1)?.WriteAndFlushAsync(
-                Arg.Is<object>(transactionObj =>
+            _peerClient.Received(1).SendMessageAsync(Arg.Is<IMessageDto<ProtocolMessage>>(transactionObj =>
                     ((MessageDto) transactionObj)
                    .Content.FromProtocolMessage<BroadcastRawTransactionResponse>()
                    .ResponseCode == expectedResponse));
