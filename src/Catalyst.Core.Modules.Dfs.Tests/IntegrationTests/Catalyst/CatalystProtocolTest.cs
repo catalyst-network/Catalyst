@@ -29,11 +29,12 @@ using NUnit.Framework;
 using System.Reactive.Linq;
 using System;
 using System.Threading;
-using Catalyst.Protocol.IPPN;
-using Catalyst.Core.Lib.Extensions;
+using Catalyst.TestUtils;
 
 namespace Lib.P2P.Tests.Protocols
 {
+    [TestFixture]
+    [Category(Traits.IntegrationTest)]
     public class CatalystProtocolTest
     {
         private Peer self = new Peer
@@ -61,12 +62,12 @@ namespace Lib.P2P.Tests.Protocols
             await swarmB.StartAsync();
             var catalystProtocolB = new CatalystProtocol(swarmB);
             await catalystProtocolB.StartAsync();
-            var peerBAddress = await swarmB.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
+            var peerBAddress = await swarmB.StartListeningAsync("/ip4/127.0.0.1/tcp/5000");
 
             var swarm = new SwarmService(self);
             var catalystProtocolA = new CatalystProtocol(swarm);
             await swarm.StartAsync();
-            var peerAAddress = await swarm.StartListeningAsync("/ip4/127.0.0.1/tcp/1");
+            var peerAAddress = await swarm.StartListeningAsync("/ip4/127.0.0.1/tcp/5001");
 
             await catalystProtocolA.StartAsync();
             try
@@ -104,12 +105,12 @@ namespace Lib.P2P.Tests.Protocols
             await swarmB.StartAsync();
             var catalystProtocolB = new CatalystProtocol(swarmB);
             await catalystProtocolB.StartAsync();
-            var peerBAddress = await swarmB.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
+            var peerBAddress = await swarmB.StartListeningAsync("/ip4/127.0.0.1/tcp/5000");
 
             var swarm = new SwarmService(self);
             var catalystProtocolA = new CatalystProtocol(swarm);
             await swarm.StartAsync();
-            var peerAAddress = await swarm.StartListeningAsync("/ip4/127.0.0.1/tcp/1");
+            var peerAAddress = await swarm.StartListeningAsync("/ip4/127.0.0.1/tcp/5001");
 
             await catalystProtocolA.StartAsync();
             try
