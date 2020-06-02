@@ -74,8 +74,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _peerClient = Substitute.For<ILibP2PPeerClient>();
-            var fakeChannel = Substitute.For<IChannel>();
-            _fakeContext.Channel.Returns(fakeChannel);
         }
 
         /// <summary>
@@ -114,9 +112,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var targetPeerToDelete = fakePeerList[0];
 
             peerRepository.Add(fakePeerList);
-
-            // Build a fake remote endpoint
-            _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
 
             var peerId = PeerIdHelper.GetPeerId("sender");
 

@@ -61,9 +61,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             _signature.SignatureBytes.Returns(ByteUtil.GenerateRandomByteArray(new FfiWrapper().SignatureLength));
             _signature.PublicKeyBytes.Returns(ByteUtil.GenerateRandomByteArray(new FfiWrapper().PublicKeyLength));
             _logger = Substitute.For<ILogger>();
-            _fakeContext = Substitute.For<IChannelHandlerContext>();
-            var fakeChannel = Substitute.For<IChannel>();
-            _fakeContext.Channel.Returns(fakeChannel);
             _peerClient = Substitute.For<ILibP2PPeerClient>();
 
             _keySigner.Sign(default, default).ReturnsForAnyArgs(_signature);

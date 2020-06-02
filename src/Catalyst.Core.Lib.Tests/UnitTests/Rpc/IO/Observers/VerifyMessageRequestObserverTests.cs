@@ -73,10 +73,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             _keySigner.CryptoContext.Returns(new FfiWrapper());
 
             var logger = Substitute.For<ILogger>();
-            _fakeContext = Substitute.For<IChannelHandlerContext>();
 
-            var fakeChannel = Substitute.For<IChannel>();
-            _fakeContext.Channel.Returns(fakeChannel);
             _verifyMessageRequestObserver = new VerifyMessageRequestObserver(peerSettings, _peerClient, logger, _keySigner);
 
             _verifyMessageRequest = GetValidVerifyMessageRequest();

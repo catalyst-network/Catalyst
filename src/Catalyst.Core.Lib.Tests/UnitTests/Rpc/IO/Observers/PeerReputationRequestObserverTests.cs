@@ -60,10 +60,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _peerClient = Substitute.For<ILibP2PPeerClient>();
 
-            var fakeChannel = Substitute.For<IChannel>();
-            _fakeContext.Channel.Returns(fakeChannel);
-            _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
-
             _testScheduler = new TestScheduler();
             _peerRepository = Substitute.For<IPeerRepository>();
 

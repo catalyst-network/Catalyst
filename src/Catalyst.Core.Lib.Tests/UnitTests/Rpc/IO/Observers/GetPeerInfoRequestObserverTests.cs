@@ -64,9 +64,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _peerClient = Substitute.For<ILibP2PPeerClient>();
 
-            var fakeChannel = Substitute.For<IChannel>();
-            _fakeContext.Channel.Returns(fakeChannel);
-
             _peerRepository = new PeerRepository(new InMemoryRepository<Peer, string>());
             _peerRepository.Add(GetPeerTestData());
         }
