@@ -48,12 +48,9 @@ namespace Catalyst.Core.Lib.Network
         {
             _seedServers = peerSettings.SeedServers;
 
-            //todo
-            //_peerIds = Enumerable.Range(0, 5)
-            //   .Select(i => ByteUtil.GenerateRandomByteArray(32).BuildPeerIdFromPublicKey(IPAddress.Any, 1234));
             _peerIds = Enumerable.Range(0, 5)
               .Select(i => new MultiAddress($"/ip4/192.168.0.181/tcp/{4000 + i}/ipfs/18n3naE9kBZoVvgYMV6saMZdwu2yu3QMzKa2BDkb5C5pcuhtrH1G9HHbztbbxA8tGmf4"));
-            //var peerIdsAsStrings = _peerIds.Select(p => Base16.EncodeLower(p.ToByteArray()));
+
             var peerIdsAsStrings = _peerIds.Select(p => p.ToString());
             _dnsQueryAnswerValues = peerIdsAsStrings.ToArray();
         }

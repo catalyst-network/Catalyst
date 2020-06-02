@@ -84,7 +84,6 @@ namespace Catalyst.Core.Lib.Network
                 var dnsQueryAnswer = await GetTxtRecordsAsync(seedServer).ConfigureAwait(false);
                 var answerSection = (TxtRecord) dnsQueryAnswer.Answers.FirstOrDefault();
 
-                //todo
                 Guard.Argument(answerSection?.EscapedText).NotNull().Count(1);
                 answerSection?.EscapedText.ToList()
                    .ForEach(stringPid => peers.Add(new MultiAddress(stringPid)));

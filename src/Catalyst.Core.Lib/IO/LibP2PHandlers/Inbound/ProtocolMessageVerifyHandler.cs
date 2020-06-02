@@ -71,7 +71,6 @@ namespace Catalyst.Core.Lib.IO.LibP2PHandlers
                 return false;
             }
 
-            //todo
             var sig = signedMessage.Signature.RawBytes.ToByteArray();
             var address = new MultiAddress(signedMessage.PeerId);
             var pub = address.PeerId.GetPublicKeyBytesFromPeerId();

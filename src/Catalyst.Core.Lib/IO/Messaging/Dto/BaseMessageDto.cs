@@ -53,10 +53,8 @@ namespace Catalyst.Core.Lib.IO.Messaging.Dto
             ICorrelationId correlationId)
             : base(content, senderPeerIdentifier.GetIPEndPoint(), recipientPeerIdentifier.GetIPEndPoint())
         {
-            //todo
-            //Guard.Argument(senderPeerIdentifier.IpEndPoint.Address, nameof(senderPeerIdentifier.IpEndPoint.Address)).NotNull();
-            //Guard.Argument(recipientPeerIdentifier.IpEndPoint.Address,
-            //    nameof(recipientPeerIdentifier.IpEndPoint.Address)).NotNull();
+            Guard.Argument(senderPeerIdentifier.GetIPEndPoint().Address).NotNull();
+            Guard.Argument(recipientPeerIdentifier.GetIPEndPoint().Address).NotNull();
 
             CorrelationId = correlationId;
             SenderPeerIdentifier = senderPeerIdentifier;

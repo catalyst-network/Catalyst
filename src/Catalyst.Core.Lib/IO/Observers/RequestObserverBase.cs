@@ -77,9 +77,6 @@ namespace Catalyst.Core.Lib.IO.Observers
                     recipientPeerId);
 
                 _peerClient.SendMessageAsync(responseDto);
-
-                //todo
-                //messageDto.Context.Channel?.WriteAndFlushAsync(responseDto).ConfigureAwait(false).GetAwaiter().GetResult();
             }
             catch (Exception exception)
             {

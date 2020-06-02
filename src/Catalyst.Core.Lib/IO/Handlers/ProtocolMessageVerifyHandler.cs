@@ -70,7 +70,6 @@ namespace Catalyst.Core.Lib.IO.Handlers
                 return false;
             }
 
-            //todo
             var sig = signedMessage.Signature.RawBytes.ToByteArray();
             var address = new MultiAddress(signedMessage.PeerId);
             var pub = address.PeerId.GetPublicKeyBytesFromPeerId();
