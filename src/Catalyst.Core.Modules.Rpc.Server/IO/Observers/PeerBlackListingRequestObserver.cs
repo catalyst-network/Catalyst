@@ -70,7 +70,6 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             ICorrelationId correlationId)
         {
             Guard.Argument(setPeerBlackListRequest, nameof(setPeerBlackListRequest)).NotNull();
-            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Logger.Information("received message of type PeerBlackListingRequest");
 

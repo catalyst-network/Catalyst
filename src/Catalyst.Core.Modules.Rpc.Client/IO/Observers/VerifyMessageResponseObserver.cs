@@ -59,7 +59,6 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
             ICorrelationId correlationId)
         {   
             Guard.Argument(verifyMessageResponse, nameof(verifyMessageResponse)).NotNull();
-            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
         }
     }

@@ -50,19 +50,19 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc
                     senderPeerId, correlationId));
         }
 
-        [Test]
-        public void Null_ChannelHandlerContext_Throws_Exception()
-        {
-            var senderPeerIdentifier = PeerIdHelper.GetPeerId();
-            var correlationId = CorrelationId.GenerateCorrelationId();
+        //[Test]
+        //public void Null_ChannelHandlerContext_Throws_Exception()
+        //{
+        //    var senderPeerIdentifier = PeerIdHelper.GetPeerId();
+        //    var correlationId = CorrelationId.GenerateCorrelationId();
 
-            var logger = Substitute.For<ILogger>();
-            var responseObserver = new TestRpcResponseObserver(logger);
+        //    var logger = Substitute.For<ILogger>();
+        //    var responseObserver = new TestRpcResponseObserver(logger);
 
-            Assert.Throws<ArgumentNullException>(() => responseObserver
-               .HandleResponseObserver(new VersionResponse(), null,
-                    senderPeerIdentifier, correlationId));
-        }
+        //    Assert.Throws<ArgumentNullException>(() => responseObserver
+        //       .HandleResponseObserver(new VersionResponse(), null,
+        //            senderPeerIdentifier, correlationId));
+        //}
 
         [Test]
         public void Null_SenderPeerIdentifierContext_Throws_Exception()

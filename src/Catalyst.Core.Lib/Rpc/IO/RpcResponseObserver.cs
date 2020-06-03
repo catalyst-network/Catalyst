@@ -46,7 +46,6 @@ namespace Catalyst.Core.Lib.Rpc.IO
             MultiAddress senderPeerId,
             ICorrelationId correlationId)
         {
-            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
             Guard.Argument(message, nameof(message)).NotNull("The message cannot be null");
 

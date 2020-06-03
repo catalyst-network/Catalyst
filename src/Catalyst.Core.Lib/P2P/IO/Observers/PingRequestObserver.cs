@@ -66,21 +66,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             ICorrelationId correlationId)
         {
             Guard.Argument(pingRequest, nameof(pingRequest)).NotNull();
-            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
-            
-            //todo
-            //Logger.Debug("message content is {0} IP: {1} PeerId: {2}", pingRequest, senderPeerId.Ip, senderPeerId);
-
-            //var peer = _peerRepository.Get(senderPeerId);
-            //if (peer == null)
-            //{
-            //    _peerRepository.Add(new Peer
-            //    {
-            //        PeerId = senderPeerId,
-            //        LastSeen = DateTime.UtcNow
-            //    });
-            //}
 
             return new PingResponse();
         }

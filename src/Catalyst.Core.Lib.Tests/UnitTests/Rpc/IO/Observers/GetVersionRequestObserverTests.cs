@@ -51,10 +51,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             _peerClient = Substitute.For<ILibP2PPeerClient>();
-
-            var fakeChannel = Substitute.For<IChannel>();
-            _fakeContext.Channel.Returns(fakeChannel);
-            _fakeContext.Channel.RemoteAddress.Returns(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort));
         }
 
         [Test]
