@@ -21,163 +21,159 @@
 
 #endregion
 
-//todo
-//using System;
-//using System.Collections.Generic;
-//using Autofac;
-//using Catalyst.TestUtils;
-//using Catalyst.Core.Lib.DAO;
-//using Catalyst.Core.Lib.DAO.Peer;
-//using Catalyst.Core.Lib.Service;
-//using Catalyst.Protocol.Peer;
-//using SharpRepository.Repository;
-//using FluentAssertions;
-//using Microsoft.EntityFrameworkCore;
-//using Catalyst.TestUtils.Repository;
-//using NUnit.Framework;
+using System;
+using System.Collections.Generic;
+using Autofac;
+using Catalyst.TestUtils;
+using Catalyst.Core.Lib.DAO.Peer;
+using Catalyst.Core.Lib.Service;
+using SharpRepository.Repository;
+using FluentAssertions;
+using Microsoft.EntityFrameworkCore;
+using Catalyst.TestUtils.Repository;
+using NUnit.Framework;
+using MultiFormats;
 
-//namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
-//{
-//    [TestFixture]
-//    [Category(Traits.IntegrationTest)] 
-//    public sealed class PeerRepositoryTests : FileSystemBasedTest
-//    {
-//        private TestMapperProvider _mapperProvider;
+namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
+{
+    [TestFixture]
+    [Category(Traits.IntegrationTest)]
+    public sealed class PeerRepositoryTests : FileSystemBasedTest
+    {
+        private TestMapperProvider _mapperProvider;
 
-//        public static IEnumerable<object[]> ModulesList => 
-//            new List<object[]>
-//            {
-//                new object[] {new InMemoryTestModule<PeerDao>()},
-//                new object[] {new MongoDbTestModule<PeerDao>()}
-//            };
+        public static IEnumerable<object[]> ModulesList =>
+            new List<object[]>
+            {
+                new object[] {new InMemoryTestModule<PeerDao>()},
+                new object[] {new MongoDbTestModule<PeerDao>()}
+            };
 
-//        [SetUp]
-//        public void Init()
-//        {
-//            _mapperProvider = new TestMapperProvider();
-//        }
+        [SetUp]
+        public void Init()
+        {
+            _mapperProvider = new TestMapperProvider();
+        }
 
-//        private void PeerRepo_Can_Save_And_Retrieve()
-//        {
-//            using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
-//            {
-//                var peerRepo = PopulatePeerRepo(scope, out var peerDao);
+        private void PeerRepo_Can_Save_And_Retrieve()
+        {
+            using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
+            {
+                var peerRepo = PopulatePeerRepo(scope, out var peerDao);
 
-//                peerRepo.Get(peerDao.Id).Id.Should().Be(peerDao.Id);
-//                peerRepo.Get(peerDao.Id).PeerIdentifier.PublicKey.Should().Be(peerDao.PeerIdentifier.PublicKey);
-//                peerRepo.Get(peerDao.Id).PeerIdentifier.Ip.Should().Be(peerDao.PeerIdentifier.Ip);
-//            }
-//        }
+                peerRepo.Get(peerDao.Id).Id.Should().Be(peerDao.Id);
+                new MultiAddress(peerRepo.Get(peerDao.Id).PeerIdentifier).Should().Be(peerDao.PeerIdentifier);
+            }
+        }
 
-//        private void PeerRepo_Can_Update_And_Retrieve()
-//        {
-//            using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
-//            {
-//                var peerRepo = PopulatePeerRepo(scope, out var peerDao);
+        private void PeerRepo_Can_Update_And_Retrieve()
+        {
+            using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
+            {
+                var peerRepo = PopulatePeerRepo(scope, out var peerDao);
 
-//                var retrievedPeer = peerRepo.Get(peerDao.Id);
-//                retrievedPeer.Touch();
-//                peerRepo.Update(retrievedPeer);
+                var retrievedPeer = peerRepo.Get(peerDao.Id);
+                retrievedPeer.Touch();
+                peerRepo.Update(retrievedPeer);
 
-//                var retrievedPeerModified = peerRepo.Get(peerDao.Id);
-//                var now = DateTime.UtcNow.Date;
+                var retrievedPeerModified = peerRepo.Get(peerDao.Id);
+                var now = DateTime.UtcNow.Date;
 
-//                if (retrievedPeerModified.Modified == null)
-//                {
-//                    return;
-//                }
+                if (retrievedPeerModified.Modified == null)
+                {
+                    return;
+                }
 
-//                var dateComparer = retrievedPeerModified.Modified.Value.Date.ToString("MM/dd/yyyy");
-                
-//                // ReSharper disable once SuspiciousTypeConversion.Global
-//                // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
-//                dateComparer.Should()?.Equals(now.ToString("MM/dd/yyyy"));
-//            }
-//        }
+                var dateComparer = retrievedPeerModified.Modified.Value.Date.ToString("MM/dd/yyyy");
 
-//        private IRepository<PeerDao, string> PopulatePeerRepo(ILifetimeScope scope, out PeerDao peerDaoOutput)
-//        {
-//            var peerRepo = scope.Resolve<IRepository<PeerDao, string>>();
+                // ReSharper disable once SuspiciousTypeConversion.Global
+                // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
+                dateComparer.Should()?.Equals(now.ToString("MM/dd/yyyy"));
+            }
+        }
 
-//            var peerDao = new PeerDao
-//            {
-//                Id = Guid.NewGuid().ToString()
-//            };
-            
-//            var peerId = PeerIdHelper.GetPeerId(new Random().Next().ToString());
-//            peerDao.PeerIdentifier = peerId.ToDao<PeerId, PeerIdDao>(_mapperProvider);
-//            peerDao.PeerIdentifier.Id = Guid.NewGuid().ToString();
+        private IRepository<PeerDao, string> PopulatePeerRepo(ILifetimeScope scope, out PeerDao peerDaoOutput)
+        {
+            var peerRepo = scope.Resolve<IRepository<PeerDao, string>>();
 
-//            peerRepo.Add(peerDao);
-//            peerDaoOutput = peerDao;
+            var peerDao = new PeerDao
+            {
+                Id = Guid.NewGuid().ToString()
+            };
 
-//            return peerRepo;
-//        }
-        
-//        [Ignore("Setup to run in pipeline only")]
-//        [Category(Traits.E2EMongoDb)]
-//        [TestCase(nameof(ModulesList))]
-//        public void PeerRepo_All_Dbs_Can_Update_And_Retrieve(Module dbModule)
-//        {
-//            RegisterModules(dbModule);
+            var peerId = PeerIdHelper.GetPeerId(new Random().Next().ToString());
+            peerDao.PeerIdentifier = peerId.ToString();
 
-//            PeerRepo_Can_Update_And_Retrieve();
-//        }
+            peerRepo.Add(peerDao);
+            peerDaoOutput = peerDao;
 
-//        [Ignore("Setup to run in pipeline only")]
-//        [Category(Traits.E2EMongoDb)]
-//        [TestCase(nameof(ModulesList))]
-//        public void PeerRepo_All_Dbs_Can_Save_And_Retrieve(Module dbModule)
-//        {
-//            RegisterModules(dbModule);
+            return peerRepo;
+        }
 
-//            PeerRepo_Can_Save_And_Retrieve();
-//        }
+        [Ignore("Setup to run in pipeline only")]
+        [Category(Traits.E2EMongoDb)]
+        [TestCase(nameof(ModulesList))]
+        public void PeerRepo_All_Dbs_Can_Update_And_Retrieve(Module dbModule)
+        {
+            RegisterModules(dbModule);
 
-//        [Ignore("Microsoft DBs yet to be completed")]
-//        [Category(Traits.E2EMssql)]
-//        public void PeerRepo_EfCore_Dbs_Update_And_Retrieve()
-//        {
-//            var connectionStr = ContainerProvider.ConfigurationRoot
-//               .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString").Value;
+            PeerRepo_Can_Update_And_Retrieve();
+        }
 
-//            RegisterModules(new EfCoreDbTestModule(connectionStr));
+        [Ignore("Setup to run in pipeline only")]
+        [Category(Traits.E2EMongoDb)]
+        [TestCase(nameof(ModulesList))]
+        public void PeerRepo_All_Dbs_Can_Save_And_Retrieve(Module dbModule)
+        {
+            RegisterModules(dbModule);
 
-//            CheckForDatabaseCreation();
+            PeerRepo_Can_Save_And_Retrieve();
+        }
 
-//            PeerRepo_Can_Update_And_Retrieve();
-//        }
+        [Ignore("Microsoft DBs yet to be completed")]
+        [Category(Traits.E2EMssql)]
+        public void PeerRepo_EfCore_Dbs_Update_And_Retrieve()
+        {
+            var connectionStr = ContainerProvider.ConfigurationRoot
+               .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString").Value;
 
-//        [Ignore("Microsoft DBs yet to be completed")]
-//        [Category(Traits.E2EMssql)]
-//        public void PeerRepo_EfCore_Dbs_Can_Save_And_Retrieve()
-//        {
-//            var connectionStr = ContainerProvider.ConfigurationRoot
-//               .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString").Value;
+            RegisterModules(new EfCoreDbTestModule(connectionStr));
 
-//            RegisterModules(new EfCoreDbTestModule(connectionStr));
+            CheckForDatabaseCreation();
 
-//            CheckForDatabaseCreation();
+            PeerRepo_Can_Update_And_Retrieve();
+        }
 
-//            PeerRepo_Can_Save_And_Retrieve();
-//        }
+        [Ignore("Microsoft DBs yet to be completed")]
+        [Category(Traits.E2EMssql)]
+        public void PeerRepo_EfCore_Dbs_Can_Save_And_Retrieve()
+        {
+            var connectionStr = ContainerProvider.ConfigurationRoot
+               .GetSection("CatalystNodeConfiguration:PersistenceConfiguration:repositories:efCore:connectionString").Value;
 
-//        private void CheckForDatabaseCreation()
-//        {
-//            using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
-//            {
-//                var contextDb = scope.Resolve<IDbContext>();
+            RegisterModules(new EfCoreDbTestModule(connectionStr));
 
-//                ((DbContext) contextDb).Database.EnsureCreated();
-//            }
-//        }
+            CheckForDatabaseCreation();
 
-//        private void RegisterModules(Module module)
-//        {
-//            ContainerProvider.ConfigureContainerBuilder();
+            PeerRepo_Can_Save_And_Retrieve();
+        }
 
-//            ContainerProvider.ContainerBuilder.RegisterModule(module);
-//        }
-//    }
-//}
+        private void CheckForDatabaseCreation()
+        {
+            using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
+            {
+                var contextDb = scope.Resolve<IDbContext>();
+
+                ((DbContext) contextDb).Database.EnsureCreated();
+            }
+        }
+
+        private void RegisterModules(Module module)
+        {
+            ContainerProvider.ConfigureContainerBuilder();
+
+            ContainerProvider.ContainerBuilder.RegisterModule(module);
+        }
+    }
+}
 

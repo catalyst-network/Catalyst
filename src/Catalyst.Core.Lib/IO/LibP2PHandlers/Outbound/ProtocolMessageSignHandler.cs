@@ -32,7 +32,7 @@ using Serilog;
 
 namespace Catalyst.Core.Lib.IO.LibP2PHandlers
 {
-    public sealed class ProtocolMessageSignHandler : IMessageHandler
+    public sealed class ProtocolMessageSignHandler : IOutboundMessageHandler
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
 

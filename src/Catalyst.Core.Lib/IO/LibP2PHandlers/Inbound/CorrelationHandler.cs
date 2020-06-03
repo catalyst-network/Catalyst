@@ -31,7 +31,7 @@ using Serilog;
 
 namespace Catalyst.Core.Lib.IO.LibP2PHandlers
 {
-    public sealed class CorrelationHandler<T> : IMessageHandler where T : IMessageCorrelationManager
+    public sealed class CorrelationHandler<T> : IInboundMessageHandler where T : IMessageCorrelationManager
     {
         private static readonly ILogger Logger = Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType);
         private readonly T _messageCorrelationManager;

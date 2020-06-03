@@ -31,7 +31,7 @@ using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Core.Lib.IO.LibP2PHandlers
 {
-    public sealed class CorrelatableHandler<T> : IMessageHandler where T : IMessageCorrelationManager
+    public sealed class CorrelatableHandler<T> : IOutboundMessageHandler where T : IMessageCorrelationManager
     {
         private readonly T _messageCorrelationManager;
         

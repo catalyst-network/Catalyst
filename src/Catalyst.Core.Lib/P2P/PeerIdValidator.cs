@@ -26,7 +26,6 @@ using System.Net;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Network;
-using Catalyst.Protocol.Peer;
 using Dawn;
 using MultiFormats;
 
@@ -47,11 +46,8 @@ namespace Catalyst.Core.Lib.P2P
         /// <inheritdoc cref="Catalyst.Abstractions.P2P.IPeerIdValidator"/>
         public bool ValidatePeerIdFormat(MultiAddress peerId)
         {
-            //todo
-            //Guard.Argument(peerId, nameof(peerId)).NotNull()
-            //   .Require(p => p.Ip.Length == 16 && ValidateIp(p.Ip.ToByteArray()), _ => "Ip should be 16 bytes")
-            //   .Require(p => ValidatePort(p.Port), _ => "Port should be between 1025 and 65535")
-            //   .Require(p => p.PublicKey.Length == _cryptoContext.PublicKeyLength, p => $"PublicKey should be {_cryptoContext.PublicKeyLength} bytes but was {p.PublicKey.Length}");
+            Guard.Argument(peerId, nameof(peerId)).NotNull();
+            Guard.Argument(peerId.HasPeerId, nameof(peerId.HasPeerId)).True("MultiAddress has no PeerId");
 
             return true;
         }
