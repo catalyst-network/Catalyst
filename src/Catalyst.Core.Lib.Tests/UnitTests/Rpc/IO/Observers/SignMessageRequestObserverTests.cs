@@ -81,11 +81,11 @@
 //            };
 
 //            var protocolMessage =
-//                signMessageRequest.ToProtocolMessage(PeerIdHelper.GetPeerId("sender"));
+//                signMessageRequest.ToProtocolMessage(MultiAddressHelper.GetAddress("sender"));
 
 //            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
-//            var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
+//            var peerSettings = MultiAddressHelper.GetAddress("sender").ToSubstitutedPeerSettings();
 //            var handler =
 //                new SignMessageRequestObserver(peerSettings, _peerClient, _logger, _keySigner);
 

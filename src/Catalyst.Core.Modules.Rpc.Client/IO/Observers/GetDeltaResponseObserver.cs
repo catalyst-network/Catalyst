@@ -42,7 +42,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
         /// <inheritdoc />
         protected override void HandleResponse(GetDeltaResponse deltaResponse,
             IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderPeerIdentifier,
+            MultiAddress senderentifier,
             ICorrelationId correlationId) { }
     }
 }

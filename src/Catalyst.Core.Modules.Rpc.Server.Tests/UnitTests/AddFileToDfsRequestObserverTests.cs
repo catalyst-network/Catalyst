@@ -71,7 +71,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
         {
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _manualResetEvent = new ManualResetEvent(false);
-            _senderIdentifier = PeerIdHelper.GetPeerId("sender");
+            _senderIdentifier = MultiAddressHelper.GetAddress("sender");
             _peerClient = Substitute.For<ILibP2PPeerClient>();
             var peerSettings = _senderIdentifier.ToSubstitutedPeerSettings();
             _fakeDfsService = Substitute.For<IDfsService>();

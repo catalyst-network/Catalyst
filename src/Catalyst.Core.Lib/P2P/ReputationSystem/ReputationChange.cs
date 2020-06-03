@@ -31,12 +31,12 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
     public sealed class ReputationChange
         : IPeerReputationChange
     {
-        public MultiAddress PeerId { get; }
+        public MultiAddress Address { get; }
         public IReputationEvents ReputationEvent { get; }
 
-        public ReputationChange(MultiAddress peerIdentifier, IReputationEvents reputationEvent)
+        public ReputationChange(MultiAddress address, IReputationEvents reputationEvent)
         {
-            PeerId = peerIdentifier;
+            Address = address;
             ReputationEvent = reputationEvent;
         }
     }

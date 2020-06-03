@@ -85,7 +85,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             Guard.Argument(candidate, nameof(candidate)).NotNull().Require(c => c.IsValid());
             _logger.Information("Broadcasting candidate delta {0}", candidate);
 
-            if (!candidate.ProducerId.Equals(_peerId.ToString()))
+            if (!candidate.Producer.Equals(_peerId.ToString()))
             {
                 _logger.Warning($"{nameof(BroadcastCandidate)} " +
                     "should only be called by the producer of a candidate.");

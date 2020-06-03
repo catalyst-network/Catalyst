@@ -41,7 +41,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
             var testScheduler = new TestScheduler(); 
             var peerClient  = Substitute.For<ILibP2PPeerClient>();
             var candidateDeltaMessages = Enumerable.Repeat(new PeerNeighborsRequest(), 10).ToArray();
-            var peerSettings = PeerIdHelper.GetPeerId("server").ToSubstitutedPeerSettings();
+            var peerSettings = MultiAddressHelper.GetAddress("server").ToSubstitutedPeerSettings();
             var messageStream = MessageStreamHelper.CreateStreamWithMessages(testScheduler, candidateDeltaMessages);
             using (var observer = new FailingRequestObserver(Substitute.For<ILogger>(),
                 peerSettings,

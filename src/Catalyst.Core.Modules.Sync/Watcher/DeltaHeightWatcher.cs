@@ -71,19 +71,18 @@ namespace Catalyst.Core.Modules.Sync.Watcher
 
         public async void RequestDeltaHeightTimerCallback(object state)
         {
-            //var peers = await _swarmApi.PeersAsync().ConfigureAwait(false);
-            //if (DeltaHeightRanker.GetPeers().Count() > 0)
-            //{
-            //    _manualResetEventSlim.Set();
-            //}
-
             await RequestDeltaHeightFromPeers();
         }
 
-        public async Task<DeltaIndex> GetHighestDeltaIndexAsync(TimeSpan timeout = default, CancellationToken cancellationToken = default)
+        public async Task<DeltaIndex> WaitForDeltaIndexAsync(TimeSpan timeout = default, CancellationToken cancellationToken = default)
         {
             await _autoResetEvent.WaitOneAsync(timeout, cancellationToken);
-            return GetMostPopularMessage()?.Item.DeltaIndex;
+            return await GetHighestDeltaIndexAsync();
+        }
+
+        public Task<DeltaIndex> GetHighestDeltaIndexAsync()
+        {
+            return Task.FromResult(GetMostPopularMessage()?.Item.DeltaIndex);
         }
 
         private IRankedItem<LatestDeltaHashResponse> GetMostPopularMessage()
@@ -114,9 +113,9 @@ namespace Catalyst.Core.Modules.Sync.Watcher
 
         private void DeltaHeightOnNext(ProtocolMessage protocolMessage)
         {
-            var peerId = protocolMessage.PeerId;
+            var address = protocolMessage.Address;
             var latestDeltaHash = protocolMessage.FromProtocolMessage<LatestDeltaHashResponse>();
-            DeltaHeightRanker.Add(peerId, latestDeltaHash);
+            DeltaHeightRanker.Add(address, latestDeltaHash);
         }
 
         public void Start()

@@ -70,18 +70,18 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
         [Test]
         public async Task Can_Query_Expected_Peer()
         {
-            var recipientPeerId = PeerIdHelper.GetPeerId();
+            var recipientPeerId = MultiAddressHelper.GetAddress();
             await _peerDeltaHistoryRequest.DeltaHistoryAsync(recipientPeerId).ConfigureAwait(false);
             var expectedDto = Substitute.For<IMessageDto<ProtocolMessage>>();
-            expectedDto.RecipientPeerIdentifier.Returns(recipientPeerId);
-            expectedDto.SenderPeerIdentifier.Returns(_testSettings.Address);
+            expectedDto.RecipientAddress.Returns(recipientPeerId);
+            expectedDto.SenderAddress.Returns(_testSettings.Address);
             await _peerDeltaHistoryRequest.PeerClient.ReceivedWithAnyArgs(1).SendMessageAsync(Arg.Is(expectedDto));
         }
 
         [Test]
         public async Task Can_Receive_Query_Response_On_Observer()
         {
-            var recipientPeerId = PeerIdHelper.GetPeerId();
+            var recipientPeerId = MultiAddressHelper.GetAddress();
             
             var hp = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             var lastDeltaHash = hp.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32));
@@ -116,7 +116,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
         [Test]
         public async Task No_Response_Timeout_And_Returns_False()
         {
-            var recipientPeerId = PeerIdHelper.GetPeerId();
+            var recipientPeerId = MultiAddressHelper.GetAddress();
             _cancellationProvider.CancellationTokenSource.Cancel();
             var response = await _peerDeltaHistoryRequest.DeltaHistoryAsync(recipientPeerId).ConfigureAwait(false);
             response.Should().BeNull();
@@ -125,7 +125,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
         [Test]
         public async Task Exception_During_Query_Returns_Null()
         {
-            var recipientPeerId = PeerIdHelper.GetPeerId();
+            var recipientPeerId = MultiAddressHelper.GetAddress();
             _cancellationProvider.Dispose(); //do summet nasty to force exception
             var response = await _peerDeltaHistoryRequest.DeltaHistoryAsync(recipientPeerId).ConfigureAwait(false);
             response.Should().BeNull();   

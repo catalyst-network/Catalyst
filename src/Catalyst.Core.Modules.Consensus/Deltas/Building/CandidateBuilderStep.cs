@@ -90,7 +90,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
             context.CoinbaseEntry = new CoinbaseEntry
             {
                 Amount = summedFees.ToUint256ByteString(),
-                ReceiverPublicKey = _producerUniqueId.PeerId.GetPublicKeyBytesFromPeerId().ToByteString()
+                ReceiverPublicKey = _producerUniqueId.GetPublicKeyBytes().ToByteString()
             };
             
             byte[] globalLedgerStateUpdate = shuffledEntriesBytes
@@ -106,7 +106,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
                    .ToByteString(),
 
                 // Idj
-                ProducerId = _producerUniqueId.ToString(),
+                Producer = _producerUniqueId.ToString(),
                 PreviousDeltaDfsHash = context.PreviousDeltaHash.ToArray().ToByteString()
             };
             

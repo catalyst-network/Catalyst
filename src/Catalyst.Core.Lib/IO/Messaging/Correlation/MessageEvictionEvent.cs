@@ -31,12 +31,12 @@ namespace Catalyst.Core.Lib.IO.Messaging.Correlation
     public sealed class MessageEvictionEvent<T> : ICacheEvictionEvent<T> where T : IMessage
     {
         public T EvictedContent { get; }
-        public MultiAddress PeerId { get; }
+        public MultiAddress Address { get; }
         
         public MessageEvictionEvent(CorrelatableMessage<T> correlatableMessage, MultiAddress sender)
         {
             EvictedContent = correlatableMessage.Content;
-            PeerId = sender;
+            Address = sender;
         }
     }
 }

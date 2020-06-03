@@ -72,7 +72,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             var protocolMessage = new GetInfoRequest
             {
                 Query = true
-            }.ToProtocolMessage(PeerIdHelper.GetPeerId("sender"));
+            }.ToProtocolMessage(MultiAddressHelper.GetAddress("sender"));
 
             var expectedResponseContent = JsonConvert
                .SerializeObject(_config.GetSection("CatalystNodeConfiguration").AsEnumerable(),
@@ -82,7 +82,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
                 protocolMessage
             );
 
-            var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
+            var peerSettings = MultiAddressHelper.GetAddress("sender").ToSubstitutedPeerSettings();
             var handler = new GetInfoRequestObserver(
                 peerSettings, _peerClient, _config, _logger);
 

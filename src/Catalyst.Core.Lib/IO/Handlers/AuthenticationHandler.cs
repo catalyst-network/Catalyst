@@ -50,7 +50,7 @@ namespace Catalyst.Core.Lib.IO.Handlers
         /// <inheritdoc cref="DotNetty.Transport.Channels.SimpleChannelInboundHandler{I}"/>>
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage msg)
         {
-            if (_authenticationStrategy.Authenticate(msg.PeerId))
+            if (_authenticationStrategy.Authenticate(msg.Address))
             {
                 ctx.FireChannelRead(msg);
             }

@@ -33,10 +33,10 @@ namespace Catalyst.Protocol.Wire
 
         public bool IsValid()
         {
-            var address = MultiAddress.TryCreate(ProducerId);
+            var address = MultiAddress.TryCreate(Producer);
             if (address==null || !address.HasPeerId)
             {
-                Logger.Debug("{field} is a invalid multi address with peerId", nameof(ProducerId));
+                Logger.Debug("{field} is a invalid multi address with peerId", nameof(Producer));
                 return false;
             }
 

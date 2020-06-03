@@ -59,15 +59,15 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
         /// </summary>
         /// <param name="signMessageRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="senderentifier"></param>
         /// <param name="correlationId"></param>
         protected override void HandleResponse(SignMessageResponse signMessageRequest,
             IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderPeerIdentifier,
+            MultiAddress senderentifier,
             ICorrelationId correlationId)
         {
             Guard.Argument(signMessageRequest, nameof(signMessageRequest)).NotNull();
-            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
+            Guard.Argument(senderentifier, nameof(senderentifier)).NotNull();
             Logger.Debug(@"sign message response");
             
             try

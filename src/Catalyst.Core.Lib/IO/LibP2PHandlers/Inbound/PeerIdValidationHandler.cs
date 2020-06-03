@@ -40,7 +40,7 @@ namespace Catalyst.Core.Lib.IO.LibP2PHandlers
         public Task<bool> ProcessAsync(ProtocolMessage message)
         {
             Logger.Verbose("Received {msg}", message);
-            if (_peerIdValidator.ValidatePeerIdFormat(message.PeerId))
+            if (_peerIdValidator.ValidatePeerIdFormat(message.Address))
             {
                 return Task.FromResult(true);
             }

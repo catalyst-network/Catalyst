@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Protocol.Peer;
 using Catalyst.Simulator.Interfaces;
 using MultiFormats;
 
@@ -29,13 +28,13 @@ namespace Catalyst.Simulator
 {
     public class ClientRpcInfo
     {
-        public ClientRpcInfo(MultiAddress peerIdentifier, IRpcClient rpcClient)
+        public ClientRpcInfo(MultiAddress address, IRpcClient rpcClient)
         {
-            PeerId = peerIdentifier;
+            Address = address;
             RpcClient = rpcClient;
         }
 
-        public MultiAddress PeerId { get; }
+        public MultiAddress Address { get; }
         public IRpcClient RpcClient { get; }
     }
 }

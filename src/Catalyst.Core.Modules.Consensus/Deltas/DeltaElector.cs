@@ -92,18 +92,18 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 Guard.Argument(candidate, nameof(candidate)).NotNull().Require(f => f.IsValid());
 
                 var cid = candidate.Candidate.PreviousDeltaDfsHash.ToByteArray().ToCid();
-                var candidateAddress = new MultiAddress(candidate.VoterId);
+                var candidateAddress = new MultiAddress(candidate.Voter);
                 var candidatePublicKey = candidateAddress.GetPublicKey();
                 if (!_deltaProducersProvider
                    .GetDeltaProducersFromPreviousDelta(cid)
                    .Any(p => p.Equals(candidatePublicKey)))
                 {
-                    var reputationChange = new ReputationChange(candidate.VoterId, ReputationEventType.VoterIsNotProducer);
+                    var reputationChange = new ReputationChange(candidate.Voter, ReputationEventType.VoterIsNotProducer);
                     _reputationManager.OnNext(reputationChange);
 
                     _logger.Debug(
                         "Voter {voter} is not a producer for this cycle succeeding {deltaHash} and its vote has been discarded.",
-                        candidate.VoterId, candidate.Candidate.PreviousDeltaDfsHash);
+                        candidate.Voter, candidate.Candidate.PreviousDeltaDfsHash);
                     return;
                 }
 

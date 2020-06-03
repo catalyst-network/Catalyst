@@ -70,7 +70,7 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
 
             try
             {
-                var multiAddress = new MultiAddress(messageDto.Payload.PeerId);
+                var multiAddress = new MultiAddress(messageDto.Payload.Address);
                 Logger.Verbose("received {message} from {port}", messageDto.Payload.CorrelationId.ToCorrelationId(),
                     multiAddress.GetPort());
 

@@ -81,16 +81,16 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// </summary>
         /// <param name="getFileFromDfsRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerId"></param>
+        /// <param name="sender"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override GetFileFromDfsResponse HandleRequest(GetFileFromDfsRequest getFileFromDfsRequest,
             IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(getFileFromDfsRequest, nameof(getFileFromDfsRequest)).NotNull();
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
 
             long fileLen = 0;
 
@@ -107,7 +107,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
                         fileLen = stream.Length;
                         using (var fileTransferInformation = new UploadFileTransferInformation(
                             stream,
-                            senderPeerId,
+                            sender,
                             PeerSettings.Address,
                             channelHandlerContext.Channel,
                             correlationId

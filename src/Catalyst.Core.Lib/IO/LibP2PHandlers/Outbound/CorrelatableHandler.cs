@@ -47,7 +47,7 @@ namespace Catalyst.Core.Lib.IO.LibP2PHandlers
             {
                 _messageCorrelationManager.AddPendingRequest(new CorrelatableMessage<ProtocolMessage>
                 {
-                    Recipient = message.PeerId,
+                    Recipient = message.Address,
                     Content = message,
                     SentAt = DateTimeOffset.UtcNow
                 });

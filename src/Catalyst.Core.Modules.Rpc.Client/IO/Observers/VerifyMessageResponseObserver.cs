@@ -51,15 +51,15 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
         /// </summary>
         /// <param name="verifyMessageResponse"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="senderentifier"></param>
         /// <param name="correlationId"></param>
         protected override void HandleResponse(VerifyMessageResponse verifyMessageResponse,
             IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderPeerIdentifier,
+            MultiAddress senderentifier,
             ICorrelationId correlationId)
         {   
             Guard.Argument(verifyMessageResponse, nameof(verifyMessageResponse)).NotNull();
-            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
+            Guard.Argument(senderentifier, nameof(senderentifier)).NotNull();
         }
     }
 }

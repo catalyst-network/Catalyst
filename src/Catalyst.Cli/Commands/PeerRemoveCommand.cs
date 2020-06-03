@@ -40,7 +40,7 @@ namespace Catalyst.Cli.Commands
         {
             return new RemovePeerRequest
             {
-                PeerId = option.Address
+                Address = option.Address
             };
         }
     }

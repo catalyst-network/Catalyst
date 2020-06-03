@@ -66,7 +66,7 @@
 
 //            _peerClient = Substitute.For<ILibP2PPeerClient>();
 
-//            _testPeerId = PeerIdHelper.GetPeerId("TestPeerIdentifier");
+//            _testPeerId = MultiAddressHelper.GetAddress("TestPeerIdentifier");
 
 //            var peerSettings = _testPeerId.ToSubstitutedPeerSettings();
 

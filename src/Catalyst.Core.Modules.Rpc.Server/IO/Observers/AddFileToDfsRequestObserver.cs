@@ -88,19 +88,19 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// </summary>
         /// <param name="addFileToDfsRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerId"></param>
+        /// <param name="sender"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override AddFileToDfsResponse HandleRequest(AddFileToDfsRequest addFileToDfsRequest,
             IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(addFileToDfsRequest, nameof(addFileToDfsRequest)).NotNull();
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
 
             var fileTransferInformation = new DownloadFileTransferInformation(PeerSettings.Address,
-                senderPeerId, channelHandlerContext.Channel,
+                sender, channelHandlerContext.Channel,
                 correlationId, addFileToDfsRequest.FileName, addFileToDfsRequest.FileSize);
 
             FileTransferResponseCodeTypes responseCodeType;
@@ -187,7 +187,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             // Send Response
             var responseMessage = new MessageDto(
                 protocolMessage,
-                fileTransferInformation.RecipientId
+                fileTransferInformation.Recipient
             );
 
             await fileTransferInformation.RecipientChannel.WriteAndFlushAsync(responseMessage).ConfigureAwait(false);

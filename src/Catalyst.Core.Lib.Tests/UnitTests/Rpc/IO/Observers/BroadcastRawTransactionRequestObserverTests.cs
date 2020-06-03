@@ -49,7 +49,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             _peerClient = Substitute.For<ILibP2PPeerClient>();
             _transactionReceivedEvent = Substitute.For<ITransactionReceivedEvent>();
 
-            var peerSettings = PeerIdHelper.GetPeerId("Test").ToSubstitutedPeerSettings();
+            var peerSettings = MultiAddressHelper.GetAddress("Test").ToSubstitutedPeerSettings();
 
             _broadcastRawTransactionRequestObserver = new BroadcastRawTransactionRequestObserver(
                 Substitute.For<ILogger>(),
@@ -75,7 +75,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             _broadcastRawTransactionRequestObserver
                .OnNext(new ObserverDto(channelContext,
                     new BroadcastRawTransactionRequest { Transaction = new TransactionBroadcast() }.ToProtocolMessage(
-                        PeerIdHelper.GetPeerId("FakeSender"))));
+                        MultiAddressHelper.GetAddress("FakeSender"))));
             _peerClient.Received(1).SendMessageAsync(Arg.Is<IMessageDto<ProtocolMessage>>(transactionObj =>
                     ((MessageDto) transactionObj)
                    .Content.FromProtocolMessage<BroadcastRawTransactionResponse>()

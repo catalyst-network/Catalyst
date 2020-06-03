@@ -55,10 +55,10 @@ namespace Catalyst.Core.Lib.FileTransfer
         public IChannel RecipientChannel { get; set; }
 
         /// <inheritdoc />
-        public MultiAddress RecipientId { get; set; }
+        public MultiAddress Recipient { get; set; }
 
         /// <inheritdoc />
-        public MultiAddress PeerId { get; set; }
+        public MultiAddress Address { get; set; }
 
         /// <inheritdoc />
         public CancellationToken CancellationToken { get; set; }
@@ -86,8 +86,8 @@ namespace Catalyst.Core.Lib.FileTransfer
         /// <param name="correlationId">The correlation unique identifier.</param>
         /// <param name="fileName">Name of the file.</param>
         /// <param name="fileSize">Size of the file.</param>
-        protected BaseFileTransferInformation(MultiAddress peerId,
-            MultiAddress recipientId,
+        protected BaseFileTransferInformation(MultiAddress address,
+            MultiAddress recipient,
             IChannel recipientChannel,
             ICorrelationId correlationId,
             string fileName,
@@ -96,8 +96,8 @@ namespace Catalyst.Core.Lib.FileTransfer
             TempPath = Path.GetTempPath() + correlationId.Id + ".tmp";
             MaxChunk = (uint) Math.Max(1, (int) Math.Ceiling((double) fileSize / Constants.FileTransferChunkSize));
             RecipientChannel = recipientChannel;
-            RecipientId = recipientId;
-            PeerId = peerId;
+            Recipient = recipient;
+            Address = address;
             CorrelationId = correlationId;
             FileOutputPath = fileName;
             ChunkIndicators = new bool[MaxChunk];

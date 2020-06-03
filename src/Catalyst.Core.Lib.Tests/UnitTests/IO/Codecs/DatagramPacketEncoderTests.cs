@@ -53,12 +53,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
                 new DatagramPacketEncoder<IMessage>(new ProtobufEncoder())
             );
 
-            var senderPid = PeerIdHelper.GetPeerId("sender",
+            var senderPid = MultiAddressHelper.GetAddress("sender",
                 IPAddress.Loopback,
                 10000
             );
 
-            _recipientPid = PeerIdHelper.GetPeerId("sender",
+            _recipientPid = MultiAddressHelper.GetAddress("sender",
                 IPAddress.Loopback,
                 20000
             );

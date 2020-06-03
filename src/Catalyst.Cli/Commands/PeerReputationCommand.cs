@@ -40,7 +40,7 @@ namespace Catalyst.Cli.Commands
         {
             return new GetPeerReputationRequest
             {
-                PeerId = option.Address
+                Address = option.Address
             };
         }
     }

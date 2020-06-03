@@ -49,8 +49,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
             _peerIdValidator = Substitute.For<IPeerIdValidator>();
             _peerIdValidationHandler = new PeerIdValidationHandler(_peerIdValidator);
 
-            _message = new PingRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("Test"))
-               .ToProtocolMessage(PeerIdHelper.GetPeerId("Test"));
+            _message = new PingRequest().ToProtocolMessage(MultiAddressHelper.GetAddress("Test"))
+               .ToProtocolMessage(MultiAddressHelper.GetAddress("Test"));
         }
 
         [Test]

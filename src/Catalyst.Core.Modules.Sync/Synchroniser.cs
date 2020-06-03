@@ -161,7 +161,7 @@ namespace Catalyst.Core.Modules.Sync
                 await _peerSyncManager.WaitForPeersAsync(cts.Token).ConfigureAwait(false);
             }
 
-            var highestDeltaIndex = await _deltaHeightWatcher.GetHighestDeltaIndexAsync(TimeSpan.FromSeconds(_deltaHeightDelay), cancellationToken).ConfigureAwait(false);
+            var highestDeltaIndex = await _deltaHeightWatcher.WaitForDeltaIndexAsync(TimeSpan.FromSeconds(_deltaHeightDelay), cancellationToken).ConfigureAwait(false);
             if (highestDeltaIndex == null || highestDeltaIndex.Height <= CurrentHighestDeltaIndexStored)
             {
                 await Completed().ConfigureAwait(false);

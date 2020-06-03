@@ -22,7 +22,6 @@
 #endregion
 
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using MultiFormats;
 
@@ -35,9 +34,6 @@ namespace Catalyst.Core.Lib.IO.Messaging.Dto
         /// </summary>
         /// <param name="content"></param>
         /// <param name="recipientPeerIdentifier"></param>
-        public MessageDto(ProtocolMessage content,
-            MultiAddress recipientPeerIdentifier)
-            : base(content, content.PeerId, recipientPeerIdentifier,
-                new CorrelationId(content.CorrelationId)) { }
+        public MessageDto(ProtocolMessage content, MultiAddress recipient) : base(content, content.Address, recipient, new CorrelationId(content.CorrelationId)) { }
     }
 }

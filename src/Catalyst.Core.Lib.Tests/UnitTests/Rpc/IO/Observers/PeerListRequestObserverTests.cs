@@ -89,18 +89,18 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 {
                     Reputation = 0,
                     LastSeen = DateTime.Now,
-                    Address = PeerIdHelper.GetPeerId(fakePeer)
+                    Address = MultiAddressHelper.GetAddress(fakePeer)
                 });
             });
 
             // Let peerRepository return the fake peer list
             peerService.GetAll().Returns(peerList.ToArray());
 
-            var protocolMessage = new GetPeerListRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("sender"));
+            var protocolMessage = new GetPeerListRequest().ToProtocolMessage(MultiAddressHelper.GetAddress("sender"));
             var messageStream =
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
-            var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
+            var peerSettings = MultiAddressHelper.GetAddress("sender").ToSubstitutedPeerSettings();
             var handler = new PeerListRequestObserver(peerSettings, _peerClient, _logger, peerService);
             handler.StartObserving(messageStream);
 

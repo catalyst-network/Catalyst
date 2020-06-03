@@ -68,11 +68,11 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
         [Test]
         public void Can_Save_Increased_Peer()
         {
-            var pid = PeerIdHelper.GetPeerId("some_peer");
+            var pid = MultiAddressHelper.GetAddress("some_peer");
 
             var savedPeer = SavePeerInRepo(pid);
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
-            peerReputationChange.PeerId.Returns(pid);
+            peerReputationChange.Address.Returns(pid);
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(100);
             _reputationManager.OnNext(peerReputationChange);
@@ -83,11 +83,11 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
         [Test]
         public void Can_Save_Decreased_Peer()
         {
-            var pid = PeerIdHelper.GetPeerId("some_peer");
+            var pid = MultiAddressHelper.GetAddress("some_peer");
 
             var savedPeer = SavePeerInRepo(pid);
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
-            peerReputationChange.PeerId.Returns(pid);
+            peerReputationChange.Address.Returns(pid);
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(-100);
             _reputationManager.OnNext(peerReputationChange);
@@ -98,11 +98,11 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
         [Test]
         public void Can_Save_Decreased_Peer_To_Negative_Number()
         {
-            var pid = PeerIdHelper.GetPeerId("some_peer");
+            var pid = MultiAddressHelper.GetAddress("some_peer");
 
             var savedPeer = SavePeerInRepo(pid);
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
-            peerReputationChange.PeerId.Returns(pid);
+            peerReputationChange.Address.Returns(pid);
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(-200);
             _reputationManager.OnNext(peerReputationChange);
@@ -113,11 +113,11 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
         [Test]
         public void Can_Save_Increased_Peer_From_Negative_Number_To_Positive_Number()
         {
-            var pid = PeerIdHelper.GetPeerId("some_peer");
+            var pid = MultiAddressHelper.GetAddress("some_peer");
 
             var savedPeer = SavePeerInRepo(pid, -100);
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
-            peerReputationChange.PeerId.Returns(pid);
+            peerReputationChange.Address.Returns(pid);
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(200);
             _reputationManager.OnNext(peerReputationChange);

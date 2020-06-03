@@ -26,14 +26,13 @@ using AutoMapper;
 using Catalyst.Abstractions.DAO;
 using Catalyst.Abstractions.Lib.Util;
 using Catalyst.Abstractions.Service.Attributes;
-using MultiFormats;
 
 namespace Catalyst.Core.Lib.DAO.Peer
 {
     [Audit]
     public sealed class PeerDao : DaoBase
     {
-        public string PeerIdentifier { get; set; }
+        public string Address { get; set; }
 
         public int Reputation { get; set; }
 

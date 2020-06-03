@@ -43,7 +43,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
 
         protected override void HandleResponse(RemovePeerResponse removePeerResponse,
             IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderPeerIdentifier,
+            MultiAddress senderentifier,
             ICorrelationId correlationId) { }
     }
 }

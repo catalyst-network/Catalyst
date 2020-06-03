@@ -24,12 +24,10 @@
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Protocol.Peer;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using MultiFormats;
-using System.Net;
 
 namespace Catalyst.Core.Lib.IO.Messaging.Dto
 {
@@ -37,28 +35,28 @@ namespace Catalyst.Core.Lib.IO.Messaging.Dto
         where T : IMessage<T>
     {
         public ICorrelationId CorrelationId { get; }
-        public MultiAddress RecipientPeerIdentifier { get; }
-        public MultiAddress SenderPeerIdentifier { get; }
+        public MultiAddress RecipientAddress { get; }
+        public MultiAddress SenderAddress { get; }
 
         /// <summary>
         ///     Data transfer object to wrap up all parameters for sending protocol messages into a MessageFactors.
         /// </summary>
         /// <param name="content"></param>
-        /// <param name="senderPeerIdentifier"></param>
-        /// <param name="recipientPeerIdentifier"></param>
+        /// <param name="sender"></param>
+        /// <param name="recipient"></param>
         /// <param name="correlationId"></param>
         protected BaseMessageDto(T content,
-            MultiAddress senderPeerIdentifier,
-            MultiAddress recipientPeerIdentifier,
+            MultiAddress sender,
+            MultiAddress recipient,
             ICorrelationId correlationId)
-            : base(content, senderPeerIdentifier.GetIPEndPoint(), recipientPeerIdentifier.GetIPEndPoint())
+            : base(content, sender.GetIPEndPoint(), recipient.GetIPEndPoint())
         {
-            Guard.Argument(senderPeerIdentifier.GetIPEndPoint().Address).NotNull();
-            Guard.Argument(recipientPeerIdentifier.GetIPEndPoint().Address).NotNull();
+            Guard.Argument(sender.GetIPEndPoint().Address).NotNull();
+            Guard.Argument(recipient.GetIPEndPoint().Address).NotNull();
 
             CorrelationId = correlationId;
-            SenderPeerIdentifier = senderPeerIdentifier;
-            RecipientPeerIdentifier = recipientPeerIdentifier;
+            SenderAddress = sender;
+            RecipientAddress = recipient;
         }
     }
 }

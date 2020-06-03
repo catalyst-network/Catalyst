@@ -50,7 +50,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
 
             protected override void HandleResponse(GetPeerCountResponse messageDto,
                 IChannelHandlerContext channelHandlerContext,
-                MultiAddress senderPeerIdentifier,
+                MultiAddress senderentifier,
                 ICorrelationId correlationId)
             {
                 var count = Interlocked.Increment(ref _counter);

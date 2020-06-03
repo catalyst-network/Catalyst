@@ -77,14 +77,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Messaging.Correlation
         {
             var peerIds = new[]
             {
-                PeerIdHelper.GetPeerId("peer1"),
-                PeerIdHelper.GetPeerId("peer2"),
-                PeerIdHelper.GetPeerId("peer3")
+                MultiAddressHelper.GetAddress("peer1"),
+                MultiAddressHelper.GetAddress("peer2"),
+                MultiAddressHelper.GetAddress("peer3")
             };
 
             var pendingRequests = peerIds.Select(peerId => new CorrelatableMessage<ProtocolMessage>
             {
-                Content = new VersionRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("sender"),
+                Content = new VersionRequest().ToProtocolMessage(MultiAddressHelper.GetAddress("sender"),
                     CorrelationId.GenerateCorrelationId()),
                 Recipient = peerId,
                 SentAt = DateTimeOffset.MinValue.Add(TimeSpan.Zero)
@@ -92,7 +92,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Messaging.Correlation
 
             var pendingResponses = pendingRequests.Select(peerId => new CorrelatableMessage<ProtocolMessage>
             {
-                Content = new VersionResponse().ToProtocolMessage(PeerIdHelper.GetPeerId("sender"),
+                Content = new VersionResponse().ToProtocolMessage(MultiAddressHelper.GetAddress("sender"),
                     peerId.Content.CorrelationId.ToCorrelationId()),
                 Recipient = peerId.Recipient,
                 SentAt = DateTimeOffset.MinValue.Add(TimeSpan.Zero)

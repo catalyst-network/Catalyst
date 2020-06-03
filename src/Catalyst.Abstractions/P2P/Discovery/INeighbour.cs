@@ -31,7 +31,7 @@ namespace Catalyst.Abstractions.P2P.Discovery
     public interface INeighbour
     {
         NeighbourStateTypes StateTypes { get; set; }
-        MultiAddress PeerId { get; }
+        MultiAddress Address { get; }
         ICorrelationId DiscoveryPingCorrelationId { get; }
     }
 }

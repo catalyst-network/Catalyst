@@ -56,7 +56,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Correlation
         protected readonly ILogger SubbedLogger;
         protected readonly IChangeTokenProvider ChangeTokenProvider;
         protected readonly IMemoryCache Cache;
-        private readonly MultiAddress _senderPeerId;
+        private readonly MultiAddress _sender;
 
         protected readonly Dictionary<ByteString, ICacheEntry> CacheEntriesByRequest
             = new Dictionary<ByteString, ICacheEntry>();
@@ -69,12 +69,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Correlation
             ChangeTokenProvider.GetChangeToken().Returns(changeToken);
             Cache = Substitute.For<IMemoryCache>();
 
-            _senderPeerId = PeerIdHelper.GetPeerId("sender");
+            _sender = MultiAddressHelper.GetAddress("sender");
             PeerIds = new[]
             {
-                PeerIdHelper.GetPeerId("peer1"),
-                PeerIdHelper.GetPeerId("peer2"),
-                PeerIdHelper.GetPeerId("peer3")
+                MultiAddressHelper.GetAddress("peer1"),
+                MultiAddressHelper.GetAddress("peer2"),
+                MultiAddressHelper.GetAddress("peer3")
             };
         }
 
@@ -85,7 +85,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Correlation
         {
             PendingRequests = PeerIds.Select((p, i) => new CorrelatableMessage<ProtocolMessage>
             {
-                Content = new T().ToProtocolMessage(_senderPeerId, CorrelationId.GenerateCorrelationId()),
+                Content = new T().ToProtocolMessage(_sender, CorrelationId.GenerateCorrelationId()),
                 Recipient = p,
                 SentAt = DateTimeOffset.MinValue.Add(TimeSpan.FromMilliseconds(100 * i))
             }).ToList();
@@ -206,7 +206,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Correlation
         {
             var matchingRequest = PendingRequests[2].Content;
             var matchingRequestWithWrongType =
-                new PeerNeighborsResponse().ToProtocolMessage(matchingRequest.PeerId,
+                new PeerNeighborsResponse().ToProtocolMessage(matchingRequest.Address,
                     matchingRequest.CorrelationId.ToCorrelationId());
 
             new Action(() => CorrelationManager.TryMatchResponse(matchingRequestWithWrongType))

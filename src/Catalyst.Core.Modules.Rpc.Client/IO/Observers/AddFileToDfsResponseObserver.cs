@@ -59,15 +59,15 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
         /// </summary>
         /// <param name="addFileToDfsResponse"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="senderentifier"></param>
         /// <param name="correlationId"></param>
         protected override void HandleResponse(AddFileToDfsResponse addFileToDfsResponse,
             IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderPeerIdentifier,
+            MultiAddress senderentifier,
             ICorrelationId correlationId)
         {
             Guard.Argument(addFileToDfsResponse, nameof(addFileToDfsResponse)).NotNull();
-            Guard.Argument(senderPeerIdentifier, nameof(senderPeerIdentifier)).NotNull();
+            Guard.Argument(senderentifier, nameof(senderentifier)).NotNull();
 
             // @TODO return int not byte
             // var responseCode = Enumeration.Parse<FileTransferResponseCodes>(deserialised.ResponseCode[0].ToString());

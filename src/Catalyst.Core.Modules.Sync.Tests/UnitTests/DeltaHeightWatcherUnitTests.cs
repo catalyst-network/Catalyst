@@ -84,7 +84,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 
             for (var i = 0; i < count; i++)
             {
-                var address = PeerIdHelper.GetPeerId(i.ToString(), port: i);
+                var address = MultiAddressHelper.GetAddress(i.ToString(), port: i);
                 var peer = new LibP2P.Peer
                 {
                     Id = address.PeerId,
@@ -120,7 +120,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
             var deltaHeightWatcher = new DeltaHeightWatcher(_peerClient, _swarmApi, _peerService);
             deltaHeightWatcher.Start();
 
-            var deltaIndex = await deltaHeightWatcher.GetHighestDeltaIndexAsync(TimeSpan.FromSeconds(10));
+            var deltaIndex = await deltaHeightWatcher.WaitForDeltaIndexAsync(TimeSpan.FromSeconds(10));
 
             deltaIndex.Height.Should().Be(deltaHeight);
         }
@@ -164,7 +164,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
             var deltaHeightWatcher = new DeltaHeightWatcher(_peerClient, _swarmApi, _peerService);
             deltaHeightWatcher.Start();
 
-            var deltaIndex = await deltaHeightWatcher.GetHighestDeltaIndexAsync(TimeSpan.FromSeconds(10));
+            var deltaIndex = await deltaHeightWatcher.WaitForDeltaIndexAsync(TimeSpan.FromSeconds(10));
 
             deltaIndex.Height.Should().Be(deltaHeight);
         }

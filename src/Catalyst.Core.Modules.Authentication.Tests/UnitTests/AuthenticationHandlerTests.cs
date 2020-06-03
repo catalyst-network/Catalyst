@@ -51,7 +51,7 @@ namespace Catalyst.Core.Modules.Authentication.Tests.UnitTests
             _authenticationStrategy = Substitute.For<IAuthenticationStrategy>();
             _serverChannel = new EmbeddedChannel(new AuthenticationHandler(_authenticationStrategy), _testObservableServiceHandler);
 
-            var senderId = PeerIdHelper.GetPeerId("Test");
+            var senderId = MultiAddressHelper.GetAddress("Test");
             _signedMessage = new GetPeerListRequest()
                .ToProtocolMessage(senderId)
                .ToSignedProtocolMessage(senderId, new byte[new FfiWrapper().SignatureLength]);

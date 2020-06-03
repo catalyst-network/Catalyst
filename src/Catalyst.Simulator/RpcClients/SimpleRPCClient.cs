@@ -65,7 +65,7 @@ namespace Catalyst.Simulator.RpcClients
     public class SimpleRpcClient : IRpcClient
     {
         private readonly ILogger _logger;
-        private readonly MultiAddress _senderPeerId;
+        private readonly MultiAddress _sender;
         private MultiAddress _recipientPeerId;
         private Abstractions.Rpc.IRpcClient _rpcClient;
         private readonly X509Certificate2 _certificate;
@@ -122,10 +122,10 @@ namespace Catalyst.Simulator.RpcClients
             var publicKey = keyRegistry.GetItemFromRegistry(KeyRegistryTypes.DefaultKey).GetPublicKey().Bytes;
 
             //todo
-            //_senderPeerId = publicKey.BuildPeerIdFromPublicKey(IPAddress.Any, 1026);
+            //_sender = publicKey.BuildPeerIdFromPublicKey(IPAddress.Any, 1026);
         }
 
-        public async Task<bool> ConnectRetryAsync(MultiAddress peerIdentifier, int retryAttempts = 5)
+        public async Task<bool> ConnectRetryAsync(MultiAddress Addressentifier, int retryAttempts = 5)
         {
             var retryCountDown = retryAttempts;
             while (retryCountDown > 0)
@@ -149,9 +149,9 @@ namespace Catalyst.Simulator.RpcClients
             return false;
         }
 
-        public async Task<bool> ConnectAsync(MultiAddress peerIdentifier)
+        public async Task<bool> ConnectAsync(MultiAddress address)
         {
-            _recipientPeerId = peerIdentifier;
+            _recipientPeerId = address;
 
             //todo
             //var peerRpcConfig = new RpcClientSettings
@@ -186,7 +186,7 @@ namespace Catalyst.Simulator.RpcClients
         public void SendMessage<T>(T message) where T : IMessage
         {
             var protocolMessage =
-                message.ToProtocolMessage(_senderPeerId, CorrelationId.GenerateCorrelationId());
+                message.ToProtocolMessage(_sender, CorrelationId.GenerateCorrelationId());
             var messageDto = new MessageDto(
                 protocolMessage,
                 _recipientPeerId);

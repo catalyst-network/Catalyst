@@ -93,16 +93,16 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 {
                     Reputation = 0,
                     LastSeen = DateTime.Now,
-                    Address = PeerIdHelper.GetPeerId(i.ToString())
+                    Address = MultiAddressHelper.GetAddress(i.ToString())
                 });
             }
 
             peerService.GetAll().Returns(peerList);
 
-            var sendPeerId = PeerIdHelper.GetPeerId("sender");
+            var sendPeerId = MultiAddressHelper.GetAddress("sender");
 
             var protocolMessage =
-                new GetPeerCountRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("sender"));
+                new GetPeerCountRequest().ToProtocolMessage(MultiAddressHelper.GetAddress("sender"));
             var messageStream =
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
 

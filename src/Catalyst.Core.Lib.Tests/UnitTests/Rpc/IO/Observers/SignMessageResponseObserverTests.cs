@@ -112,7 +112,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var correlationId = CorrelationId.GenerateCorrelationId();
 
             var protocolMessage =
-                signMessageResponse.ToProtocolMessage(PeerIdHelper.GetPeerId("sender"), correlationId);
+                signMessageResponse.ToProtocolMessage(MultiAddressHelper.GetAddress("sender"), correlationId);
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler,
                 protocolMessage

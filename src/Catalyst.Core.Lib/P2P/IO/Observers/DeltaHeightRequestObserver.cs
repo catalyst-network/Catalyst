@@ -64,19 +64,19 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
 
         /// <param name="deltaHeightRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerId"></param>
+        /// <param name="sender"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override LatestDeltaHashResponse HandleRequest(LatestDeltaHashRequest deltaHeightRequest,
             IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(deltaHeightRequest, nameof(deltaHeightRequest)).NotNull();
 
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
 
-            Logger.Debug("PeerId: {0} wants to know your current chain height", senderPeerId);
+            Logger.Debug("PeerId: {0} wants to know your current chain height", sender);
 
             var deltaIndexDao = _deltaIndexService.LatestDeltaIndex();
             var deltaIndex = DeltaIndexDao.ToProtoBuff<DeltaIndex>(deltaIndexDao, _mapperProvider);

@@ -63,7 +63,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _fileTransferFactory = Substitute.For<IUploadFileTransferFactory>();
             _dfsService = Substitute.For<IDfsService>();
-            var peerSettings = PeerIdHelper.GetPeerId("test").ToSubstitutedPeerSettings();
+            var peerSettings = MultiAddressHelper.GetAddress("test").ToSubstitutedPeerSettings();
             _observer = new GetFileFromDfsRequestObserver(_dfsService, peerSettings, _peerClient, _fileTransferFactory,
                 Substitute.For<ILogger>());
         }
@@ -105,7 +105,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 DfsHash = _hashProvider.ComputeUtf8MultiHash("test").ToCid()
             };
             var protocolMessage = getFileFromDfsRequestMessage
-               .ToProtocolMessage(PeerIdHelper.GetPeerId("TestMan"), CorrelationId.GenerateCorrelationId());
+               .ToProtocolMessage(MultiAddressHelper.GetAddress("TestMan"), CorrelationId.GenerateCorrelationId());
             return new ObserverDto(Substitute.For<IChannelHandlerContext>(), protocolMessage);
         }
 

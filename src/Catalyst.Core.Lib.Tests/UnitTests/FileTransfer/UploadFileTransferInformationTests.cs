@@ -48,8 +48,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.FileTransfer
             {
                 var uploadFileInformation = new UploadFileTransferInformation(
                     ms,
-                    PeerIdHelper.GetPeerId("test1"),
-                    PeerIdHelper.GetPeerId("test2"),
+                    MultiAddressHelper.GetAddress("test1"),
+                    MultiAddressHelper.GetAddress("test2"),
                     null,
                     CorrelationId.GenerateCorrelationId());
 
@@ -73,8 +73,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.FileTransfer
             {
                 var uploadFileInformation = new UploadFileTransferInformation(
                     memoryStream,
-                    PeerIdHelper.GetPeerId("test1"),
-                    PeerIdHelper.GetPeerId("test2"),
+                    MultiAddressHelper.GetAddress("test1"),
+                    MultiAddressHelper.GetAddress("test2"),
                     null,
                     CorrelationId.GenerateCorrelationId());
                 uploadFileInformation.RetryCount += Constants.FileTransferMaxChunkRetryCount + 1;

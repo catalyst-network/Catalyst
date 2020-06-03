@@ -47,7 +47,7 @@ namespace Catalyst.TestUtils
 
         protected override PeerNeighborsResponse HandleRequest(PeerNeighborsRequest messageDto,
             IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             var count = Interlocked.Increment(ref _counter);
@@ -56,7 +56,7 @@ namespace Catalyst.TestUtils
                 throw new ArgumentException("something went wrong handling the request");
             }
 
-            return new PeerNeighborsResponse {Peers = {PeerIdHelper.GetPeerId().ToString()}};
+            return new PeerNeighborsResponse {Peers = {MultiAddressHelper.GetAddress().ToString()}};
         }
     }
 }

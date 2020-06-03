@@ -39,9 +39,9 @@ namespace Catalyst.Core.Lib.P2P.Protocols
         public bool Disposing { get; protected set; }
         
         protected ProtocolRequestBase(ILogger logger,
-            MultiAddress senderIdentifier,
+            MultiAddress sender,
             ICancellationTokenProvider cancellationTokenProvider,
-            ILibP2PPeerClient peerClient) : base(senderIdentifier)
+            ILibP2PPeerClient peerClient) : base(sender)
         {
             Logger = logger;
             CancellationTokenProvider = cancellationTokenProvider;

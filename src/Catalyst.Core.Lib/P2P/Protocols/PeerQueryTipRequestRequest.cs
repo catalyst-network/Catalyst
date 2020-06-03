@@ -67,14 +67,14 @@ namespace Catalyst.Core.Lib.P2P.Protocols
             try
             {
                 await PeerClient.SendMessageAsync(new MessageDto(
-                    new LatestDeltaHashRequest().ToProtocolMessage(PeerId, CorrelationId.GenerateCorrelationId()),
+                    new LatestDeltaHashRequest().ToProtocolMessage(Address, CorrelationId.GenerateCorrelationId()),
                     recipientPeerId
                 ));
 
                 using (CancellationTokenProvider.CancellationTokenSource)
                 {
                     await QueryTipResponseMessageStreamer
-                       .FirstAsync(a => a != null && a.PeerId == recipientPeerId)
+                       .FirstAsync(a => a != null && a.Address == recipientPeerId)
                        .ToTask(CancellationTokenProvider.CancellationTokenSource.Token)
                        .ConfigureAwait(false);
                 }

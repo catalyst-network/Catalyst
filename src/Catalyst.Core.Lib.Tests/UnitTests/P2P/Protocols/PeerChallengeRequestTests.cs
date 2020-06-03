@@ -62,18 +62,18 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
         [Test]
         public async Task Can_Challenge_Peer()
         {
-            var recipientPeerId = PeerIdHelper.GetPeerId();
+            var recipientPeerId = MultiAddressHelper.GetAddress();
             await _peerChallengeRequest.ChallengePeerAsync(recipientPeerId).ConfigureAwait(false);
             var expectedDto = Substitute.For<IMessageDto<ProtocolMessage>>();
-            expectedDto.RecipientPeerIdentifier.Returns(recipientPeerId);
-            expectedDto.SenderPeerIdentifier.Returns(_testSettings.Address);
+            expectedDto.RecipientAddress.Returns(recipientPeerId);
+            expectedDto.SenderAddress.Returns(_testSettings.Address);
             await _peerChallengeRequest.PeerClient.ReceivedWithAnyArgs(1).SendMessageAsync(Arg.Is(expectedDto));
         }
         
         [Test]
         public async Task Can_Receive_Query_Response_On_Observer()
         {
-            var recipientPeerId = PeerIdHelper.GetPeerId();
+            var recipientPeerId = MultiAddressHelper.GetAddress();
             var challengeResposne = new PeerChallengeResponse(recipientPeerId);
 
             _peerChallengeRequest.ChallengeResponseMessageStreamer.OnNext(challengeResposne);
@@ -84,7 +84,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
         [Test]
         public async Task No_Response_Timeout_And_Returns_False()
         {
-            var recipientPeerId = PeerIdHelper.GetPeerId();
+            var recipientPeerId = MultiAddressHelper.GetAddress();
             _cancellationProvider.CancellationTokenSource.Cancel();
             var response = await _peerChallengeRequest.ChallengePeerAsync(recipientPeerId).ConfigureAwait(false);
             response.Should().BeFalse();
@@ -93,7 +93,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
         [Test]
         public async Task Exception_During_Query_Returns_Null()
         {
-            var recipientPeerId = PeerIdHelper.GetPeerId();
+            var recipientPeerId = MultiAddressHelper.GetAddress();
             _cancellationProvider.Dispose(); //do summet nasty to force exception
             var response = await _peerChallengeRequest.ChallengePeerAsync(recipientPeerId).ConfigureAwait(false);
             response.Should().BeFalse();   

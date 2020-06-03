@@ -89,7 +89,7 @@ namespace Catalyst.TestUtils
             var subbedOriginator = Substitute.For<IHastingsOriginator>();
 
             subbedOriginator.Neighbours.Count.Returns(5);
-            subbedOriginator.Peer.Returns(peer ?? PeerIdHelper.GetPeerId());
+            subbedOriginator.Peer.Returns(peer ?? MultiAddressHelper.GetAddress());
             subbedOriginator.Neighbours.Returns(neighbours ?? Substitute.For<INeighbours>());
             subbedOriginator.PnrCorrelationId.Returns(expectedPnr ?? CorrelationId.GenerateCorrelationId());
 
@@ -131,7 +131,7 @@ namespace Catalyst.TestUtils
         {
             var neighbours = Enumerable.Range(0, amount).Select(i =>
                 new Neighbour(
-                    PeerIdHelper.GetPeerId(
+                    MultiAddressHelper.GetAddress(
                         StringHelper.RandomString()
                     ),
                     stateTypes ?? NeighbourStateTypes.NotContacted,
@@ -143,7 +143,7 @@ namespace Catalyst.TestUtils
         public static IDictionary<MultiAddress, ICorrelationId> SubContactedNeighbours(int amount = 5)
         {
             return Enumerable.Range(0, amount)
-               .Select(i => PeerIdHelper.GetPeerId())
+               .Select(i => MultiAddressHelper.GetAddress())
                .ToDictionary(v => v, k => Substitute.For<ICorrelationId>());
         }
 
@@ -151,7 +151,7 @@ namespace Catalyst.TestUtils
             INeighbours neighbours = default)
         {
             var subbedMemento = Substitute.For<IHastingsMemento>();
-            subbedMemento.Peer.Returns(identifier ?? PeerIdHelper.GetPeerId());
+            subbedMemento.Peer.Returns(identifier ?? MultiAddressHelper.GetAddress());
             subbedMemento.Neighbours.Returns(neighbours ?? MockNeighbours());
 
             return subbedMemento;
@@ -160,7 +160,7 @@ namespace Catalyst.TestUtils
         public static IHastingsMemento MockMemento(MultiAddress identifier = default,
             INeighbours neighbours = default)
         {
-            var peerParam = identifier ?? PeerIdHelper.GetPeerId(StringHelper.RandomString());
+            var peerParam = identifier ?? MultiAddressHelper.GetAddress(StringHelper.RandomString());
             var neighbourParam = neighbours ?? MockNeighbours();
             return new HastingsMemento(peerParam, neighbourParam);
         }
@@ -174,7 +174,7 @@ namespace Catalyst.TestUtils
                         state.Last()
                            .Neighbours
                            .RandomElement()
-                           .PeerId,
+                           .Address,
                         MockNeighbours()
                     )
                 );
@@ -204,7 +204,7 @@ namespace Catalyst.TestUtils
             peerSetting.SeedServers.ToList().ForEach(domain =>
             {
                 MockQueryResponse.CreateFakeLookupResult(domain,
-                    "0x" + PeerIdHelper.GetPeerId(
+                    "0x" + MultiAddressHelper.GetAddress(
                         StringHelper.RandomString(32)).ToString().ToHexUTF8(),
                     lookupClient ?? Substitute.For<ILookupClient>()
                 );
@@ -223,7 +223,7 @@ namespace Catalyst.TestUtils
             MultiAddress sender = default)
         {
             var dto = Substitute.For<IPeerClientMessageDto>();
-            dto.Sender.Returns(sender ?? PeerIdHelper.GetPeerId());
+            dto.Sender.Returns(sender ?? MultiAddressHelper.GetAddress());
             dto.CorrelationId.Returns(correlationId ?? Substitute.For<ICorrelationId>());
             dto.Message.Returns(Activator.CreateInstance(discoveryMessage));
 

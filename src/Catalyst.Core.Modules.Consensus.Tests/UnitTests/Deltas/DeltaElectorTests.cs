@@ -107,9 +107,9 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 Candidate = new CandidateDeltaBroadcast
                 {
                     Hash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
-                    ProducerId = PeerIdHelper.GetPeerId("unknown_producer").ToString()
+                    Producer = MultiAddressHelper.GetAddress("unknown_producer").ToString()
                 },
-                VoterId = PeerIdHelper.GetPeerId("candidate field is invalid").ToString()
+                Voter = MultiAddressHelper.GetAddress("candidate field is invalid").ToString()
             });
 
             _cache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
@@ -136,7 +136,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var favourite = DeltaHelper.GetFavouriteDelta(_hashProvider);
             var candidateListKey = DeltaElector.GetCandidateListCacheKey(favourite);
 
-            AddVoterAsExpectedProducer(new MultiAddress(favourite.VoterId).GetPublicKey());
+            AddVoterAsExpectedProducer(new MultiAddress(favourite.Voter).GetPublicKey());
 
             var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
 
@@ -162,7 +162,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 var favourite = DeltaHelper.GetFavouriteDelta(_hashProvider);
                 var candidateListKey = DeltaElector.GetCandidateListCacheKey(favourite);
 
-                AddVoterAsExpectedProducer(new MultiAddress(favourite.VoterId).GetPublicKey());
+                AddVoterAsExpectedProducer(new MultiAddress(favourite.Voter).GetPublicKey());
 
                 var elector = new DeltaElector(realCache, _deltaProducersProvider, _reputationManager, _logger);
 
@@ -184,7 +184,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             _deltaProducersProvider
                .GetDeltaProducersFromPreviousDelta(Arg.Any<Cid>())
-               .Returns(new List<string> { PeerIdHelper.GetPeerId("the only known producer").GetPublicKey() });
+               .Returns(new List<string> { MultiAddressHelper.GetAddress("the only known producer").GetPublicKey() });
 
             var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
 
@@ -201,8 +201,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         {
             var favourite = DeltaHelper.GetFavouriteDelta(_hashProvider);
 
-            var peer = new Peer { Reputation = 100, Address = favourite.VoterId };
-            _reputationManager.PeerRepository.Add(new Peer { Reputation = 100, Address = favourite.VoterId });
+            var peer = new Peer { Reputation = 100, Address = favourite.Voter };
+            _reputationManager.PeerRepository.Add(new Peer { Reputation = 100, Address = favourite.Voter });
 
             var expectedReputation = peer.Reputation + ReputationEventType.VoterIsNotProducer.Amount;
 
@@ -216,7 +216,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             _testScheduler.Start();
 
-            var updatedPeer = _reputationManager.PeerRepository.Get(favourite.VoterId);
+            var updatedPeer = _reputationManager.PeerRepository.Get(favourite.Voter);
             expectedReputation.Should().Be(updatedPeer.Reputation);
 
             _cache.DidNotReceiveWithAnyArgs().TryGetValue(default, out _);
@@ -227,7 +227,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))
             {
-                var producers = "abc".Select(c => PeerIdHelper.GetPeerId(c.ToString()))
+                var producers = "abc".Select(c => MultiAddressHelper.GetAddress(c.ToString()))
                    .ToArray();
                 var hashProduced = _hashProvider.ComputeUtf8MultiHash("newHash").ToCid();
                 var previousHash = _hashProvider.ComputeUtf8MultiHash("prevHash").ToCid();
@@ -242,10 +242,10 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                    .Select((c, j) => new FavouriteDeltaBroadcast
                    {
                        Candidate = c,
-                       VoterId = PeerIdHelper.GetPeerId((j % votersCount).ToString()).ToString()
+                       Voter = MultiAddressHelper.GetAddress((j % votersCount).ToString()).ToString()
                    }).ToList();
 
-                AddVoterAsExpectedProducer(favourites.Select(f => new MultiAddress(f.VoterId).GetPublicKey()).ToArray());
+                AddVoterAsExpectedProducer(favourites.Select(f => new MultiAddress(f.Voter).GetPublicKey()).ToArray());
 
                 var elector = new DeltaElector(realCache, _deltaProducersProvider, _reputationManager, _logger);
 
@@ -269,7 +269,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         {
             using (var realCache = new MemoryCache(new MemoryCacheOptions()))
             {
-                var producers = "ab".Select(c => PeerIdHelper.GetPeerId(c.ToString()))
+                var producers = "ab".Select(c => MultiAddressHelper.GetAddress(c.ToString()))
                    .ToArray();
                 var previousHash = _hashProvider.ComputeUtf8MultiHash("previousHash").ToCid();
                 var newHash = _hashProvider.ComputeUtf8MultiHash("newHash").ToCid();
@@ -285,10 +285,10 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                    .Select((c, j) => new FavouriteDeltaBroadcast
                    {
                        Candidate = c,
-                       VoterId = PeerIdHelper.GetPeerId(j.ToString()).ToString()
+                       Voter = MultiAddressHelper.GetAddress(j.ToString()).ToString()
                    }).ToList();
 
-                AddVoterAsExpectedProducer(favourites.Select(f => new MultiAddress(f.VoterId).GetPublicKey()).ToArray());
+                AddVoterAsExpectedProducer(favourites.Select(f => new MultiAddress(f.Voter).GetPublicKey()).ToArray());
 
                 var elector = new DeltaElector(realCache, _deltaProducersProvider, _reputationManager, _logger);
 

@@ -66,7 +66,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var fakePeers = PreparePeerRepositoryContent();
             _peerRepository.GetAll().Returns(fakePeers);
 
-            _senderId = PeerIdHelper.GetPeerId("sender");
+            _senderId = MultiAddressHelper.GetAddress("sender");
         }
 
         private static Peer[] PreparePeerRepositoryContent()
@@ -74,7 +74,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var knownPeers = Enumerable.Range(0, 5).Select(i => new Peer
             {
                 Reputation = i,
-                Address = PeerIdHelper.GetPeerId($"peer-{i}")
+                Address = MultiAddressHelper.GetAddress($"peer-{i}")
             });
 
             var fakePeers = knownPeers.ToArray();
@@ -86,9 +86,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         [TestCase("unknown", int.MinValue)]
         public void TestPeerReputationRequestResponse(string publicKeySeed, int expectedReputations)
         {
-            var peerId = PeerIdHelper.GetPeerId(publicKeySeed);
+            var peerId = MultiAddressHelper.GetAddress(publicKeySeed);
 
-            var request = new GetPeerReputationRequest { PeerId = peerId.ToString() };
+            var request = new GetPeerReputationRequest { Address = peerId.ToString() };
 
             var responseContent = GetGetPeerReputationResponse(request);
 

@@ -114,7 +114,7 @@
 //            ContainerProvider.ContainerBuilder.RegisterType<PeerServerChannelFactory>().As<IUdpServerChannelFactory>();
 //            ContainerProvider.ContainerBuilder.RegisterType<PeerClientChannelFactory>().As<IUdpClientChannelFactory>();
 
-//            ContainerProvider.ContainerBuilder.RegisterInstance(PeerIdHelper.GetPeerId("Test"))
+//            ContainerProvider.ContainerBuilder.RegisterInstance(MultiAddressHelper.GetAddress("Test"))
 //               .As<MultiAddress>();
 
 //            ContainerProvider.ConfigureContainerBuilder();

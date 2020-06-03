@@ -61,19 +61,19 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// </summary>
         /// <param name="setPeerBlackListRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerId"></param>
+        /// <param name="sender"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override SetPeerBlackListResponse HandleRequest(SetPeerBlackListRequest setPeerBlackListRequest,
             IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(setPeerBlackListRequest, nameof(setPeerBlackListRequest)).NotNull();
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
             Logger.Information("received message of type PeerBlackListingRequest");
 
-            var peerItem = _peerRepository.GetAll().FirstOrDefault(m => m.Address == setPeerBlackListRequest.PeerId);
+            var peerItem = _peerRepository.GetAll().FirstOrDefault(m => m.Address == setPeerBlackListRequest.Address);
 
             return peerItem == null
                 ? ReturnResponse(false, string.Empty)
@@ -91,7 +91,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             return new SetPeerBlackListResponse
             {
                 Blacklist = blacklist,
-                PeerId = address
+                Address = address
             };
         }
     }

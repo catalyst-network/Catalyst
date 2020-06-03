@@ -40,7 +40,7 @@ namespace Catalyst.Cli.Commands
         {
             return new SetPeerBlackListRequest
             {
-                PeerId = option.Address,
+                Address = option.Address,
                 Blacklist = option.BlackListFlag
             };
         }

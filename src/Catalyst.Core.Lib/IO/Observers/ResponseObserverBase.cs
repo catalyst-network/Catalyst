@@ -48,7 +48,7 @@ namespace Catalyst.Core.Lib.IO.Observers
             }
         }
 
-        protected abstract void HandleResponse(TProto messageDto, IChannelHandlerContext channelHandlerContext, MultiAddress senderPeerId, ICorrelationId correlationId);
+        protected abstract void HandleResponse(TProto messageDto, IChannelHandlerContext channelHandlerContext, MultiAddress sender, ICorrelationId correlationId);
 
         public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
         {
@@ -56,7 +56,7 @@ namespace Catalyst.Core.Lib.IO.Observers
             try
             {
                 HandleResponse(messageDto.Payload.FromProtocolMessage<TProto>(), messageDto.Context,
-                    messageDto.Payload.PeerId, messageDto.Payload.CorrelationId.ToCorrelationId());
+                    messageDto.Payload.Address, messageDto.Payload.CorrelationId.ToCorrelationId());
             }
             catch (Exception exception)
             {

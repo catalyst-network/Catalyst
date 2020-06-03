@@ -58,16 +58,16 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         /// </summary>
         /// <param name="peerNeighborsRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerId"></param>
+        /// <param name="sender"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override PeerNeighborsResponse HandleRequest(PeerNeighborsRequest peerNeighborsRequest,
             IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(peerNeighborsRequest, nameof(peerNeighborsRequest)).NotNull();
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
 
             Logger.Debug("PeerNeighborsRequest Message Received");
 

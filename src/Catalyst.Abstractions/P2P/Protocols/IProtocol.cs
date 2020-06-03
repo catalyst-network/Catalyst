@@ -28,6 +28,6 @@ namespace Catalyst.Abstractions.P2P.Protocols
 {
     public interface IProtocol
     {
-        MultiAddress PeerId { get; }
+        MultiAddress Address { get; }
     }
 }

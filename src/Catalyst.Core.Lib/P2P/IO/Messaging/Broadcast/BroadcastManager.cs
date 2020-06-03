@@ -178,7 +178,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
             try
             {
                 var innerMessage = message.FromProtocolMessage<ProtocolMessage>();
-                var isOwnerOfBroadcast = innerMessage.PeerId == _peerId.ToString();
+                var isOwnerOfBroadcast = innerMessage.Address == _peerId.ToString();
 
                 if (isOwnerOfBroadcast)
                 {
@@ -200,7 +200,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast
                 {
                     _logger.Verbose("Broadcasting message {message}", message);
                     var protocolMessage = message.Clone();
-                    protocolMessage.PeerId = _peerId.ToString();
+                    protocolMessage.Address = _peerId.ToString();
                     _peerClient.SendMessageAsync(new MessageDto(
                         protocolMessage,
                         peerIdentifier)

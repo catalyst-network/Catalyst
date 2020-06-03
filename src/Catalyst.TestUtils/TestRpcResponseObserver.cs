@@ -45,11 +45,11 @@ namespace Catalyst.TestUtils
         /// </summary>
         /// <param name="testResponse"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="senderentifier"></param>
         /// <param name="correlationId"></param>
         protected override void HandleResponse(VersionResponse testResponse,
             IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderPeerIdentifier,
+            MultiAddress senderentifier,
             ICorrelationId correlationId)
         {
             /* Empty method as this is a Stub class for testing base */

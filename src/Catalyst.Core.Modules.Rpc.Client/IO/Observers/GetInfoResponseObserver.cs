@@ -48,11 +48,11 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
         /// </summary>
         /// <param name="getInfoResponse"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="senderentifier"></param>
         /// <param name="correlationId"></param>
         protected override void HandleResponse(GetInfoResponse getInfoResponse,
             IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderPeerIdentifier,
+            MultiAddress senderentifier,
             ICorrelationId correlationId) { }
     }
 }

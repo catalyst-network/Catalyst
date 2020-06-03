@@ -82,11 +82,11 @@ namespace Catalyst.Abstractions.FileTransfer
 
         /// <summary>Gets or sets the recipient identifier.</summary>
         /// <value>The recipient identifier.</value>
-        MultiAddress RecipientId { get; set; }
+        MultiAddress Recipient { get; set; }
 
         /// <summary>Gets or sets the peer identifier.</summary>
         /// <value>The peer identifier.</value>
-        MultiAddress PeerId { get; set; }
+        MultiAddress Address { get; set; }
 
         /// <summary>The cancellation token</summary>
         CancellationToken CancellationToken { get; set; }

@@ -71,8 +71,8 @@ namespace Catalyst.Core.Lib.IO.Handlers
             }
 
             var sig = signedMessage.Signature.RawBytes.ToByteArray();
-            var address = new MultiAddress(signedMessage.PeerId);
-            var pub = address.PeerId.GetPublicKeyBytesFromPeerId();
+            var address = new MultiAddress(signedMessage.Address);
+            var pub = address.GetPublicKeyBytes();
 
             var signature = _keySigner.CryptoContext.GetSignatureFromBytes(sig, pub);
             var messageWithoutSig = signedMessage.Clone();

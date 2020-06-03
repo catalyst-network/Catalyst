@@ -65,7 +65,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
         {
             this.Setup(TestContext.CurrentContext);
 
-            _pid = PeerIdHelper.GetPeerId("im_a_key");
+            _pid = MultiAddressHelper.GetAddress("im_a_key");
             _guid = CorrelationId.GenerateCorrelationId();
             _logger = Substitute.For<ILogger>();
 
@@ -120,7 +120,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
         public async Task Can_receive_PeerNeighborsResponse()
         {
             var pingRequestHandler = new TestMessageObserver<PeerNeighborsResponse>(_logger);
-            var neighbourIds = "abc".Select(i => PeerIdHelper.GetPeerId(i.ToString()).ToString());
+            var neighbourIds = "abc".Select(i => MultiAddressHelper.GetAddress(i.ToString()).ToString());
             var responseContent = new PeerNeighborsResponse();
             responseContent.Peers.AddRange(neighbourIds);
 

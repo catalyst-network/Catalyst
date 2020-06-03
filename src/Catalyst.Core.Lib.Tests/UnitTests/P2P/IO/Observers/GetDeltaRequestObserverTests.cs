@@ -66,7 +66,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 
             _testScheduler = new TestScheduler();
             var logger = Substitute.For<ILogger>();
-            var peerIdentifier = PeerIdHelper.GetPeerId("responder");
+            var peerIdentifier = MultiAddressHelper.GetAddress("responder");
             var peerSettings = peerIdentifier.ToSubstitutedPeerSettings();
             _peerClient = Substitute.For<ILibP2PPeerClient>();
             _deltaCache = Substitute.For<IDeltaCache>();
@@ -115,7 +115,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         {
             var deltaRequest = new GetDeltaRequest { DeltaDfsHash = cid.ToArray().ToByteString() };
 
-            var message = deltaRequest.ToProtocolMessage(PeerIdHelper.GetPeerId("sender"));
+            var message = deltaRequest.ToProtocolMessage(MultiAddressHelper.GetAddress("sender"));
 
             var observable = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, message);
             return observable;

@@ -58,13 +58,13 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
 
         protected override void HandleResponse(LatestDeltaHashResponse deltaHeightResponse,
             IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
-            ResponseMessageSubject.OnNext(new PeerClientMessageDto(deltaHeightResponse, senderPeerId, correlationId));
+            ResponseMessageSubject.OnNext(new PeerClientMessageDto(deltaHeightResponse, sender, correlationId));
 
             _peerQueryTipRequest.QueryTipResponseMessageStreamer.OnNext(
-                new PeerQueryTipResponse(senderPeerId, Cid.Read(deltaHeightResponse.DeltaIndex.Cid.ToByteArray()))
+                new PeerQueryTipResponse(sender, Cid.Read(deltaHeightResponse.DeltaIndex.Cid.ToByteArray()))
             );
         }
     }

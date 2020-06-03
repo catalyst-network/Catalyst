@@ -36,7 +36,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
         public void EntityStoreAuditsCreateTime()
         {
             var repo = new InMemoryRepository<Peer, string>();
-            var peer = new Peer {Address = PeerIdHelper.GetPeerId("Test")};
+            var peer = new Peer {Address = MultiAddressHelper.GetAddress("Test")};
             repo.Add(peer);
             var retrievedPeer = repo.Get(peer.DocumentId);
             var now = DateTime.UtcNow.Date;
@@ -52,7 +52,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
         public void EntityStoreAuditsModifiedTime()
         {
             var repo = new InMemoryRepository<Peer, string>();
-            var peer = new Peer {Address = PeerIdHelper.GetPeerId("Test")};
+            var peer = new Peer {Address = MultiAddressHelper.GetAddress("Test")};
             repo.Add(peer);
             var retrievedPeer = repo.Get(peer.DocumentId);
             retrievedPeer.Touch();

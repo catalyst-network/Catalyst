@@ -23,7 +23,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using Catalyst.Abstractions.Rpc;
 using Microsoft.Extensions.Configuration;
 using MultiFormats;
@@ -41,13 +40,13 @@ namespace Catalyst.Core.Modules.Rpc.Client
                 NodeId = child.GetSection("nodeId").Value,
                 PfxFileName = child.GetSection("PfxFileName").Value,
                 SslCertPassword = child.GetSection("SslCertPassword").Value,
-                PeerId = child.GetSection("Address").Value
+                Address = child.GetSection("Address").Value
             } as IRpcClientConfig).ToList();
 
             return nodeList;
         }
 
-        public MultiAddress PeerId { get; set; }
+        public MultiAddress Address { get; set; }
         public string NodeId { get; set; }
         public string PfxFileName { get; set; }
         public string SslCertPassword { get; set; }

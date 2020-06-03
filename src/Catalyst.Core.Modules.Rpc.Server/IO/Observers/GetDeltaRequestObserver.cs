@@ -52,11 +52,11 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
         protected override GetDeltaResponse HandleRequest(GetDeltaRequest getDeltaRequest,
             IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(getDeltaRequest, nameof(getDeltaRequest)).NotNull();
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
             Logger.Verbose("received message of type GetDeltaRequest:");
             Logger.Verbose("{getDeltaRequest}", getDeltaRequest);
 

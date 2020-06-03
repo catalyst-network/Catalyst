@@ -46,10 +46,10 @@ namespace Catalyst.Simulator.Simulations
         private async Task<bool> ConnectAsync(ClientRpcInfo clientRpcInfo)
         {
             var isConnectionSuccessful = await clientRpcInfo.RpcClient
-               .ConnectRetryAsync(clientRpcInfo.PeerId).ConfigureAwait(false);
+               .ConnectRetryAsync(clientRpcInfo.Address).ConfigureAwait(false);
             if (!isConnectionSuccessful)
             {
-                //_userOutput.WriteLine($"Could not connect to node: {clientRpcInfo.PeerId.Ip}:{clientRpcInfo.PeerId.Port}");
+                //_userOutput.WriteLine($"Could not connect to node: {clientRpcInfo.Address.Ip}:{clientRpcInfo.Address.Port}");
                 return false;
             }
 

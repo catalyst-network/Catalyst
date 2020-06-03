@@ -65,12 +65,12 @@ namespace Catalyst.Cli.CommandTypes
             {
                 if (_recipientPeerId != null) return _recipientPeerId;
                 var rpcClientConfig = CommandContext.GetNodeConfig(Options.Node);
-                _recipientPeerId = rpcClientConfig.PeerId;
+                _recipientPeerId = rpcClientConfig.Address;
                 return _recipientPeerId;
             }
         }
 
-        protected MultiAddress SenderPeerId => CommandContext.PeerId;
+        protected MultiAddress sender => CommandContext.Address;
 
         public void Dispose() { Dispose(true); }
 
@@ -83,7 +83,7 @@ namespace Catalyst.Cli.CommandTypes
             if (message == null) return;
 
             var messageDto = new MessageDto(
-                message.ToProtocolMessage(SenderPeerId),
+                message.ToProtocolMessage(sender),
                 RecipientPeerId);
             Target.SendMessage(messageDto);
         }

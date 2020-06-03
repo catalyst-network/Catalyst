@@ -64,14 +64,14 @@ namespace Catalyst.Core.Lib.P2P.Protocols
                     {
                         Range = range,
                         Height = height
-                    }.ToProtocolMessage(PeerId, CorrelationId.GenerateCorrelationId()),
+                    }.ToProtocolMessage(Address, CorrelationId.GenerateCorrelationId()),
                     recipientPeerId
                 ));
 
                 using (CancellationTokenProvider.CancellationTokenSource)
                 {
                     history = await DeltaHistoryResponseMessageStreamer
-                       .FirstAsync(a => a != null && a.PeerId == recipientPeerId)
+                       .FirstAsync(a => a != null && a.Address == recipientPeerId)
                        .ToTask(CancellationTokenProvider.CancellationTokenSource.Token)
                        .ConfigureAwait(false);
                 }

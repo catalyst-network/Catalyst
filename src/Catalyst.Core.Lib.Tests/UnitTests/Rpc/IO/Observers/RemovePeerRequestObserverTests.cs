@@ -105,7 +105,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 {
                     Reputation = 0,
                     LastSeen = DateTime.Now.Subtract(TimeSpan.FromSeconds(fakePeers.ToList().IndexOf(fakePeer))),
-                    Address = PeerIdHelper.GetPeerId(fakePeer)
+                    Address = MultiAddressHelper.GetAddress(fakePeer)
                 };
             }).ToList();
 
@@ -113,11 +113,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             peerRepository.Add(fakePeerList);
 
-            var peerId = PeerIdHelper.GetPeerId("sender");
+            var peerId = MultiAddressHelper.GetAddress("sender");
 
             var removePeerRequest = new RemovePeerRequest
             {
-                PeerId = targetPeerToDelete.Address.ToString()
+                Address = targetPeerToDelete.Address.ToString()
             };
 
             var protocolMessage = removePeerRequest.ToProtocolMessage(peerId);

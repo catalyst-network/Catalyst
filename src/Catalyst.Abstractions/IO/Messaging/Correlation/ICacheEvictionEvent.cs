@@ -30,6 +30,6 @@ namespace Catalyst.Abstractions.IO.Messaging.Correlation
     public interface ICacheEvictionEvent<out T> where T : IMessage
     {
         T EvictedContent { get; }
-        MultiAddress PeerId { get; }
+        MultiAddress Address { get; }
     }
 }

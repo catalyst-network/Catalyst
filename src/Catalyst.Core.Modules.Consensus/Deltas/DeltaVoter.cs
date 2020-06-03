@@ -167,7 +167,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             favourite = new FavouriteDeltaBroadcast
             {
                 Candidate = bestCandidate,
-                VoterId = _localPeerIdentifier.ToString()
+                Voter = _localPeerIdentifier.ToString()
             };
 
             _logger.Debug("Retrieved favourite candidate delta {candidate} for the successor of delta {previousDelta}",
@@ -182,19 +182,19 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             var preferredProducers = _deltaProducersProvider
                .GetDeltaProducersFromPreviousDelta(candidate.PreviousDeltaDfsHash.ToByteArray().ToCid());
 
-            var address = new MultiAddress(candidate.ProducerId);
+            var address = new MultiAddress(candidate.Producer);
             var candidatePublicKey = address.GetPublicKey();
             var ranking = preferredProducers.ToList()
                .FindIndex(p => p.Equals(candidatePublicKey));
 
-            var identifier = candidate.ProducerId;
+            var identifier = candidate.Producer;
             _logger.Verbose("ranking for block produced by {producerId} = {ranking}",
                 identifier, ranking);
 
             if (ranking == -1)
             {
                 throw new KeyNotFoundException(
-                    $"Producer {candidate.ProducerId} " +
+                    $"Producer {candidate.Producer} " +
                     "should not be sending candidate deltas with previous hash " +
                     $"{candidate.PreviousDeltaDfsHash.ToByteArray().ToCid()} {candidate.PreviousDeltaDfsHash.ToByteArray().ToCid().Hash.ToBase32()}");
             }

@@ -60,7 +60,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _subbedLogger = Substitute.For<ILogger>();
             _peerClient = Substitute.For<ILibP2PPeerClient>();
 
-            var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
+            var peerSettings = MultiAddressHelper.GetAddress("sender").ToSubstitutedPeerSettings();
             var deltaIndexService = new DeltaIndexService(new InMemoryRepository<DeltaIndexDao, string>());
 
             _deltaHistoryRequestObserver = new DeltaHistoryRequestObserver(peerSettings,
@@ -78,7 +78,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             var deltaHistoryRequestMessage = new DeltaHistoryRequest();
 
             var channeledAny = new ObserverDto(fakeContext,
-                deltaHistoryRequestMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(),
+                deltaHistoryRequestMessage.ToProtocolMessage(MultiAddressHelper.GetAddress(),
                     CorrelationId.GenerateCorrelationId()
                 )
             );
@@ -109,7 +109,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
                 lastDeltaHash = hp.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32));
             }
 
-            var responder = PeerIdHelper.GetPeerId();
+            var responder = MultiAddressHelper.GetAddress();
             var dtoResponse = new MessageDto(response.ToProtocolMessage(responder, CorrelationId.GenerateCorrelationId()),
                 responder);
 

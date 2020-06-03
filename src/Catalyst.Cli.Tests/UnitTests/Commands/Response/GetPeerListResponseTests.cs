@@ -42,7 +42,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands.Response
         public void GetPeerListResponse_Can_Get_Output()
         {
             var getPeerListResponse = new GetPeerListResponse();
-            getPeerListResponse.Peers.Add(PeerIdHelper.GetPeerId().ToString());
+            getPeerListResponse.Peers.Add(MultiAddressHelper.GetAddress().ToString());
 
             var commandContext = TestCommandHelpers.GenerateCliResponseCommandContext(_testScheduler);
 

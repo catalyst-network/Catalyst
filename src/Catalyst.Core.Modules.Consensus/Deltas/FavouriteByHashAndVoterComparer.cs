@@ -57,8 +57,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 return candidateHashComparison;
             }
 
-            var voterIdXBytes = Encoding.UTF8.GetBytes(x.VoterId);
-            var voterIdYBytes = Encoding.UTF8.GetBytes(y.VoterId);
+            var voterIdXBytes = Encoding.UTF8.GetBytes(x.Voter);
+            var voterIdYBytes = Encoding.UTF8.GetBytes(y.Voter);
             return ByteUtil.ByteListComparer.Default.Compare(voterIdXBytes, voterIdYBytes);
         }
 
@@ -89,8 +89,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             unchecked
             {
                 var candidateHash = favourite.Candidate?.Hash == null ? 0 : favourite.Candidate.Hash.GetHashCode();
-                var voterIdHash = favourite.VoterId == null ? 0 : favourite.VoterId.GetHashCode();
-                return (candidateHash * 397) ^ voterIdHash;
+                var voterHash = favourite.Voter == null ? 0 : favourite.Voter.GetHashCode();
+                return (candidateHash * 397) ^ voterHash;
             }
         }
     }

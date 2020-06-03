@@ -38,19 +38,19 @@ namespace Catalyst.Protocol.Tests.UnitTests.Wire
             {
                 Add(new CandidateDeltaBroadcast
                 {
-                    ProducerId = "",
+                    Producer = "",
                     Hash = ByteString.CopyFromUtf8("hash"),
                     PreviousDeltaDfsHash = ByteString.CopyFromUtf8("yes")
                 });
                 Add(new CandidateDeltaBroadcast
                 {
-                    ProducerId = PeerIdHelper.GetPeerId("hello").ToString(),
+                    Producer = MultiAddressHelper.GetAddress("hello").ToString(),
                     Hash = ByteString.Empty,
                     PreviousDeltaDfsHash = ByteString.CopyFromUtf8("yes")
                 });
                 Add(new CandidateDeltaBroadcast
                 {
-                    ProducerId = PeerIdHelper.GetPeerId("hello").ToString(),
+                    Producer = MultiAddressHelper.GetAddress("hello").ToString(),
                     Hash = ByteString.CopyFromUtf8("yes"),
                     PreviousDeltaDfsHash = ByteString.Empty
                 });
@@ -68,7 +68,7 @@ namespace Catalyst.Protocol.Tests.UnitTests.Wire
         {
             var candidate = new CandidateDeltaBroadcast
             {
-                ProducerId = PeerIdHelper.GetPeerId("hello").ToString(),
+                Producer = MultiAddressHelper.GetAddress("hello").ToString(),
                 Hash = ByteString.CopyFromUtf8("yes"),
                 PreviousDeltaDfsHash = ByteString.CopyFromUtf8("bla")
             };

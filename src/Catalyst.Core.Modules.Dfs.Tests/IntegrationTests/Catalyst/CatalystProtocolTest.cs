@@ -76,7 +76,7 @@ namespace Lib.P2P.Tests.Protocols
 
                 var protocolMessage = new ProtocolMessage
                 {
-                    PeerId = self.Addresses.First().ToString()
+                    Address = self.Addresses.First().ToString()
                 };
 
                 await catalystProtocolA.SendAsync(other.Id, protocolMessage);
@@ -119,7 +119,7 @@ namespace Lib.P2P.Tests.Protocols
 
                 var protocolMessage = new ProtocolMessage
                 {
-                    PeerId = self.Addresses.First().ToString()
+                    Address = self.Addresses.First().ToString()
                 };
 
                 await catalystProtocolA.SendAsync(peerBAddress, protocolMessage);

@@ -64,8 +64,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _deltaElector = Substitute.For<IDeltaElector>();
             _fakeChannelContext = Substitute.For<IChannelHandlerContext>();
             var logger = Substitute.For<ILogger>();
-            _voterId = PeerIdHelper.GetPeerId("favourite delta voter");
-            _producerId = PeerIdHelper.GetPeerId("candidate delta producer");
+            _voterId = MultiAddressHelper.GetAddress("favourite delta voter");
+            _producerId = MultiAddressHelper.GetAddress("candidate delta producer");
 
             var peerRepository = Substitute.For<IPeerRepository>();
             peerRepository.GetPoaPeersByPublicKey(Arg.Any<string>()).Returns(new List<Peer> { new Peer() });
@@ -85,7 +85,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _deltaElector.Received(1).OnNext(Arg.Is<FavouriteDeltaBroadcast>(c =>
                 c.Candidate.Hash.SequenceEqual(_newHash.ToArray().ToByteString())
              && c.Candidate.PreviousDeltaDfsHash.Equals(_prevHash.ToArray().ToByteString())
-             && c.Candidate.ProducerId == _producerId.ToString()));
+             && c.Candidate.Producer == _producerId.ToString()));
         }
 
         [Test]
@@ -121,17 +121,17 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             {
                 Hash = newHash.ToByteString(),
                 PreviousDeltaDfsHash = prevHash.ToByteString(),
-                ProducerId = producerId.ToString()
+                Producer = producerId.ToString()
             };
 
             var favouriteDeltaBroadcast = new FavouriteDeltaBroadcast
             {
                 Candidate = candidate,
-                VoterId = voterId.ToString()
+                Voter = voterId.ToString()
             };
 
             var receivedMessage = new ObserverDto(_fakeChannelContext,
-                favouriteDeltaBroadcast.ToProtocolMessage(PeerIdHelper.GetPeerId()));
+                favouriteDeltaBroadcast.ToProtocolMessage(MultiAddressHelper.GetAddress()));
             return receivedMessage;
         }
     }

@@ -95,7 +95,7 @@ namespace Catalyst.Core.Lib.P2P
         public async Task SendMessageAsync<T>(IMessageDto<T> message) where T : IMessage<T>
         {
             var protocolMessage = ProtocolMessage.Parser.ParseFrom(message.Content.ToByteArray());
-            await SendMessageAsync(message.RecipientPeerIdentifier, protocolMessage).ConfigureAwait(false);
+            await SendMessageAsync(message.RecipientAddress, protocolMessage).ConfigureAwait(false);
         }
 
         private async Task SendMessageAsync(MultiAddress receiver, ProtocolMessage message)

@@ -36,7 +36,7 @@ namespace Catalyst.TestUtils
     {
         public static IPeerSettings TestPeerSettings(byte[] publicKey = default, int port = 42069)
         {
-            var peerId = PeerIdHelper.GetPeerId(publicKey);
+            var peerId = MultiAddressHelper.GetAddress(publicKey);
             var finalPublicKey = peerId.GetPublicKey();
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.NetworkType.Returns(NetworkType.Devnet);

@@ -106,7 +106,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
                 peerValidator,
                 peerSettings,
                 _testScheduler);
-            _senderId = PeerIdHelper.GetPeerId("sender");
+            _senderId = MultiAddressHelper.GetAddress("sender");
             _correlationId = CorrelationId.GenerateCorrelationId();
             _signature = ByteUtil.GenerateRandomByteArray(new FfiWrapper().SignatureLength);
             _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), default)
@@ -162,7 +162,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
             var testingChannel = new EmbeddedChannel("testWithExceptions".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());
 
-            var serverIdentifier = PeerIdHelper.GetPeerId("server");
+            var serverIdentifier = MultiAddressHelper.GetAddress("server");
             var peerSettings = serverIdentifier.ToSubstitutedPeerSettings();
             using (var badHandler = new FailingRequestObserver(Substitute.For<ILogger>(), peerSettings, _peerClient))
             {

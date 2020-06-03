@@ -127,7 +127,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());
 
-            var senderId = PeerIdHelper.GetPeerId("sender");
+            var senderId = MultiAddressHelper.GetAddress("sender");
             var correlationId = CorrelationId.GenerateCorrelationId();
             var signatureBytes = ByteUtil.GenerateRandomByteArray(new FfiWrapper().SignatureLength);
             _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), Arg.Any<SigningContext>())
@@ -156,7 +156,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());
             
-            var senderId = PeerIdHelper.GetPeerId("sender");
+            var senderId = MultiAddressHelper.GetAddress("sender");
             var correlationId = CorrelationId.GenerateCorrelationId();
             var protocolMessage = new PingResponse().ToProtocolMessage(senderId, correlationId);
 

@@ -31,8 +31,8 @@ namespace Catalyst.Simulator.Interfaces
 {
     public interface IRpcClient
     {
-        Task<bool> ConnectRetryAsync(MultiAddress peerIdentifier, int retryAttempts = 5);
-        Task<bool> ConnectAsync(MultiAddress peerIdentifier);
+        Task<bool> ConnectRetryAsync(MultiAddress Addressentifier, int retryAttempts = 5);
+        Task<bool> ConnectAsync(MultiAddress Addressentifier);
         void SendMessage<T>(T message) where T : IMessage;
         void ReceiveMessage<T>(Action<T> message) where T : IMessage<T>;
         bool IsConnected();

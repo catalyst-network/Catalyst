@@ -31,6 +31,6 @@ namespace Catalyst.Abstractions.IO.Observers
 {
     public interface IRpcResponseObserver : IResponseMessageObserver
     {
-        void HandleResponseObserver(IMessage messageDto, IChannelHandlerContext channelHandlerContext, MultiAddress senderPeerIdentifier, ICorrelationId correlationId);
+        void HandleResponseObserver(IMessage messageDto, IChannelHandlerContext channelHandlerContext, MultiAddress senderentifier, ICorrelationId correlationId);
     }
 }

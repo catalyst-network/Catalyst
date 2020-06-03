@@ -58,7 +58,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
         {
             _testScheduler = new TestScheduler();
             _logger = Substitute.For<ILogger>();
-            _peerIdentifier = PeerIdHelper.GetPeerId("Test");
+            _peerIdentifier = MultiAddressHelper.GetAddress("Test");
             _channelHandlerContext = Substitute.For<IChannelHandlerContext>();
 
             _channelFactory = Substitute.For<ITcpClientChannelFactory>();
@@ -75,7 +75,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
             _rpcClientConfig = Substitute.For<IRpcClientConfig>();
             _rpcClientConfig.NodeId = "0";
             _rpcClientConfig.PfxFileName = "pfx";
-            _rpcClientConfig.PeerId = new MultiAddress("/ip4/127.0.0.1/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdwu2yu3QMzKa2BDkb5C5pcuhtrH1G9HHbztbbxA8tGmf4");
+            _rpcClientConfig.Address = new MultiAddress("/ip4/127.0.0.1/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdwu2yu3QMzKa2BDkb5C5pcuhtrH1G9HHbztbbxA8tGmf4");
         }
 
         private readonly ILogger _logger;

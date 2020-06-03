@@ -38,7 +38,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
     {
         private readonly MultiAddress _ownNode;
 
-        public HastingsCareTakerTests() { _ownNode = PeerIdHelper.GetPeerId("own_node"); }
+        public HastingsCareTakerTests() { _ownNode = MultiAddressHelper.GetAddress("own_node"); }
 
         [Test]
         public void Can_Add_New_Mementos_To_Caretaker()

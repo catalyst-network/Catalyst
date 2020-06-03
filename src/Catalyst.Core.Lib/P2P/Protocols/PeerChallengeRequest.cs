@@ -87,7 +87,7 @@ namespace Catalyst.Core.Lib.P2P.Protocols
                     new CancellationTokenSource(TimeSpan.FromSeconds(_ttl)))
                 {
                     await ChallengeResponseMessageStreamer
-                       .FirstAsync(a => a != null && a.PeerId == recipientPeerId)
+                       .FirstAsync(a => a != null && a.Address == recipientPeerId)
                        .ToTask(cancellationTokenSource.Token)
                        .ConfigureAwait(false);
                 }

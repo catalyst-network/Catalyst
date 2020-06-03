@@ -101,7 +101,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
        
         public async Task RpcServer_Can_Handle_SignMessageRequest(string message)
         {
-            var sender = PeerIdHelper.GetPeerId("sender");
+            var sender = MultiAddressHelper.GetAddress("sender");
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.Address.Returns(sender);
             var signMessageRequest = new SignMessageRequest

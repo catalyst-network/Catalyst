@@ -52,7 +52,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _peerClient = Substitute.For<ILibP2PPeerClient>();
             _testScheduler = new TestScheduler();
             _subbedLogger = Substitute.For<ILogger>();
-            var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
+            var peerSettings = MultiAddressHelper.GetAddress("sender").ToSubstitutedPeerSettings();
             _pingRequestObserver = new PingRequestObserver(peerSettings, Substitute.For<IPeerRepository>(), _peerClient, _subbedLogger);
         }
 
@@ -62,15 +62,15 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             var pingRequestMessage = new PingRequest();
             
             var fakeContext = Substitute.For<IChannelHandlerContext>();
-            var channeledAny = new ObserverDto(fakeContext, pingRequestMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId()));
+            var channeledAny = new ObserverDto(fakeContext, pingRequestMessage.ToProtocolMessage(MultiAddressHelper.GetAddress(), CorrelationId.GenerateCorrelationId()));
             var observableStream = new[] {channeledAny}.ToObservable(_testScheduler);
             
             _pingRequestObserver.StartObserving(observableStream);
 
             _testScheduler.Start();
 
-            var responder = PeerIdHelper.GetPeerId();
-            var dtoResponse = new MessageDto(new PingResponse().ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId()),
+            var responder = MultiAddressHelper.GetAddress();
+            var dtoResponse = new MessageDto(new PingResponse().ToProtocolMessage(MultiAddressHelper.GetAddress(), CorrelationId.GenerateCorrelationId()),
             responder);
 
             await _peerClient.ReceivedWithAnyArgs(1).SendMessageAsync(dtoResponse).ConfigureAwait(false);

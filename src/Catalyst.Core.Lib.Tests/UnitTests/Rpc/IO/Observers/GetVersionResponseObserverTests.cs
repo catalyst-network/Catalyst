@@ -39,7 +39,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         public void Null_Version_Throws_Exception()
         {
             var channelHandlerContext = Substitute.For<IChannelHandlerContext>();
-            var senderPeerIdentifier = PeerIdHelper.GetPeerId();
+            var senderentifier = MultiAddressHelper.GetAddress();
             var correlationId = CorrelationId.GenerateCorrelationId();
 
             var logger = Substitute.For<ILogger>();
@@ -47,7 +47,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             Assert.Throws<ArgumentNullException>(() => getVersionResponseObserver
                .HandleResponseObserver(new VersionResponse {Version = null}, channelHandlerContext,
-                    senderPeerIdentifier, correlationId));
+                    senderentifier, correlationId));
         }
     }
 }

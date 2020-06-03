@@ -56,7 +56,7 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
             var peers = new[]
             {
                  new PoaPeer {Address="/ip4/192.168.0.181/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdwu2yu3QMzKa2BDkb5C5pcuhtrH1G9HHbztbbxA8tGmf4"},
-                 new PoaPeer {Address=PeerIdHelper.GetPeerId().ToString()},
+                 new PoaPeer {Address=MultiAddressHelper.GetAddress().ToString()},
             };
 
             await FileSystem.WriteTextFileToCddAsync(PoaDiscovery.PoaPeerFile, JsonConvert.SerializeObject(peers));

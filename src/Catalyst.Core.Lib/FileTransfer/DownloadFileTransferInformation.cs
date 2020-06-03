@@ -49,13 +49,13 @@ namespace Catalyst.Core.Lib.FileTransfer
         /// <param name="correlationGuid">The correlation unique identifier.</param>
         /// <param name="fileOutputPath">The file output path.</param>
         /// <param name="fileSize">Size of the file.</param>
-        public DownloadFileTransferInformation(MultiAddress peerId,
-            MultiAddress recipientId,
+        public DownloadFileTransferInformation(MultiAddress address,
+            MultiAddress recipient,
             IChannel recipientChannel,
             ICorrelationId correlationGuid,
             string fileOutputPath,
             ulong fileSize) :
-            base(peerId, recipientId, recipientChannel,
+            base(address, recipient, recipientChannel,
                 correlationGuid, fileOutputPath, fileSize)
         {
             _fileLock = new object();

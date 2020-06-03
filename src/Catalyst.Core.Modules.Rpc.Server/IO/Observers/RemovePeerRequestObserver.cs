@@ -63,19 +63,19 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// </summary>
         /// <param name="removePeerRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerId"></param>
+        /// <param name="sender"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override RemovePeerResponse HandleRequest(RemovePeerRequest removePeerRequest,
             IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(removePeerRequest, nameof(removePeerRequest)).NotNull();
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
             Logger.Debug("Received message of type RemovePeerRequest");
 
-            var peerDeletedCount = _peerRepository.DeletePeersByAddress(removePeerRequest.PeerId);
+            var peerDeletedCount = _peerRepository.DeletePeersByAddress(removePeerRequest.Address);
 
             return new RemovePeerResponse
             {

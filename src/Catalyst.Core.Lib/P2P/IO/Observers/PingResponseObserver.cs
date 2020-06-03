@@ -43,7 +43,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
     /// <summary>
     ///     @TODO we inject IPeerChallengeRequest, this class probably shouldnt care about IPeerChallengeRequest,
     ///     IPeerChallengeRequest should consume ResponseMessageSubject, and filter for messages it is concerned with.
-    ///     OnNext(new PeerChallengeResponse(senderPeerId)); would then instantiate PeerChallengeResponse where its consumed not here.
+    ///     OnNext(new PeerChallengeResponse(sender)); would then instantiate PeerChallengeResponse where its consumed not here.
     /// </summary>
     public sealed class PingResponseObserver
         : ResponseObserverBase<PingResponse>,
@@ -62,11 +62,11 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         
         protected override void HandleResponse(PingResponse pingResponse,
             IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
-            ResponseMessageSubject.OnNext(new PeerClientMessageDto(pingResponse, senderPeerId, correlationId));
-            _peerChallengeRequest.ChallengeResponseMessageStreamer.OnNext(new PeerChallengeResponse(senderPeerId));
+            ResponseMessageSubject.OnNext(new PeerClientMessageDto(pingResponse, sender, correlationId));
+            _peerChallengeRequest.ChallengeResponseMessageStreamer.OnNext(new PeerChallengeResponse(sender));
         }
     }
 }

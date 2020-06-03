@@ -57,7 +57,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
             _context = Substitute.For<IChannelHandlerContext>();
             _context.Channel.Returns(Substitute.For<IChannel>());
             _downloadFileTransferFactory = Substitute.For<IDownloadFileTransferFactory>();
-            var peerSettings = PeerIdHelper.GetPeerId("Test").ToSubstitutedPeerSettings();
+            var peerSettings = MultiAddressHelper.GetAddress("Test").ToSubstitutedPeerSettings();
             _observer = new TransferFileBytesRequestObserver(_downloadFileTransferFactory,
                 peerSettings,
                 _peerClient,
@@ -73,7 +73,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
                 ChunkBytes = ByteString.Empty,
                 ChunkId = 1,
                 CorrelationFileName = CorrelationId.GenerateCorrelationId().Id.ToByteString()
-            }.ToProtocolMessage(PeerIdHelper.GetPeerId("Test"), guid);
+            }.ToProtocolMessage(MultiAddressHelper.GetAddress("Test"), guid);
 
             _downloadFileTransferFactory.DownloadChunk(Arg.Any<TransferFileBytesRequest>())
                .Returns(FileTransferResponseCodeTypes.Successful);
@@ -89,9 +89,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
 
             _downloadFileTransferFactory.DownloadChunk(Arg.Any<TransferFileBytesRequest>()).Returns(FileTransferResponseCodeTypes.Error);
 
-            var sender = PeerIdHelper.GetPeerId("sender");
+            var sender = MultiAddressHelper.GetAddress("sender");
             var requestDto = new MessageDto(new TransferFileBytesRequest().ToProtocolMessage(sender)
-              , PeerIdHelper.GetPeerId("recipient"));
+              , MultiAddressHelper.GetAddress("recipient"));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_context, testScheduler, requestDto.Content);
 

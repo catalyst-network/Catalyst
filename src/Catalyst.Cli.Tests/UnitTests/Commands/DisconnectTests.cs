@@ -25,7 +25,6 @@ using System.Collections.Generic;
 using Catalyst.Abstractions.Cli.CommandTypes;
 using Catalyst.Cli.Commands;
 using Catalyst.Cli.Tests.UnitTests.Helpers;
-using Catalyst.Core.Lib.Network;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
@@ -50,8 +49,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands
             var rpcNodeConfig = TestCommandHelpers.MockRpcNodeConfig(commandContext);
             var socketClientRegistry = TestCommandHelpers.AddClientSocketRegistry(commandContext, _testScheduler);
 
-            var clientHashCode =
-                socketClientRegistry.GenerateClientHashCode(rpcNodeConfig.PeerId.GetIPEndPoint());
+            var clientHashCode = socketClientRegistry.GenerateClientHashCode(rpcNodeConfig.Address.GetIPEndPoint());
             socketClientRegistry.AddClientToRegistry(clientHashCode, nodeRpcClient);
 
             var commands = new List<ICommand> {new DisconnectCommand(commandContext, Substitute.For<ILogger>())};

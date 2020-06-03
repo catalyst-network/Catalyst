@@ -54,7 +54,7 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
             _peerClient = Substitute.For<ILibP2PPeerClient>();
             _testPeer = new Peer
             {
-                Address = PeerIdHelper.GetPeerId("TestPeer")
+                Address = MultiAddressHelper.GetAddress("TestPeer")
             };
         }
 

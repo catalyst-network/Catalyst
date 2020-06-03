@@ -62,7 +62,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
                 var peerRepo = PopulatePeerRepo(scope, out var peerDao);
 
                 peerRepo.Get(peerDao.Id).Id.Should().Be(peerDao.Id);
-                new MultiAddress(peerRepo.Get(peerDao.Id).PeerIdentifier).Should().Be(peerDao.PeerIdentifier);
+                new MultiAddress(peerRepo.Get(peerDao.Id).Address).Should().Be(peerDao.Address);
             }
         }
 
@@ -101,8 +101,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
                 Id = Guid.NewGuid().ToString()
             };
 
-            var peerId = PeerIdHelper.GetPeerId(new Random().Next().ToString());
-            peerDao.PeerIdentifier = peerId.ToString();
+            var address = MultiAddressHelper.GetAddress(new Random().Next().ToString());
+            peerDao.Address = address.ToString();
 
             peerRepo.Add(peerDao);
             peerDaoOutput = peerDao;

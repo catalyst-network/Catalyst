@@ -161,7 +161,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             TestContext.WriteLine(ip.ToString());
             TestContext.WriteLine(port.ToString());
 
-            var recipient = PeerIdHelper.GetPeerId(publicKey, ip, port);
+            var recipient = MultiAddressHelper.GetAddress(publicKey, ip, port);
             return await _peerChallengeRequest.ChallengePeerAsync(recipient);
         }
 

@@ -29,7 +29,7 @@ namespace Catalyst.Abstractions.P2P.ReputationSystem
 {
     public interface IPeerReputationChange
     {
-        MultiAddress PeerId { get; }
+        MultiAddress Address { get; }
         IReputationEvents ReputationEvent { get; }
     }
 }

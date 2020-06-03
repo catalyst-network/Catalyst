@@ -85,7 +85,7 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
                     return;
                 }
 
-                var multiAddress = new MultiAddress(messageDto.Payload.PeerId);
+                var multiAddress = new MultiAddress(messageDto.Payload.Address);
                 var messagePoaNode = _peerRepository.GetPoaPeersByPublicKey(multiAddress.GetPublicKey()).FirstOrDefault();
                 if (messagePoaNode == null)
                 {

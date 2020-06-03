@@ -270,7 +270,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
             // continue walk by proposing next degree.
             var newCandidate = CurrentStep.Neighbours
                .Where(n => n.StateTypes == NeighbourStateTypes.Responsive)
-               .RandomElement().PeerId;
+               .RandomElement().Address;
 
             StepProposal.RestoreMemento(new HastingsMemento(newCandidate, new Neighbours()));
 
@@ -292,7 +292,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
             do
             {
                 responsiveNeighbours = CurrentStep.Neighbours
-                   .Where(n => n.PeerId != unresponsiveNeighbour
+                   .Where(n => n.Address != unresponsiveNeighbour
                      && n.StateTypes == NeighbourStateTypes.Responsive)
                    .ToList();
 
@@ -310,7 +310,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
                     "Peer discovery walked failed reaching its starting point with no responsive neighbours.");
             }
 
-            var newCandidate = responsiveNeighbours.RandomElement().PeerId;
+            var newCandidate = responsiveNeighbours.RandomElement().Address;
 
             StepProposal.RestoreMemento(new HastingsMemento(newCandidate, new Neighbours()));
 
@@ -336,7 +336,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
                 if (StepProposal.PnrCorrelationId.Equals(requestCorrelationId))
                 {
                     // state candidate didn't give any neighbours so go back a step.
-                    _logger.Verbose("StepProposal {n.PeerId} unresponsive.");
+                    _logger.Verbose("StepProposal {n.Address} unresponsive.");
                     WalkBack();
                 }
 
@@ -351,7 +351,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
                     return;
                 }
 
-                _logger.Verbose("Neighbour {peerId} unresponsive.", neighbour.PeerId);
+                _logger.Verbose("Neighbour {peerId} unresponsive.", neighbour.Address);
                 neighbour.StateTypes = NeighbourStateTypes.UnResponsive;
             }
             catch (Exception e)
@@ -381,7 +381,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
                     return;
                 }
 
-                StepProposal.Neighbours.First(n => n.PeerId.Equals(obj.Sender)).StateTypes =
+                StepProposal.Neighbours.First(n => n.Address.Equals(obj.Sender)).StateTypes =
                     NeighbourStateTypes.Responsive;
             }
             catch (Exception e)
@@ -419,7 +419,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
                     {
                         var pingRequestDto = new MessageDto(
                             new PingRequest().ToProtocolMessage(_ownNode, n.DiscoveryPingCorrelationId),
-                            n.PeerId);
+                            n.Address);
 
                         PeerClient.SendMessage(pingRequestDto);
 
@@ -486,7 +486,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
             {
                 Reputation = 0,
                 LastSeen = DateTime.UtcNow,
-                Address = neighbour.PeerId
+                Address = neighbour.Address
             });
 
             Interlocked.Add(ref _discoveredPeerInCurrentWalk, 1);

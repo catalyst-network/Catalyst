@@ -62,7 +62,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
             this.Setup(TestContext.CurrentContext);
             _testScheduler = new TestScheduler();
             _settings = PeerSettingsHelper.TestPeerSettings();
-            _ownNode = PeerIdHelper.GetPeerId("ownNode");
+            _ownNode = MultiAddressHelper.GetAddress("ownNode");
 
             ContainerProvider.ConfigureContainerBuilder(true, true);
             _logger = ContainerProvider.Container.Resolve<ILogger>();
@@ -105,7 +105,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
 
             stateCandidate.Neighbours.ToList().ForEach(n =>
             {
-                _logger.Debug("Setting up neighbour {neighbour}", n.PeerId);
+                _logger.Debug("Setting up neighbour {neighbour}", n.Address);
                 _logger.Debug("Adding eviction callbacks expectation for correlationId {correlationId}",
                     n.DiscoveryPingCorrelationId);
 
@@ -120,7 +120,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
 
                 {
                     Content = new PingRequest().ToProtocolMessage(_ownNode, n.DiscoveryPingCorrelationId),
-                    Recipient = n.PeerId
+                    Recipient = n.Address
                 };
 
                 correlatableMessages.Add(msg);
@@ -151,9 +151,9 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
                        .PostEvictionCallbacks[0]
                        .EvictionCallback
                        .Invoke(
-                            n.PeerId,
+                            n.Address,
                             correlatableMessages.Single(i =>
-                                i.Recipient.Equals(n.PeerId)),
+                                i.Recipient.Equals(n.Address)),
                             EvictionReason.Expired,
                             new object()
                         );
@@ -221,7 +221,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
                 stateCandidate.Neighbours.ToList().ForEach(i =>
                 {
                     var dto = new PeerClientMessageDto(new PingResponse(),
-                        stateCandidate.Neighbours.FirstOrDefault()?.PeerId,
+                        stateCandidate.Neighbours.FirstOrDefault()?.Address,
                         stateCandidate.Neighbours.FirstOrDefault()?.DiscoveryPingCorrelationId
                     );
 
@@ -237,11 +237,11 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
                 {
                     walker.StepProposal.Neighbours
                        .Where(n => n.StateTypes == NeighbourStateTypes.Responsive)
-                       .Select(i => i.PeerId)
+                       .Select(i => i.Address)
                        .Should()
                        .BeSubsetOf(
                             stateCandidate.Neighbours
-                               .Select(i => i.PeerId)
+                               .Select(i => i.Address)
                         );
                 }
             }
@@ -287,7 +287,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
                 using (walker.DiscoveryStream.Subscribe(streamObserver.OnNext))
                 {
                     var pingDto = new PeerClientMessageDto(new PingResponse(),
-                        stateCandidate.Neighbours.FirstOrDefault()?.PeerId,
+                        stateCandidate.Neighbours.FirstOrDefault()?.Address,
                         stateCandidate.Neighbours.FirstOrDefault()?.DiscoveryPingCorrelationId
                     );
 
@@ -301,7 +301,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.IntegrationTests
 
                     var foundResponsiveNeighbour = walker.StepProposal.Neighbours
                        .Where(n => n.StateTypes == NeighbourStateTypes.Responsive)
-                       .Select(n => n.PeerId)
+                       .Select(n => n.Address)
                        .Contains(pingDto.Sender);
 
                     foundResponsiveNeighbour.Should().BeTrue();

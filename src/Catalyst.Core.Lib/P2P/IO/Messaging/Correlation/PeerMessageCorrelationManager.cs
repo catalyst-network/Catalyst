@@ -82,7 +82,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Correlation
             {
                 Logger.Debug($"{response.CorrelationId} message not found");
 
-                _reputationEvent.OnNext(new ReputationChange(response.PeerId,
+                _reputationEvent.OnNext(new ReputationChange(response.Address,
                     ReputationEventType.UnCorrelatableMessage)
                 );
                 return false;
@@ -109,7 +109,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Correlation
             Logger.Verbose("{correlationId} message originally sent to {peer} is getting evicted", correlationId,
                 message.Recipient);
 
-            _reputationEvent.OnNext(new ReputationChange(message.Content.PeerId,
+            _reputationEvent.OnNext(new ReputationChange(message.Content.Address,
                 ReputationEventType.NoResponseReceived));
             Logger.Verbose("PeerReputationChange sent for {correlationId}", correlationId);
 

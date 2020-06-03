@@ -41,7 +41,7 @@ namespace Catalyst.Core.Modules.Authentication.Tests.Repository
 
         public AuthenticationRepositoryTests()
         {
-            _trustedPeer = PeerIdHelper.GetPeerId("Trusted");
+            _trustedPeer = MultiAddressHelper.GetAddress("Trusted");
             var whiteListRepo = new AuthCredentialRepository(new InMemoryRepository<AuthCredentials, string>());
 
             whiteListRepo.Add(new AuthCredentials
@@ -61,7 +61,7 @@ namespace Catalyst.Core.Modules.Authentication.Tests.Repository
         [Test]
         public void Can_Invalidate_Untrusted_Peer()
         {
-            _repositoryAuthenticationStrategy.Authenticate(PeerIdHelper.GetPeerId("NotTrusted"))
+            _repositoryAuthenticationStrategy.Authenticate(MultiAddressHelper.GetAddress("NotTrusted"))
                .Should().BeFalse();
         }
     }

@@ -88,7 +88,7 @@
 //        public void ProtocolMessageDao_ProtocolMessage_Should_Be_Convertible()
 //        {
 //            var newGuid = Guid.NewGuid();
-//            var peerId = PeerIdHelper.GetPeerId("testcontent");
+//            var peerId = MultiAddressHelper.GetAddress("testcontent");
 //            var original = new ProtocolMessage
 //            {
 //                CorrelationId = newGuid.ToByteString(),
@@ -101,8 +101,8 @@
 
 //            messageDao.TypeUrl.Should().Be("cleanurl");
 //            messageDao.CorrelationId.Should().Be(newGuid.ToString());
-//            messageDao.PeerId.Port.Should().Be((ushort) peerId.Port);
-//            messageDao.PeerId.Ip.Should().Be(new IPAddress(peerId.Ip.ToByteArray()).MapToIPv6().ToString());
+//            messageDao.Address.Port.Should().Be((ushort) peerId.Port);
+//            messageDao.Address.Ip.Should().Be(new IPAddress(peerId.Ip.ToByteArray()).MapToIPv6().ToString());
 
 //            var reconverted = messageDao.ToProtoBuff<ProtocolMessageDao, ProtocolMessage>(_mapperProvider);
 //            reconverted.Should().Be(original);
@@ -122,7 +122,7 @@
 //                    RawBytes = byteRn.ToByteString(),
 //                    SigningContext = DevNetPeerSigningContext.Instance
 //                },
-//                PeerId = PeerIdHelper.GetPeerId("test").ToString(),
+//                PeerId = MultiAddressHelper.GetAddress("test").ToString(),
 //                Code = 74
 //            };
 
@@ -135,7 +135,7 @@
 //        [Test]
 //        public void PeerIdDao_PeerId_Should_Be_Convertible()
 //        {
-//            var original = PeerIdHelper.GetPeerId("MyPeerId_Testing");
+//            var original = MultiAddressHelper.GetAddress("MyPeerId_Testing");
 
 //            var peer = original.ToDao<PeerId, PeerIdDao>(_mapperProvider);
 //            var reconverted = peer.ToProtoBuff<PeerIdDao, PeerId>(_mapperProvider);
@@ -180,7 +180,7 @@
 //            var original = new CandidateDeltaBroadcast
 //            {
 //                Hash = MultiBase.Decode(hash.ToCid()).ToByteString(),
-//                ProducerId = PeerIdHelper.GetPeerId("test"),
+//                ProducerId = MultiAddressHelper.GetAddress("test"),
 //                PreviousDeltaDfsHash = MultiBase.Decode(previousHash.ToCid()).ToByteString()
 //            };
 
@@ -215,8 +215,8 @@
 //        {
 //            var original = new FavouriteDeltaBroadcast
 //            {
-//                Candidate = DeltaHelper.GetCandidateDelta(_hashProvider, producerId: PeerIdHelper.GetPeerId("not me")),
-//                VoterId = PeerIdHelper.GetPeerId("test")
+//                Candidate = DeltaHelper.GetCandidateDelta(_hashProvider, producerId: MultiAddressHelper.GetAddress("not me")),
+//                VoterId = MultiAddressHelper.GetAddress("test")
 //            };
 
 //            var contextDao = original.ToDao<FavouriteDeltaBroadcast, FavouriteDeltaBroadcastDao>(_mapperProvider);

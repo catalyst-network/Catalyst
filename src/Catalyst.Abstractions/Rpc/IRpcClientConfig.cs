@@ -27,7 +27,7 @@ namespace Catalyst.Abstractions.Rpc
 {
     public interface IRpcClientConfig
     {
-        MultiAddress PeerId { get; set; }
+        MultiAddress Address { get; set; }
         string NodeId { get; set; }
         string PfxFileName { get; set; }
         string SslCertPassword { get; set; }

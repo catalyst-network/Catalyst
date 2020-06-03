@@ -36,11 +36,11 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
     public class FavouriteByHashAndVoterComparerTests
     {
-        private static MultiAddress voter1 = PeerIdHelper.GetPeerId("voter1");
-        private static MultiAddress voter2 = PeerIdHelper.GetPeerId("voter2");
+        private static MultiAddress voter1 = MultiAddressHelper.GetAddress("voter1");
+        private static MultiAddress voter2 = MultiAddressHelper.GetAddress("voter2");
 
-        private static MultiAddress producer1 = PeerIdHelper.GetPeerId("producer1");
-        private static MultiAddress producer2 = PeerIdHelper.GetPeerId("producer2");
+        private static MultiAddress producer1 = MultiAddressHelper.GetAddress("producer1");
+        private static MultiAddress producer2 = MultiAddressHelper.GetAddress("producer2");
 
         private static ByteString hash1 = ByteUtil.GenerateRandomByteArray(32).ToByteString();
         private static ByteString hash2 = ByteUtil.GenerateRandomByteArray(32).ToByteString();
@@ -70,51 +70,51 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 {
                     Candidate = new CandidateDeltaBroadcast
                     {
-                        Hash = hash1, ProducerId = producer1.ToString(), PreviousDeltaDfsHash = previousHash1
+                        Hash = hash1, Producer = producer1.ToString(), PreviousDeltaDfsHash = previousHash1
                     },
-                    VoterId = voter1.ToString()
+                    Voter = voter1.ToString()
                 },
                 new FavouriteDeltaBroadcast
                 {
                     Candidate = new CandidateDeltaBroadcast
                     {
-                        Hash = hash2, ProducerId = producer1.ToString(), PreviousDeltaDfsHash = previousHash1
+                        Hash = hash2, Producer = producer1.ToString(), PreviousDeltaDfsHash = previousHash1
                     },
-                    VoterId = voter1.ToString()
+                    Voter = voter1.ToString()
                 }, false ),
 
            new FavouritesTestData(new FavouriteDeltaBroadcast
                 {
                     Candidate = new CandidateDeltaBroadcast
                     {
-                        Hash = hash1, ProducerId = producer1.ToString(), PreviousDeltaDfsHash = previousHash1
+                        Hash = hash1, Producer = producer1.ToString(), PreviousDeltaDfsHash = previousHash1
                     },
-                    VoterId = voter1.ToString()
+                    Voter = voter1.ToString()
                 },
                 new FavouriteDeltaBroadcast
                 {
                     Candidate = new CandidateDeltaBroadcast
                     {
-                        Hash = hash1, ProducerId = producer1.ToString(), PreviousDeltaDfsHash = previousHash1
+                        Hash = hash1, Producer = producer1.ToString(), PreviousDeltaDfsHash = previousHash1
                     },
-                    VoterId = voter2.ToString()
+                    Voter = voter2.ToString()
                 }, false ),
 
             new FavouritesTestData(new FavouriteDeltaBroadcast
                 {
                     Candidate = new CandidateDeltaBroadcast
                     {
-                        Hash = hash1, ProducerId = producer1.ToString(), PreviousDeltaDfsHash = previousHash1
+                        Hash = hash1, Producer = producer1.ToString(), PreviousDeltaDfsHash = previousHash1
                     },
-                    VoterId = voter1.ToString()
+                    Voter = voter1.ToString()
                 },
                 new FavouriteDeltaBroadcast
                 {
                     Candidate = new CandidateDeltaBroadcast
                     {
-                        Hash = hash1, ProducerId = producer2.ToString(), PreviousDeltaDfsHash = previousHash2
+                        Hash = hash1, Producer = producer2.ToString(), PreviousDeltaDfsHash = previousHash2
                     },
-                    VoterId = voter1.ToString()
+                    Voter = voter1.ToString()
                 }, true)
         };
 

@@ -111,7 +111,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             {
                 FileSize = ExpectedFileSize,
                 ResponseCode = ByteString.CopyFrom((byte) responseCodeTypes.Id)
-            }.ToProtocolMessage(PeerIdHelper.GetPeerId("Test"), correlationId);
+            }.ToProtocolMessage(MultiAddressHelper.GetAddress("Test"), correlationId);
         }
     }
 }

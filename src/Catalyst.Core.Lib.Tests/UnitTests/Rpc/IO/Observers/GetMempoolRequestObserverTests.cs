@@ -85,12 +85,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var mempool = Substitute.For<IMempool<PublicEntryDao>>();
             mempool.Service.GetAll().Returns(mempoolTransactions);
 
-            var protocolMessage = new GetMempoolRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("sender_key"));
+            var protocolMessage = new GetMempoolRequest().ToProtocolMessage(MultiAddressHelper.GetAddress("sender_key"));
 
             var messageStream =
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
-            var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
+            var peerSettings = MultiAddressHelper.GetAddress("sender").ToSubstitutedPeerSettings();
             var handler = new GetMempoolRequestObserver(peerSettings, _peerClient, mempool, _mapperProvider, _logger);
 
             handler.StartObserving(messageStream);

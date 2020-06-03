@@ -57,16 +57,16 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         /// </summary>
         /// <param name="pingRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerId"></param>
+        /// <param name="sender"></param>
         /// <param name="correlationId"></param>
         /// <returns><see cref="PingResponse"/></returns>
         protected override PingResponse HandleRequest(PingRequest pingRequest,
             IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(pingRequest, nameof(pingRequest)).NotNull();
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
 
             return new PingResponse();
         }

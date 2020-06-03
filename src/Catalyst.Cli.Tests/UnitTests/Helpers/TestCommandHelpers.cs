@@ -64,7 +64,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Helpers
             commandContext.RpcClientFactory.Returns(nodeRpcClientFactory);
             commandContext.CertificateStore.Returns(certificateStore);
 
-            commandContext.PeerId.Returns("/ip4/192.168.0.181/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdwu2yu3QMzKa2BDkb5C5pcuhtrH1G9HHbztbbxA8tGmf4");
+            commandContext.Address.Returns("/ip4/192.168.0.181/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdwu2yu3QMzKa2BDkb5C5pcuhtrH1G9HHbztbbxA8tGmf4");
 
             var nodeRpcClient = MockNodeRpcClient();
             MockRpcNodeConfig(commandContext);
@@ -87,8 +87,8 @@ namespace Catalyst.Cli.Tests.UnitTests.Helpers
 
             IHashProvider hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             var deltaMultiHash = hashProvider.ComputeUtf8MultiHash("previous");
-            commandContext.PeerId.Returns(
-                PeerIdHelper.GetPeerId(deltaMultiHash.Digest, IPAddress.Any, 9010));
+            commandContext.Address.Returns(
+                MultiAddressHelper.GetAddress(deltaMultiHash.Digest, IPAddress.Any, 9010));
 
             return commandContext;
         }
@@ -97,7 +97,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Helpers
         {
             var rpcNodeConfig = Substitute.For<IRpcClientConfig>();
             rpcNodeConfig.NodeId = "test";
-            rpcNodeConfig.PeerId = "/ip4/192.168.0.181/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdwu2yu3QMzKa2BDkb5C5pcuhtrH1G9HHbztbbxA8tGmf4";
+            rpcNodeConfig.Address = "/ip4/192.168.0.181/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdwu2yu3QMzKa2BDkb5C5pcuhtrH1G9HHbztbbxA8tGmf4";
             commandContext.GetNodeConfig(Arg.Any<string>()).Returns(rpcNodeConfig);
             return rpcNodeConfig;
         }

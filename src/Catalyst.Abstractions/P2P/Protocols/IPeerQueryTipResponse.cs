@@ -29,7 +29,7 @@ namespace Catalyst.Abstractions.P2P.Protocols
 {
     public interface IPeerQueryTipResponse
     {
-        MultiAddress PeerId { get; }
+        MultiAddress Address { get; }
         Cid DeltaHash { get; }
     }
 }

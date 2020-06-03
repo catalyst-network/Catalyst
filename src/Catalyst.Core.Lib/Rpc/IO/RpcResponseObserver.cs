@@ -39,17 +39,17 @@ namespace Catalyst.Core.Lib.Rpc.IO
         protected RpcResponseObserver(ILogger logger, bool assertMessageNameCheck = true) : base(logger,
             assertMessageNameCheck) { }
 
-        protected abstract override void HandleResponse(TProto messageDto, IChannelHandlerContext channelHandlerContext, MultiAddress senderPeerId, ICorrelationId correlationId);
+        protected abstract override void HandleResponse(TProto messageDto, IChannelHandlerContext channelHandlerContext, MultiAddress sender, ICorrelationId correlationId);
 
         public void HandleResponseObserver(IMessage message,
             IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
             Guard.Argument(message, nameof(message)).NotNull("The message cannot be null");
 
-            HandleResponse((TProto) message, channelHandlerContext, senderPeerId, correlationId);
+            HandleResponse((TProto) message, channelHandlerContext, sender, correlationId);
         }
     }
 }

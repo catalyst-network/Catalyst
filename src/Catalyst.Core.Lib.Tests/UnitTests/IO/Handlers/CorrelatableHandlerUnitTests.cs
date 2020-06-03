@@ -53,8 +53,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
         public async Task Does_Process_IMessageDto_Types()
         {
             var protocolMessage =
-                new PingRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("sender"));
-            var messageDto = new MessageDto(protocolMessage, PeerIdHelper.GetPeerId("recipient"));
+                new PingRequest().ToProtocolMessage(MultiAddressHelper.GetAddress("sender"));
+            var messageDto = new MessageDto(protocolMessage, MultiAddressHelper.GetAddress("recipient"));
 
             var correlatableHandler = new CorrelatableHandler<IMessageCorrelationManager>(_fakeMessageCorrelationManager);
 

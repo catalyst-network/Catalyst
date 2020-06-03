@@ -57,13 +57,13 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         
         protected override void HandleResponse(DeltaHistoryResponse deltaHeightResponse,
             IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
-            ResponseMessageSubject.OnNext(new PeerClientMessageDto(deltaHeightResponse, senderPeerId, correlationId));
+            ResponseMessageSubject.OnNext(new PeerClientMessageDto(deltaHeightResponse, sender, correlationId));
 
             //_deltaHistoryRequest.DeltaHistoryResponseMessageStreamer
-            //   .OnNext(new PeerDeltaHistoryResponse(senderPeerId, deltaHeightResponse.Result));
+            //   .OnNext(new PeerDeltaHistoryResponse(sender, deltaHeightResponse.Result));
         }
     }
 }

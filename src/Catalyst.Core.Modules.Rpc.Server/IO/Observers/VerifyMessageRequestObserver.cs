@@ -57,16 +57,16 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
         /// <param name="verifyMessageRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerId"></param>
+        /// <param name="sender"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override VerifyMessageResponse HandleRequest(VerifyMessageRequest verifyMessageRequest,
             IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(verifyMessageRequest, nameof(verifyMessageRequest)).NotNull();
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
             Logger.Debug("received message of type VerifyMessageRequest");
 
             var decodedMessage = verifyMessageRequest.Message;

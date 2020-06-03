@@ -37,7 +37,7 @@ namespace Catalyst.Core.Lib.IO.Messaging.Dto
         /// <param name="recipientPeerIdentifier"></param>
         public SignedMessageDto(ProtocolMessage content,
             MultiAddress recipientPeerIdentifier)
-            : base(content, content.PeerId, recipientPeerIdentifier,
+            : base(content, content.Address, recipientPeerIdentifier,
                 new CorrelationId(content.CorrelationId)) { }
     }
 }

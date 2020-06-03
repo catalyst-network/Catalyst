@@ -39,10 +39,10 @@ namespace Catalyst.Protocol.Wire
                 return false;
             }
 
-            var address = MultiAddress.TryCreate(VoterId);
+            var address = MultiAddress.TryCreate(Voter);
             if (address == null || !address.HasPeerId)
             {
-                Logger.Debug("{field} is a invalid multi address with peerId", nameof(VoterId));
+                Logger.Debug("{field} is a invalid multi address with peerId", nameof(Voter));
                 return false;
             }
 

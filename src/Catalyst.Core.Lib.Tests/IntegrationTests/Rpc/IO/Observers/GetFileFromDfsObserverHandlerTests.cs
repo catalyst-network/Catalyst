@@ -84,8 +84,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 
             try
             {
-                var nodePeerId = PeerIdHelper.GetPeerId("sender");
-                var rpcPeerId = PeerIdHelper.GetPeerId("recipient");
+                var nodePeerId = MultiAddressHelper.GetAddress("sender");
+                var rpcPeerId = MultiAddressHelper.GetAddress("recipient");
                 var peerSettings = Substitute.For<IPeerSettings>();
                 peerSettings.Address.Returns(rpcPeerId);
                 var nodePeer = nodePeerId;

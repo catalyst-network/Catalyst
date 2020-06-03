@@ -30,7 +30,7 @@ namespace Catalyst.Abstractions.P2P.Protocols
 {
     public interface IPeerDeltaHistoryResponse
     {
-        MultiAddress PeerId { get; }
+        MultiAddress Address { get; }
         ICollection<DeltaIndex> DeltaCid { get; }
     }
 }

@@ -83,7 +83,7 @@ namespace Catalyst.Modules.POA.P2P.Discovery
             }))
             {
                 //Don't add your own peer id even if you are a POA node.
-                //if (_peerSettings.PeerId == peer.PeerId)
+                //if (_peerSettings.Address == peer.Address)
                 //{
                 //    continue;
                 //}

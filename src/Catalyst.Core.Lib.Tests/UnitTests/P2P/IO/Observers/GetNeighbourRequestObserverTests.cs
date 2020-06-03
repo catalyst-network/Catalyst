@@ -57,7 +57,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _testScheduler = new TestScheduler();
             _subbedLogger = Substitute.For<ILogger>();
             _subbedPeerRepository = Substitute.For<IPeerRepository>();
-            _peerId = PeerIdHelper.GetPeerId("testPeer");
+            _peerId = MultiAddressHelper.GetAddress("testPeer");
             _peerClient = Substitute.For<ILibP2PPeerClient>();
         }
 
@@ -74,12 +74,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             // mock a random set of peers
             var randomPeers = new List<Peer>
             {
-                new Peer {Address = PeerIdHelper.GetPeerId("peer1"), LastSeen = DateTime.Now},
-                new Peer {Address = PeerIdHelper.GetPeerId("peer2"), LastSeen = DateTime.Now},
-                new Peer {Address = PeerIdHelper.GetPeerId("peer3"), LastSeen = DateTime.Now},
-                new Peer {Address = PeerIdHelper.GetPeerId("peer4"), LastSeen = DateTime.Now},
-                new Peer {Address = PeerIdHelper.GetPeerId("peer5"), LastSeen = DateTime.Now},
-                new Peer {Address = PeerIdHelper.GetPeerId("peer6")}
+                new Peer {Address = MultiAddressHelper.GetAddress("peer1"), LastSeen = DateTime.Now},
+                new Peer {Address = MultiAddressHelper.GetAddress("peer2"), LastSeen = DateTime.Now},
+                new Peer {Address = MultiAddressHelper.GetAddress("peer3"), LastSeen = DateTime.Now},
+                new Peer {Address = MultiAddressHelper.GetAddress("peer4"), LastSeen = DateTime.Now},
+                new Peer {Address = MultiAddressHelper.GetAddress("peer5"), LastSeen = DateTime.Now},
+                new Peer {Address = MultiAddressHelper.GetAddress("peer6")}
             };
 
             // add them to the mocked repository, and set return expectation
@@ -96,7 +96,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 
             var fakeContext = Substitute.For<IChannelHandlerContext>();
             var channeledAny = new ObserverDto(fakeContext,
-                peerNeighbourRequestMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(),
+                peerNeighbourRequestMessage.ToProtocolMessage(MultiAddressHelper.GetAddress(),
                     CorrelationId.GenerateCorrelationId()));
             var observableStream = new[] {channeledAny}.ToObservable(_testScheduler);
 
@@ -106,7 +106,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 
             for (var i = 0; i < 5; i++)
             {
-                peerNeighborsResponseMessage.Peers.Add(PeerIdHelper.GetPeerId().ToString());
+                peerNeighborsResponseMessage.Peers.Add(MultiAddressHelper.GetAddress().ToString());
             }
 
             _testScheduler.Start();

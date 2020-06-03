@@ -34,7 +34,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
     {
         private readonly MultiAddress _peer;
 
-        public HastingsMementoTests() { _peer = PeerIdHelper.GetPeerId("current_peer"); }
+        public HastingsMementoTests() { _peer = MultiAddressHelper.GetAddress("current_peer"); }
 
         [Test]
         public void Can_Init_Memento_With_Existing_Params()

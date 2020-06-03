@@ -41,7 +41,7 @@ namespace Catalyst.Core.Lib.Extensions
 
         public static string GetPublicKey(this MultiAddress address)
         {
-            return address.PeerId.GetPublicKeyBytesFromPeerId().KeyToString();
+            return address.GetPublicKeyBytes().KeyToString();
         }
 
         public static byte[] GetPublicKeyBytes(this MultiAddress address)

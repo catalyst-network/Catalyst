@@ -42,7 +42,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Extensions
         public static void ToAnySigned_should_happen_new_guid_to_request_if_not_specified()
         {
             //this ensures we won't get Guid.Empty and then a risk of mismatch;
-            var wrapped = new PingRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("you"));
+            var wrapped = new PingRequest().ToProtocolMessage(MultiAddressHelper.GetAddress("you"));
             wrapped.CorrelationId.Should().NotBeEquivalentTo(Guid.Empty.ToByteString());
         }
 
@@ -50,18 +50,18 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Extensions
         public static void ToAnySigned_should_set_the_wrapper_fields()
         {
             var guid = CorrelationId.GenerateCorrelationId();
-            var peerId = PeerIdHelper.GetPeerId("blablabla");
+            var peerId = MultiAddressHelper.GetAddress("blablabla");
             var wrapped = new PeerId().ToProtocolMessage(peerId, guid);
 
             wrapped.CorrelationId.ToCorrelationId().Id.Should().Be(guid.Id);
-            wrapped.PeerId.Should().Be(peerId.ToString());
+            wrapped.Address.Should().Be(peerId.ToString());
             wrapped.TypeUrl.Should().Be(PeerId.Descriptor.ShortenedFullName());
         }
 
         [Test]
         public static void ToProtocolMessage_When_Processing_Request_Should_Generate_New_CorrelationId_If_Not_Specified()
         {
-            var peerId = PeerIdHelper.GetPeerId("someone");
+            var peerId = MultiAddressHelper.GetAddress("someone");
             var request = new GetPeerCountRequest().ToProtocolMessage(peerId);
             request.CorrelationId.ToCorrelationId().Should().NotBe(default);
         }
@@ -69,7 +69,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Extensions
         [Test]
         public static void ToProtocolMessage_When_Processing_Response_Should_Fail_If_No_CorrelationId_Specified()
         {
-            var peerId = PeerIdHelper.GetPeerId("someone");
+            var peerId = MultiAddressHelper.GetAddress("someone");
             var response = new GetPeerCountResponse
             {
                 PeerCount = 13

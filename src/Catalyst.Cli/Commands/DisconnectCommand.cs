@@ -41,7 +41,7 @@ namespace Catalyst.Cli.Commands
             var nodeConfig = CommandContext.GetNodeConfig(option.Node);
             Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull();
 
-            var registryId = CommandContext.SocketClientRegistry.GenerateClientHashCode(nodeConfig.PeerId.GetIPEndPoint());
+            var registryId = CommandContext.SocketClientRegistry.GenerateClientHashCode(nodeConfig.Address.GetIPEndPoint());
 
             var node = CommandContext.SocketClientRegistry.GetClientFromRegistry(registryId);
             Guard.Argument(node, nameof(node)).Require(CommandContext.IsSocketChannelActive(node));

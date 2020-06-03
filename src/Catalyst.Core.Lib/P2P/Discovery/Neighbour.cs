@@ -32,14 +32,14 @@ namespace Catalyst.Core.Lib.P2P.Discovery
     public sealed class Neighbour : INeighbour
     {
         public NeighbourStateTypes StateTypes { get; set; }
-        public MultiAddress PeerId { get; }
+        public MultiAddress Address { get; }
         public ICorrelationId DiscoveryPingCorrelationId { get; }
 
-        public Neighbour(MultiAddress peerId,
+        public Neighbour(MultiAddress address,
             NeighbourStateTypes stateTypes = default,
             ICorrelationId discoveryPingCorrelationId = default)
         {
-            PeerId = peerId;
+            Address = address;
             StateTypes = stateTypes ?? NeighbourStateTypes.NotContacted;
             DiscoveryPingCorrelationId = discoveryPingCorrelationId;
         }

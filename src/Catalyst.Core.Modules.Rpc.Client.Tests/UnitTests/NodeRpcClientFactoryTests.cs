@@ -52,7 +52,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
             var nodeRpcConfig = Substitute.For<IRpcClientConfig>();
             nodeRpcConfig.NodeId = "0";
             nodeRpcConfig.PfxFileName = "pfx";
-            nodeRpcConfig.PeerId = "/ip4/127.0.0.1/tcp/9000";
+            nodeRpcConfig.Address = "/ip4/127.0.0.1/tcp/9000";
             var rpcClient = await _rpcClientFactory.GetClientAsync(null, nodeRpcConfig);
 
             rpcClient.Should().BeAssignableTo<IRpcClient>();

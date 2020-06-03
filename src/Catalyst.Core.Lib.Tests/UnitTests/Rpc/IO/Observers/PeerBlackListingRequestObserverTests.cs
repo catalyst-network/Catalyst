@@ -71,7 +71,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var fakePeers = PreparePeerRepositoryContent();
             _peerRepository.GetAll().Returns(fakePeers);
 
-            _senderId = PeerIdHelper.GetPeerId("sender");
+            _senderId = MultiAddressHelper.GetAddress("sender");
         }
 
         private static Peer[] PreparePeerRepositoryContent()
@@ -79,13 +79,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var blacklistedPeers = Enumerable.Range(0, 5).Select(i => new Peer
             {
                 Reputation = 0,
-                Address = PeerIdHelper.GetPeerId($"blacklisted-{i}"),
+                Address = MultiAddressHelper.GetAddress($"blacklisted-{i}"),
                 BlackListed = true
             });
             var goodPeers = Enumerable.Range(0, 23).Select(i => new Peer
             {
                 Reputation = 125,
-                Address = PeerIdHelper.GetPeerId($"good-{i}")
+                Address = MultiAddressHelper.GetAddress($"good-{i}")
             });
 
             var fakePeers = blacklistedPeers.Concat(goodPeers).ToArray();
@@ -99,17 +99,17 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         public void PeerBlackListingRequestObserver_should_set_Blacklist_flag_on_known_peers(string publicKeySeed,
             bool blacklist)
         {
-            var targetedId = PeerIdHelper.GetPeerId(publicKeySeed);
+            var targetedId = MultiAddressHelper.GetAddress(publicKeySeed);
             var request = new SetPeerBlackListRequest
             {
-                PeerId = targetedId.ToString(),
+                Address = targetedId.ToString(),
                 Blacklist = blacklist
             };
 
             var responseContent = GetSetPeerBlacklistRequest(request);
 
             responseContent.Blacklist.Should().Be(blacklist);
-            responseContent.PeerId.Should().Be(targetedId.ToString());
+            responseContent.Address.Should().Be(targetedId.ToString());
         }
 
         [TestCase("unknown-1", false)]
@@ -117,16 +117,16 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         public void PeerBlackListingRequestObserver_should_not_set_Blacklist_flag_on_unknown_peers(string publicKeySeed,
             bool blacklist)
         {
-            var targetedId = PeerIdHelper.GetPeerId(publicKeySeed);
+            var targetedId = MultiAddressHelper.GetAddress(publicKeySeed);
             var request = new SetPeerBlackListRequest
             {
-                PeerId = targetedId.ToString(),
+                Address = targetedId.ToString(),
                 Blacklist = blacklist
             };
 
             var responseContent = GetSetPeerBlacklistRequest(request);
 
-            responseContent.PeerId.Should().BeNullOrEmpty();
+            responseContent.Address.Should().BeNullOrEmpty();
         }
 
         private SetPeerBlackListResponse GetSetPeerBlacklistRequest(SetPeerBlackListRequest request)

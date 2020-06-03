@@ -34,7 +34,6 @@ using DotNetty.Transport.Channels;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
 using MultiFormats;
-using Lib.P2P.Protocols;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
@@ -61,23 +60,23 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// </summary>
         /// <param name="getPeerInfoRequest">The request</param>
         /// <param name="channelHandlerContext">The channel handler context</param>
-        /// <param name="senderPeerId">The sender peer identifier</param>
+        /// <param name="sender">The sender peer identifier</param>
         /// <param name="correlationId">The correlationId</param>
         /// <returns>The GetPeerInfoResponse</returns>
         protected override GetPeerInfoResponse HandleRequest(GetPeerInfoRequest getPeerInfoRequest,
             IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(getPeerInfoRequest, nameof(getPeerInfoRequest)).NotNull();
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
             Logger.Debug("received message of type GetPeerInfoRequest");
 
-            var peerInfo = _peerRepository.GetPeersByAddress(getPeerInfoRequest.PeerId)
+            var peerInfo = _peerRepository.GetPeersByAddress(getPeerInfoRequest.Address)
                .Select(x =>
                     new PeerInfo
                     {
-                        PeerId = x.Address.ToString(),
+                        Address = x.Address.ToString(),
                         Reputation = x.Reputation,
                         IsBlacklisted = x.BlackListed,
                         IsUnreachable = x.IsAwolPeer,

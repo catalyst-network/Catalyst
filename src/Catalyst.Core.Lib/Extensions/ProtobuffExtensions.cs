@@ -141,11 +141,11 @@ namespace Catalyst.Core.Lib.Extensions
         }
 
         public static ProtocolMessage ToProtocolMessage(this IMessage protobufObject,
-            MultiAddress senderId,
+            MultiAddress sender,
             ICorrelationId correlationId = default)
         {
             var typeUrl = protobufObject.Descriptor.ShortenedFullName();
-            Guard.Argument(senderId, nameof(senderId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
 
             if (typeUrl.EndsWith(MessageTypes.Response.Name))
             {
@@ -154,7 +154,7 @@ namespace Catalyst.Core.Lib.Extensions
 
             return new ProtocolMessage
             {
-                PeerId = senderId.ToString(),
+                Address = sender.ToString(),
                 CorrelationId = (correlationId?.Id ?? CorrelationId.GenerateCorrelationId().Id).ToByteString(),
                 TypeUrl = typeUrl,
                 Value = protobufObject.ToByteString()

@@ -78,7 +78,7 @@
 //                }
 //            ).ToList();
 
-//            var peerIdentifiers = poaNodeDetails.Select(n => n.peerIdentifier).ToList();
+//            var peerIdentifiers = poaNodeDetails.Select(n => n.Addressentifier).ToList();
 
 //            _nodes = new List<PoaTestNode>();
 //            foreach (var nodeDetails in poaNodeDetails)

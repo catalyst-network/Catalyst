@@ -44,10 +44,10 @@ namespace Catalyst.Core.Lib.P2P
         }
 
         /// <inheritdoc cref="Catalyst.Abstractions.P2P.IPeerIdValidator"/>
-        public bool ValidatePeerIdFormat(MultiAddress peerId)
+        public bool ValidatePeerIdFormat(MultiAddress address)
         {
-            Guard.Argument(peerId, nameof(peerId)).NotNull();
-            Guard.Argument(peerId.HasPeerId, nameof(peerId.HasPeerId)).True("MultiAddress has no PeerId");
+            Guard.Argument(address, nameof(address)).NotNull();
+            Guard.Argument(address.HasPeerId, nameof(address.HasPeerId)).True("MultiAddress has no PeerId");
 
             return true;
         }

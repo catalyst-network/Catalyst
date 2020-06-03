@@ -70,7 +70,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
             _transactionValidator.ValidateTransaction(Arg.Any<PublicEntry>())
                .Returns(false);
             _transactionReceivedEvent.OnTransactionReceived(new TransactionBroadcast {PublicEntry = new PublicEntry{SenderAddress = new byte[32].ToByteString()}}
-                   .ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId())).Should()
+                   .ToProtocolMessage(MultiAddressHelper.GetAddress(), CorrelationId.GenerateCorrelationId())).Should()
                .Be(ResponseCode.Error);
             _broadcastManager.DidNotReceiveWithAnyArgs()?.BroadcastAsync(default);
         }
@@ -86,7 +86,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
             _mempool.Service.TryReadItem(Arg.Any<string>()).Returns(true);
 
             _transactionReceivedEvent
-               .OnTransactionReceived(transaction.ToProtocolMessage(PeerIdHelper.GetPeerId(),
+               .OnTransactionReceived(transaction.ToProtocolMessage(MultiAddressHelper.GetAddress(),
                     CorrelationId.GenerateCorrelationId()))
                .Should().Be(ResponseCode.Exists);
             _broadcastManager.DidNotReceiveWithAnyArgs()?.BroadcastAsync(default);
@@ -101,7 +101,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
             _transactionValidator.ValidateTransaction(Arg.Any<PublicEntry>())
                .Returns(true);
             _transactionReceivedEvent
-               .OnTransactionReceived(transaction.ToProtocolMessage(PeerIdHelper.GetPeerId(),
+               .OnTransactionReceived(transaction.ToProtocolMessage(MultiAddressHelper.GetAddress(),
                     CorrelationId.GenerateCorrelationId()))
                .Should().Be(ResponseCode.Successful);
 

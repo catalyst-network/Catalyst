@@ -31,10 +31,7 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Transport;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Network;
-using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Rpc.Client;
-using Catalyst.Protocol.Peer;
 using Dawn;
 using Microsoft.Extensions.Configuration;
 using MultiFormats;
@@ -60,13 +57,13 @@ namespace Catalyst.Cli.Commands
             _rpcNodeConfigs = RpcClientSettings.BuildRpcNodeSettingList(config);
 
             SocketClientRegistry = socketClientRegistry;
-            PeerId = GetPeerIdentifierFromCliConfig(config);
+            Address = GetPeerIdentifierFromCliConfig(config);
             RpcClientFactory = rpcClientFactory;
             CertificateStore = certificateStore;
             UserOutput = userOutput;
         }
 
-        public MultiAddress PeerId { get; }
+        public MultiAddress Address { get; }
 
         public IRpcClientFactory RpcClientFactory { get; }
 
@@ -83,7 +80,7 @@ namespace Catalyst.Cli.Commands
             var nodeConfig = _rpcNodeConfigs.SingleOrDefault(node => node.NodeId.Equals(nodeId));
             Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull();
 
-            var registryId = SocketClientRegistry.GenerateClientHashCode(nodeConfig.PeerId.GetIPEndPoint());
+            var registryId = SocketClientRegistry.GenerateClientHashCode(nodeConfig.Address.GetIPEndPoint());
 
             var nodeRpcClient = SocketClientRegistry.GetClientFromRegistry(registryId);
             Guard.Argument(nodeRpcClient).Require(IsSocketChannelActive(nodeRpcClient));

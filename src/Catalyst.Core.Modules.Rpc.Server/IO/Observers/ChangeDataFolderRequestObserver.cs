@@ -52,11 +52,11 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
         protected override SetPeerDataFolderResponse HandleRequest(SetPeerDataFolderRequest setDataFolderRequest,
             IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(setDataFolderRequest, nameof(setDataFolderRequest)).NotNull();
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
 
             Logger.Debug("received message of type SetPeerDataFolderRequest");
 

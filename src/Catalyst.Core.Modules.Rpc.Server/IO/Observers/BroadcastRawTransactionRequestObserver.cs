@@ -52,10 +52,10 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
         protected override BroadcastRawTransactionResponse HandleRequest(BroadcastRawTransactionRequest messageDto,
             IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
-            var responseCode = _transactionReceivedEvent.OnTransactionReceived(messageDto.Transaction.ToProtocolMessage(senderPeerId, correlationId));
+            var responseCode = _transactionReceivedEvent.OnTransactionReceived(messageDto.Transaction.ToProtocolMessage(sender, correlationId));
 
             return new BroadcastRawTransactionResponse {ResponseCode = responseCode};
         }

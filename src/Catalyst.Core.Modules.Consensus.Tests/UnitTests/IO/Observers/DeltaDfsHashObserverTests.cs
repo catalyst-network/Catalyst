@@ -72,7 +72,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             var prevHash = _hashProvider.ComputeUtf8MultiHash("prevHash").ToCid();
             var receivedMessage = PrepareReceivedMessage(newHash.ToArray(), prevHash.ToArray());
 
-            var multiAddress = new MultiAddress(receivedMessage.Payload.PeerId);
+            var multiAddress = new MultiAddress(receivedMessage.Payload.Address);
             _peerRepository.GetPoaPeersByPublicKey(multiAddress.GetPublicKey()).Returns(new List<Peer>() { new Peer() });
             var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _syncState, _peerRepository, _logger);
 
@@ -102,7 +102,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             var prevHash = _hashProvider.ComputeUtf8MultiHash("prevHash").ToCid();
             var receivedMessage = PrepareReceivedMessage(newHash.ToArray(), prevHash.ToArray());
 
-            var multiAddress = new MultiAddress(receivedMessage.Payload.PeerId);
+            var multiAddress = new MultiAddress(receivedMessage.Payload.Address);
             _peerRepository.GetPoaPeersByPublicKey(multiAddress.GetPublicKey()).Returns(new List<Peer>());
             var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _syncState, _peerRepository, _logger);
 
@@ -121,7 +121,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             };
 
             var receivedMessage = new ObserverDto(_fakeChannelContext,
-                message.ToProtocolMessage(PeerIdHelper.GetPeerId()));
+                message.ToProtocolMessage(MultiAddressHelper.GetAddress()));
             return receivedMessage;
         }
     }

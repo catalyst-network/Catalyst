@@ -57,7 +57,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _testScheduler = new TestScheduler();
             _subbedLogger = Substitute.For<ILogger>();
             _peerClient = Substitute.For<ILibP2PPeerClient>();
-            var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
+            var peerSettings = MultiAddressHelper.GetAddress("sender").ToSubstitutedPeerSettings();
             _deltaHeightRequestObserver = new DeltaHeightRequestObserver(peerSettings,
                 Substitute.For<IDeltaIndexService>(), new TestMapperProvider(), _peerClient, new Abstractions.Sync.SyncState() { IsSynchronized = true },
                 _subbedLogger
@@ -71,7 +71,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 
             var fakeContext = Substitute.For<IChannelHandlerContext>();
             var channeledAny = new ObserverDto(fakeContext,
-                deltaHeightRequestMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(),
+                deltaHeightRequestMessage.ToProtocolMessage(MultiAddressHelper.GetAddress(),
                     CorrelationId.GenerateCorrelationId()));
             var observableStream = new[] { channeledAny }.ToObservable(_testScheduler);
 
@@ -82,7 +82,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             var hash = MultiHash.ComputeHash(new byte[32]);
             var cid = new Cid { Hash = hash };
 
-            var responder = PeerIdHelper.GetPeerId();
+            var responder = MultiAddressHelper.GetAddress();
             var dtoResponse = new MessageDto(new LatestDeltaHashResponse
             {
                 DeltaIndex = new DeltaIndex { Cid = cid.ToArray().ToByteString(), Height = 100 }

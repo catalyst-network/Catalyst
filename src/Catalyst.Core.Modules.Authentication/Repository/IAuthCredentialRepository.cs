@@ -31,6 +31,6 @@ namespace Catalyst.Core.Modules.Authentication.Repository
     public interface IAuthCredentialRepository : IDisposable
     {
         void Add(AuthCredentials authCredentials);
-        bool TryFind(MultiAddress peerIdentifier, out AuthCredentials authCredentials);
+        bool TryFind(MultiAddress Addressentifier, out AuthCredentials authCredentials);
     }
 }

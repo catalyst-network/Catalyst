@@ -49,7 +49,7 @@ namespace Catalyst.Abstractions.Cli.Commands
 
         /// <summary>Gets the peer identifier.</summary>
         /// <value>The peer identifier.</value>
-        MultiAddress PeerId { get; }
+        MultiAddress Address { get; }
 
         /// <summary>Gets the connected node.</summary>
         /// <param name="nodeId">The node identifier located in configuration.</param>

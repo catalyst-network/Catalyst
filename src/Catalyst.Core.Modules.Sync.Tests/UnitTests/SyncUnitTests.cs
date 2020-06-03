@@ -117,7 +117,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
             _peerSettings = Substitute.For<IPeerSettings>();
-            _peerSettings.Address.Returns(PeerIdHelper.GetPeerId());
+            _peerSettings.Address.Returns(MultiAddressHelper.GetAddress());
 
             _deltaDfsReader = Substitute.For<IDeltaDfsReader>();
             _deltaDfsReader.TryReadDeltaFromDfs(Arg.Any<Cid>(), out Arg.Any<Delta>()).Returns(x => true);
@@ -133,7 +133,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
             _deltaIndexService.Add(new DeltaIndexDao { Cid = _hashProvider.ComputeUtf8MultiHash("0").ToCid(), Height = 0 });
 
             _peerClient = Substitute.For<ILibP2PPeerClient>();
-            ModifyPeerClient<LatestDeltaHashRequest>((request, senderPeerIdentifier) =>
+            ModifyPeerClient<LatestDeltaHashRequest>((request, senderentifier) =>
             {
                 var deltaHeightResponse = new LatestDeltaHashResponse
                 {
@@ -145,19 +145,19 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
                     }
                 };
 
-                _deltaHeightReplaySubject.OnNext(new ObserverDto(null, deltaHeightResponse.ToProtocolMessage(senderPeerIdentifier, CorrelationId.GenerateCorrelationId())));
+                _deltaHeightReplaySubject.OnNext(new ObserverDto(null, deltaHeightResponse.ToProtocolMessage(senderentifier, CorrelationId.GenerateCorrelationId())));
             });
 
-            ModifyPeerClient<DeltaHistoryRequest>((request, senderPeerIdentifier) =>
+            ModifyPeerClient<DeltaHistoryRequest>((request, senderentifier) =>
             {
                 var data = GenerateSampleData((int) request.Height, (int) request.Range, (int) _syncTestHeight);
                 _deltaIndexService.Add(data.DeltaIndex.Select(x => DeltaIndexDao.ToDao<DeltaIndex>(x, _mapperProvider)));
 
-                _deltaHistoryReplaySubject.OnNext(new ObserverDto(null, data.ToProtocolMessage(senderPeerIdentifier, CorrelationId.GenerateCorrelationId())));
+                _deltaHistoryReplaySubject.OnNext(new ObserverDto(null, data.ToProtocolMessage(senderentifier, CorrelationId.GenerateCorrelationId())));
             });
 
             var peers = new List<LibP2P.Peer>();
-            Enumerable.Range(0, 5).Select(x => PeerIdHelper.GetPeerId(x.ToString(), port: x)).Select(x => new LibP2P.Peer { Id = x.PeerId, ConnectedAddress = x }).ToList().ForEach(peers.Add);
+            Enumerable.Range(0, 5).Select(x => MultiAddressHelper.GetAddress(x.ToString(), port: x)).Select(x => new LibP2P.Peer { Id = x.PeerId, ConnectedAddress = x }).ToList().ForEach(peers.Add);
 
             _swarmApi = Substitute.For<ISwarmApi>();
             _swarmApi.PeersAsync().Returns(peers);
@@ -236,7 +236,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
         public async Task StartAsync_Should_Start_Sync()
         {
             _deltaHeightWatcher = Substitute.For<IDeltaHeightWatcher>();
-            _deltaHeightWatcher.GetHighestDeltaIndexAsync(Arg.Any<TimeSpan>(), Arg.Any<CancellationToken>()).Returns(new DeltaIndex { Cid = ByteString.Empty, Height = 10000 });
+            _deltaHeightWatcher.WaitForDeltaIndexAsync(Arg.Any<TimeSpan>(), Arg.Any<CancellationToken>()).Returns(new DeltaIndex { Cid = ByteString.Empty, Height = 10000 });
 
             var sync = new Synchroniser(new SyncState(), _peerSyncManager, _deltaCache, _deltaHeightWatcher, _deltaHashProvider, _deltaDfsReader,
                 _deltaIndexService, _mapperProvider, _userOutput, Substitute.For<ILogger>());
@@ -250,7 +250,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
         public async Task StopAsync_Should_Stop_Sync()
         {
             _deltaHeightWatcher = Substitute.For<IDeltaHeightWatcher>();
-            _deltaHeightWatcher.GetHighestDeltaIndexAsync(Arg.Any<TimeSpan>(), Arg.Any<CancellationToken>()).Returns(new DeltaIndex { Cid = ByteString.Empty, Height = 10000 });
+            _deltaHeightWatcher.WaitForDeltaIndexAsync(Arg.Any<TimeSpan>(), Arg.Any<CancellationToken>()).Returns(new DeltaIndex { Cid = ByteString.Empty, Height = 10000 });
 
             var sync = new Synchroniser(new SyncState(), _peerSyncManager, _deltaCache, _deltaHeightWatcher, _deltaHashProvider, _deltaDfsReader,
                 _deltaIndexService, _mapperProvider, _userOutput, Substitute.For<ILogger>());

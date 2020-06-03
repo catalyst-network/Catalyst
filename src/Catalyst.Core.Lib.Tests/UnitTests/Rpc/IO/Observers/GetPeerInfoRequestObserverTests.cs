@@ -73,7 +73,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             yield return new Peer
             {
                 Address =
-                    PeerIdHelper.GetPeerId("publickey-1", IPAddress.Parse("172.0.0.1"), 9090),
+                    MultiAddressHelper.GetAddress("publickey-1", IPAddress.Parse("172.0.0.1"), 9090),
                 Reputation = 0,
                 LastSeen = DateTime.UtcNow,
                 Created = DateTime.UtcNow
@@ -81,7 +81,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             yield return new Peer
             {
                 Address =
-                    PeerIdHelper.GetPeerId("publickey-2", IPAddress.Parse("172.0.0.2"), 9090),
+                    MultiAddressHelper.GetAddress("publickey-2", IPAddress.Parse("172.0.0.2"), 9090),
                 Reputation = 1,
                 LastSeen = DateTime.UtcNow,
                 Created = DateTime.UtcNow
@@ -89,7 +89,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             yield return new Peer
             {
                 Address =
-                    PeerIdHelper.GetPeerId("publickey-3", IPAddress.Parse("172.0.0.3"), 9090),
+                    MultiAddressHelper.GetAddress("publickey-3", IPAddress.Parse("172.0.0.3"), 9090),
                 Reputation = 2,
                 LastSeen = DateTime.UtcNow,
                 Created = DateTime.UtcNow
@@ -106,13 +106,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         [TestCase("publickey-2", "172.0.0.2")]
         public void TestGetPeerInfoRequestResponse(string publicKey, string ipAddress)
         {
-            var peerId = PeerIdHelper.GetPeerId(publicKey, ipAddress, 9090);
+            var peerId = MultiAddressHelper.GetAddress(publicKey, ipAddress, 9090);
             var responseContent = GetPeerInfoTest(peerId);
             responseContent.PeerInfo.Count().Should().Be(1);
 
             foreach (var peerInfo in responseContent.PeerInfo)
             {
-                peerInfo.PeerId.ToString().Should().Be(peerId.ToString());
+                peerInfo.Address.ToString().Should().Be(peerId.ToString());
             }
         }
 
@@ -128,7 +128,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         [TestCase("publickey-3", "0.0.0.0")]
         public void TestGetPeerInfoRequestResponseForNonExistantPeers(string publicKey, string ipAddress)
         {
-            var peerId = PeerIdHelper.GetPeerId(publicKey, ipAddress, 12345);
+            var peerId = MultiAddressHelper.GetAddress(publicKey, ipAddress, 12345);
             var responseContent = GetPeerInfoTest(peerId);
             responseContent.PeerInfo.Count.Should().Be(0);
         }
@@ -137,20 +137,20 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         ///     Tests the data/communication through protobuf
         /// </summary>
         /// <returns></returns>
-        private GetPeerInfoResponse GetPeerInfoTest(MultiAddress peerId)
+        private GetPeerInfoResponse GetPeerInfoTest(MultiAddress address)
         {
             var testScheduler = new TestScheduler();
 
-            var senderPeerIdentifier = PeerIdHelper.GetPeerId("sender");
-            var getPeerInfoRequest = new GetPeerInfoRequest {PeerId = peerId.ToString()};
+            var senderentifier = MultiAddressHelper.GetAddress("sender");
+            var getPeerInfoRequest = new GetPeerInfoRequest {Address = address.ToString()};
 
             var protocolMessage =
-                getPeerInfoRequest.ToProtocolMessage(senderPeerIdentifier);
+                getPeerInfoRequest.ToProtocolMessage(senderentifier);
 
             var messageStream =
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
-            var peerSettings = senderPeerIdentifier.ToSubstitutedPeerSettings();
+            var peerSettings = senderentifier.ToSubstitutedPeerSettings();
             var handler = new GetPeerInfoRequestObserver(peerSettings, _logger, _peerRepository, _peerClient);
 
             handler.StartObserving(messageStream);

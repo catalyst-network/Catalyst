@@ -53,11 +53,11 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
         protected override GetInfoResponse HandleRequest(GetInfoRequest getInfoRequest,
             IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(getInfoRequest, nameof(getInfoRequest)).NotNull();
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
             Logger.Debug("received message of type GetInfoRequest");
 
             Logger.Debug("message content is {0}", getInfoRequest);

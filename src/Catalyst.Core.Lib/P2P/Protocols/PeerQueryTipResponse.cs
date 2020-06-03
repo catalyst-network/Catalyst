@@ -22,7 +22,6 @@
 #endregion
 
 using Catalyst.Abstractions.P2P.Protocols;
-using Catalyst.Protocol.Peer;
 using Lib.P2P;
 using MultiFormats;
 
@@ -32,7 +31,7 @@ namespace Catalyst.Core.Lib.P2P.Protocols
     {
         public Cid DeltaHash { get; }
 
-        public PeerQueryTipResponse(MultiAddress peerId, Cid deltaHash) : base(peerId)
+        public PeerQueryTipResponse(MultiAddress address, Cid deltaHash) : base(address)
         {
             DeltaHash = deltaHash;
         }

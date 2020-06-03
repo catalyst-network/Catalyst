@@ -40,7 +40,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
         [SetUp]
         public void Init()
         {
-            _validPeerId = PeerIdHelper.GetPeerId();
+            _validPeerId = MultiAddressHelper.GetAddress();
             _peerIdValidator = new PeerIdValidator(new FfiWrapper());
         }
 

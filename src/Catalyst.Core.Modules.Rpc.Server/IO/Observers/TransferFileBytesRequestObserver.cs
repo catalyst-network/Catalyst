@@ -63,16 +63,16 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// </summary>
         /// <param name="transferFileBytesRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerId"></param>
+        /// <param name="sender"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override TransferFileBytesResponse HandleRequest(TransferFileBytesRequest transferFileBytesRequest,
             IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(transferFileBytesRequest, nameof(transferFileBytesRequest)).NotNull();
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
             Logger.Debug("received message of type TransferFileBytesRequest");
 
             FileTransferResponseCodeTypes responseCodeType = _fileTransferFactory.DownloadChunk(transferFileBytesRequest);
