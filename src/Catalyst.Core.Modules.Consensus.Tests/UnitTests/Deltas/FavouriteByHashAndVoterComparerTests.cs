@@ -24,14 +24,12 @@
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Deltas;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
 using MultiFormats;
 using NUnit.Framework;
-using System.Collections.Generic;
 using CandidateDeltaBroadcast = Catalyst.Protocol.Wire.CandidateDeltaBroadcast;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
@@ -50,29 +48,42 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         private static ByteString previousHash1 = ByteUtil.GenerateRandomByteArray(32).ToByteString();
         private static ByteString previousHash2 = ByteUtil.GenerateRandomByteArray(32).ToByteString();
 
-        public static object[] FavouritesComparisonData = new object[]{
-            new object[] { null, null, true },
-            new object[] { new FavouriteDeltaBroadcast(), new FavouriteDeltaBroadcast(), true },
-            //new object[] { null, new FavouriteDeltaBroadcast(), false },
-            //new object[] { new FavouriteDeltaBroadcast(), null, false },
-            //new object[] { new FavouriteDeltaBroadcast
-            //    {
-            //        Candidate = new CandidateDeltaBroadcast
-            //        {
-            //            Hash = hash1, ProducerId = producer1, PreviousDeltaDfsHash = previousHash1
-            //        },
-            //        VoterId = voter1
-            //    },
-            //    new FavouriteDeltaBroadcast
-            //    {
-            //        Candidate = new CandidateDeltaBroadcast
-            //        {
-            //            Hash = hash2, ProducerId = producer1, PreviousDeltaDfsHash = previousHash1
-            //        },
-            //        VoterId = voter1
-            //    }, false },
+        public class FavouritesTestData
+        {
+            public FavouriteDeltaBroadcast X { private set; get; }
+            public FavouriteDeltaBroadcast Y { private set; get; }
+            public bool ComparisonResult { private set; get; }
+            public FavouritesTestData(FavouriteDeltaBroadcast x, FavouriteDeltaBroadcast y, bool comparisonResult)
+            {
+                X = x;
+                Y = y;
+                ComparisonResult = comparisonResult;
+            }
+        }
 
-            new object[] { new FavouriteDeltaBroadcast
+        private static FavouritesTestData[] FavouritesComparisonData = new FavouritesTestData[]{
+            new FavouritesTestData(null, null, true),
+            new FavouritesTestData(new FavouriteDeltaBroadcast(), new FavouriteDeltaBroadcast(), true ),
+            new FavouritesTestData(null, new FavouriteDeltaBroadcast(), false ),
+            new FavouritesTestData(new FavouriteDeltaBroadcast(), null, false ),
+            new FavouritesTestData(new FavouriteDeltaBroadcast
+                {
+                    Candidate = new CandidateDeltaBroadcast
+                    {
+                        Hash = hash1, ProducerId = producer1.ToString(), PreviousDeltaDfsHash = previousHash1
+                    },
+                    VoterId = voter1.ToString()
+                },
+                new FavouriteDeltaBroadcast
+                {
+                    Candidate = new CandidateDeltaBroadcast
+                    {
+                        Hash = hash2, ProducerId = producer1.ToString(), PreviousDeltaDfsHash = previousHash1
+                    },
+                    VoterId = voter1.ToString()
+                }, false ),
+
+           new FavouritesTestData(new FavouriteDeltaBroadcast
                 {
                     Candidate = new CandidateDeltaBroadcast
                     {
@@ -87,9 +98,9 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                         Hash = hash1, ProducerId = producer1.ToString(), PreviousDeltaDfsHash = previousHash1
                     },
                     VoterId = voter2.ToString()
-                }, false },
+                }, false ),
 
-            new object[] { new FavouriteDeltaBroadcast
+            new FavouritesTestData(new FavouriteDeltaBroadcast
                 {
                     Candidate = new CandidateDeltaBroadcast
                     {
@@ -104,98 +115,20 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                         Hash = hash1, ProducerId = producer2.ToString(), PreviousDeltaDfsHash = previousHash2
                     },
                     VoterId = voter1.ToString()
-                }, true}
+                }, true)
         };
 
-        //public void FavouriteByHashComparer_should_differentiate_by_candidate_hash_and_voter_only()
-        //{
-        //    var comparisonResult = true;
-        //    var xHashCode = FavouriteByHashAndVoterComparer.Default.GetHashCode(null);
-        //    var yHashCode = FavouriteByHashAndVoterComparer.Default.GetHashCode(null);
-        //    if (xHashCode != 0 && yHashCode != 0)
-        //    {
-        //        xHashCode.Equals(yHashCode).Should().Be(comparisonResult);
-        //    }
+        [TestCaseSource(nameof(FavouritesComparisonData))]
+        public void FavouriteByHashComparer_should_differentiate_by_candidate_hash_and_voter_only(FavouritesTestData favouritesTestData)
+        {
+            var xHashCode = FavouriteByHashAndVoterComparer.Default.GetHashCode(favouritesTestData.X);
+            var yHashCode = FavouriteByHashAndVoterComparer.Default.GetHashCode(favouritesTestData.Y);
+            if (xHashCode != 0 && yHashCode != 0)
+            {
+                xHashCode.Equals(yHashCode).Should().Be(favouritesTestData.ComparisonResult);
+            }
 
-        //    FavouriteByHashAndVoterComparer.Default.Equals(x, y).Should().Be(comparisonResult);
-        //}
-
-        //[TestCaseSource(nameof(FavouritesComparisonData))]
-        //public void FavouriteByHashComparer_should_differentiate_by_candidate_hash_and_voter_only(FavouriteDeltaBroadcast x, FavouriteDeltaBroadcast y, bool comparisonResult)
-        //{
-        //    var xHashCode = FavouriteByHashAndVoterComparer.Default.GetHashCode(x);
-        //    var yHashCode = FavouriteByHashAndVoterComparer.Default.GetHashCode(y);
-        //    if (xHashCode != 0 && yHashCode != 0)
-        //    {
-        //        xHashCode.Equals(yHashCode).Should().Be(comparisonResult);
-        //    }
-
-        //    FavouriteByHashAndVoterComparer.Default.Equals(x, y).Should().Be(comparisonResult);
-        //}
-
-        //[TestCaseSource(nameof(FavouritesComparisonData))]
-        //public void FavouriteByHashComparer_should_differentiate_by_candidate_hash_and_voter_only(FavouriteDeltaBroadcast x, FavouriteDeltaBroadcast y, bool comparisonResult)
-        //{
-        //    var xHashCode = FavouriteByHashAndVoterComparer.Default.GetHashCode(x);
-        //    var yHashCode = FavouriteByHashAndVoterComparer.Default.GetHashCode(y);
-        //    if (xHashCode != 0 && yHashCode != 0)
-        //    {
-        //        xHashCode.Equals(yHashCode).Should().Be(comparisonResult);
-        //    }
-
-        //    FavouriteByHashAndVoterComparer.Default.Equals(x, y).Should().Be(comparisonResult);
-        //}
-
-        //[TestCaseSource(nameof(FavouritesComparisonData))]
-        //public void FavouriteByHashComparer_should_differentiate_by_candidate_hash_and_voter_only(FavouriteDeltaBroadcast x, FavouriteDeltaBroadcast y, bool comparisonResult)
-        //{
-        //    var xHashCode = FavouriteByHashAndVoterComparer.Default.GetHashCode(x);
-        //    var yHashCode = FavouriteByHashAndVoterComparer.Default.GetHashCode(y);
-        //    if (xHashCode != 0 && yHashCode != 0)
-        //    {
-        //        xHashCode.Equals(yHashCode).Should().Be(comparisonResult);
-        //    }
-
-        //    FavouriteByHashAndVoterComparer.Default.Equals(x, y).Should().Be(comparisonResult);
-        //}
-
-        //[TestCaseSource(nameof(FavouritesComparisonData))]
-        //public void FavouriteByHashComparer_should_differentiate_by_candidate_hash_and_voter_only(FavouriteDeltaBroadcast x, FavouriteDeltaBroadcast y, bool comparisonResult)
-        //{
-        //    var xHashCode = FavouriteByHashAndVoterComparer.Default.GetHashCode(x);
-        //    var yHashCode = FavouriteByHashAndVoterComparer.Default.GetHashCode(y);
-        //    if (xHashCode != 0 && yHashCode != 0)
-        //    {
-        //        xHashCode.Equals(yHashCode).Should().Be(comparisonResult);
-        //    }
-
-        //    FavouriteByHashAndVoterComparer.Default.Equals(x, y).Should().Be(comparisonResult);
-        //}
-
-        //[TestCaseSource(nameof(FavouritesComparisonData))]
-        //public void FavouriteByHashComparer_should_differentiate_by_candidate_hash_and_voter_only(FavouriteDeltaBroadcast x, FavouriteDeltaBroadcast y, bool comparisonResult)
-        //{
-        //    var xHashCode = FavouriteByHashAndVoterComparer.Default.GetHashCode(x);
-        //    var yHashCode = FavouriteByHashAndVoterComparer.Default.GetHashCode(y);
-        //    if (xHashCode != 0 && yHashCode != 0)
-        //    {
-        //        xHashCode.Equals(yHashCode).Should().Be(comparisonResult);
-        //    }
-
-        //    FavouriteByHashAndVoterComparer.Default.Equals(x, y).Should().Be(comparisonResult);
-        //}
-
-        //[TestCaseSource(nameof(FavouritesComparisonData))]
-        //public void FavouriteByHashComparer_should_differentiate_by_candidate_hash_and_voter_only(FavouriteDeltaBroadcast x, FavouriteDeltaBroadcast y, bool comparisonResult)
-        //{
-        //    var xHashCode = FavouriteByHashAndVoterComparer.Default.GetHashCode(x);
-        //    var yHashCode = FavouriteByHashAndVoterComparer.Default.GetHashCode(y);
-        //    if (xHashCode != 0 && yHashCode != 0)
-        //    {
-        //        xHashCode.Equals(yHashCode).Should().Be(comparisonResult);
-        //    }
-
-        //    FavouriteByHashAndVoterComparer.Default.Equals(x, y).Should().Be(comparisonResult);
-        //}
+            FavouriteByHashAndVoterComparer.Default.Equals(favouritesTestData.X, favouritesTestData.Y).Should().Be(favouritesTestData.ComparisonResult);
+        }
     }
 }

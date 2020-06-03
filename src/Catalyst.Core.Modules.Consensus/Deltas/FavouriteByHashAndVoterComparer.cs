@@ -57,9 +57,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 return candidateHashComparison;
             }
 
-            //todo
             var voterIdXBytes = Encoding.UTF8.GetBytes(x.VoterId);
-            var voterIdYBytes = Encoding.UTF8.GetBytes(x.VoterId);
+            var voterIdYBytes = Encoding.UTF8.GetBytes(y.VoterId);
             return ByteUtil.ByteListComparer.Default.Compare(voterIdXBytes, voterIdYBytes);
         }
 
