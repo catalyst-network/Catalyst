@@ -62,12 +62,12 @@ namespace Lib.P2P.Tests.Protocols
             await swarmB.StartAsync();
             var catalystProtocolB = new CatalystProtocol(swarmB);
             await catalystProtocolB.StartAsync();
-            var peerBAddress = await swarmB.StartListeningAsync("/ip4/127.0.0.1/tcp/5000");
+            var peerBAddress = await swarmB.StartListeningAsync("/ip4/127.0.0.1/tcp/5001");
 
             var swarm = new SwarmService(self);
             var catalystProtocolA = new CatalystProtocol(swarm);
             await swarm.StartAsync();
-            var peerAAddress = await swarm.StartListeningAsync("/ip4/127.0.0.1/tcp/5001");
+            var peerAAddress = await swarm.StartListeningAsync("/ip4/127.0.0.1/tcp/5002");
 
             await catalystProtocolA.StartAsync();
             try
@@ -105,12 +105,12 @@ namespace Lib.P2P.Tests.Protocols
             await swarmB.StartAsync();
             var catalystProtocolB = new CatalystProtocol(swarmB);
             await catalystProtocolB.StartAsync();
-            var peerBAddress = await swarmB.StartListeningAsync("/ip4/127.0.0.1/tcp/5000");
+            var peerBAddress = await swarmB.StartListeningAsync("/ip4/127.0.0.1/tcp/5003");
 
             var swarm = new SwarmService(self);
             var catalystProtocolA = new CatalystProtocol(swarm);
             await swarm.StartAsync();
-            var peerAAddress = await swarm.StartListeningAsync("/ip4/127.0.0.1/tcp/5001");
+            var peerAAddress = await swarm.StartListeningAsync("/ip4/127.0.0.1/tcp/5004");
 
             await catalystProtocolA.StartAsync();
             try
