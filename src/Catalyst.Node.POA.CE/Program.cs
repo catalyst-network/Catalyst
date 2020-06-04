@@ -65,6 +65,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -134,7 +135,7 @@ namespace Catalyst.Node.POA.CE
                 {typeof(AuthenticationModule), () => new AuthenticationModule()},
                 {
                     typeof(ApiModule),
-                    () => new ApiModule("http://*:5005", new List<string> {"Catalyst.Core.Modules.Web3", "Catalyst.Core.Modules.Dfs"})
+                    () => new ApiModule(new IPEndPoint(IPAddress.Any, 5005), "cert.pfx", new List<string> {"Catalyst.Core.Modules.Web3", "Catalyst.Core.Modules.Dfs"})
                 },
                 {typeof(PoaConsensusModule), () => new PoaConsensusModule()},
                 {typeof(PoaP2PModule), () => new PoaP2PModule()}

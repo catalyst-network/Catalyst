@@ -47,14 +47,16 @@ namespace Catalyst.Core.Modules.Web3
 {
     public sealed class ApiModule : Module
     {
-        private readonly string _apiBindingAddress;
+        private readonly IPEndPoint _apiBindingAddress;
+        private readonly string _certificateName;
         private readonly string[] _controllerModules;
         private IContainer _container;
         private readonly bool _addSwagger;
 
-        public ApiModule(string apiBindingAddress, List<string> controllerModules, bool addSwagger = true)
+        public ApiModule(IPEndPoint apiBindingAddress, string certificateName, List<string> controllerModules, bool addSwagger = true)
         {
             _apiBindingAddress = apiBindingAddress;
+            _certificateName = certificateName;
             _controllerModules = controllerModules.ToArray();
             _addSwagger = addSwagger;
         }
@@ -70,7 +72,7 @@ namespace Catalyst.Core.Modules.Web3
                 _container = container;
                 var logger = _container.Resolve<ILogger>();
                 var certificateStore = _container.Resolve<ICertificateStore>();
-                var certificate = certificateStore.ReadOrCreateCertificateFile("cert.pfx");
+                var certificate = certificateStore.ReadOrCreateCertificateFile(_certificateName);
                 try
                 {
                     await Host.CreateDefaultBuilder()
@@ -83,11 +85,10 @@ namespace Catalyst.Core.Modules.Web3
                                 webHostBuilder
                                    .ConfigureServices(ConfigureServices)
                                    .Configure(Configure)
-                                   .UseUrls(_apiBindingAddress)
                                    .UseWebRoot(webDirectory.FullName)
                                    .ConfigureKestrel(options =>
                                    {
-                                       options.Listen(IPAddress.Any, 5005, listenOptions =>
+                                       options.Listen(_apiBindingAddress, listenOptions =>
                                        {
                                            listenOptions.UseHttps(certificate);
                                        });
