@@ -26,6 +26,7 @@ using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using MultiFormats;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Catalyst.Abstractions.P2P
@@ -35,6 +36,6 @@ namespace Catalyst.Abstractions.P2P
         Task SendMessageToPeersAsync(IMessage message, IEnumerable<MultiAddress> peers);
         Task SendMessageAsync<T>(IMessageDto<T> message) where T : IMessage<T>;
         Task BroadcastAsync(ProtocolMessage message);
-        Task StartAsync();
+        Task StartAsync(CancellationToken cancellationToken = default);
     }
 }

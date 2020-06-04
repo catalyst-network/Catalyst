@@ -72,7 +72,6 @@ namespace Catalyst.Node.POA.CE
         private readonly ISynchroniser _synchronizer;
         private readonly IPeerRepository _peerRepository;
         private readonly IKeyApi _keyApi;
-        private readonly IPubSubService _messageRouter;
         private readonly IPeerDiscovery _peerDiscovery;
 
         public CatalystNodePoa(IKeySigner keySigner,
@@ -87,7 +86,6 @@ namespace Catalyst.Node.POA.CE
             ISynchroniser synchronizer,
             IPeerRepository peerRepository,
             IKeyApi keyApi,
-            IPubSubService messageRouter,
             IPeerDiscovery peerDiscovery,
             IContract contract = null)
         {
@@ -106,7 +104,6 @@ namespace Catalyst.Node.POA.CE
             _synchronizer = synchronizer;
             _peerRepository = peerRepository;
             _keyApi = keyApi;
-            _messageRouter = messageRouter;
             _peerDiscovery = peerDiscovery;
 
             var privateKey = keySigner.GetPrivateKey(KeyRegistryTypes.DefaultKey);
@@ -116,7 +113,6 @@ namespace Catalyst.Node.POA.CE
 
         public async Task StartSocketsAsync()
         {
-            _messageRouter.Routers.ForEach(async x => await x.JoinTopicAsync("catalyst", CancellationToken.None).ConfigureAwait(false));
             await _peerClient.StartAsync().ConfigureAwait(false);
             await _peer.StartAsync().ConfigureAwait(false);
         }

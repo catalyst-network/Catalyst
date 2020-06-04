@@ -22,11 +22,9 @@
 #endregion
 
 using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
-using Google.Protobuf;
 using System;
-using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Catalyst.Abstractions.P2P
@@ -34,6 +32,6 @@ namespace Catalyst.Abstractions.P2P
     public interface ILibP2PPeerService
     {
         IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
-        Task StartAsync();
+        Task StartAsync(CancellationToken cancellationToken = default);
     }
 }
