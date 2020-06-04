@@ -25,17 +25,20 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Core.Modules.Web3.Controllers.Handlers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Server.Kestrel.Https;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Nethermind.Core;
 using Nethermind.Serialization.Json;
 using Serilog;
 using Module = Autofac.Module;
@@ -66,7 +69,8 @@ namespace Catalyst.Core.Modules.Web3
             {
                 _container = container;
                 var logger = _container.Resolve<ILogger>();
-
+                var certificateStore = _container.Resolve<ICertificateStore>();
+                var certificate = certificateStore.ReadOrCreateCertificateFile("cert.pfx");
                 try
                 {
                     await Host.CreateDefaultBuilder()
@@ -81,6 +85,14 @@ namespace Catalyst.Core.Modules.Web3
                                    .Configure(Configure)
                                    .UseUrls(_apiBindingAddress)
                                    .UseWebRoot(webDirectory.FullName)
+                                   .ConfigureKestrel(options =>
+                                   {
+                                       options.Listen(IPAddress.Any, 5005, listenOptions =>
+                                       {
+                                           listenOptions.UseHttps(certificate);
+                                       });
+                                       options.ConfigureHttpsDefaults(o => o.ClientCertificateMode = ClientCertificateMode.RequireCertificate);
+                                   })
                                    .UseSerilog();
                             }).RunConsoleAsync();
 
@@ -113,10 +125,20 @@ namespace Catalyst.Core.Modules.Web3
                        .AllowAnyHeader());
             });
 
+            services.AddAntiforgery(
+               options =>
+               {
+                   options.Cookie.Name = "_af";
+                   options.Cookie.HttpOnly = true;
+                   options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                   options.HeaderName = "X-XSRF-TOKEN";
+               }
+            );
+
             services.AddMvcCore().AddNewtonsoftJson(options =>
             {
                 var converters = options.SerializerSettings.Converters;
-                
+
                 converters.Add(new UInt256Converter());
                 converters.Add(new NullableUInt256Converter());
                 converters.Add(new KeccakConverter());
@@ -134,7 +156,7 @@ namespace Catalyst.Core.Modules.Web3
             if (_addSwagger)
                 services.AddSwaggerGen(swagger =>
                 {
-                    swagger.SwaggerDoc("v1", new OpenApiInfo {Title = "Catalyst API", Description = "Catalyst"});
+                    swagger.SwaggerDoc("v1", new OpenApiInfo { Title = "Catalyst API", Description = "Catalyst" });
                 });
         }
 
@@ -158,7 +180,7 @@ namespace Catalyst.Core.Modules.Web3
                 app.UseSwaggerUI(swagger => { swagger.SwaggerEndpoint("/swagger/v1/swagger.json", "Catalyst API"); });
             }
         }
-        
+
         private sealed class SharedContainerProviderFactory : IServiceProviderFactory<ContainerBuilder>
         {
             readonly IContainer _container;
