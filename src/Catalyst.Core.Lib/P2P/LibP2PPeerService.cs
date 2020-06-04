@@ -65,7 +65,7 @@ namespace Catalyst.Core.Lib.P2P
         /// <param name="clientChannelFactory">A factory used to build the appropriate kind of channel for a udp client.</param>
         /// <param name="eventLoopGroupFactory"></param>
         /// <param name="peerSettings"></param>
-        public LibP2PPeerService(IPeerSettings peerSettings,
+        public LibP2PPeerService(
             IEnumerable<IP2PMessageObserver> messageObservers,
             IPeerMessageCorrelationManager messageCorrelationManager,
             IKeySigner keySigner,
