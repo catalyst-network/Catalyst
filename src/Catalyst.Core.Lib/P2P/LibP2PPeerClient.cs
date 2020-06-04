@@ -33,9 +33,11 @@ using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Lib.P2P.Protocols;
+using Lib.P2P.PubSub;
 using MultiFormats;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Catalyst.Core.Lib.P2P
@@ -46,8 +48,11 @@ namespace Catalyst.Core.Lib.P2P
         private readonly IPubSubApi _pubSubApi;
         private readonly ICatalystProtocol _catalystProtocol;
         private readonly SigningContext _signingContext;
-        private readonly IList<IOutboundMessageHandler> _catalystProtocolHandlers;
-        private readonly IList<IOutboundMessageHandler> _catalystPubSubHandlers;
+        private IList<IOutboundMessageHandler> _catalystProtocolHandlers;
+        private IList<IOutboundMessageHandler> _catalystPubSubHandlers;
+        private IPubSubService _pubSubService;
+        private IKeySigner _keySigner;
+        private IPeerMessageCorrelationManager _messageCorrelationManager;
 
         public IObservable<ProtocolMessage> MessageStream { private set; get; }
 
@@ -59,28 +64,32 @@ namespace Catalyst.Core.Lib.P2P
             IKeySigner keySigner,
             IPeerSettings peerSettings,
             IPubSubApi pubSubApi,
-            ICatalystProtocol catalystProtocol)
+            ICatalystProtocol catalystProtocol,
+            IPubSubService pubSubService)
         {
+            _messageCorrelationManager = messageCorrelationManager;
+            _keySigner = keySigner;
             _peerSettings = peerSettings;
             _pubSubApi = pubSubApi;
             _catalystProtocol = catalystProtocol;
             _signingContext = new SigningContext { NetworkType = peerSettings.NetworkType, SignatureType = SignatureType.ProtocolPeer };
+            _pubSubService = pubSubService;
+        }
 
+        public Task StartAsync(CancellationToken cancellationToken = default)
+        {
             _catalystProtocolHandlers = new List<IOutboundMessageHandler>
             {
-                new ProtocolMessageSignHandler(keySigner, _signingContext),
-                new CorrelatableHandler<IPeerMessageCorrelationManager>(messageCorrelationManager)
+                new ProtocolMessageSignHandler(_keySigner, _signingContext),
+                new CorrelatableHandler<IPeerMessageCorrelationManager>(_messageCorrelationManager)
             };
 
             _catalystPubSubHandlers = new List<IOutboundMessageHandler>
             {
-                new ProtocolMessageSignHandler(keySigner, _signingContext)
+                new ProtocolMessageSignHandler(_keySigner, _signingContext)
             };
-        }
 
-        public async Task StartAsync()
-        {
-
+            return Task.CompletedTask;
         }
 
         public async Task SendMessageToPeersAsync(IMessage message, IEnumerable<MultiAddress> peers)

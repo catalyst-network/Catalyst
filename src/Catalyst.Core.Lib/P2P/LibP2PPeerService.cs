@@ -30,10 +30,10 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.LibP2PHandlers;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
 using Lib.P2P;
 using Lib.P2P.Protocols;
+using Lib.P2P.PubSub;
 using Serilog;
 using System;
 using System.Collections.Generic;
@@ -57,6 +57,7 @@ namespace Catalyst.Core.Lib.P2P
         private readonly Peer _localPeer;
         private readonly IList<IInboundMessageHandler> _handlers;
         private readonly IEnumerable<IP2PMessageObserver> _messageObservers;
+        private readonly IPubSubService _pubSubService;
         private readonly ILogger _logger;
 
         private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _messageSubject;
@@ -73,6 +74,7 @@ namespace Catalyst.Core.Lib.P2P
             Peer localPeer,
             IPubSubApi pubSubApi,
             ICatalystProtocol catalystProtocol,
+            IPubSubService pubSubService,
             ILogger logger,
             IScheduler scheduler = null
             )
@@ -84,6 +86,7 @@ namespace Catalyst.Core.Lib.P2P
             _localPeer = localPeer;
             _pubSubApi = pubSubApi;
             _catalystProtocol = catalystProtocol;
+            _pubSubService = pubSubService;
             _messageSubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(_scheduler);
             MessageStream = _messageSubject.AsObservable();
 
@@ -149,10 +152,15 @@ namespace Catalyst.Core.Lib.P2P
             _messageSubject.OnNext(new ObserverDto(null, message));
         }
 
-        public async Task StartAsync()
+        public async Task StartAsync(CancellationToken cancellationToken = default)
         {
             MessageStream = await BuildMessageStreamAsync();
             _messageObservers.ToList().ForEach(h => h.StartObserving(MessageStream));
+
+            foreach (var router in _pubSubService.Routers)
+            {
+                await router.JoinTopicAsync("catalyst", cancellationToken).ConfigureAwait(false);
+            }
         }
     }
 }
