@@ -37,7 +37,7 @@ namespace Catalyst.Core.Modules.Web3.Client.Tests.UnitTests
         [Test]
         public void Can_Add_Swagger() {
             var serviceCollection = new ServiceCollection();
-            var apiModule = new ApiModule(null, new List<string>(), true);
+            var apiModule = new ApiModule(null, new List<string>(), "cert.pfx", true);
             apiModule.ConfigureServices(serviceCollection);
             serviceCollection.Any(service => service.ServiceType == typeof(ISwaggerProvider)).Should().Be(true);
         }
@@ -45,7 +45,7 @@ namespace Catalyst.Core.Modules.Web3.Client.Tests.UnitTests
         [Test]
         public void Can_Not_Add_Swagger() {
             var serviceCollection = new ServiceCollection();
-            var apiModule = new ApiModule(null, new List<string>(), false);
+            var apiModule = new ApiModule(null, new List<string>(), "cert.pfx", false);
             apiModule.ConfigureServices(serviceCollection);
             serviceCollection.Any(service => service.ServiceType == typeof(ISwaggerProvider)).Should().Be(false);
         }
@@ -59,7 +59,7 @@ namespace Catalyst.Core.Modules.Web3.Client.Tests.UnitTests
             };
 
             var serviceCollection = new ServiceCollection();
-            var apiModule = new ApiModule(null, new List<string>(), true);
+            var apiModule = new ApiModule(null, new List<string>(), "cert.pfx", true);
             apiModule.ConfigureServices(serviceCollection);
 
             foreach (var serviceType in serviceTypes)

@@ -53,7 +53,7 @@ namespace Catalyst.Core.Modules.Web3
         private IContainer _container;
         private readonly bool _addSwagger;
 
-        public ApiModule(IPEndPoint apiBindingAddress, string certificateName, List<string> controllerModules, bool addSwagger = true)
+        public ApiModule(IPEndPoint apiBindingAddress, List<string> controllerModules, string certificateName = null, bool addSwagger = true)
         {
             _apiBindingAddress = apiBindingAddress;
             _certificateName = certificateName;
@@ -88,11 +88,18 @@ namespace Catalyst.Core.Modules.Web3
                                    .UseWebRoot(webDirectory.FullName)
                                    .ConfigureKestrel(options =>
                                    {
-                                       options.Listen(_apiBindingAddress, listenOptions =>
+                                       if (_certificateName != null)
                                        {
-                                           listenOptions.UseHttps(certificate);
-                                       });
-                                       options.ConfigureHttpsDefaults(o => o.ClientCertificateMode = ClientCertificateMode.RequireCertificate);
+                                           options.Listen(_apiBindingAddress, listenOptions =>
+                                           {
+                                               listenOptions.UseHttps(certificate);
+                                           });
+                                           options.ConfigureHttpsDefaults(o => o.ClientCertificateMode = ClientCertificateMode.RequireCertificate);
+                                       }
+                                       else
+                                       {
+                                           options.Listen(_apiBindingAddress);
+                                       }
                                    })
                                    .UseSerilog();
                             }).RunConsoleAsync();
