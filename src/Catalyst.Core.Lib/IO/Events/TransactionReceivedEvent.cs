@@ -22,18 +22,22 @@
 #endregion
 
 using System;
+using System.Linq;
 using Catalyst.Abstractions.IO.Events;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Abstractions.Repository;
 using Catalyst.Abstractions.Validators;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using MultiFormats;
+using MultiFormats.Registry;
 using Nethermind.Core.Crypto;
 using Serilog;
 

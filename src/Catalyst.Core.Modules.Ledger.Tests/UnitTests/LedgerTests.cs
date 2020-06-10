@@ -133,12 +133,15 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
 
         private IEnumerable<PublicEntry> GenerateSamplePublicTransactions(int sampleSize)
         {
+            decimal amount = 0.000001m;
             for (var i = 0; i < sampleSize; i++)
             {
                 var sender = _cryptoContext.GeneratePrivateKey();
                 var recipient = _cryptoContext.GeneratePrivateKey().GetPublicKey();
-                var publicEntry = EntryUtils.PreparePublicEntry(recipient, sender.GetPublicKey(), 10);
+                var publicEntry = EntryUtils.PreparePublicEntry(recipient, sender.GetPublicKey(), new UInt256(amount));
                 publicEntry.Signature = publicEntry.GenerateSignature(_cryptoContext, sender, _signingContext);
+
+                amount *= 10;
                 yield return publicEntry;
             }
         }
@@ -146,7 +149,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.UnitTests
         [Test]
         public void Should_Delete_MempoolItems_On_New_Delta_Hash()
         {
-            var sampleSize = 5;
+            var sampleSize = 10;
             _mempool.Service.Returns(new MempoolService(new InMemoryRepository<PublicEntryDao, string>()));
 
             var hash = _hashProvider.ComputeUtf8MultiHash("update").ToCid();

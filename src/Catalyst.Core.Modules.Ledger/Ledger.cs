@@ -34,6 +34,7 @@ using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Ledger;
 using Catalyst.Core.Lib.DAO.Transaction;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Service;
 using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Protocol.Deltas;
@@ -135,7 +136,6 @@ namespace Catalyst.Core.Modules.Ledger
             {
                 var deltaTransactions =
                     delta.PublicEntries.Select(x => x.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider));
-
                 _mempool.Service.Delete(deltaTransactions);
             }
         }

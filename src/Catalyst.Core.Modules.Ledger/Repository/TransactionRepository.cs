@@ -25,6 +25,7 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Ledger.Models;
 using Catalyst.Abstractions.Repository;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
 using Lib.P2P;
