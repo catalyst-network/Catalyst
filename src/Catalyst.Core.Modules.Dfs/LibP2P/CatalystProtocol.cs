@@ -30,7 +30,6 @@ using System.Threading.Tasks;
 using Catalyst.Protocol.Wire;
 using Common.Logging;
 using Google.Protobuf;
-using Microsoft.VisualBasic;
 using MultiFormats;
 using ProtoBuf;
 using Semver;
@@ -81,19 +80,8 @@ namespace Lib.P2P.Protocols
 
             while (true)
             {
-                //var intSize = sizeof(int) - 1;
-                //var length = await stream.ReadVarint32Async(cancel).ConfigureAwait(false);
-                //var realLength = length - intSize;
-                //var bytes = new byte[length];
-                //await stream.ReadExactAsync(bytes, 0, length, cancel).ConfigureAwait(false);
-
-                //var newArray = new byte[realLength];
-                //Array.Copy(bytes, intSize, newArray, 0, realLength);
-
                 var request = await ProtoBufHelper.ReadMessageAsync<CatalystByteMessage>(stream, cancel).ConfigureAwait(false);
-
                 var protocolMessage = ProtocolMessage.Parser.ParseFrom(request.Message);
-
                 ResponseMessageSubject.OnNext(protocolMessage);
             }
         }
@@ -134,8 +122,14 @@ namespace Lib.P2P.Protocols
         ///   A task that represents the asynchronous operation.
         /// </returns>
         public async Task SendAsync(MultiHash peerId,
-            ProtocolMessage message,
-            CancellationToken cancel = default)
+            ProtocolMessage message)
+        {
+            await SendAsync(peerId, message, CancellationToken.None).ConfigureAwait(false);
+        }
+
+        public async Task SendAsync(MultiHash peerId,
+             ProtocolMessage message,
+             CancellationToken cancel)
         {
             var peer = new Peer { Id = peerId };
             await SendAsync(peer, message, cancel).ConfigureAwait(false);
@@ -157,11 +151,16 @@ namespace Lib.P2P.Protocols
         ///   A task that represents the asynchronous operation.
         /// </returns>
         public async Task SendAsync(MultiAddress address,
-            ProtocolMessage message,
-            CancellationToken cancel = default)
+            ProtocolMessage message)
+        {
+            await SendAsync(address, message, CancellationToken.None).ConfigureAwait(false);
+        }
+
+        public async Task SendAsync(MultiAddress address,
+             ProtocolMessage message,
+             CancellationToken cancel)
         {
             var peer = SwarmService.RegisterPeerAddress(address);
-
             await SendAsync(peer, message, cancel).ConfigureAwait(false);
         }
 
@@ -183,7 +182,7 @@ namespace Lib.P2P.Protocols
         public sealed class CatalystByteMessage
         {
             [ProtoMember(1)]
-            public byte[] Message;
+            public byte[] Message { set; get; }
         }
     }
 }

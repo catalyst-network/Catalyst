@@ -34,11 +34,16 @@ namespace Lib.P2P.Protocols
         IObservable<ProtocolMessage> MessageStream { get; }
 
         Task SendAsync(MultiHash peerId,
-            ProtocolMessage message,
-            CancellationToken cancel = default);
+            ProtocolMessage message);
+        Task SendAsync(MultiHash peerId,
+          ProtocolMessage message,
+          CancellationToken cancel);
+
+        Task SendAsync(MultiAddress address,
+            ProtocolMessage message);
 
         Task SendAsync(MultiAddress address,
             ProtocolMessage message,
-            CancellationToken cancel = default);
+            CancellationToken cancel);
     }
 }

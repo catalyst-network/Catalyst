@@ -109,9 +109,9 @@ namespace Catalyst.Core.Lib.P2P
         /// <returns></returns>
         public async Task<IObservable<IObserverDto<ProtocolMessage>>> BuildMessageStreamAsync()
         {
-            await SubscribeToCatalystLibP2PProtocol();
+            await SubscribeToCatalystLibP2PProtocol().ConfigureAwait(false);
 
-            await SubscribeToCatalystPubSub();
+            await SubscribeToCatalystPubSub().ConfigureAwait(false);
 
             return MessageStream;
         }
@@ -120,7 +120,7 @@ namespace Catalyst.Core.Lib.P2P
         {
             _catalystProtocol.MessageStream.Subscribe(async message =>
             {
-                await ProcessMessageAsync(message);
+                await ProcessMessageAsync(message).ConfigureAwait(false);
             });
 
             return Task.CompletedTask;
@@ -133,16 +133,16 @@ namespace Catalyst.Core.Lib.P2P
                 if (msg.Sender.Id != _localPeer.Id)
                 {
                     var protocolMessage = ProtocolMessage.Parser.ParseFrom(msg.DataStream);
-                    await ProcessMessageAsync(protocolMessage);
+                    await ProcessMessageAsync(protocolMessage).ConfigureAwait(false);
                 }
-            }, CancellationToken.None);
+            }, CancellationToken.None).ConfigureAwait(false);
         }
 
         private async Task ProcessMessageAsync(ProtocolMessage message)
         {
             foreach (var handler in _handlers)
             {
-                var result = await handler.ProcessAsync(message);
+                var result = await handler.ProcessAsync(message).ConfigureAwait(false);
                 if (!result)
                 {
                     return;
@@ -154,7 +154,7 @@ namespace Catalyst.Core.Lib.P2P
 
         public async Task StartAsync(CancellationToken cancellationToken = default)
         {
-            MessageStream = await BuildMessageStreamAsync();
+            MessageStream = await BuildMessageStreamAsync().ConfigureAwait(false);
             _messageObservers.ToList().ForEach(h => h.StartObserving(MessageStream));
 
             foreach (var router in _pubSubService.Routers)
