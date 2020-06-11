@@ -69,7 +69,7 @@ namespace Catalyst.Core.Lib.DAO.Transaction
             cfg.CreateMap<PublicEntry, PublicEntryDao>()
                .ForMember(d => d.Id, opt => opt.MapFrom(src => src.GetDocumentId(_hashProvider)))
                .ForMember(d => d.Amount,
-                    opt => opt.ConvertUsing(new ByteStringToUInt256StringConverter(), s => s.Amount))
+                    opt => opt.ConvertUsing(new ByteStringToBase32Converter(), s => s.Amount))
                .ForMember(e => e.Data, opt => opt.ConvertUsing<ByteStringToBase32Converter, ByteString>())
                .ForMember(d => d.ReceiverAddress,
                     opt => opt.ConvertUsing(new ByteStringToBase32Converter(), s => s.ReceiverAddress))
@@ -81,7 +81,7 @@ namespace Catalyst.Core.Lib.DAO.Transaction
 
             cfg.CreateMap<PublicEntryDao, PublicEntry>()
                .ForMember(d => d.Amount,
-                    opt => opt.ConvertUsing(new UInt256StringToByteStringConverter(), s => s.Amount))
+                    opt => opt.ConvertUsing(new Base32ToByteStringFormatter(), s => s.Amount))
                .ForMember(e => e.Data, opt => opt.ConvertUsing<Base32ToByteStringFormatter, string>())
                .ForMember(d => d.ReceiverAddress,
                     opt => opt.ConvertUsing(new Base32ToByteStringFormatter(), s => s.ReceiverAddress))

@@ -73,6 +73,11 @@ namespace Catalyst.Core.Lib.P2P
             _signingContext = new SigningContext { NetworkType = peerSettings.NetworkType, SignatureType = SignatureType.ProtocolPeer };
         }
 
+        public async Task StartAsync()
+        {
+            await StartAsync(CancellationToken.None).ConfigureAwait(false);
+        }
+
         public Task StartAsync(CancellationToken cancellationToken = default)
         {
             _catalystProtocolHandlers = new List<IOutboundMessageHandler>
@@ -106,7 +111,7 @@ namespace Catalyst.Core.Lib.P2P
 
         private async Task SendMessageAsync(MultiAddress receiver, ProtocolMessage message)
         {
-            if (!await ProcessHandlersAsync(_catalystProtocolHandlers, message))
+            if (!await ProcessHandlersAsync(_catalystProtocolHandlers, message).ConfigureAwait(false))
             {
                 return;
             }
@@ -123,7 +128,7 @@ namespace Catalyst.Core.Lib.P2P
 
         public async Task BroadcastAsync(ProtocolMessage message)
         {
-            if (!await ProcessHandlersAsync(_catalystPubSubHandlers, message))
+            if (!await ProcessHandlersAsync(_catalystPubSubHandlers, message).ConfigureAwait(false))
             {
                 return;
             }
@@ -131,7 +136,7 @@ namespace Catalyst.Core.Lib.P2P
             await _pubSubApi.PublishAsync("catalyst", message.ToByteArray()).ConfigureAwait(false);
         }
 
-        private async Task<bool> ProcessHandlersAsync(IList<IOutboundMessageHandler> handlers, ProtocolMessage message)
+        private static async Task<bool> ProcessHandlersAsync(IList<IOutboundMessageHandler> handlers, ProtocolMessage message)
         {
             foreach (var handler in handlers)
             {

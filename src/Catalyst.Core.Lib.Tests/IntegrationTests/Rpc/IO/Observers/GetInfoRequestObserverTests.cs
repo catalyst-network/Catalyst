@@ -23,7 +23,6 @@
 
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Config;
@@ -41,19 +40,18 @@ using NSubstitute;
 using Serilog;
 using NUnit.Framework;
 using Catalyst.Abstractions.P2P;
-using Google.Protobuf;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 {
     [TestFixture]
-    [Category(Traits.IntegrationTest)] 
+    [Category(Traits.IntegrationTest)]
     public sealed class GetInfoRequestObserverTests
     {
         private readonly TestScheduler _testScheduler;
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IConfigurationRoot _config;
-        private ILibP2PPeerClient _peerClient;
+        private readonly ILibP2PPeerClient _peerClient;
 
         public GetInfoRequestObserverTests()
         {
@@ -61,7 +59,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             _config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, TestConstants.TestShellNodesConfigFile))
                .Build();
-            
+
             _logger = Substitute.For<ILogger>();
             _peerClient = Substitute.For<ILibP2PPeerClient>();
         }
@@ -93,7 +91,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             await _peerClient.Received(1).SendMessageAsync(Arg.Any<IMessageDto<ProtocolMessage>>());
 
             var receivedCalls = _peerClient.ReceivedCalls().ToList();
-            receivedCalls.Count.Should().Be(1, 
+            receivedCalls.Count.Should().Be(1,
                 "the only call should be the one we checked above");
 
             var response = ((IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments()[0])

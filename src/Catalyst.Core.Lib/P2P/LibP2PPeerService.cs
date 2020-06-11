@@ -152,7 +152,12 @@ namespace Catalyst.Core.Lib.P2P
             _messageSubject.OnNext(new ObserverDto(null, message));
         }
 
-        public async Task StartAsync(CancellationToken cancellationToken = default)
+        public async Task StartAsync()
+        {
+            await StartAsync(CancellationToken.None).ConfigureAwait(false);
+        }
+
+        public async Task StartAsync(CancellationToken cancellationToken)
         {
             MessageStream = await BuildMessageStreamAsync().ConfigureAwait(false);
             _messageObservers.ToList().ForEach(h => h.StartObserving(MessageStream));

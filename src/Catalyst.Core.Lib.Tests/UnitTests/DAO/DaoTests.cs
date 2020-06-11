@@ -21,324 +21,322 @@
 
 #endregion
 
-//todo
-//using System;
-//using System.Net;
-//using System.Text;
-//using Catalyst.Abstractions.DAO;
-//using Catalyst.Core.Lib.DAO;
-//using Catalyst.Core.Lib.DAO.Cryptography;
-//using Catalyst.Core.Lib.DAO.Deltas;
-//using Catalyst.Core.Lib.DAO.Peer;
-//using Catalyst.Core.Lib.DAO.Transaction;
-//using Catalyst.Core.Lib.Extensions;
-//using Catalyst.Core.Lib.Util;
-//using Catalyst.Core.Modules.Dfs.Extensions;
-//using Catalyst.Core.Modules.Hashing;
-//using Catalyst.Protocol.Cryptography;
-//using Catalyst.Protocol.Deltas;
-//using Catalyst.Protocol.Network;
-//using Catalyst.Protocol.Peer;
-//using Catalyst.Protocol.Transaction;
-//using Catalyst.Protocol.Wire;
-//using Catalyst.TestUtils;
-//using Catalyst.TestUtils.Protocol;
-//using FluentAssertions;
-//using MultiFormats;
-//using MultiFormats.Registry;
-//using Google.Protobuf;
-//using Google.Protobuf.WellKnownTypes;
-//using Nethermind.Dirichlet.Numerics;
-//using NUnit.Framework;
+using System;
+using System.Net;
+using System.Text;
+using Catalyst.Abstractions.DAO;
+using Catalyst.Core.Lib.DAO;
+using Catalyst.Core.Lib.DAO.Cryptography;
+using Catalyst.Core.Lib.DAO.Deltas;
+using Catalyst.Core.Lib.DAO.Peer;
+using Catalyst.Core.Lib.DAO.Transaction;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Lib.Util;
+using Catalyst.Core.Modules.Dfs.Extensions;
+using Catalyst.Core.Modules.Hashing;
+using Catalyst.Protocol.Cryptography;
+using Catalyst.Protocol.Deltas;
+using Catalyst.Protocol.Network;
+using Catalyst.Protocol.Peer;
+using Catalyst.Protocol.Transaction;
+using Catalyst.Protocol.Wire;
+using Catalyst.TestUtils;
+using Catalyst.TestUtils.Protocol;
+using FluentAssertions;
+using MultiFormats;
+using MultiFormats.Registry;
+using Google.Protobuf;
+using Google.Protobuf.WellKnownTypes;
+using Nethermind.Dirichlet.Numerics;
+using NUnit.Framework;
 
-//namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
-//{
-//    public class DaoTests
-//    {
-//        private readonly HashProvider _hashProvider;
-//        private readonly MapperProvider _mapperProvider;
+namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
+{
+    public class DaoTests
+    {
+        private readonly HashProvider _hashProvider;
+        private readonly MapperProvider _mapperProvider;
 
-//        public DaoTests()
-//        {
-//            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
+        public DaoTests()
+        {
+            _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
-//            var initialisers = new IMapperInitializer[]
-//            {
-//                new ProtocolMessageMapperInitialiser(),
-//                new ConfidentialEntryMapperInitialiser(),
-//                new CandidateDeltaBroadcastMapperInitialiser(),
-//                new ProtocolErrorMessageMapperInitialiser(),
-//                new PeerIdMapperInitialiser(),
-//                new SigningContextMapperInitialiser(),
-//                new DeltaMapperInitialiser(),
-//                new CandidateDeltaBroadcastMapperInitialiser(),
-//                new DeltaDfsHashBroadcastMapperInitialiser(),
-//                new FavouriteDeltaBroadcastMapperInitialiser(),
-//                new CoinbaseEntryMapperInitialiser(),
-//                new PublicEntryMapperInitialiser(_hashProvider),
-//                new ConfidentialEntryMapperInitialiser(),
-//                new TransactionBroadcastMapperInitialiser(),
-//                new SignatureMapperInitialiser()
-//            };
+            var initialisers = new IMapperInitializer[]
+            {
+                new ProtocolMessageMapperInitialiser(),
+                new ConfidentialEntryMapperInitialiser(),
+                new CandidateDeltaBroadcastMapperInitialiser(),
+                new ProtocolErrorMessageMapperInitialiser(),
+                new PeerIdMapperInitialiser(),
+                new SigningContextMapperInitialiser(),
+                new DeltaMapperInitialiser(),
+                new CandidateDeltaBroadcastMapperInitialiser(),
+                new DeltaDfsHashBroadcastMapperInitialiser(),
+                new FavouriteDeltaBroadcastMapperInitialiser(),
+                new CoinbaseEntryMapperInitialiser(),
+                new PublicEntryMapperInitialiser(_hashProvider),
+                new ConfidentialEntryMapperInitialiser(),
+                new TransactionBroadcastMapperInitialiser(),
+                new SignatureMapperInitialiser()
+            };
 
-//            _mapperProvider = new MapperProvider(initialisers);
-//        }
+            _mapperProvider = new MapperProvider(initialisers);
+        }
 
-//        [Test]
-//        public void ProtocolMessageDao_ProtocolMessage_Should_Be_Convertible()
-//        {
-//            var newGuid = Guid.NewGuid();
-//            var peerId = MultiAddressHelper.GetAddress("testcontent");
-//            var original = new ProtocolMessage
-//            {
-//                CorrelationId = newGuid.ToByteString(),
-//                TypeUrl = "cleanurl",
-//                Value = "somecontent".ToUtf8ByteString(),
-//                PeerId = peerId.ToString()
-//            };
+        [Test]
+        public void ProtocolMessageDao_ProtocolMessage_Should_Be_Convertible()
+        {
+            var newGuid = Guid.NewGuid();
+            var address = MultiAddressHelper.GetAddress("testcontent");
+            var original = new ProtocolMessage
+            {
+                CorrelationId = newGuid.ToByteString(),
+                TypeUrl = "cleanurl",
+                Value = "somecontent".ToUtf8ByteString(),
+                Address = address.ToString()
+            };
 
-//            var messageDao = original.ToDao<ProtocolMessage, ProtocolMessageDao>(_mapperProvider);
+            var messageDao = original.ToDao<ProtocolMessage, ProtocolMessageDao>(_mapperProvider);
 
-//            messageDao.TypeUrl.Should().Be("cleanurl");
-//            messageDao.CorrelationId.Should().Be(newGuid.ToString());
-//            messageDao.Address.Port.Should().Be((ushort) peerId.Port);
-//            messageDao.Address.Ip.Should().Be(new IPAddress(peerId.Ip.ToByteArray()).MapToIPv6().ToString());
+            messageDao.TypeUrl.Should().Be("cleanurl");
+            messageDao.CorrelationId.Should().Be(newGuid.ToString());
+            messageDao.Address.Should().Be(address.ToString());
 
-//            var reconverted = messageDao.ToProtoBuff<ProtocolMessageDao, ProtocolMessage>(_mapperProvider);
-//            reconverted.Should().Be(original);
-//        }
+            var reconverted = messageDao.ToProtoBuff<ProtocolMessageDao, ProtocolMessage>(_mapperProvider);
+            reconverted.Should().Be(original);
+        }
 
-//        [Test]
-//        public void ProtocolErrorMessageSignedDao_ProtocolErrorMessageSigned_Should_Be_Convertible()
-//        {
-//            var byteRn = new byte[30];
-//            new Random().NextBytes(byteRn);
+        [Test]
+        public void ProtocolErrorMessageSignedDao_ProtocolErrorMessageSigned_Should_Be_Convertible()
+        {
+            var byteRn = new byte[30];
+            new Random().NextBytes(byteRn);
 
-//            var original = new ProtocolErrorMessage
-//            {
-//                CorrelationId = Guid.NewGuid().ToByteString(),
-//                Signature = new Signature
-//                {
-//                    RawBytes = byteRn.ToByteString(),
-//                    SigningContext = DevNetPeerSigningContext.Instance
-//                },
-//                PeerId = MultiAddressHelper.GetAddress("test").ToString(),
-//                Code = 74
-//            };
+            var original = new ProtocolErrorMessage
+            {
+                CorrelationId = Guid.NewGuid().ToByteString(),
+                Signature = new Signature
+                {
+                    RawBytes = byteRn.ToByteString(),
+                    SigningContext = DevNetPeerSigningContext.Instance
+                },
+                Address = MultiAddressHelper.GetAddress("test").ToString(),
+                Code = 74
+            };
 
-//            var errorMessageSignedDao = original.ToDao<ProtocolErrorMessage, ProtocolErrorMessageDao>(_mapperProvider);
-//            var reconverted =
-//                errorMessageSignedDao.ToProtoBuff<ProtocolErrorMessageDao, ProtocolErrorMessage>(_mapperProvider);
-//            reconverted.Should().Be(original);
-//        }
+            var errorMessageSignedDao = original.ToDao<ProtocolErrorMessage, ProtocolErrorMessageDao>(_mapperProvider);
+            var reconverted =
+                errorMessageSignedDao.ToProtoBuff<ProtocolErrorMessageDao, ProtocolErrorMessage>(_mapperProvider);
+            reconverted.Should().Be(original);
+        }
 
-//        [Test]
-//        public void PeerIdDao_PeerId_Should_Be_Convertible()
-//        {
-//            var original = MultiAddressHelper.GetAddress("MyPeerId_Testing");
+        //[Test]
+        //public void PeerIdDao_PeerId_Should_Be_Convertible()
+        //{
+        //    var original = MultiAddressHelper.GetAddress("MyPeerId_Testing");
 
-//            var peer = original.ToDao<PeerId, PeerIdDao>(_mapperProvider);
-//            var reconverted = peer.ToProtoBuff<PeerIdDao, PeerId>(_mapperProvider);
-//            reconverted.Should().Be(original);
-//        }
+        //    var peer = original.ToDao<PeerId, PeerIdDao>(_mapperProvider);
+        //    var reconverted = peer.ToProtoBuff<PeerIdDao, PeerId>(_mapperProvider);
+        //    reconverted.Should().Be(original);
+        //}
 
-//        [Test]
-//        public void SigningContextDao_SigningContext_Should_Be_Convertible()
-//        {
-//            var byteRn = new byte[30];
-//            new Random().NextBytes(byteRn);
+        [Test]
+        public void SigningContextDao_SigningContext_Should_Be_Convertible()
+        {
+            var byteRn = new byte[30];
+            new Random().NextBytes(byteRn);
 
-//            var original = new SigningContext
-//            {
-//                NetworkType = NetworkType.Devnet,
-//                SignatureType = SignatureType.TransactionPublic
-//            };
+            var original = new SigningContext
+            {
+                NetworkType = NetworkType.Devnet,
+                SignatureType = SignatureType.TransactionPublic
+            };
 
-//            var contextDao = original.ToDao<SigningContext, SigningContextDao>(_mapperProvider);
-//            var reconverted = contextDao.ToProtoBuff<SigningContextDao, SigningContext>(_mapperProvider);
-//            reconverted.Should().Be(original);
-//        }
+            var contextDao = original.ToDao<SigningContext, SigningContextDao>(_mapperProvider);
+            var reconverted = contextDao.ToProtoBuff<SigningContextDao, SigningContext>(_mapperProvider);
+            reconverted.Should().Be(original);
+        }
 
-//        [Test]
-//        public void DeltasDao_Deltas_Should_Be_Convertible()
-//        {
-//            var previousHash = _hashProvider.ComputeMultiHash(Encoding.UTF8.GetBytes("previousHash"));
+        [Test]
+        public void DeltasDao_Deltas_Should_Be_Convertible()
+        {
+            var previousHash = _hashProvider.ComputeMultiHash(Encoding.UTF8.GetBytes("previousHash"));
 
-//            var original = DeltaHelper.GetDelta(_hashProvider, previousHash);
+            var original = DeltaHelper.GetDelta(_hashProvider, previousHash);
 
-//            var messageDao = original.ToDao<Delta, DeltaDao>(_mapperProvider);
-//            var reconverted = messageDao.ToProtoBuff<DeltaDao, Delta>(_mapperProvider);
-//            original.Should().Be(reconverted);
-//        }
+            var messageDao = original.ToDao<Delta, DeltaDao>(_mapperProvider);
+            var reconverted = messageDao.ToProtoBuff<DeltaDao, Delta>(_mapperProvider);
+            original.Should().Be(reconverted);
+        }
 
-//        [Test]
-//        public void CandidateDeltaBroadcastDao_CandidateDeltaBroadcast_Should_Be_Convertible()
-//        {
-//            var previousHash = _hashProvider.ComputeMultiHash(Encoding.UTF8.GetBytes("previousHash"));
-//            var hash = _hashProvider.ComputeMultiHash(Encoding.UTF8.GetBytes("anotherHash"));
+        [Test]
+        public void CandidateDeltaBroadcastDao_CandidateDeltaBroadcast_Should_Be_Convertible()
+        {
+            var previousHash = _hashProvider.ComputeMultiHash(Encoding.UTF8.GetBytes("previousHash"));
+            var hash = _hashProvider.ComputeMultiHash(Encoding.UTF8.GetBytes("anotherHash"));
 
-//            var original = new CandidateDeltaBroadcast
-//            {
-//                Hash = MultiBase.Decode(hash.ToCid()).ToByteString(),
-//                ProducerId = MultiAddressHelper.GetAddress("test"),
-//                PreviousDeltaDfsHash = MultiBase.Decode(previousHash.ToCid()).ToByteString()
-//            };
+            var original = new CandidateDeltaBroadcast
+            {
+                Hash = MultiBase.Decode(hash.ToCid()).ToByteString(),
+                Producer = MultiAddressHelper.GetAddress("test").ToString(),
+                PreviousDeltaDfsHash = MultiBase.Decode(previousHash.ToCid()).ToByteString()
+            };
 
-//            var candidateDeltaBroadcast =
-//                original.ToDao<CandidateDeltaBroadcast, CandidateDeltaBroadcastDao>(_mapperProvider);
-//            var reconverted =
-//                candidateDeltaBroadcast.ToProtoBuff<CandidateDeltaBroadcastDao, CandidateDeltaBroadcast>(
-//                    _mapperProvider);
-//            reconverted.Should().Be(original);
-//        }
+            var candidateDeltaBroadcast =
+                original.ToDao<CandidateDeltaBroadcast, CandidateDeltaBroadcastDao>(_mapperProvider);
+            var reconverted =
+                candidateDeltaBroadcast.ToProtoBuff<CandidateDeltaBroadcastDao, CandidateDeltaBroadcast>(
+                    _mapperProvider);
+            reconverted.Should().Be(original);
+        }
 
-//        [Test]
-//        public void DeltaDfsHashBroadcastDao_DeltaDfsHashBroadcast_Should_Be_Convertible()
-//        {
-//            var hash = MultiBase.Decode(_hashProvider.ComputeUtf8MultiHash("this hash").ToCid());
-//            var previousDfsHash =
-//                MultiBase.Decode(_hashProvider.ComputeUtf8MultiHash("previousDfsHash").ToCid());
+        [Test]
+        public void DeltaDfsHashBroadcastDao_DeltaDfsHashBroadcast_Should_Be_Convertible()
+        {
+            var hash = MultiBase.Decode(_hashProvider.ComputeUtf8MultiHash("this hash").ToCid());
+            var previousDfsHash =
+                MultiBase.Decode(_hashProvider.ComputeUtf8MultiHash("previousDfsHash").ToCid());
 
-//            var original = new DeltaDfsHashBroadcast
-//            {
-//                DeltaDfsHash = hash.ToByteString(),
-//                PreviousDeltaDfsHash = previousDfsHash.ToByteString()
-//            };
+            var original = new DeltaDfsHashBroadcast
+            {
+                DeltaDfsHash = hash.ToByteString(),
+                PreviousDeltaDfsHash = previousDfsHash.ToByteString()
+            };
 
-//            var contextDao = original.ToDao<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>(_mapperProvider);
-//            var reconverted = contextDao.ToProtoBuff<DeltaDfsHashBroadcastDao, DeltaDfsHashBroadcast>(_mapperProvider);
-//            reconverted.Should().Be(original);
-//        }
+            var contextDao = original.ToDao<DeltaDfsHashBroadcast, DeltaDfsHashBroadcastDao>(_mapperProvider);
+            var reconverted = contextDao.ToProtoBuff<DeltaDfsHashBroadcastDao, DeltaDfsHashBroadcast>(_mapperProvider);
+            reconverted.Should().Be(original);
+        }
 
-//        [Test]
-//        public void FavouriteDeltaBroadcastDao_FavouriteDeltaBroadcast_Should_Be_Convertible()
-//        {
-//            var original = new FavouriteDeltaBroadcast
-//            {
-//                Candidate = DeltaHelper.GetCandidateDelta(_hashProvider, producerId: MultiAddressHelper.GetAddress("not me")),
-//                VoterId = MultiAddressHelper.GetAddress("test")
-//            };
+        [Test]
+        public void FavouriteDeltaBroadcastDao_FavouriteDeltaBroadcast_Should_Be_Convertible()
+        {
+            var original = new FavouriteDeltaBroadcast
+            {
+                Candidate = DeltaHelper.GetCandidateDelta(_hashProvider, producerId: MultiAddressHelper.GetAddress("not me")),
+                Voter = MultiAddressHelper.GetAddress("test").ToString()
+            };
 
-//            var contextDao = original.ToDao<FavouriteDeltaBroadcast, FavouriteDeltaBroadcastDao>(_mapperProvider);
-//            var reconverted =
-//                contextDao.ToProtoBuff<FavouriteDeltaBroadcastDao, FavouriteDeltaBroadcast>(_mapperProvider);
-//            reconverted.Should().Be(original);
-//        }
+            var contextDao = original.ToDao<FavouriteDeltaBroadcast, FavouriteDeltaBroadcastDao>(_mapperProvider);
+            var reconverted =
+                contextDao.ToProtoBuff<FavouriteDeltaBroadcastDao, FavouriteDeltaBroadcast>(_mapperProvider);
+            reconverted.Should().Be(original);
+        }
 
-//        [Test]
-//        public void CoinbaseEntryDao_CoinbaseEntry_Should_Be_Convertible()
-//        {
-//            var pubKeyBytes = new byte[30];
-//            new Random().NextBytes(pubKeyBytes);
+        [Test]
+        public void CoinbaseEntryDao_CoinbaseEntry_Should_Be_Convertible()
+        {
+            var pubKeyBytes = new byte[30];
+            new Random().NextBytes(pubKeyBytes);
 
-//            var original = new CoinbaseEntry
-//            {
-//                ReceiverPublicKey = pubKeyBytes.ToByteString(),
-//                Amount = 271314.ToUint256ByteString()
-//            };
+            var original = new CoinbaseEntry
+            {
+                ReceiverPublicKey = pubKeyBytes.ToByteString(),
+                Amount = 271314.ToUint256ByteString()
+            };
 
-//            var messageDao = original.ToDao<CoinbaseEntry, CoinbaseEntryDao>(_mapperProvider);
-//            messageDao.ReceiverPublicKey.Should().Be(pubKeyBytes.KeyToString());
+            var messageDao = original.ToDao<CoinbaseEntry, CoinbaseEntryDao>(_mapperProvider);
+            messageDao.ReceiverPublicKey.Should().Be(pubKeyBytes.KeyToString());
 
-//            var reconverted = messageDao.ToProtoBuff<CoinbaseEntryDao, CoinbaseEntry>(_mapperProvider);
-//            reconverted.Should().Be(original);
-//        }
+            var reconverted = messageDao.ToProtoBuff<CoinbaseEntryDao, CoinbaseEntry>(_mapperProvider);
+            reconverted.Should().Be(original);
+        }
 
-//        [Test]
-//        public void STTransactionEntryDao_STTransactionEntry_Should_Be_Convertible()
-//        {
-//            var pubKeyBytes = new byte[30];
-//            new Random().NextBytes(pubKeyBytes);
+        [Test]
+        public void STTransactionEntryDao_STTransactionEntry_Should_Be_Convertible()
+        {
+            var pubKeyBytes = new byte[30];
+            new Random().NextBytes(pubKeyBytes);
 
-//            var original = new PublicEntry
-//            {
-//                Amount = 8855274.ToUint256ByteString(),
-//                SenderAddress = pubKeyBytes.ToByteString(),
-//                Signature = new Signature
-//                {
-//                    RawBytes = new byte[] { 0x0 }.ToByteString(),
-//                    SigningContext = new SigningContext
-//                    { NetworkType = NetworkType.Devnet, SignatureType = SignatureType.TransactionPublic }
-//                }
-//            };
+            var original = new PublicEntry
+            {
+                Amount = 8855274.ToUint256ByteString(),
+                SenderAddress = pubKeyBytes.ToByteString(),
+                Signature = new Signature
+                {
+                    RawBytes = new byte[] { 0x0 }.ToByteString(),
+                    SigningContext = new SigningContext
+                    { NetworkType = NetworkType.Devnet, SignatureType = SignatureType.TransactionPublic }
+                }
+            };
 
-//            var transactionEntryDao = original.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider);
+            var transactionEntryDao = original.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider);
 
-//            transactionEntryDao.SenderAddress.Should().Be(pubKeyBytes.KeyToString());
-//            transactionEntryDao.Amount.Should().Be(8855274.ToString());
+            transactionEntryDao.SenderAddress.Should().Be(pubKeyBytes.KeyToString());
+            transactionEntryDao.Amount.Should().Be(8855274.ToUint256ByteString().ToByteArray().ToBase58());
 
-//            var reconverted = transactionEntryDao.ToProtoBuff<PublicEntryDao, PublicEntry>(_mapperProvider);
-//            reconverted.Should().Be(original);
-//        }
+            var reconverted = transactionEntryDao.ToProtoBuff<PublicEntryDao, PublicEntry>(_mapperProvider);
+            reconverted.Should().Be(original);
+        }
 
-//        [Test]
-//        public void ConfidentialEntry_And_ConfidentialEntryDao_Should_Be_Convertible()
-//        {
-//            var pubKeyBytes = new byte[30];
-//            var pedersenCommitBytes = new byte[50];
-//            var rangeProof = new RangeProof();
+        [Test]
+        public void ConfidentialEntry_And_ConfidentialEntryDao_Should_Be_Convertible()
+        {
+            var pubKeyBytes = new byte[30];
+            var pedersenCommitBytes = new byte[50];
+            var rangeProof = new RangeProof();
 
-//            var rnd = new Random();
-//            rnd.NextBytes(pubKeyBytes);
-//            rnd.NextBytes(pedersenCommitBytes);
+            var rnd = new Random();
+            rnd.NextBytes(pubKeyBytes);
+            rnd.NextBytes(pedersenCommitBytes);
 
-//            var original = new ConfidentialEntry
-//            {
-//                Nonce = ulong.MaxValue,
-//                SenderPublicKey = pubKeyBytes.ToByteString(),
-//                TransactionFees = UInt256.Zero.ToUint256ByteString(),
-//                PedersenCommitment = pedersenCommitBytes.ToByteString(),
-//                RangeProof = rangeProof
-//            };
+            var original = new ConfidentialEntry
+            {
+                Nonce = ulong.MaxValue,
+                SenderPublicKey = pubKeyBytes.ToByteString(),
+                TransactionFees = UInt256.Zero.ToUint256ByteString(),
+                PedersenCommitment = pedersenCommitBytes.ToByteString(),
+                RangeProof = rangeProof
+            };
 
-//            var transactionEntryDao = original.ToDao<ConfidentialEntry, ConfidentialEntryDao>(_mapperProvider);
+            var transactionEntryDao = original.ToDao<ConfidentialEntry, ConfidentialEntryDao>(_mapperProvider);
 
-//            transactionEntryDao.SenderPublicKey.Should().Be(pubKeyBytes.KeyToString());
-//            transactionEntryDao.Nonce.Should().Be(ulong.MaxValue);
-//            transactionEntryDao.PedersenCommitment.Should().Be(pedersenCommitBytes.ToByteString().ToBase64());
-//            transactionEntryDao.RangeProof.Should().Be(rangeProof.ToByteString().ToBase64());
+            transactionEntryDao.SenderPublicKey.Should().Be(pubKeyBytes.KeyToString());
+            transactionEntryDao.Nonce.Should().Be(ulong.MaxValue);
+            transactionEntryDao.PedersenCommitment.Should().Be(pedersenCommitBytes.ToByteString().ToBase64());
+            transactionEntryDao.RangeProof.Should().Be(rangeProof.ToByteString().ToBase64());
 
-//            var reconverted = transactionEntryDao.ToProtoBuff<ConfidentialEntryDao, ConfidentialEntry>(_mapperProvider);
-//            reconverted.Should().Be(original);
-//        }
+            var reconverted = transactionEntryDao.ToProtoBuff<ConfidentialEntryDao, ConfidentialEntry>(_mapperProvider);
+            reconverted.Should().Be(original);
+        }
 
-//        [Test]
-//        public void TransactionBroadcastDao_TransactionBroadcast_Should_Be_Convertible()
-//        {
-//            var original = TransactionHelper.GetPublicTransaction();
+        [Test]
+        public void TransactionBroadcastDao_TransactionBroadcast_Should_Be_Convertible()
+        {
+            var original = TransactionHelper.GetPublicTransaction();
 
-//            var transactionEntryDao = original.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
-//            var reconverted =
-//                transactionEntryDao.ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mapperProvider);
-//            reconverted.Should().Be(original);
-//        }
+            var transactionEntryDao = original.ToDao<TransactionBroadcast, TransactionBroadcastDao>(_mapperProvider);
+            var reconverted =
+                transactionEntryDao.ToProtoBuff<TransactionBroadcastDao, TransactionBroadcast>(_mapperProvider);
+            reconverted.Should().Be(original);
+        }
 
-//        [Test]
-//        public void PublicEntryDao_Should_Be_The_Same_When_Converted()
-//        {
-//            var pubKeyBytes = new byte[30];
-//            new Random().NextBytes(pubKeyBytes);
-//            var original = new PublicEntry
-//            {
-//                Amount = new byte[] { 222, 11, 107, 58, 118, 64, 0, 0 }.ToByteString(),
-//                SenderAddress = pubKeyBytes.ToByteString(),
-//                Signature = new Signature
-//                {
-//                    RawBytes = new byte[] { 0x0 }.ToByteString(),
-//                    SigningContext = new SigningContext
-//                    { NetworkType = NetworkType.Devnet, SignatureType = SignatureType.TransactionPublic }
-//                }
-//            };
+        [Test]
+        public void PublicEntryDao_Should_Be_The_Same_When_Converted()
+        {
+            var pubKeyBytes = new byte[30];
+            new Random().NextBytes(pubKeyBytes);
+            var original = new PublicEntry
+            {
+                Amount = new byte[] { 222, 11, 107, 58, 118, 64, 0, 0 }.ToByteString(),
+                SenderAddress = pubKeyBytes.ToByteString(),
+                Signature = new Signature
+                {
+                    RawBytes = new byte[] { 0x0 }.ToByteString(),
+                    SigningContext = new SigningContext
+                    { NetworkType = NetworkType.Devnet, SignatureType = SignatureType.TransactionPublic }
+                }
+            };
 
-//            var transactionEntryDao1 = original.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider);
-//            var hashId1 = transactionEntryDao1.Id;
+            var transactionEntryDao1 = original.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider);
+            var hashId1 = transactionEntryDao1.Id;
 
-//            var reconverted = transactionEntryDao1.ToProtoBuff<PublicEntryDao, PublicEntry>(_mapperProvider);
+            var reconverted = transactionEntryDao1.ToProtoBuff<PublicEntryDao, PublicEntry>(_mapperProvider);
 
-//            var transactionEntryDao2 = reconverted.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider);
-//            var hashId2 = transactionEntryDao2.Id;
+            var transactionEntryDao2 = reconverted.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider);
+            var hashId2 = transactionEntryDao2.Id;
 
-//            hashId1.Should().Be(hashId2);
-//        }
-//    }
-//}
+            hashId1.Should().Be(hashId2);
+        }
+    }
+}

@@ -71,7 +71,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
         public async Task Can_Query_Expected_Peer()
         {
             var recipientPeerId = MultiAddressHelper.GetAddress();
-            await _peerDeltaHistoryRequest.DeltaHistoryAsync(recipientPeerId).ConfigureAwait(false);
+            await _peerDeltaHistoryRequest.DeltaHistoryAsync(recipientPeerId, 0, 10).ConfigureAwait(false);
             var expectedDto = Substitute.For<IMessageDto<ProtocolMessage>>();
             expectedDto.RecipientAddress.Returns(recipientPeerId);
             expectedDto.SenderAddress.Returns(_testSettings.Address);
@@ -81,6 +81,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
         [Test]
         public async Task Can_Receive_Query_Response_On_Observer()
         {
+            var height = 10u;
             var recipientPeerId = MultiAddressHelper.GetAddress();
             
             var hp = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
@@ -89,7 +90,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
             var collection = new List<DeltaIndex>();
 
             //// this matches the fake mock 
-            for (uint x = 0; x < 10; x++)
+            for (uint x = 0; x < height; x++)
             {
                 var delta = new Delta
                 {
@@ -109,7 +110,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
             var deltaHistoryResponse = new PeerDeltaHistoryResponse(recipientPeerId, collection);
 
             _peerDeltaHistoryRequest.DeltaHistoryResponseMessageStreamer.OnNext(deltaHistoryResponse);
-            var response = await _peerDeltaHistoryRequest.DeltaHistoryAsync(recipientPeerId).ConfigureAwait(false);
+            var response = await _peerDeltaHistoryRequest.DeltaHistoryAsync(recipientPeerId, 0, height).ConfigureAwait(false);
             response.DeltaCid.Count.Should().Be(10);
         }
 
@@ -118,7 +119,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
         {
             var recipientPeerId = MultiAddressHelper.GetAddress();
             _cancellationProvider.CancellationTokenSource.Cancel();
-            var response = await _peerDeltaHistoryRequest.DeltaHistoryAsync(recipientPeerId).ConfigureAwait(false);
+            var response = await _peerDeltaHistoryRequest.DeltaHistoryAsync(recipientPeerId, 0, 10).ConfigureAwait(false);
             response.Should().BeNull();
         }
 
@@ -127,7 +128,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
         {
             var recipientPeerId = MultiAddressHelper.GetAddress();
             _cancellationProvider.Dispose(); //do summet nasty to force exception
-            var response = await _peerDeltaHistoryRequest.DeltaHistoryAsync(recipientPeerId).ConfigureAwait(false);
+            var response = await _peerDeltaHistoryRequest.DeltaHistoryAsync(recipientPeerId, 0, 10).ConfigureAwait(false);
             response.Should().BeNull();   
         }
     }

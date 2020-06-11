@@ -36,6 +36,7 @@ namespace Catalyst.Abstractions.P2P
         Task SendMessageToPeersAsync(IMessage message, IEnumerable<MultiAddress> peers);
         Task SendMessageAsync<T>(IMessageDto<T> message) where T : IMessage<T>;
         Task BroadcastAsync(ProtocolMessage message);
-        Task StartAsync(CancellationToken cancellationToken = default);
+        Task StartAsync();
+        Task StartAsync(CancellationToken cancellationToken);
     }
 }
