@@ -49,7 +49,7 @@ namespace Catalyst.Core.Modules.Sync.Watcher
         public DeltaIndex LatestDeltaHash { set; get; }
 
         private Timer _requestDeltaHeightTimer;
-        private AutoResetEvent _autoResetEvent;
+        private readonly AutoResetEvent _autoResetEvent;
 
         public DeltaHeightWatcher(ILibP2PPeerClient peerClient,
             ISwarmApi swarmApi,
@@ -76,7 +76,7 @@ namespace Catalyst.Core.Modules.Sync.Watcher
         public async Task<DeltaIndex> WaitForDeltaIndexAsync(TimeSpan timeout, CancellationToken cancellationToken)
         {
             await _autoResetEvent.WaitOneAsync(timeout, cancellationToken);
-            return await GetHighestDeltaIndexAsync();
+            return await GetHighestDeltaIndexAsync().ConfigureAwait(false);
         }
 
         public Task<DeltaIndex> GetHighestDeltaIndexAsync()

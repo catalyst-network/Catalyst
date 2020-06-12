@@ -57,7 +57,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _subbedLogger = Substitute.For<ILogger>();
             _peerClient = Substitute.For<ILibP2PPeerClient>();
             var peerSettings = MultiAddressHelper.GetAddress("sender").ToSubstitutedPeerSettings();
-            var syncState = new SyncState() { IsSynchronized = true };
+            var syncState = new SyncState { IsSynchronized = true };
             _deltaHeightRequestObserver = new DeltaHeightRequestObserver(peerSettings,
                 Substitute.For<IDeltaIndexService>(), new TestMapperProvider(), _peerClient, syncState,
                 _subbedLogger

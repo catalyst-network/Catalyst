@@ -215,7 +215,7 @@ namespace Catalyst.TestUtils
 
             await _dfsService.StartAsync().ConfigureAwait(false);
 
-            PeerActive(peerSettings.Address);
+            PeerActive.Invoke(peerSettings.Address);
 
             await StartSocketsAsync().ConfigureAwait(false);
 
@@ -223,7 +223,7 @@ namespace Catalyst.TestUtils
             while (peers.Count() < 2)
             {
                 peers = await _dfsService.SwarmApi.PeersAsync().ConfigureAwait(false);
-                await Task.Delay(100);
+                await Task.Delay(100).ConfigureAwait(false);
             }
 
             if (!_isSynchronized)
@@ -241,7 +241,7 @@ namespace Catalyst.TestUtils
 
             do
             {
-                await Task.Delay(300, cancellationSourceToken);
+                await Task.Delay(300, cancellationSourceToken).ConfigureAwait(false);
             } while (!cancellationSourceToken.IsCancellationRequested);
         }
 

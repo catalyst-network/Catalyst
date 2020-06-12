@@ -129,8 +129,8 @@ namespace Catalyst.Core.Modules.Sync.Manager
             {
                 if (_deltaHistoryRanker != null)
                 {
-                    //var peers = _deltaHeightWatcher.DeltaHeightRanker.GetPeers();
-                    var peers = await _swarmApi.PeersAsync().ConfigureAwait(false);
+                    var peers = _deltaHeightWatcher.DeltaHeightRanker.GetPeers();
+                    //var peers = await _swarmApi.PeersAsync().ConfigureAwait(false);
                     var messageCount = Math.Min(_minimumPeers, 50);
                     var minimumThreshold = messageCount * _threshold;
                     var score = _deltaHistoryRanker.GetHighestScore();

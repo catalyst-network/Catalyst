@@ -60,18 +60,13 @@ using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Google.Protobuf;
 using Lib.P2P;
-using Microsoft.Reactive.Testing;
 using MultiFormats.Registry;
 using NSubstitute;
 using SharpRepository.InMemoryRepository;
 using Serilog;
-using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
-using Catalyst.Core.Lib.P2P.Repository;
 using NUnit.Framework;
 using MultiFormats;
-using Lib.P2P.Protocols;
 using Catalyst.Abstractions.Dfs.CoreApi;
-using NSubstitute.Extensions;
 
 namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 {
@@ -82,8 +77,6 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
         private IDeltaDfsReader _deltaDfsReader;
         private ILibP2PPeerClient _peerClient;
         private IDeltaIndexService _deltaIndexService;
-
-        private ILibP2PPeerService _peerService;
 
         private ReplaySubject<IObserverDto<ProtocolMessage>> _deltaHeightReplaySubject;
 
@@ -99,8 +92,6 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 
         private IDeltaHashProvider _deltaHashProvider;
 
-        private ISwarmApi _swarmApi;
-
         private int _syncTestHeight = 1005;
 
         private ManualResetEventSlim _manualResetEventSlim;
@@ -110,6 +101,14 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
         [SetUp]
         public void Init()
         {
+            var peerService = Substitute.For<ILibP2PPeerService>();
+
+            var peers = new List<LibP2P.Peer>();
+            Enumerable.Range(0, 5).Select(x => MultiAddressHelper.GetAddress(x.ToString(), port: x)).Select(x => new LibP2P.Peer { Id = x.PeerId, ConnectedAddress = x }).ToList().ForEach(peers.Add);
+
+            var swarmApi = Substitute.For<ISwarmApi>();
+            swarmApi.PeersAsync().Returns(peers);
+
             _cancellationToken = new CancellationToken();
 
             _manualResetEventSlim = new ManualResetEventSlim(false);
@@ -124,8 +123,6 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 
             _deltaCache = Substitute.For<IDeltaCache>();
             _deltaCache.GenesisHash.Returns("bafk2bzacecji5gcdd6lxsoazgnbg46c3vttjwwkptiw27enachziizhhkir2w".ToCid());
-
-            _peerService = Substitute.For<ILibP2PPeerService>();
 
             _deltaHashProvider = new DeltaHashProvider(_deltaCache, Substitute.For<IDeltaIndexService>(), Substitute.For<ILogger>());
 
@@ -156,19 +153,13 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
                 _deltaHistoryReplaySubject.OnNext(new ObserverDto(null, data.ToProtocolMessage(senderentifier, CorrelationId.GenerateCorrelationId())));
             });
 
-            var peers = new List<LibP2P.Peer>();
-            Enumerable.Range(0, 5).Select(x => MultiAddressHelper.GetAddress(x.ToString(), port: x)).Select(x => new LibP2P.Peer { Id = x.PeerId, ConnectedAddress = x }).ToList().ForEach(peers.Add);
-
-            _swarmApi = Substitute.For<ISwarmApi>();
-            _swarmApi.PeersAsync().Returns(peers);
-
             _deltaHeightReplaySubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1);
             _deltaHistoryReplaySubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1);
 
             var mergeMessageStreams = _deltaHeightReplaySubject.AsObservable()
                .Merge(_deltaHistoryReplaySubject.AsObservable());
 
-            _peerService.MessageStream.Returns(mergeMessageStreams);
+            peerService.MessageStream.Returns(mergeMessageStreams);
 
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
             _deltaHashProvider.TryUpdateLatestHash(Arg.Any<Cid>(), Arg.Any<Cid>()).Returns(true);
@@ -177,11 +168,11 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 
             _userOutput = Substitute.For<IUserOutput>();
 
-            _deltaHeightWatcher = new DeltaHeightWatcher(_peerClient, _swarmApi, _peerService);
+            _deltaHeightWatcher = new DeltaHeightWatcher(_peerClient, swarmApi, peerService);
 
             var dfsService = Substitute.For<IDfsService>();
 
-            _peerSyncManager = new PeerSyncManager(_peerClient, _peerService, _userOutput, _deltaHeightWatcher, _swarmApi, 0.7, 0);
+            _peerSyncManager = new PeerSyncManager(_peerClient, peerService, _userOutput, _deltaHeightWatcher, swarmApi, 0.7, 0);
         }
 
         [TearDown]

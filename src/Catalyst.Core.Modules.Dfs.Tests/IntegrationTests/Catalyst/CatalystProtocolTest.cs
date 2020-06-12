@@ -37,7 +37,7 @@ namespace Lib.P2P.Tests.Protocols
     [Category(Traits.IntegrationTest)]
     public class CatalystProtocolTest
     {
-        private Peer self = new Peer
+        private readonly Peer self = new Peer
         {
             AgentVersion = "self",
             Id = "QmXK9VBxaXFuuT29AaPUTgW3jBWZ9JgLVZYdMYTHC6LLAH",
@@ -45,7 +45,7 @@ namespace Lib.P2P.Tests.Protocols
                 "CAASXjBcMA0GCSqGSIb3DQEBAQUAA0sAMEgCQQCC5r4nQBtnd9qgjnG8fBN5+gnqIeWEIcUFUdCG4su/vrbQ1py8XGKNUBuDjkyTv25Gd3hlrtNJV3eOKZVSL8ePAgMBAAE="
         };
 
-        private Peer other = new Peer
+        private readonly Peer other = new Peer
         {
             AgentVersion = "other",
             Id = "QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCM1h",
@@ -67,7 +67,7 @@ namespace Lib.P2P.Tests.Protocols
             var swarm = new SwarmService(self);
             var catalystProtocolA = new CatalystProtocol(swarm);
             await swarm.StartAsync();
-            var peerAAddress = await swarm.StartListeningAsync("/ip4/127.0.0.1/tcp/5002");
+            await swarm.StartListeningAsync("/ip4/127.0.0.1/tcp/5002");
 
             await catalystProtocolA.StartAsync();
             try
@@ -110,7 +110,7 @@ namespace Lib.P2P.Tests.Protocols
             var swarm = new SwarmService(self);
             var catalystProtocolA = new CatalystProtocol(swarm);
             await swarm.StartAsync();
-            var peerAAddress = await swarm.StartListeningAsync("/ip4/127.0.0.1/tcp/5004");
+            await swarm.StartListeningAsync("/ip4/127.0.0.1/tcp/5004");
 
             await catalystProtocolA.StartAsync();
             try
