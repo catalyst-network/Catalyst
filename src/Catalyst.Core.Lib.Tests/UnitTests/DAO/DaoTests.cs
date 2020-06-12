@@ -130,16 +130,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             reconverted.Should().Be(original);
         }
 
-        //[Test]
-        //public void PeerIdDao_PeerId_Should_Be_Convertible()
-        //{
-        //    var original = MultiAddressHelper.GetAddress("MyPeerId_Testing");
-
-        //    var peer = original.ToDao<PeerId, PeerIdDao>(_mapperProvider);
-        //    var reconverted = peer.ToProtoBuff<PeerIdDao, PeerId>(_mapperProvider);
-        //    reconverted.Should().Be(original);
-        //}
-
         [Test]
         public void SigningContextDao_SigningContext_Should_Be_Convertible()
         {

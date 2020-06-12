@@ -48,17 +48,12 @@ namespace Catalyst.Core.Lib.P2P
 {
     public class LibP2PPeerService : ILibP2PPeerService
     {
-        private readonly IScheduler _scheduler;
-        private readonly IPeerMessageCorrelationManager _messageCorrelationManager;
-        private readonly IKeySigner _keySigner;
-        private readonly IPeerIdValidator _peerIdValidator;
         private readonly IPubSubApi _pubSubApi;
         private readonly ICatalystProtocol _catalystProtocol;
         private readonly Peer _localPeer;
         private readonly IList<IInboundMessageHandler> _handlers;
         private readonly IEnumerable<IP2PMessageObserver> _messageObservers;
         private readonly IPubSubService _pubSubService;
-        private readonly ILogger _logger;
 
         private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _messageSubject;
         public IObservable<IObserverDto<ProtocolMessage>> MessageStream { private set; get; }
@@ -75,30 +70,37 @@ namespace Catalyst.Core.Lib.P2P
             IPubSubApi pubSubApi,
             ICatalystProtocol catalystProtocol,
             IPubSubService pubSubService,
-            ILogger logger,
-            IScheduler scheduler = null
-            )
+            ILogger logger
+            ) : this(messageObservers, messageCorrelationManager, keySigner, peerIdValidator, localPeer, pubSubApi, catalystProtocol, pubSubService, logger, Scheduler.Default)
+        { }
+
+        public LibP2PPeerService(
+           IEnumerable<IP2PMessageObserver> messageObservers,
+           IPeerMessageCorrelationManager messageCorrelationManager,
+           IKeySigner keySigner,
+           IPeerIdValidator peerIdValidator,
+           Peer localPeer,
+           IPubSubApi pubSubApi,
+           ICatalystProtocol catalystProtocol,
+           IPubSubService pubSubService,
+           ILogger logger,
+           IScheduler scheduler)
         {
-            _scheduler = scheduler ?? Scheduler.Default;
-            _messageCorrelationManager = messageCorrelationManager;
-            _keySigner = keySigner;
-            _peerIdValidator = peerIdValidator;
             _localPeer = localPeer;
             _pubSubApi = pubSubApi;
             _catalystProtocol = catalystProtocol;
             _pubSubService = pubSubService;
-            _messageSubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(_scheduler);
+            _messageSubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(scheduler);
             MessageStream = _messageSubject.AsObservable();
 
             _handlers = new List<IInboundMessageHandler>
             {
-                new PeerIdValidationHandler(_peerIdValidator),
-                new ProtocolMessageVerifyHandler(_keySigner),
-                new CorrelationHandler<IPeerMessageCorrelationManager>(_messageCorrelationManager)
+                new PeerIdValidationHandler(peerIdValidator),
+                new ProtocolMessageVerifyHandler(keySigner),
+                new CorrelationHandler<IPeerMessageCorrelationManager>(messageCorrelationManager)
             };
 
             _messageObservers = messageObservers;
-            _logger = logger;
         }
 
 

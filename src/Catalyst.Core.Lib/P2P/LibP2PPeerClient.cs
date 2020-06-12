@@ -33,7 +33,6 @@ using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Lib.P2P.Protocols;
-using Lib.P2P.PubSub;
 using MultiFormats;
 using System;
 using System.Collections.Generic;
@@ -78,7 +77,7 @@ namespace Catalyst.Core.Lib.P2P
             await StartAsync(CancellationToken.None).ConfigureAwait(false);
         }
 
-        public Task StartAsync(CancellationToken cancellationToken = default)
+        public Task StartAsync(CancellationToken cancellationToken)
         {
             _catalystProtocolHandlers = new List<IOutboundMessageHandler>
             {
