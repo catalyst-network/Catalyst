@@ -63,7 +63,7 @@ namespace Catalyst.Core.Lib.P2P
             var result = new MultiAddress($"{address}/ipfs/{localPeer.Id}");
 
             // Get the actual IP address(es).
-            IEnumerable<MultiAddress> addresses = new List<MultiAddress>();
+            IList<MultiAddress> addresses = null;
             var ips = NetworkInterface.GetAllNetworkInterfaces()
 
                // It appears that the loopback adapter is not UP on Ubuntu 14.04.5 LTS
@@ -75,14 +75,14 @@ namespace Catalyst.Core.Lib.P2P
                 addresses = ips
                    .Where(ip => ip.Address.AddressFamily == AddressFamily.InterNetwork)
                    .Select(ip => new MultiAddress(result.ToString().Replace("0.0.0.0", ip.Address.ToString())))
-                   .ToArray();
+                   .ToList();
             }
             else if (result.ToString().StartsWith("/ip6/::/"))
             {
                 addresses = ips
                    .Where(ip => ip.Address.AddressFamily == AddressFamily.InterNetworkV6)
                    .Select(ip => { return new MultiAddress(result.ToString().Replace("::", ip.Address.ToString())); })
-                   .ToArray();
+                   .ToList();
             }
             else
             {
@@ -137,37 +137,5 @@ namespace Catalyst.Core.Lib.P2P
 
             Address = addresses.First();
         }
-
-        //public PeerSettings(IConfigurationRoot rootSection, Peer localPeer, IConfigApi configApi)
-        //{
-        //    Guard.Argument(rootSection, nameof(rootSection)).NotNull();
-
-        //    var section = rootSection.GetSection("CatalystNodeConfiguration").GetSection("Peer");
-        //    Enum.TryParse(section.GetSection("Network").Value, out _networkType);
-
-        //    var pksi = Convert.FromBase64String(localPeer.PublicKey);
-        //    PublicKey = pksi.GetPublicKeyBytesFromPeerId().ToBase58();
-
-        //    Port = int.Parse(section.GetSection("Port").Value);
-        //    PayoutAddress = section.GetSection("PayoutAddress").Value;
-        //    BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value);
-        //    SeedServers = section.GetSection("SeedServers").GetChildren().Select(p => p.Value).ToList();
-        //    DnsServers = section.GetSection("DnsServers")
-        //       .GetChildren()
-        //       .Select(p => EndpointBuilder.BuildNewEndPoint(p.Value)).ToArray();
-
-        //    var publicIpAddress = IPAddress.Parse(section.GetSection("PublicIpAddress").Value);
-
-        //    //dfsService.StartAsync().GetAwaiter().GetResult();
-
-        //    //var json = configApi.GetAsync("Addresses.Swarm").ConfigureAwait(false).GetAwaiter().GetResult();
-        //    //foreach (string a in json)
-        //    //{
-        //    //    var addresses = GetAddresses(a, localPeer);
-        //    //    var b = 0;
-        //    //}
-
-        //    PeerId = new MultiAddress("/ip4/192.168.0.181/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdwu2yu3QMzKa2BDkb5C5pcuhtrH1G9HHbztbbxA8tGmf4");
-        //}
     }
 }

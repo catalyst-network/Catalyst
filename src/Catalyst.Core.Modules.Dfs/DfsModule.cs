@@ -90,9 +90,6 @@ namespace Catalyst.Core.Modules.Dfs
 
             builder.RegisterBuildCallback(x =>
             {
-                var localPeer = x.Resolve<Peer>();
-                var swarmService = x.Resolve<ISwarmService>();
-
                 var bitSwapService = x.Resolve<IBitswapService>();
                 bitSwapService.BlockService = x.Resolve<IBlockApi>();
             });

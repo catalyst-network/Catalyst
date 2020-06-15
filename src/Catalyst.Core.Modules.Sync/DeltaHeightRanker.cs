@@ -88,7 +88,7 @@ namespace Catalyst.Core.Modules.Sync
             return _messages.Count();
         }
 
-        public IOrderedEnumerable<IRankedItem<LatestDeltaHashResponse>> GetMessagesByMostPopular(Func<KeyValuePair<MultiAddress, LatestDeltaHashResponse>, bool> filter = null)
+        public IOrderedEnumerable<IRankedItem<LatestDeltaHashResponse>> GetMessagesByMostPopular()
         {
             return _messages.GroupBy(x => x.Value).Select(x => new RankedItem<LatestDeltaHashResponse> { Item = x.Key, Score = x.Count() }).OrderByDescending(x => x.Score).ThenByDescending(x => x.Item.DeltaIndex.Height);
         }

@@ -33,7 +33,7 @@ namespace Catalyst.Core.Lib.DAO.Deltas
     public class CandidateDeltaBroadcastDao : DaoBase
     {
         public string Hash { get; set; }
-        public PeerIdDao ProducerId { get; set; }
+        public string Producer { get; set; }
         public string PreviousDeltaDfsHash { get; set; }
     }
 

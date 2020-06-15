@@ -50,7 +50,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         private readonly ILogger _subbedLogger;
         private readonly MultiAddress _peerId;
         private readonly IPeerRepository _subbedPeerRepository;
-        private ILibP2PPeerClient _peerClient;
+        private readonly ILibP2PPeerClient _peerClient;
 
         public GetNeighbourRequestObserverTests()
         {

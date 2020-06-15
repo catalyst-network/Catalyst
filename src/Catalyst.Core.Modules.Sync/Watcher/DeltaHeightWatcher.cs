@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reactive.Linq;
 using System.Threading;
@@ -34,7 +33,6 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Wire;
-using Lib.P2P.Protocols;
 using Nethermind.Core.Extensions;
 
 namespace Catalyst.Core.Modules.Sync.Watcher
@@ -42,18 +40,16 @@ namespace Catalyst.Core.Modules.Sync.Watcher
     public class DeltaHeightWatcher : IDeltaHeightWatcher
     {
         private bool _disposed;
-        private readonly double _threshold;
         public IDeltaHeightRanker DeltaHeightRanker { private set; get; }
         private IDisposable _deltaHeightSubscription;
         private readonly ILibP2PPeerService _peerService;
         private readonly ILibP2PPeerClient _peerClient;
         private readonly ISwarmApi _swarmApi;
-        private int _countDown = 2;
 
         public DeltaIndex LatestDeltaHash { set; get; }
 
         private Timer _requestDeltaHeightTimer;
-        private AutoResetEvent _autoResetEvent;
+        private readonly AutoResetEvent _autoResetEvent;
 
         public DeltaHeightWatcher(ILibP2PPeerClient peerClient,
             ISwarmApi swarmApi,
@@ -65,19 +61,22 @@ namespace Catalyst.Core.Modules.Sync.Watcher
             _peerService = peerService;
             _autoResetEvent = new AutoResetEvent(false);
             _swarmApi = swarmApi;
-
-            _threshold = threshold;
         }
 
         public async void RequestDeltaHeightTimerCallback(object state)
         {
-            await RequestDeltaHeightFromPeers();
+            await RequestDeltaHeightFromPeers().ConfigureAwait(false);
         }
 
-        public async Task<DeltaIndex> WaitForDeltaIndexAsync(TimeSpan timeout = default, CancellationToken cancellationToken = default)
+        public async Task<DeltaIndex> WaitForDeltaIndexAsync(TimeSpan timeout)
+        {
+            return await WaitForDeltaIndexAsync(timeout, CancellationToken.None).ConfigureAwait(false);
+        }
+
+        public async Task<DeltaIndex> WaitForDeltaIndexAsync(TimeSpan timeout, CancellationToken cancellationToken)
         {
             await _autoResetEvent.WaitOneAsync(timeout, cancellationToken);
-            return await GetHighestDeltaIndexAsync();
+            return await GetHighestDeltaIndexAsync().ConfigureAwait(false);
         }
 
         public Task<DeltaIndex> GetHighestDeltaIndexAsync()

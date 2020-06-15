@@ -54,7 +54,7 @@ namespace Catalyst.Core.Lib.P2P.Protocols
             DeltaHistoryResponseMessageStreamer = new ReplaySubject<IPeerDeltaHistoryResponse>(1, observableScheduler ?? Scheduler.Default);
         }
 
-        public async Task<IPeerDeltaHistoryResponse> DeltaHistoryAsync(MultiAddress recipientPeerId, uint height = 1, uint range = 1024)
+        public async Task<IPeerDeltaHistoryResponse> DeltaHistoryAsync(MultiAddress recipientPeerId, uint height, uint range)
         {
             IPeerDeltaHistoryResponse history;
             try

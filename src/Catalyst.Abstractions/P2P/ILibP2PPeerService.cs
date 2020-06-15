@@ -32,6 +32,7 @@ namespace Catalyst.Abstractions.P2P
     public interface ILibP2PPeerService
     {
         IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
-        Task StartAsync(CancellationToken cancellationToken = default);
+        Task StartAsync();
+        Task StartAsync(CancellationToken cancellationToken);
     }
 }
