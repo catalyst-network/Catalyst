@@ -177,7 +177,8 @@ namespace Catalyst.Core.Modules.Web3
 
         public void Configure(IApplicationBuilder app)
         {
-            app.UseHttpsRedirection();
+            //enable to force http to upgrade to https, disabled because dashboard uses http, wallet https.
+            //app.UseHttpsRedirection();
             app.UseRouting();
             app.UseDeveloperExceptionPage();
             app.UseCors("AllowOrigin");
