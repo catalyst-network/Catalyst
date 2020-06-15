@@ -72,7 +72,6 @@ namespace Catalyst.Core.Modules.Web3
                 _container = container;
                 var logger = _container.Resolve<ILogger>();
                 var certificateStore = _container.Resolve<ICertificateStore>();
-                var certificate = certificateStore.ReadOrCreateCertificateFile(_certificateName);
                 try
                 {
                     await Host.CreateDefaultBuilder()
@@ -90,6 +89,7 @@ namespace Catalyst.Core.Modules.Web3
                                    {
                                        if (_certificateName != null)
                                        {
+                                           var certificate = certificateStore.ReadOrCreateCertificateFile(_certificateName);
                                            options.Listen(_apiBindingAddress, listenOptions =>
                                            {
                                                listenOptions.UseHttps(certificate);

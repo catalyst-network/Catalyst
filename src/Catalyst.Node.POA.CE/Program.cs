@@ -135,7 +135,7 @@ namespace Catalyst.Node.POA.CE
                 {typeof(AuthenticationModule), () => new AuthenticationModule()},
                 {
                     typeof(ApiModule),
-                    () => new ApiModule(new IPEndPoint(IPAddress.Any, 5005), new List<string> {"Catalyst.Core.Modules.Web3", "Catalyst.Core.Modules.Dfs"}, "cert.pfx")
+                    () => new ApiModule(new IPEndPoint(IPAddress.Any, 5005), new List<string> {"Catalyst.Core.Modules.Web3", "Catalyst.Core.Modules.Dfs"}, null)
                 },
                 {typeof(PoaConsensusModule), () => new PoaConsensusModule()},
                 {typeof(PoaP2PModule), () => new PoaP2PModule()}
