@@ -25,13 +25,13 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Core.Modules.Web3.Controllers.Handlers;
+using Catalyst.Core.Modules.Web3.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -47,16 +47,22 @@ namespace Catalyst.Core.Modules.Web3
 {
     public sealed class ApiModule : Module
     {
-        private readonly IPEndPoint _apiBindingAddress;
-        private readonly string _certificateName;
+        private readonly HttpOptions _httpOptions;
+        private readonly HttpsOptions _httpsOptions;
         private readonly string[] _controllerModules;
         private IContainer _container;
         private readonly bool _addSwagger;
 
-        public ApiModule(IPEndPoint apiBindingAddress, List<string> controllerModules, string certificateName = null, bool addSwagger = true)
+        public ApiModule(HttpOptions httpOptions, List<string> controllerModules, bool addSwagger = true) : this(httpOptions, null, controllerModules, addSwagger)
+        { }
+
+        public ApiModule(HttpsOptions httpsOptions, List<string> controllerModules, bool addSwagger = true) : this(null, httpsOptions, controllerModules, addSwagger)
+        { }
+
+        public ApiModule(HttpOptions httpOptions, HttpsOptions httpsOptions, List<string> controllerModules, bool addSwagger = true)
         {
-            _apiBindingAddress = apiBindingAddress;
-            _certificateName = certificateName;
+            _httpOptions = httpOptions;
+            _httpsOptions = httpsOptions;
             _controllerModules = controllerModules.ToArray();
             _addSwagger = addSwagger;
         }
@@ -72,7 +78,6 @@ namespace Catalyst.Core.Modules.Web3
                 _container = container;
                 var logger = _container.Resolve<ILogger>();
                 var certificateStore = _container.Resolve<ICertificateStore>();
-                var certificate = certificateStore.ReadOrCreateCertificateFile(_certificateName);
                 try
                 {
                     await Host.CreateDefaultBuilder()
@@ -88,17 +93,19 @@ namespace Catalyst.Core.Modules.Web3
                                    .UseWebRoot(webDirectory.FullName)
                                    .ConfigureKestrel(options =>
                                    {
-                                       if (_certificateName != null)
+                                       if (_httpsOptions != null)
                                        {
-                                           options.Listen(_apiBindingAddress, listenOptions =>
+                                           var certificate = certificateStore.ReadOrCreateCertificateFile(_httpsOptions.CertificateName);
+                                           options.Listen(_httpsOptions.BindingAddress, listenOptions =>
                                            {
                                                listenOptions.UseHttps(certificate);
                                            });
                                            options.ConfigureHttpsDefaults(o => o.ClientCertificateMode = ClientCertificateMode.RequireCertificate);
                                        }
-                                       else
+
+                                       if (_httpOptions != null)
                                        {
-                                           options.Listen(_apiBindingAddress);
+                                           options.Listen(_httpOptions.BindingAddress);
                                        }
                                    })
                                    .UseSerilog();

@@ -85,6 +85,7 @@ using Catalyst.Core.Lib.Extensions;
 using Lib.P2P.Protocols;
 using Catalyst.Abstractions.Sync.Interfaces;
 using System.Net;
+using Catalyst.Core.Modules.Web3.Options;
 
 namespace Catalyst.TestUtils
 {
@@ -196,7 +197,7 @@ namespace Catalyst.TestUtils
                 {typeof(AuthenticationModule), () => new AuthenticationModule()},
                 {
                     typeof(ApiModule),
-                    () => new ApiModule(new IPEndPoint(IPAddress.Any, 5005), new List<string> {"Catalyst.Core.Modules.Web3", "Catalyst.Core.Modules.Dfs"}, "cert.pfx")
+                    () => new ApiModule(new HttpOptions(new IPEndPoint(IPAddress.Any, 5005)), new HttpsOptions(new IPEndPoint(IPAddress.Any, 2053), "cert.pfx"), new List<string> {"Catalyst.Core.Modules.Web3", "Catalyst.Core.Modules.Dfs"})
                 },
                 {typeof(PoaConsensusModule), () => new PoaConsensusModule()},
                 {typeof(PoaP2PModule), () => new PoaP2PModule()}
