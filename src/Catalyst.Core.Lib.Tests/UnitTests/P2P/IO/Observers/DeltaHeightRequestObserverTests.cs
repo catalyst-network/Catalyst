@@ -38,10 +38,9 @@ using Microsoft.Reactive.Testing;
 using MultiFormats;
 using NSubstitute;
 using Serilog;
-using SharpRepository.InMemoryRepository;
 using NUnit.Framework;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Core.Abstractions.Sync;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 {
@@ -58,8 +57,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _subbedLogger = Substitute.For<ILogger>();
             _peerClient = Substitute.For<ILibP2PPeerClient>();
             var peerSettings = MultiAddressHelper.GetAddress("sender").ToSubstitutedPeerSettings();
+            var syncState = new SyncState { IsSynchronized = true };
             _deltaHeightRequestObserver = new DeltaHeightRequestObserver(peerSettings,
-                Substitute.For<IDeltaIndexService>(), new TestMapperProvider(), _peerClient, new Abstractions.Sync.SyncState() { IsSynchronized = true },
+                Substitute.For<IDeltaIndexService>(), new TestMapperProvider(), _peerClient, syncState,
                 _subbedLogger
             );
         }

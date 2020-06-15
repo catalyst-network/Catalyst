@@ -45,7 +45,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         private readonly TestScheduler _testScheduler;
         private readonly ILogger _subbedLogger;
         private readonly PingRequestObserver _pingRequestObserver;
-        private ILibP2PPeerClient _peerClient;
+        private readonly ILibP2PPeerClient _peerClient;
 
         public PingRequestObserverTests()
         {

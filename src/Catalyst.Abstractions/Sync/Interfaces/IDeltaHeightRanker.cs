@@ -32,12 +32,12 @@ namespace Catalyst.Abstractions.Sync.Interfaces
 {
     public interface IDeltaHeightRanker : IDisposable
     {
-         IEnumerable<MultiAddress> GetPeers();
+        IEnumerable<MultiAddress> GetPeers();
 
-         void Add(MultiAddress key, LatestDeltaHashResponse value);
+        void Add(MultiAddress key, LatestDeltaHashResponse value);
 
-         int Count();
+        int Count();
 
-         IOrderedEnumerable<IRankedItem<LatestDeltaHashResponse>> GetMessagesByMostPopular(Func<KeyValuePair<MultiAddress, LatestDeltaHashResponse>, bool> filter = null);
+        IOrderedEnumerable<IRankedItem<LatestDeltaHashResponse>> GetMessagesByMostPopular();
     }
 }

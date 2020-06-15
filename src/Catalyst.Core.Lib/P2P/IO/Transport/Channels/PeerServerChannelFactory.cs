@@ -58,7 +58,6 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
         private readonly IKeySigner _keySigner;
         private readonly IPeerIdValidator _peerIdValidator;
         private readonly SigningContext _signingContext;
-        private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _messageSubject;
         public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
 
         public PeerServerChannelFactory(IPeerMessageCorrelationManager messageCorrelationManager,
@@ -74,8 +73,9 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
             _keySigner = keySigner;
             _peerIdValidator = peerIdValidator;
             _signingContext = new SigningContext {NetworkType = peerSettings.NetworkType, SignatureType = SignatureType.ProtocolPeer};
-            _messageSubject = new ReplaySubject<IObserverDto<ProtocolMessage>>();
-            MessageStream = _messageSubject.AsObservable();
+            
+            var messageSubject = new ReplaySubject<IObserverDto<ProtocolMessage>>();
+            MessageStream = messageSubject.AsObservable();
         }
 
         protected override Func<List<IChannelHandler>> HandlerGenerationFunction

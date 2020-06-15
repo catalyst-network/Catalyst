@@ -30,10 +30,8 @@ using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cli;
-using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Deltas;
@@ -48,7 +46,6 @@ namespace Catalyst.Core.Modules.Sync.Manager
         private readonly double _threshold;
         private int _minimumPeers;
         private readonly ILibP2PPeerClient _peerClient;
-        private readonly IPeerRepository _peerRepository;
         private readonly ILibP2PPeerService _peerService;
         private readonly IUserOutput _userOutput;
         private readonly ISwarmApi _swarmApi;
@@ -99,7 +96,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
             }
             catch(TaskCanceledException)
             {
-
+                //Task has been canceled.
             }
         }
 
@@ -129,7 +126,6 @@ namespace Catalyst.Core.Modules.Sync.Manager
             {
                 if (_deltaHistoryRanker != null)
                 {
-                    //var peers = _deltaHeightWatcher.DeltaHeightRanker.GetPeers();
                     var peers = await _swarmApi.PeersAsync().ConfigureAwait(false);
                     var messageCount = Math.Min(_minimumPeers, 50);
                     var minimumThreshold = messageCount * _threshold;

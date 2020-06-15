@@ -48,17 +48,12 @@ namespace Catalyst.Core.Lib.P2P
 {
     public class LibP2PPeerService : ILibP2PPeerService
     {
-        private readonly IScheduler _scheduler;
-        private readonly IPeerMessageCorrelationManager _messageCorrelationManager;
-        private readonly IKeySigner _keySigner;
-        private readonly IPeerIdValidator _peerIdValidator;
         private readonly IPubSubApi _pubSubApi;
         private readonly ICatalystProtocol _catalystProtocol;
         private readonly Peer _localPeer;
         private readonly IList<IInboundMessageHandler> _handlers;
         private readonly IEnumerable<IP2PMessageObserver> _messageObservers;
         private readonly IPubSubService _pubSubService;
-        private readonly ILogger _logger;
 
         private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _messageSubject;
         public IObservable<IObserverDto<ProtocolMessage>> MessageStream { private set; get; }
@@ -75,30 +70,37 @@ namespace Catalyst.Core.Lib.P2P
             IPubSubApi pubSubApi,
             ICatalystProtocol catalystProtocol,
             IPubSubService pubSubService,
-            ILogger logger,
-            IScheduler scheduler = null
-            )
+            ILogger logger
+            ) : this(messageObservers, messageCorrelationManager, keySigner, peerIdValidator, localPeer, pubSubApi, catalystProtocol, pubSubService, logger, Scheduler.Default)
+        { }
+
+        public LibP2PPeerService(
+           IEnumerable<IP2PMessageObserver> messageObservers,
+           IPeerMessageCorrelationManager messageCorrelationManager,
+           IKeySigner keySigner,
+           IPeerIdValidator peerIdValidator,
+           Peer localPeer,
+           IPubSubApi pubSubApi,
+           ICatalystProtocol catalystProtocol,
+           IPubSubService pubSubService,
+           ILogger logger,
+           IScheduler scheduler)
         {
-            _scheduler = scheduler ?? Scheduler.Default;
-            _messageCorrelationManager = messageCorrelationManager;
-            _keySigner = keySigner;
-            _peerIdValidator = peerIdValidator;
             _localPeer = localPeer;
             _pubSubApi = pubSubApi;
             _catalystProtocol = catalystProtocol;
             _pubSubService = pubSubService;
-            _messageSubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(_scheduler);
+            _messageSubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(scheduler);
             MessageStream = _messageSubject.AsObservable();
 
             _handlers = new List<IInboundMessageHandler>
             {
-                new PeerIdValidationHandler(_peerIdValidator),
-                new ProtocolMessageVerifyHandler(_keySigner),
-                new CorrelationHandler<IPeerMessageCorrelationManager>(_messageCorrelationManager)
+                new PeerIdValidationHandler(peerIdValidator),
+                new ProtocolMessageVerifyHandler(keySigner),
+                new CorrelationHandler<IPeerMessageCorrelationManager>(messageCorrelationManager)
             };
 
             _messageObservers = messageObservers;
-            _logger = logger;
         }
 
 
@@ -109,9 +111,9 @@ namespace Catalyst.Core.Lib.P2P
         /// <returns></returns>
         public async Task<IObservable<IObserverDto<ProtocolMessage>>> BuildMessageStreamAsync()
         {
-            await SubscribeToCatalystLibP2PProtocol();
+            await SubscribeToCatalystLibP2PProtocol().ConfigureAwait(false);
 
-            await SubscribeToCatalystPubSub();
+            await SubscribeToCatalystPubSub().ConfigureAwait(false);
 
             return MessageStream;
         }
@@ -120,7 +122,7 @@ namespace Catalyst.Core.Lib.P2P
         {
             _catalystProtocol.MessageStream.Subscribe(async message =>
             {
-                await ProcessMessageAsync(message);
+                await ProcessMessageAsync(message).ConfigureAwait(false);
             });
 
             return Task.CompletedTask;
@@ -133,16 +135,16 @@ namespace Catalyst.Core.Lib.P2P
                 if (msg.Sender.Id != _localPeer.Id)
                 {
                     var protocolMessage = ProtocolMessage.Parser.ParseFrom(msg.DataStream);
-                    await ProcessMessageAsync(protocolMessage);
+                    await ProcessMessageAsync(protocolMessage).ConfigureAwait(false);
                 }
-            }, CancellationToken.None);
+            }, CancellationToken.None).ConfigureAwait(false);
         }
 
         private async Task ProcessMessageAsync(ProtocolMessage message)
         {
             foreach (var handler in _handlers)
             {
-                var result = await handler.ProcessAsync(message);
+                var result = await handler.ProcessAsync(message).ConfigureAwait(false);
                 if (!result)
                 {
                     return;
@@ -152,9 +154,14 @@ namespace Catalyst.Core.Lib.P2P
             _messageSubject.OnNext(new ObserverDto(null, message));
         }
 
-        public async Task StartAsync(CancellationToken cancellationToken = default)
+        public async Task StartAsync()
         {
-            MessageStream = await BuildMessageStreamAsync();
+            await StartAsync(CancellationToken.None).ConfigureAwait(false);
+        }
+
+        public async Task StartAsync(CancellationToken cancellationToken)
+        {
+            MessageStream = await BuildMessageStreamAsync().ConfigureAwait(false);
             _messageObservers.ToList().ForEach(h => h.StartObserving(MessageStream));
 
             foreach (var router in _pubSubService.Routers)
