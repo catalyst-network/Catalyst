@@ -81,8 +81,6 @@ using Catalyst.Abstractions.Dfs.CoreApi;
 using Newtonsoft.Json.Linq;
 using MultiFormats;
 using Catalyst.Core.Abstractions.Sync;
-using Catalyst.Core.Lib.Extensions;
-using Lib.P2P.Protocols;
 using Catalyst.Abstractions.Sync.Interfaces;
 using System.Net;
 

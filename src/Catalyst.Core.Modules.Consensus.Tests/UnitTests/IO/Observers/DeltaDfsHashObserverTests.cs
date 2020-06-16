@@ -76,6 +76,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             var receivedMessage = PrepareReceivedMessage(newHash.ToArray(), prevHash.ToArray());
 
             var multiAddress = new MultiAddress(receivedMessage.Payload.Address);
+
             _deltaProducersProvider.GetDeltaProducersFromPreviousDelta(prevHash).Returns(new[] { multiAddress.GetPublicKey() });
             _peerRepository.GetPoaPeersByPublicKey(multiAddress.GetPublicKey()).Returns(new List<Peer>() { new Peer() });
             var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _deltaProducersProvider, _syncState, _peerRepository, _logger);
