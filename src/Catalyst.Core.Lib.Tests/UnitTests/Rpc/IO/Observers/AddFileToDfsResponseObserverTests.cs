@@ -50,7 +50,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         public void HandlerRemovesFileTransferOnError()
         {
             var channelHandlerContext = Substitute.For<IChannelHandlerContext>();
-            var senderPeerIdentifier = PeerIdHelper.GetPeerId();
+            var senderentifier = MultiAddressHelper.GetAddress();
             var correlationId = CorrelationId.GenerateCorrelationId();
 
             var addFileResponse = new AddFileToDfsResponse
@@ -64,7 +64,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 _uploadFileTransferFactory
             );
             addFileToDfsResponseObserver.HandleResponseObserver(addFileResponse, channelHandlerContext,
-                senderPeerIdentifier, correlationId);
+                senderentifier, correlationId);
             _uploadFileTransferFactory.Received(1).Remove(Arg.Any<IUploadFileInformation>(), true);
         }
 
@@ -72,7 +72,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         public void InitializesFileTransferOnSuccessResponse()
         {
             var channelHandlerContext = Substitute.For<IChannelHandlerContext>();
-            var senderPeerId = PeerIdHelper.GetPeerId();
+            var sender = MultiAddressHelper.GetAddress();
             var correlationId = CorrelationId.GenerateCorrelationId();
 
             var addFileResponse = new AddFileToDfsResponse
@@ -87,7 +87,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             );
 
             addFileToDfsResponseObserver.HandleResponseObserver(addFileResponse, channelHandlerContext,
-                senderPeerId, correlationId);
+                sender, correlationId);
             _uploadFileTransferFactory.Received(1)
               ?.FileTransferAsync(Arg.Any<ICorrelationId>(), Arg.Any<CancellationToken>());
         }

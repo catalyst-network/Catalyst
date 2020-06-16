@@ -31,7 +31,6 @@ using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
@@ -43,6 +42,8 @@ using Serilog;
 using SharpRepository.InMemoryRepository;
 using NUnit.Framework;
 using Catalyst.Core.Lib.P2P.Repository;
+using MultiFormats;
+using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -54,15 +55,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         private ILogger _logger;
         private IChannelHandlerContext _fakeContext;
         private IPeerRepository _peerRepository;
+        private ILibP2PPeerClient _peerClient;
 
         [SetUp]
         public void Init()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-
-            var fakeChannel = Substitute.For<IChannel>();
-            _fakeContext.Channel.Returns(fakeChannel);
+            _peerClient = Substitute.For<ILibP2PPeerClient>();
 
             _peerRepository = new PeerRepository(new InMemoryRepository<Peer, string>());
             _peerRepository.Add(GetPeerTestData());
@@ -72,24 +72,24 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         {
             yield return new Peer
             {
-                PeerId =
-                    PeerIdHelper.GetPeerId("publickey-1", IPAddress.Parse("172.0.0.1"), 9090),
+                Address =
+                    MultiAddressHelper.GetAddress("publickey-1", IPAddress.Parse("172.0.0.1"), 9090),
                 Reputation = 0,
                 LastSeen = DateTime.UtcNow,
                 Created = DateTime.UtcNow
             };
             yield return new Peer
             {
-                PeerId =
-                    PeerIdHelper.GetPeerId("publickey-2", IPAddress.Parse("172.0.0.2"), 9090),
+                Address =
+                    MultiAddressHelper.GetAddress("publickey-2", IPAddress.Parse("172.0.0.2"), 9090),
                 Reputation = 1,
                 LastSeen = DateTime.UtcNow,
                 Created = DateTime.UtcNow
             };
             yield return new Peer
             {
-                PeerId =
-                    PeerIdHelper.GetPeerId("publickey-3", IPAddress.Parse("172.0.0.3"), 9090),
+                Address =
+                    MultiAddressHelper.GetAddress("publickey-3", IPAddress.Parse("172.0.0.3"), 9090),
                 Reputation = 2,
                 LastSeen = DateTime.UtcNow,
                 Created = DateTime.UtcNow
@@ -106,14 +106,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         [TestCase("publickey-2", "172.0.0.2")]
         public void TestGetPeerInfoRequestResponse(string publicKey, string ipAddress)
         {
-            var peerId = PeerIdHelper.GetPeerId(publicKey, ipAddress, 12345);
+            var peerId = MultiAddressHelper.GetAddress(publicKey, ipAddress, 9090);
             var responseContent = GetPeerInfoTest(peerId);
             responseContent.PeerInfo.Count().Should().Be(1);
 
             foreach (var peerInfo in responseContent.PeerInfo)
             {
-                peerInfo.PeerId.Ip.ToByteArray().Should().BeEquivalentTo(peerId.Ip.ToByteArray());
-                peerInfo.PeerId.PublicKey.ToByteArray().Should().BeEquivalentTo(peerId.PublicKey.ToByteArray());
+                peerInfo.Address.ToString().Should().Be(peerId.ToString());
             }
         }
 
@@ -129,7 +128,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         [TestCase("publickey-3", "0.0.0.0")]
         public void TestGetPeerInfoRequestResponseForNonExistantPeers(string publicKey, string ipAddress)
         {
-            var peerId = PeerIdHelper.GetPeerId(publicKey, ipAddress, 12345);
+            var peerId = MultiAddressHelper.GetAddress(publicKey, ipAddress, 12345);
             var responseContent = GetPeerInfoTest(peerId);
             responseContent.PeerInfo.Count.Should().Be(0);
         }
@@ -138,29 +137,27 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         ///     Tests the data/communication through protobuf
         /// </summary>
         /// <returns></returns>
-        private GetPeerInfoResponse GetPeerInfoTest(PeerId peerId)
+        private GetPeerInfoResponse GetPeerInfoTest(MultiAddress address)
         {
             var testScheduler = new TestScheduler();
 
-            _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
-
-            var senderPeerIdentifier = PeerIdHelper.GetPeerId("sender");
-            var getPeerInfoRequest = new GetPeerInfoRequest {PublicKey = peerId.PublicKey, Ip = peerId.Ip};
+            var senderentifier = MultiAddressHelper.GetAddress("sender");
+            var getPeerInfoRequest = new GetPeerInfoRequest {Address = address.ToString()};
 
             var protocolMessage =
-                getPeerInfoRequest.ToProtocolMessage(senderPeerIdentifier);
+                getPeerInfoRequest.ToProtocolMessage(senderentifier);
 
             var messageStream =
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
-            var peerSettings = senderPeerIdentifier.ToSubstitutedPeerSettings();
-            var handler = new GetPeerInfoRequestObserver(peerSettings, _logger, _peerRepository);
+            var peerSettings = senderentifier.ToSubstitutedPeerSettings();
+            var handler = new GetPeerInfoRequestObserver(peerSettings, _logger, _peerRepository, _peerClient);
 
             handler.StartObserving(messageStream);
 
             testScheduler.Start();
 
-            var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
+            var receivedCalls = _peerClient.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls[0].GetArguments().Single();

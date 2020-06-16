@@ -28,6 +28,7 @@ using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Peer;
@@ -65,7 +66,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         private readonly IMemoryCache _candidatesCache;
 
         private readonly IDeltaProducersProvider _deltaProducersProvider;
-        private readonly PeerId _localPeerIdentifier;
+        private readonly MultiAddress _localPeerIdentifier;
         private readonly ILogger _logger;
         private readonly Func<MemoryCacheEntryOptions> _cacheEntryOptions;
 
@@ -76,7 +77,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         {
             _candidatesCache = candidatesCache;
             _deltaProducersProvider = deltaProducersProvider;
-            _localPeerIdentifier = peerSettings.PeerId;
+            _localPeerIdentifier = peerSettings.Address;
             _cacheEntryOptions = () => new MemoryCacheEntryOptions()
                .AddExpirationToken(
                     new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(3)).Token));
@@ -166,7 +167,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             favourite = new FavouriteDeltaBroadcast
             {
                 Candidate = bestCandidate,
-                VoterId = _localPeerIdentifier
+                Voter = _localPeerIdentifier.ToString()
             };
 
             _logger.Debug("Retrieved favourite candidate delta {candidate} for the successor of delta {previousDelta}",
@@ -180,17 +181,20 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         {
             var preferredProducers = _deltaProducersProvider
                .GetDeltaProducersFromPreviousDelta(candidate.PreviousDeltaDfsHash.ToByteArray().ToCid());
-            var ranking = preferredProducers.ToList()
-               .FindIndex(p => p.Equals(candidate.ProducerId));
 
-            var identifier = candidate.ProducerId;
+            var address = new MultiAddress(candidate.Producer);
+            var candidatePublicKey = address.GetPublicKey();
+            var ranking = preferredProducers.ToList()
+               .FindIndex(p => p.Equals(candidatePublicKey));
+
+            var identifier = candidate.Producer;
             _logger.Verbose("ranking for block produced by {producerId} = {ranking}",
                 identifier, ranking);
 
             if (ranking == -1)
             {
                 throw new KeyNotFoundException(
-                    $"Producer {candidate.ProducerId} " +
+                    $"Producer {candidate.Producer} " +
                     "should not be sending candidate deltas with previous hash " +
                     $"{candidate.PreviousDeltaDfsHash.ToByteArray().ToCid()} {candidate.PreviousDeltaDfsHash.ToByteArray().ToCid().Hash.ToBase32()}");
             }

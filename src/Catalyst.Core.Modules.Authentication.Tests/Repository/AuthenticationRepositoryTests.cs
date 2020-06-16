@@ -30,23 +30,23 @@ using Catalyst.TestUtils;
 using FluentAssertions;
 using SharpRepository.InMemoryRepository;
 using NUnit.Framework;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.Authentication.Tests.Repository
 {
     public sealed class AuthenticationRepositoryTests
     {
         private readonly IAuthenticationStrategy _repositoryAuthenticationStrategy;
-        private readonly PeerId _trustedPeer;
+        private readonly MultiAddress _trustedPeer;
 
         public AuthenticationRepositoryTests()
         {
-            _trustedPeer = PeerIdHelper.GetPeerId("Trusted");
+            _trustedPeer = MultiAddressHelper.GetAddress("Trusted");
             var whiteListRepo = new AuthCredentialRepository(new InMemoryRepository<AuthCredentials, string>());
 
             whiteListRepo.Add(new AuthCredentials
             {
-                PublicKey = _trustedPeer.PublicKey.KeyToString(),
-                IpAddress = _trustedPeer.Ip.ToString()
+                Address = _trustedPeer.ToString()
             });
 
             _repositoryAuthenticationStrategy = new RepositoryAuthenticationStrategy(whiteListRepo);
@@ -61,7 +61,7 @@ namespace Catalyst.Core.Modules.Authentication.Tests.Repository
         [Test]
         public void Can_Invalidate_Untrusted_Peer()
         {
-            _repositoryAuthenticationStrategy.Authenticate(PeerIdHelper.GetPeerId("NotTrusted"))
+            _repositoryAuthenticationStrategy.Authenticate(MultiAddressHelper.GetAddress("NotTrusted"))
                .Should().BeFalse();
         }
     }

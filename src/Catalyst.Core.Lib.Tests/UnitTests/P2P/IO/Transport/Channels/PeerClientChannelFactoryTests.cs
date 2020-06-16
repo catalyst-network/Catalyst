@@ -49,6 +49,7 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
 {
@@ -88,7 +89,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
             peerSettings.NetworkType.Returns(NetworkType.Devnet);
 
             var peerValidator = Substitute.For<IPeerIdValidator>();
-            peerValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
+            peerValidator.ValidatePeerIdFormat(Arg.Any<MultiAddress>()).Returns(true);
 
             _factory = new TestPeerClientChannelFactory(
                 _keySigner,
@@ -117,7 +118,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());
 
-            var senderId = PeerIdHelper.GetPeerId("sender");
+            var senderId = MultiAddressHelper.GetAddress("sender");
             var correlationId = CorrelationId.GenerateCorrelationId();
             var protocolMessage = new PingRequest().ToProtocolMessage(senderId, correlationId);
             var signature = ByteUtil.GenerateRandomByteArray(new FfiWrapper().SignatureLength);

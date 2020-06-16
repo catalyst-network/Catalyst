@@ -25,8 +25,7 @@ using System;
 using Catalyst.Abstractions.Lib.Util;
 using Catalyst.Abstractions.P2P.Models;
 using Catalyst.Abstractions.Service.Attributes;
-using Catalyst.Protocol.Peer;
-using Google.Protobuf;
+using MultiFormats;
 using SharpRepository.Repository;
 
 namespace Catalyst.Core.Lib.P2P.Models
@@ -35,10 +34,10 @@ namespace Catalyst.Core.Lib.P2P.Models
     public sealed class Peer : IPeer
     {
         [RepositoryPrimaryKey(Order = 1)]
-        public string DocumentId => PeerId?.ToByteString().ToBase64();
+        public string DocumentId => Address.ToString();
         
         /// <inheritdoc />
-        public PeerId PeerId { get; set; }
+        public MultiAddress Address { get; set; }
 
         public bool IsPoaNode { set; get; }
 

@@ -24,12 +24,13 @@
 using Catalyst.Abstractions.IO.Transport;
 using Catalyst.Protocol.Peer;
 using Google.Protobuf;
+using MultiFormats;
 using System.Collections.Generic;
 
 namespace Catalyst.Abstractions.P2P
 {
     public interface IPeerClient : ISocketClient
     {
-        void SendMessageToPeers(IMessage message, IEnumerable<PeerId> peers);
+        void SendMessageToPeers(IMessage message, IEnumerable<MultiAddress> peers);
     }
 }

@@ -21,33 +21,23 @@
 
 #endregion
 
-using System;
-using System.IO;
-using System.Linq;
 using System.Net;
 using System.Text;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Core.Lib.Cryptography.Proto;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Network;
-using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Protocol.Peer;
 using MultiFormats;
 using NSubstitute;
-using Org.BouncyCastle.Crypto;
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Security;
-using Org.BouncyCastle.X509;
-using ProtoBuf;
 
 namespace Catalyst.TestUtils
 {
-    public static class PeerIdHelper
+    public static class MultiAddressHelper
     {
         private static ICryptoContext ffiWrapper = new FfiWrapper();
-        public static PeerId GetPeerId(byte[] publicKey = null,
+        public static MultiAddress GetAddress(byte[] publicKey = null,
             IPAddress ipAddress = null,
             int port = 12345)
         {
@@ -66,34 +56,29 @@ namespace Catalyst.TestUtils
                 publicKey = ((Ed25519PublicKeyParameters) keyPair.Public).GetEncoded();
             }
 
-            var peerIdentifier = new PeerId
-            {
-                PublicKey = publicKey.ToByteString(),
-                Ip = (ipAddress ?? IPAddress.Loopback).To16Bytes().ToByteString(),
-                Port = (ushort) port
-            };
-            return peerIdentifier;
+            var address = new MultiAddress($"/ip4/{ipAddress ?? IPAddress.Loopback}/tcp/{port}/ipfs/{publicKey.ToPeerId()}");
+            return address;
         }
 
-        public static PeerId GetPeerId(string publicKeySeed,
+        public static MultiAddress GetAddress(string publicKeySeed,
             IPAddress ipAddress = null,
             int port = 12345)
         {
-            return GetPeerId(Encoding.UTF8.GetBytes(publicKeySeed), ipAddress, port);
+            return GetAddress(Encoding.UTF8.GetBytes(publicKeySeed), ipAddress, port);
         }
 
-        public static PeerId GetPeerId(string publicKey, string ipAddress, int port)
+        public static MultiAddress GetAddress(string publicKey, string ipAddress, int port)
         {
-            return GetPeerId(publicKey, IPAddress.Parse(ipAddress), port);
+            return GetAddress(publicKey, IPAddress.Parse(ipAddress), port);
         }
 
-        public static IPeerSettings ToSubstitutedPeerSettings(this PeerId peerId)
+        public static IPeerSettings ToSubstitutedPeerSettings(this MultiAddress address)
         {
             var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.PeerId.Returns(peerId);
-            peerSettings.BindAddress.Returns(peerId.IpAddress);
-            peerSettings.Port.Returns((int) peerId.Port);
-            peerSettings.PublicKey.Returns(peerId.PublicKey.KeyToString());
+            peerSettings.Address.Returns(address);
+            peerSettings.BindAddress.Returns(IPAddress.Parse(address.GetIpAddress().ToString()));
+            peerSettings.Port.Returns((int) address.GetPort());
+            peerSettings.PublicKey.Returns(address.GetPublicKey());
             return peerSettings;
         }
     }

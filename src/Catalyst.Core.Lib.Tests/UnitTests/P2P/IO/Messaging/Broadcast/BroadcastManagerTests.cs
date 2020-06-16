@@ -42,6 +42,7 @@ using Serilog;
 using SharpRepository.InMemoryRepository;
 using NUnit.Framework;
 using Catalyst.Core.Lib.P2P.Repository;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
 {
@@ -50,26 +51,26 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
         private IPeerRepository _peers;
         private IMemoryCache _cache;
         private FakeKeySigner _keySigner;
-        private PeerId _senderPeerId;
+        private MultiAddress _sender;
         private IPeerSettings _peerSettings;
 
         [SetUp]
         public void Init()
         {
-            _senderPeerId = PeerIdHelper.GetPeerId("sender");
+            _sender = MultiAddressHelper.GetAddress("sender");
             _keySigner = Substitute.For<FakeKeySigner>();
             var fakeSignature = Substitute.For<ISignature>();
             _keySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(fakeSignature);
             _keySigner.CryptoContext.SignatureLength.Returns(64);
             _peers = new PeerRepository(new InMemoryRepository<Peer, string>());
             _cache = new MemoryCache(new MemoryCacheOptions());
-            _peerSettings = _senderPeerId.ToSubstitutedPeerSettings();
+            _peerSettings = _sender.ToSubstitutedPeerSettings();
         }
 
         [Test]
         public async Task Can_Increase_Broadcast_Count_When_Broadcast_Owner_Broadcasting()
         {
-            await TestBroadcast(100, _senderPeerId,
+            await TestBroadcast(100, _sender,
                 BroadcastManager.BroadcastOwnerMaximumGossipPeersPerRound).ConfigureAwait(false);
         }
 
@@ -77,7 +78,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
         public async Task Can_Increase_Broadcast_Count_When_Broadcasting()
         {
             await TestBroadcast(100,
-                PeerIdHelper.GetPeerId("AnotherBroadcaster"),
+                MultiAddressHelper.GetAddress("AnotherBroadcaster"),
                 BroadcastManager.MaxGossipPeersPerRound).ConfigureAwait(false);
         }
 
@@ -85,11 +86,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
         public async Task Can_Broadcast_Message_When_Not_Enough_Peers_To_Gossip()
         {
             var peerCount = BroadcastManager.MaxGossipPeersPerRound - 1;
-            await TestBroadcast(peerCount, _senderPeerId,
+            await TestBroadcast(peerCount, _sender,
                 peerCount).ConfigureAwait(false);
         }
 
-        private async Task TestBroadcast(int peerCount, PeerId broadcaster, int expectedBroadcastCount)
+        private async Task TestBroadcast(int peerCount, MultiAddress broadcaster, int expectedBroadcastCount)
         {
             PopulatePeers(peerCount);
             var correlationId = await BroadcastMessage(broadcaster)
@@ -109,24 +110,23 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
         {
             PopulatePeers(100);
 
-            var peerId = PeerIdHelper.GetPeerId("1");
-            var senderIdentifier = PeerIdHelper.GetPeerId("sender");
+            var peerId = MultiAddressHelper.GetAddress("1");
 
             IBroadcastManager broadcastMessageHandler = new BroadcastManager(
                 _peers,
                 _peerSettings,
                 _cache,
-                Substitute.For<IPeerClient>(),
+                Substitute.For<ILibP2PPeerClient>(),
                 _keySigner,
                 Substitute.For<ILogger>());
 
             var messageDto = new MessageDto(
-                TransactionHelper.GetPublicTransaction().ToProtocolMessage(senderIdentifier),
+                TransactionHelper.GetPublicTransaction().ToProtocolMessage(_sender),
                 peerId
             );
 
             var gossipDto = messageDto.Content
-               .ToProtocolMessage(senderIdentifier, messageDto.CorrelationId);
+               .ToProtocolMessage(_sender, messageDto.CorrelationId);
 
             await broadcastMessageHandler.ReceiveAsync(gossipDto);
 
@@ -142,14 +142,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
             value.ReceivedCount.Should().Be(receivedCount + 1);
         }
 
-        private async Task<ICorrelationId> BroadcastMessage(PeerId broadcaster)
+        private async Task<ICorrelationId> BroadcastMessage(MultiAddress broadcaster)
         {
             var gossipMessageHandler = new
                 BroadcastManager(
                     _peers,
                     _peerSettings,
                     _cache,
-                    Substitute.For<IPeerClient>(),
+                    Substitute.For<ILibP2PPeerClient>(),
                     _keySigner,
                     Substitute.For<ILogger>());
 
@@ -166,7 +166,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
             {
                 _peers.Add(new Peer
                 {
-                    PeerId = PeerIdHelper.GetPeerId(i.ToString())
+                    Address = MultiAddressHelper.GetAddress(i.ToString())
                 });
             }
         }

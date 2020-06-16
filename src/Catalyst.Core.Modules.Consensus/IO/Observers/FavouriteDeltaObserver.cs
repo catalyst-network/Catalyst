@@ -33,6 +33,7 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Wire;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Consensus.IO.Observers
@@ -78,11 +79,11 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
                     return;
                 }
 
-
-                var messagePoaNode = _peerRepository.GetPeersByIpAndPublicKey(messageDto.Payload.PeerId.Ip, messageDto.Payload.PeerId.PublicKey).FirstOrDefault();
+                var multiAddress = new MultiAddress(messageDto.Payload.Address);
+                var messagePoaNode = _peerRepository.GetPoaPeersByPublicKey(multiAddress.GetPublicKey()).FirstOrDefault();
                 if (messagePoaNode == null)
                 {
-                    Logger.Error($"Message from IP address '{messageDto.Payload.PeerId.Ip}' with public key '{messageDto.Payload.PeerId.PublicKey}' is not found in producer node list.");
+                    Logger.Error($"Message from IP address '{multiAddress.GetIpAddress()}' with public key '{multiAddress.GetPublicKey()}' is not found in producer node list.");
                     return;
                 }
 

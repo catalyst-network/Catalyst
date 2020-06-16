@@ -70,6 +70,7 @@ namespace Catalyst.TestUtils
             containerBuilder.RegisterInstance(new HashProvider(HashingAlgorithm.GetAlgorithmMetadata(hashName))).As<IHashProvider>();
             containerBuilder.RegisterType<KeyStoreService>().As<IKeyStoreService>().SingleInstance();
             containerBuilder.RegisterModule(new DfsModule());
+            containerBuilder.RegisterType<DiscoveryOptions>().SingleInstance().WithProperty("DisableMdns", true).WithProperty("UsePeerRepository", false);
             if (keyType != null)
             {
                 containerBuilder.RegisterType<KeyChainOptions>().SingleInstance().WithProperty("DefaultKeyType", keyType);

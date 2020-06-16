@@ -30,6 +30,8 @@ using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
+using Lib.P2P.Protocols;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
@@ -41,18 +43,19 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
         public BroadcastRawTransactionRequestObserver(ILogger logger,
             IPeerSettings peerSettings,
+            ILibP2PPeerClient peerClient,
             ITransactionReceivedEvent transactionReceivedEvent)
-            : base(logger, peerSettings)
+            : base(logger, peerSettings, peerClient)
         {
             _transactionReceivedEvent = transactionReceivedEvent;
         }
 
         protected override BroadcastRawTransactionResponse HandleRequest(BroadcastRawTransactionRequest messageDto,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
-            var responseCode = _transactionReceivedEvent.OnTransactionReceived(messageDto.Transaction.ToProtocolMessage(senderPeerId, correlationId));
+            var responseCode = _transactionReceivedEvent.OnTransactionReceived(messageDto.Transaction.ToProtocolMessage(sender, correlationId));
 
             return new BroadcastRawTransactionResponse {ResponseCode = responseCode};
         }

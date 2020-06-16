@@ -109,7 +109,7 @@ namespace Lib.P2P.Routing
         /// <summary>
         ///   The distributed hash table.
         /// </summary>
-        public DhtService Dht { get; set; }
+        public IDhtService Dht { get; set; }
 
         /// <summary>
         ///   The type of query to perform.

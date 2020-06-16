@@ -42,6 +42,8 @@ using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Lib.P2P;
+using Lib.P2P.Protocols;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
@@ -67,8 +69,9 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <param name="logger">The logger.</param>
         public GetFileFromDfsRequestObserver(IDfsService dfsService,
             IPeerSettings peerSettings,
+            ILibP2PPeerClient peerClient,
             IUploadFileTransferFactory fileTransferFactory,
-            ILogger logger) : base(logger, peerSettings)
+            ILogger logger) : base(logger, peerSettings, peerClient)
         {
             _fileTransferFactory = fileTransferFactory;
             _dfsService = dfsService;
@@ -78,17 +81,16 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// </summary>
         /// <param name="getFileFromDfsRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerId"></param>
+        /// <param name="sender"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override GetFileFromDfsResponse HandleRequest(GetFileFromDfsRequest getFileFromDfsRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(getFileFromDfsRequest, nameof(getFileFromDfsRequest)).NotNull();
-            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
 
             long fileLen = 0;
 
@@ -105,8 +107,8 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
                         fileLen = stream.Length;
                         using (var fileTransferInformation = new UploadFileTransferInformation(
                             stream,
-                            senderPeerId,
-                            PeerSettings.PeerId,
+                            sender,
+                            PeerSettings.Address,
                             channelHandlerContext.Channel,
                             correlationId
                         ))

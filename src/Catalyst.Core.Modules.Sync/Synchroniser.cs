@@ -31,9 +31,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Abstractions.Dfs;
-using Catalyst.Abstractions.Hashing;
-using Catalyst.Abstractions.Options;
 using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.DAO;
@@ -49,6 +46,7 @@ namespace Catalyst.Core.Modules.Sync
     public class Synchroniser : ISynchroniser
     {
         public SyncState State { set; get; }
+        public bool IsRunning { private set; get; }
         private bool _disposed;
         private readonly int _rangeSize;
         private readonly IUserOutput _userOutput;
@@ -69,18 +67,33 @@ namespace Catalyst.Core.Modules.Sync
         public IObservable<ulong> SyncCompleted { get; }
         private readonly ReplaySubject<ulong> _syncCompletedReplaySubject;
 
+        private readonly int _peerDiscoveryDelay;
+        private readonly int _deltaHeightDelay;
+
+        public Synchroniser(SyncState syncState,
+           IPeerSyncManager peerSyncManager,
+           IDeltaCache deltaCache,
+           IDeltaHeightWatcher deltaHeightWatcher,
+           IDeltaHashProvider deltaHashProvider,
+           IDeltaIndexService deltaIndexService,
+           IMapperProvider mapperProvider,
+           IUserOutput userOutput,
+           ILogger logger) : this(syncState, peerSyncManager, deltaCache, deltaHeightWatcher, deltaHashProvider, deltaIndexService, mapperProvider, userOutput, logger, 100, 10, 30, Scheduler.Default)
+        { }
+
         public Synchroniser(SyncState syncState,
             IPeerSyncManager peerSyncManager,
             IDeltaCache deltaCache,
             IDeltaHeightWatcher deltaHeightWatcher,
             IDeltaHashProvider deltaHashProvider,
-            IDeltaDfsReader deltaDfsReader,
             IDeltaIndexService deltaIndexService,
             IMapperProvider mapperProvider,
             IUserOutput userOutput,
             ILogger logger,
-            int rangeSize = 20, //cannot go over 20 until udp network fragmentation is fixed
-            IScheduler scheduler = null)
+            int rangeSize,
+            int peerDiscoveryDelay,
+            int deltaHeightDelay,
+            IScheduler scheduler)
         {
             State = syncState;
             _peerSyncManager = peerSyncManager;
@@ -97,6 +110,9 @@ namespace Catalyst.Core.Modules.Sync
 
             _syncCompletedReplaySubject = new ReplaySubject<ulong>(1, scheduler ?? Scheduler.Default);
             SyncCompleted = _syncCompletedReplaySubject.AsObservable();
+
+            _peerDiscoveryDelay = peerDiscoveryDelay;
+            _deltaHeightDelay = deltaHeightDelay;
         }
 
         public void UpdateState(ulong _latestKnownDeltaNumber)
@@ -134,13 +150,13 @@ namespace Catalyst.Core.Modules.Sync
 
         public async Task StartAsync(CancellationToken cancellationToken = default)
         {
-            if (State.IsRunning)
+            if (IsRunning)
             {
                 _userOutput.WriteLine("Sync is already running.");
                 return;
             }
 
-            State.IsRunning = true;
+            IsRunning = true;
             _previousHash = _deltaIndexService.LatestDeltaIndex().Cid;
             _userOutput.WriteLine("Starting Sync...");
 
@@ -148,9 +164,14 @@ namespace Catalyst.Core.Modules.Sync
 
             _deltaHeightWatcher.Start();
 
-            await _peerSyncManager.WaitForPeersAsync(cancellationToken).ConfigureAwait(false);
+            using (var WaitForPeersCancellationSource = new CancellationTokenSource())
+            {
+                using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, WaitForPeersCancellationSource.Token);
+                cts.CancelAfter(TimeSpan.FromSeconds(_peerDiscoveryDelay));
+                await _peerSyncManager.WaitForPeersAsync(cts.Token).ConfigureAwait(false);
+            }
 
-            var highestDeltaIndex = await _deltaHeightWatcher.GetHighestDeltaIndexAsync();
+            var highestDeltaIndex = await _deltaHeightWatcher.WaitForDeltaIndexAsync(TimeSpan.FromSeconds(_deltaHeightDelay), cancellationToken).ConfigureAwait(false);
             if (highestDeltaIndex == null || highestDeltaIndex.Height <= CurrentHighestDeltaIndexStored)
             {
                 await Completed().ConfigureAwait(false);
@@ -165,7 +186,7 @@ namespace Catalyst.Core.Modules.Sync
             Progress(CurrentHighestDeltaIndexStored, _rangeSize);
         }
 
-        private void ProcessDeltaIndexRange(IEnumerable<DeltaIndex> deltaIndexRange)
+        private async void ProcessDeltaIndexRange(IEnumerable<DeltaIndex> deltaIndexRange)
         {
             var deltaIndexRangeDao = deltaIndexRange.Select(x =>
                 DeltaIndexDao.ToDao<DeltaIndex>(x, _mapperProvider)).ToList();
@@ -182,7 +203,7 @@ namespace Catalyst.Core.Modules.Sync
             DownloadDeltas(deltaIndexRangeDao);
             UpdateState(deltaIndexRangeDao);
 
-            CheckSyncProgressAsync().ConfigureAwait(false).GetAwaiter().GetResult();
+            await CheckSyncProgressAsync().ConfigureAwait(false);
 
             Progress(CurrentHighestDeltaIndexStored, _rangeSize);
         }
@@ -195,7 +216,7 @@ namespace Catalyst.Core.Modules.Sync
                 {
                     try
                     {
-                        if(DeltaCache.TryGetOrAddConfirmedDelta(deltaIndex.Cid, out Delta _))
+                        if (DeltaCache.TryGetOrAddConfirmedDelta(deltaIndex.Cid, out Delta _))
                         {
                             break;
                         }
@@ -207,19 +228,19 @@ namespace Catalyst.Core.Modules.Sync
             });
         }
 
-        private int GetSyncProgressPercentage()
+        private async Task<int> GetSyncProgressPercentageAsync()
         {
-            var percentageSync = _deltaIndexService.Height() /
-                _deltaHeightWatcher.GetHighestDeltaIndexAsync().GetAwaiter().GetResult().Height * 100;
-            return (int)percentageSync;
+            var currentDeltaIndex = await _deltaHeightWatcher.GetHighestDeltaIndexAsync();
+            var percentageSync = _deltaIndexService.Height() / currentDeltaIndex.Height * 100;
+            return (int) percentageSync;
         }
 
-        public async Task StopAsync(CancellationToken cancellationToken = default)
+        public Task StopAsync(CancellationToken cancellationToken = default)
         {
-            if (!State.IsRunning)
+            if (!IsRunning)
             {
                 _userOutput.WriteLine("Sync is not currently running.");
-                return;
+                return Task.CompletedTask;
             }
 
             _deltaHeightWatcher.Stop();
@@ -227,7 +248,9 @@ namespace Catalyst.Core.Modules.Sync
 
             _userOutput.WriteLine("Sync has been stopped");
 
-            State.IsRunning = false;
+            IsRunning = false;
+
+            return Task.CompletedTask;
         }
 
         private void Progress(ulong index, int range)
@@ -248,26 +271,26 @@ namespace Catalyst.Core.Modules.Sync
 
         private async Task<bool> CheckSyncProgressAsync()
         {
-            var highestDeltaIndex = await _deltaHeightWatcher.GetHighestDeltaIndexAsync();
+            var highestDeltaIndex = await _deltaHeightWatcher.GetHighestDeltaIndexAsync().ConfigureAwait(false);
             State.CurrentBlock = CurrentHighestDeltaIndexStored;
             State.HighestBlock = highestDeltaIndex.Height;
 
             if (CurrentHighestDeltaIndexStored >= highestDeltaIndex.Height)
             {
-                _userOutput.WriteLine($"Sync Progress: {GetSyncProgressPercentage()}%");
+                _userOutput.WriteLine($"Sync Progress: { await GetSyncProgressPercentageAsync().ConfigureAwait(false)}%");
                 await Completed().ConfigureAwait(false);
                 return true;
             }
 
-            _userOutput.WriteLine($"Sync Progress: {GetSyncProgressPercentage()}%");
+            _userOutput.WriteLine($"Sync Progress: {await GetSyncProgressPercentageAsync().ConfigureAwait(false)}%");
             return false;
         }
 
         private async Task Completed()
         {
-           State.IsSynchronized = true;
+            State.IsSynchronized = true;
             _syncCompletedReplaySubject.OnNext(CurrentHighestDeltaIndexStored);
-            await StopAsync();
+            await StopAsync().ConfigureAwait(false);
         }
 
         public void Dispose()

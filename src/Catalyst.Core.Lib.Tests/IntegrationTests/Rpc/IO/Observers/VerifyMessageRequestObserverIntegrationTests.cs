@@ -21,138 +21,173 @@
 
 #endregion
 
-using Autofac;
-using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.KeySigner;
-using Catalyst.Abstractions.Types;
-using Catalyst.Protocol.Rpc.Node;
-using Catalyst.TestUtils;
-using DotNetty.Transport.Channels;
-using FluentAssertions;
-using Google.Protobuf;
-using NSubstitute;
-using System.Linq;
-using Catalyst.Abstractions.Keystore;
-using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Core.Modules.Consensus;
-using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Core.Modules.Dfs;
-using Catalyst.Core.Modules.KeySigner;
-using Catalyst.Core.Modules.Keystore;
-using Catalyst.Core.Modules.Rpc.Server;
-using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
-using NUnit.Framework;
-using Catalyst.Core.Modules.Mempool;
-using Catalyst.Protocol.Cryptography;
-using Catalyst.Protocol.Network;
-using Catalyst.Protocol.Peer;
-using Catalyst.Core.Modules.Authentication;
-using Catalyst.Core.Modules.Hashing;
+//RPC will be come deprecated
+//using Autofac;
+//using Catalyst.Abstractions.IO.Observers;
+//using Catalyst.Abstractions.KeySigner;
+//using Catalyst.Abstractions.Types;
+//using Catalyst.Protocol.Rpc.Node;
+//using Catalyst.TestUtils;
+//using DotNetty.Transport.Channels;
+//using FluentAssertions;
+//using Google.Protobuf;
+//using NSubstitute;
+//using System.Linq;
+//using Catalyst.Abstractions.Keystore;
+//using Catalyst.Core.Lib.Extensions;
+//using Catalyst.Core.Lib.IO.Messaging.Dto;
+//using Catalyst.Core.Modules.Consensus;
+//using Catalyst.Core.Modules.Cryptography.BulletProofs;
+//using Catalyst.Core.Modules.Dfs;
+//using Catalyst.Core.Modules.KeySigner;
+//using Catalyst.Core.Modules.Keystore;
+//using Catalyst.Core.Modules.Rpc.Server;
+//using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
+//using NUnit.Framework;
+//using Catalyst.Core.Modules.Mempool;
+//using Catalyst.Protocol.Cryptography;
+//using Catalyst.Protocol.Network;
+//using Catalyst.Protocol.Peer;
+//using Catalyst.Core.Modules.Authentication;
+//using Catalyst.Core.Modules.Hashing;
+//using MultiFormats;
+//using Catalyst.Abstractions.P2P;
+//using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
+//using Catalyst.Abstractions.IO.Transport.Channels;
+//using Catalyst.Core.Lib.IO.EventLoop;
+//using Catalyst.Abstractions.IO.EventLoop;
+//using Catalyst.Core.Lib.P2P;
 
-namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
-{
-    public class VerifyMessageRequestObserverIntegrationTests : FileSystemBasedTest
-    {
-        private IKeySigner _keySigner;
-        private IChannelHandlerContext _fakeContext;
-        private IRpcRequestObserver _verifyMessageRequestObserver;
-        private ILifetimeScope _scope;
-        private PeerId _peerId;
-        private ByteString _testMessageToSign;
-        
-        [SetUp]
-        public void Init()
-        {
-            Setup(TestContext.CurrentContext);
+//namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
+//{
+//    public class VerifyMessageRequestObserverIntegrationTests : FileSystemBasedTest
+//    {
+//        private IKeySigner _keySigner;
+//        private IChannelHandlerContext _fakeContext;
+//        private IRpcRequestObserver _verifyMessageRequestObserver;
+//        private ILifetimeScope _scope;
+//        private MultiAddress _peerId;
+//        private ByteString _testMessageToSign;
+//        private ILibP2PPeerClient _peerClient;
 
-            _testMessageToSign = ByteString.CopyFromUtf8("TestMsg");
+//        [SetUp]
+//        public void Init()
+//        {
+//            Setup(TestContext.CurrentContext);
 
-            ContainerProvider.ContainerBuilder.RegisterInstance(TestKeyRegistry.MockKeyRegistry()).As<IKeyRegistry>();
-            ContainerProvider.ContainerBuilder.RegisterModule(new KeystoreModule());
-            ContainerProvider.ContainerBuilder.RegisterModule(new KeySignerModule());
-            ContainerProvider.ContainerBuilder.RegisterModule(new RpcServerModule());
-            ContainerProvider.ContainerBuilder.RegisterModule(new DfsModule());
-            ContainerProvider.ContainerBuilder.RegisterModule(new MempoolModule());
-            ContainerProvider.ContainerBuilder.RegisterModule(new ConsensusModule());
-            ContainerProvider.ContainerBuilder.RegisterModule(new BulletProofsModule());
-            ContainerProvider.ContainerBuilder.RegisterModule(new AuthenticationModule());
-            ContainerProvider.ContainerBuilder.RegisterModule(new HashingModule());
-            ContainerProvider.ContainerBuilder.RegisterType<VerifyMessageRequestObserver>().As<IRpcRequestObserver>();
+//            _testMessageToSign = ByteString.CopyFromUtf8("TestMsg");
+//            _peerClient = Substitute.For<ILibP2PPeerClient>();
 
-            ContainerProvider.ContainerBuilder.RegisterInstance(PeerIdHelper.GetPeerId("Test"))
-               .As<PeerId>();
+//            ContainerProvider.ContainerBuilder.RegisterInstance(TestKeyRegistry.MockKeyRegistry()).As<IKeyRegistry>();
+//            ContainerProvider.ContainerBuilder.RegisterModule(new KeystoreModule());
+//            ContainerProvider.ContainerBuilder.RegisterModule(new KeySignerModule());
+//            ContainerProvider.ContainerBuilder.RegisterModule(new RpcServerModule());
+//            ContainerProvider.ContainerBuilder.RegisterModule(new DfsModule());
+//            ContainerProvider.ContainerBuilder.RegisterModule(new MempoolModule());
+//            ContainerProvider.ContainerBuilder.RegisterModule(new ConsensusModule());
+//            ContainerProvider.ContainerBuilder.RegisterModule(new BulletProofsModule());
+//            ContainerProvider.ContainerBuilder.RegisterModule(new AuthenticationModule());
+//            ContainerProvider.ContainerBuilder.RegisterModule(new HashingModule());
+//            ContainerProvider.ContainerBuilder.RegisterType<VerifyMessageRequestObserver>().As<IRpcRequestObserver>();
+//            ContainerProvider.ContainerBuilder.RegisterInstance(_peerClient).As<ILibP2PPeerClient>();
+//            ContainerProvider.ContainerBuilder.RegisterType<PeerServerChannelFactory>().As<IUdpServerChannelFactory>();
+//            ContainerProvider.ContainerBuilder.RegisterType<PeerClientChannelFactory>().As<IUdpClientChannelFactory>();
 
-            ContainerProvider.ConfigureContainerBuilder();
+//            // Register IO.EventLoop
+//            ContainerProvider.ContainerBuilder.RegisterType<UdpClientEventLoopGroupFactory>().As<IUdpClientEventLoopGroupFactory>()
+//               .SingleInstance();
+//            ContainerProvider.ContainerBuilder.RegisterType<UdpServerEventLoopGroupFactory>().As<IUdpServerEventLoopGroupFactory>()
+//               .SingleInstance();
+//            ContainerProvider.ContainerBuilder.RegisterType<TcpServerEventLoopGroupFactory>().As<ITcpServerEventLoopGroupFactory>()
+//               .SingleInstance();
+//            ContainerProvider.ContainerBuilder.RegisterType<TcpClientEventLoopGroupFactory>().As<ITcpClientEventLoopGroupFactory>();
+//            ContainerProvider.ContainerBuilder.RegisterType<EventLoopGroupFactoryConfiguration>().As<IEventLoopGroupFactoryConfiguration>()
+//               .WithProperty("TcpServerHandlerWorkerThreads", 4)
+//               .WithProperty("TcpClientHandlerWorkerThreads", 4)
+//               .WithProperty("UdpServerHandlerWorkerThreads", 8)
+//               .WithProperty("UdpClientHandlerWorkerThreads", 2);
 
-            _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);
-            _keySigner = ContainerProvider.Container.Resolve<IKeySigner>();
-            _peerId = ContainerProvider.Container.Resolve<PeerId>();
-            _fakeContext = Substitute.For<IChannelHandlerContext>();
+//            // Register P2P
+//            ContainerProvider.ContainerBuilder.RegisterType<PeerService>().As<IPeerService>().SingleInstance();
+//            ContainerProvider.ContainerBuilder.RegisterType<PeerClient>().As<IPeerClient>().SingleInstance();
 
-            var fakeChannel = Substitute.For<IChannel>();
-            _fakeContext.Channel.Returns(fakeChannel);
-            _verifyMessageRequestObserver = _scope.Resolve<IRpcRequestObserver>();
-        }
+//            ContainerProvider.ContainerBuilder.RegisterType<PeerServerChannelFactory>().As<IUdpServerChannelFactory>();
+//            ContainerProvider.ContainerBuilder.RegisterType<PeerClientChannelFactory>().As<IUdpClientChannelFactory>();
 
-        [Test]
-        public void Valid_Message_Signature_Can_Return_True_Response()
-        {
-            var privateKey = _keySigner.GetPrivateKey(KeyRegistryTypes.DefaultKey);
+//            ContainerProvider.ContainerBuilder.RegisterInstance(MultiAddressHelper.GetAddress("Test"))
+//               .As<MultiAddress>();
 
-            var signingContext = new SigningContext
-            {
-                NetworkType = NetworkType.Devnet,
-                SignatureType = SignatureType.TransactionPublic
-            };
+//            ContainerProvider.ConfigureContainerBuilder();
 
-            var requestMessage = new VerifyMessageRequest
-            {
-                Message = _testMessageToSign,
-                PublicKey = privateKey.GetPublicKey().Bytes.ToByteString(),
-                Signature = _keySigner.CryptoContext.Sign(privateKey, _testMessageToSign.ToByteArray(), signingContext.ToByteArray()).SignatureBytes.ToByteString(),
-                SigningContext = signingContext
-            };
+//            _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);
+//            _keySigner = ContainerProvider.Container.Resolve<IKeySigner>();
+//            _peerId = ContainerProvider.Container.Resolve<MultiAddress>();
 
-            _verifyMessageRequestObserver
-               .OnNext(new ObserverDto(_fakeContext,
-                    requestMessage.ToProtocolMessage(_peerId)));
-            AssertVerifyResponse(true);
-        }
+//            _fakeContext = Substitute.For<IChannelHandlerContext>();
 
-        [Test]
-        public void Invalid_Message_Signature_Can_Return_False_Response()
-        {
-            var requestMessage = new VerifyMessageRequest
-            {
-                Message = _testMessageToSign,
-                PublicKey = ByteString.CopyFrom(new byte[_keySigner.CryptoContext.PublicKeyLength]),
-                Signature = ByteString.CopyFrom(new byte[_keySigner.CryptoContext.SignatureLength]),
-                SigningContext = new SigningContext()
-            };
+//            var fakeChannel = Substitute.For<IChannel>();
+//            _fakeContext.Channel.Returns(fakeChannel);
+//            _verifyMessageRequestObserver = _scope.Resolve<IRpcRequestObserver>();
+//        }
 
-            _verifyMessageRequestObserver
-               .OnNext(new ObserverDto(_fakeContext,
-                    requestMessage.ToProtocolMessage(_peerId)));
-            AssertVerifyResponse(false);
-        }
+//        [Test]
+//        public void Valid_Message_Signature_Can_Return_True_Response()
+//        {
+//            var privateKey = _keySigner.GetPrivateKey(KeyRegistryTypes.DefaultKey);
 
-        private void AssertVerifyResponse(bool valid)
-        {
-            var responseList = _fakeContext.Channel.ReceivedCalls().ToList();
-            var response = ((MessageDto) responseList[0].GetArguments()[0]).Content
-               .FromProtocolMessage<VerifyMessageResponse>();
-            response.IsSignedByKey.Should().Be(valid);
-        }
+//            var signingContext = new SigningContext
+//            {
+//                NetworkType = NetworkType.Devnet,
+//                SignatureType = SignatureType.TransactionPublic
+//            };
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                _scope?.Dispose();
-            }
+//            var requestMessage = new VerifyMessageRequest
+//            {
+//                Message = _testMessageToSign,
+//                PublicKey = privateKey.GetPublicKey().Bytes.ToByteString(),
+//                Signature = _keySigner.CryptoContext.Sign(privateKey, _testMessageToSign.ToByteArray(), signingContext.ToByteArray()).SignatureBytes.ToByteString(),
+//                SigningContext = signingContext
+//            };
 
-            base.Dispose(disposing);
-        }
-    }
-}
+//            _verifyMessageRequestObserver
+//               .OnNext(new ObserverDto(_fakeContext,
+//                    requestMessage.ToProtocolMessage(_peerId)));
+//            AssertVerifyResponse(true);
+//        }
+
+//        [Test]
+//        public void Invalid_Message_Signature_Can_Return_False_Response()
+//        {
+//            var requestMessage = new VerifyMessageRequest
+//            {
+//                Message = _testMessageToSign,
+//                PublicKey = ByteString.CopyFrom(new byte[_keySigner.CryptoContext.PublicKeyLength]),
+//                Signature = ByteString.CopyFrom(new byte[_keySigner.CryptoContext.SignatureLength]),
+//                SigningContext = new SigningContext()
+//            };
+
+//            _verifyMessageRequestObserver
+//               .OnNext(new ObserverDto(_fakeContext,
+//                    requestMessage.ToProtocolMessage(_peerId)));
+//            AssertVerifyResponse(false);
+//        }
+
+//        private void AssertVerifyResponse(bool valid)
+//        {
+//            var responseList = _peerClient.ReceivedCalls().ToList();
+//            var response = ((MessageDto) responseList[0].GetArguments()[0]).Content
+//               .FromProtocolMessage<VerifyMessageResponse>();
+//            response.IsSignedByKey.Should().Be(valid);
+//        }
+
+//        protected override void Dispose(bool disposing)
+//        {
+//            if (disposing)
+//            {
+//                _scope?.Dispose();
+//            }
+
+//            base.Dispose(disposing);
+//        }
+//    }
+//}

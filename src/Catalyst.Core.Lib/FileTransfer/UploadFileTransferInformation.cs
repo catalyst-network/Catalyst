@@ -33,6 +33,7 @@ using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.FileTransfer
 {
@@ -40,16 +41,16 @@ namespace Catalyst.Core.Lib.FileTransfer
     {
         /// <summary>Initializes a new instance of the <see cref="UploadFileTransferInformation"/> class.</summary>
         /// <param name="stream">The stream.</param>
-        /// <param name="peerId">The peer identifier.</param>
+        /// <param name="address">The peer address.</param>
         /// <param name="recipientId">The recipient identifier.</param>
         /// <param name="recipientChannel">The recipient channel.</param>
         /// <param name="correlationGuid">The correlation unique identifier.</param>
         public UploadFileTransferInformation(Stream stream,
-            PeerId peerId,
-            PeerId recipientId,
+            MultiAddress address,
+            MultiAddress recipient,
             IChannel recipientChannel,
             ICorrelationId correlationGuid) :
-            base(peerId, recipientId, recipientChannel,
+            base(address, recipient, recipientChannel,
                 correlationGuid, string.Empty, (ulong) stream.Length)
         {
             RandomAccessStream = stream;
@@ -90,11 +91,9 @@ namespace Catalyst.Core.Lib.FileTransfer
                 ChunkBytes = ByteString.CopyFrom(chunk),
                 ChunkId = chunkId,
                 CorrelationFileName = CorrelationId.Id.ToByteString()
-            }.ToProtocolMessage(PeerId);
+            }.ToProtocolMessage(Address);
 
-            return new MessageDto(transferMessage,
-                RecipientId
-            );
+            return new MessageDto(transferMessage, Recipient);
         }
 
         public int RetryCount { get; set; }

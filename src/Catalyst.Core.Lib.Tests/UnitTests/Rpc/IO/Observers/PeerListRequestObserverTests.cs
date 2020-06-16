@@ -39,6 +39,7 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -53,6 +54,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         /// <summary>The fake channel context</summary>
         private IChannelHandlerContext _fakeContext;
 
+        private ILibP2PPeerClient _peerClient;
+
         /// <summary>
         ///     Initializes a new instance of the
         ///     <see>
@@ -65,8 +68,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-            var fakeChannel = Substitute.For<IChannel>();
-            _fakeContext.Channel.Returns(fakeChannel);
+            _peerClient = Substitute.For<ILibP2PPeerClient>();
         }
 
         /// <summary>
@@ -87,27 +89,24 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 {
                     Reputation = 0,
                     LastSeen = DateTime.Now,
-                    PeerId = PeerIdHelper.GetPeerId(fakePeer)
+                    Address = MultiAddressHelper.GetAddress(fakePeer)
                 });
             });
 
             // Let peerRepository return the fake peer list
             peerService.GetAll().Returns(peerList.ToArray());
 
-            // Build a fake remote endpoint
-            _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
-
-            var protocolMessage = new GetPeerListRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("sender"));
+            var protocolMessage = new GetPeerListRequest().ToProtocolMessage(MultiAddressHelper.GetAddress("sender"));
             var messageStream =
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
-            var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
-            var handler = new PeerListRequestObserver(peerSettings, _logger, peerService);
+            var peerSettings = MultiAddressHelper.GetAddress("sender").ToSubstitutedPeerSettings();
+            var handler = new PeerListRequestObserver(peerSettings, _peerClient, _logger, peerService);
             handler.StartObserving(messageStream);
 
             testScheduler.Start();
 
-            var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
+            var receivedCalls = _peerClient.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls[0].GetArguments().Single();

@@ -55,6 +55,7 @@ using Catalyst.Simulator.Interfaces;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
+using MultiFormats;
 using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
@@ -64,8 +65,8 @@ namespace Catalyst.Simulator.RpcClients
     public class SimpleRpcClient : IRpcClient
     {
         private readonly ILogger _logger;
-        private readonly PeerId _senderPeerId;
-        private PeerId _recipientPeerId;
+        private readonly MultiAddress _sender;
+        private MultiAddress _recipientPeerId;
         private Abstractions.Rpc.IRpcClient _rpcClient;
         private readonly X509Certificate2 _certificate;
         private readonly RpcClientFactory _rpcClientFactory;
@@ -119,19 +120,22 @@ namespace Catalyst.Simulator.RpcClients
 
             //PeerId for RPC/TCP is currently redundant.
             var publicKey = keyRegistry.GetItemFromRegistry(KeyRegistryTypes.DefaultKey).GetPublicKey().Bytes;
-            _senderPeerId = publicKey.BuildPeerIdFromPublicKey(IPAddress.Any, 1026);
+
+            //todo
+            //_sender = publicKey.BuildPeerIdFromPublicKey(IPAddress.Any, 1026);
         }
 
-        public async Task<bool> ConnectRetryAsync(PeerId peerIdentifier, int retryAttempts = 5)
+        public async Task<bool> ConnectRetryAsync(MultiAddress Addressentifier, int retryAttempts = 5)
         {
             var retryCountDown = retryAttempts;
             while (retryCountDown > 0)
             {
-                var isConnectionSuccessful = await ConnectAsync(peerIdentifier).ConfigureAwait(false);
-                if (isConnectionSuccessful)
-                {
-                    return true;
-                }
+                //todo
+                //var isConnectionSuccessful = await ConnectAsync(peerIdentifier).ConfigureAwait(false);
+                //if (isConnectionSuccessful)
+                //{
+                //    return true;
+                //}
 
                 _logger.Error("Connection failed retrying...");
                 if (retryAttempts != 0)
@@ -145,33 +149,34 @@ namespace Catalyst.Simulator.RpcClients
             return false;
         }
 
-        public async Task<bool> ConnectAsync(PeerId peerIdentifier)
+        public async Task<bool> ConnectAsync(MultiAddress address)
         {
-            _recipientPeerId = peerIdentifier;
+            _recipientPeerId = address;
 
-            var peerRpcConfig = new RpcClientSettings
-            {
-                HostAddress = _recipientPeerId.IpAddress,
-                Port = (int) _recipientPeerId.Port,
-                PublicKey = _recipientPeerId.PublicKey.KeyToString()
-            };
+            //todo
+            //var peerRpcConfig = new RpcClientSettings
+            //{
+            //    HostAddress = _recipientPeerId.IpAddress,
+            //    Port = (int) _recipientPeerId.Port,
+            //    PublicKey = _recipientPeerId.PublicKey.KeyToString()
+            //};
 
-            _logger.Information($"Connecting to {peerRpcConfig.HostAddress}:{peerRpcConfig.Port}");
+            //_logger.Information($"Connecting to {peerRpcConfig.HostAddress}:{peerRpcConfig.Port}");
 
-            try
-            {
-                _rpcClient =
-                    await _rpcClientFactory.GetClientAsync(_certificate, peerRpcConfig).ConfigureAwait(false);
-                return _rpcClient.Channel.Open;
-            }
-            catch (ConnectException connectionException)
-            {
-                _logger.Error(connectionException, "Could not connect to node");
-            }
-            catch (Exception exception)
-            {
-                _logger.Error(exception, "Error attempting to connect to node");
-            }
+            //try
+            //{
+            //    _rpcClient =
+            //        await _rpcClientFactory.GetClientAsync(_certificate, peerRpcConfig).ConfigureAwait(false);
+            //    return _rpcClient.Channel.Open;
+            //}
+            //catch (ConnectException connectionException)
+            //{
+            //    _logger.Error(connectionException, "Could not connect to node");
+            //}
+            //catch (Exception exception)
+            //{
+            //    _logger.Error(exception, "Error attempting to connect to node");
+            //}
 
             return false;
         }
@@ -181,7 +186,7 @@ namespace Catalyst.Simulator.RpcClients
         public void SendMessage<T>(T message) where T : IMessage
         {
             var protocolMessage =
-                message.ToProtocolMessage(_senderPeerId, CorrelationId.GenerateCorrelationId());
+                message.ToProtocolMessage(_sender, CorrelationId.GenerateCorrelationId());
             var messageDto = new MessageDto(
                 protocolMessage,
                 _recipientPeerId);

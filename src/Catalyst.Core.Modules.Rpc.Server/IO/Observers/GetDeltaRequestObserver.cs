@@ -31,6 +31,8 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
+using Lib.P2P.Protocols;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
@@ -42,19 +44,19 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
         public GetDeltaRequestObserver(IDeltaCache deltaCache,
             IPeerSettings peerSettings,
-            ILogger logger) : base(logger, peerSettings)
+            ILibP2PPeerClient peerClient,
+            ILogger logger) : base(logger, peerSettings, peerClient)
         {
             _deltaCache = deltaCache;
         }
 
         protected override GetDeltaResponse HandleRequest(GetDeltaRequest getDeltaRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(getDeltaRequest, nameof(getDeltaRequest)).NotNull();
-            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
             Logger.Verbose("received message of type GetDeltaRequest:");
             Logger.Verbose("{getDeltaRequest}", getDeltaRequest);
 

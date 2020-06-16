@@ -30,6 +30,7 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Lib.P2P;
+using MultiFormats;
 using Nethermind.State;
 using Serilog;
 
@@ -41,7 +42,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
         private readonly IDeltaTransactionRetriever _transactionRetriever;
         private readonly IDeterministicRandomFactory _randomFactory;
         private readonly IHashProvider _hashProvider;
-        private readonly PeerId _producerUniqueId;
+        private readonly MultiAddress _producerUniqueId;
         private readonly IDeltaCache _deltaCache;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IStateProvider _stateProvider;
@@ -61,7 +62,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
             _transactionRetriever = transactionRetriever;
             _randomFactory = randomFactory;
             _hashProvider = hashProvider;
-            _producerUniqueId = peerSettings.PeerId;
+            _producerUniqueId = peerSettings.Address;
             _deltaCache = deltaCache;
             _dateTimeProvider = dateTimeProvider;
             _stateProvider = stateProvider;

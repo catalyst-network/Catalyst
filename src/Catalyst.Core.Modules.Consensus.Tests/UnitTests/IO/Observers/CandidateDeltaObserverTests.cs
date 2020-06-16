@@ -33,7 +33,6 @@ using Catalyst.Core.Lib.Service;
 using Catalyst.Core.Modules.Consensus.IO.Observers;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -43,8 +42,8 @@ using Serilog;
 using NUnit.Framework;
 using Google.Protobuf;
 using System.Collections.Generic;
-using Catalyst.Core.Lib.P2P.Models;
 using Lib.P2P;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
 {
@@ -54,7 +53,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
         private IChannelHandlerContext _fakeChannelContext;
         private Cid _newHash;
         private Cid _prevHash;
-        private PeerId _producerId;
+        private MultiAddress _producer;
         private CandidateDeltaObserver _candidateDeltaObserver;
 
         [SetUp]
@@ -66,10 +65,10 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             var logger = Substitute.For<ILogger>();
             _newHash = hashProvider.ComputeUtf8MultiHash("newHash").ToCid();
             _prevHash = hashProvider.ComputeUtf8MultiHash("prevHash").ToCid();
-            _producerId = PeerIdHelper.GetPeerId("candidate delta producer");
+            _producer = MultiAddressHelper.GetAddress("candidate delta producer");
 
             var peerRepository = Substitute.For<IPeerRepository>();
-            peerRepository.GetPeersByIpAndPublicKey(Arg.Any<ByteString>(), Arg.Any<ByteString>()).Returns(new List<Lib.P2P.Models.Peer> { new Lib.P2P.Models.Peer() });
+            peerRepository.GetPoaPeersByPublicKey(Arg.Any<string>()).Returns(new List<Lib.P2P.Models.Peer> { new Lib.P2P.Models.Peer() });
 
             var deltaIndexService = Substitute.For<IDeltaIndexService>();
             deltaIndexService.LatestDeltaIndex().Returns(new Lib.DAO.Ledger.DeltaIndexDao() { Cid = _prevHash, Height = 0 });
@@ -79,21 +78,21 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
         [Test]
         public void HandleBroadcast_Should_Cast_Hashes_To_Multihash_And_Send_To_Voter()
         {
-            var receivedMessage = PrepareReceivedMessage(_newHash.ToArray(), _prevHash.ToArray(), _producerId);
+            var receivedMessage = PrepareReceivedMessage(_newHash.ToArray(), _prevHash.ToArray(), _producer);
 
             _candidateDeltaObserver.HandleBroadcast(receivedMessage);
 
             _deltaVoter.Received(1).OnNext(Arg.Is<CandidateDeltaBroadcast>(c =>
                 c.Hash.SequenceEqual(_newHash.ToArray().ToByteString())
              && c.PreviousDeltaDfsHash.Equals(_prevHash.ToArray().ToByteString())
-             && c.ProducerId.Equals(_producerId)));
+             && c.Producer == _producer.ToString()));
         }
 
         [Test]
         public void HandleBroadcast_Should_Not_Try_Forwarding_Invalid_Hash()
         {
             var invalidNewHash = Encoding.UTF8.GetBytes("invalid hash");
-            var receivedMessage = PrepareReceivedMessage(invalidNewHash, _prevHash.ToArray(), _producerId);
+            var receivedMessage = PrepareReceivedMessage(invalidNewHash, _prevHash.ToArray(), _producer);
 
             _candidateDeltaObserver.HandleBroadcast(receivedMessage);
 
@@ -104,7 +103,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
         public void HandleBroadcast_Should_Not_Try_Forwarding_Invalid_PreviousHash()
         {
             var invalidPreviousHash = Encoding.UTF8.GetBytes("invalid previous hash");
-            var receivedMessage = PrepareReceivedMessage(_newHash.ToArray(), invalidPreviousHash, _producerId);
+            var receivedMessage = PrepareReceivedMessage(_newHash.ToArray(), invalidPreviousHash, _producer);
 
             _candidateDeltaObserver.HandleBroadcast(receivedMessage);
 
@@ -113,17 +112,17 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
 
         private IObserverDto<ProtocolMessage> PrepareReceivedMessage(byte[] newHash,
             byte[] prevHash,
-            PeerId producerId)
+            MultiAddress producer)
         {
             var message = new CandidateDeltaBroadcast
             {
                 Hash = newHash.ToByteString(),
                 PreviousDeltaDfsHash = prevHash.ToByteString(),
-                ProducerId = producerId
+                Producer = producer.ToString()
             };
 
             var receivedMessage = new ObserverDto(_fakeChannelContext,
-                message.ToProtocolMessage(PeerIdHelper.GetPeerId()));
+                message.ToProtocolMessage(MultiAddressHelper.GetAddress()));
             return receivedMessage;
         }
     }

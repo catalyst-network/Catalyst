@@ -25,13 +25,14 @@ using System;
 using System.Threading.Tasks;
 using Catalyst.Protocol.Peer;
 using Google.Protobuf;
+using MultiFormats;
 
 namespace Catalyst.Simulator.Interfaces
 {
     public interface IRpcClient
     {
-        Task<bool> ConnectRetryAsync(PeerId peerIdentifier, int retryAttempts = 5);
-        Task<bool> ConnectAsync(PeerId peerIdentifier);
+        Task<bool> ConnectRetryAsync(MultiAddress Addressentifier, int retryAttempts = 5);
+        Task<bool> ConnectAsync(MultiAddress Addressentifier);
         void SendMessage<T>(T message) where T : IMessage;
         void ReceiveMessage<T>(Action<T> message) where T : IMessage<T>;
         bool IsConnected();

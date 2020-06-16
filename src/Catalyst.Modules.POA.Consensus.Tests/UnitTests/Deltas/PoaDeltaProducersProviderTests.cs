@@ -41,6 +41,8 @@ using NSubstitute;
 using Serilog;
 using NUnit.Framework;
 using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
+using MultiFormats;
+using Catalyst.Core.Lib.Extensions;
 
 namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
 {
@@ -58,14 +60,14 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
         {
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
-            var peerSettings = PeerIdHelper.GetPeerId("TEST").ToSubstitutedPeerSettings();
-            _selfAsPeer = new Peer { PeerId = peerSettings.PeerId };
+            var peerSettings = MultiAddressHelper.GetAddress("TEST").ToSubstitutedPeerSettings();
+            _selfAsPeer = new Peer { Address = peerSettings.Address };
             var rand = new Random();
             _peers = Enumerable.Range(0, 5)
                .Select(_ =>
                 {
-                    var peerIdentifier = PeerIdHelper.GetPeerId(rand.Next().ToString());
-                    var peer = new Peer { PeerId = peerIdentifier, LastSeen = DateTime.UtcNow };
+                    var peerIdentifier = MultiAddressHelper.GetAddress(rand.Next().ToString());
+                    var peer = new Peer { Address = peerIdentifier, LastSeen = DateTime.UtcNow };
                     return peer;
                 }).ToList();
 
@@ -91,21 +93,19 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
         {
             _producersByPreviousDelta.TryGetValue(Arg.Any<string>(), out Arg.Any<object>()).Returns(false);
 
-            var peers = _peers.Concat(new[] { _selfAsPeer });
+            var peers = _peers.Select(x=>x.Address.GetPublicKey()).Concat(new[] { _selfAsPeer.Address.GetPublicKey() });
 
             var expectedProducers = peers.Select(p =>
                 {
-                    var bytesToHash = p.PeerId.ToByteArray()
-                       .Concat(_previousDeltaHash.ToArray()).ToArray();
-                    var ranking = _hashProvider.ComputeMultiHash(bytesToHash).ToArray();
+                    var ranking = _hashProvider.ComputeMultiHash(p, _previousDeltaHash.ToArray()).ToArray();
                     return new
                     {
-                        PeerIdentifier = p.PeerId,
+                        PublicKey = p,
                         ranking
                     };
                 })
                .OrderBy(h => h.ranking, ByteUtil.ByteListMinSizeComparer.Default)
-               .Select(h => h.PeerIdentifier)
+               .Select(h => h.PublicKey)
                .ToList();
 
             var producers = _poaDeltaProducerProvider.GetDeltaProducersFromPreviousDelta(_previousDeltaHash);
@@ -119,8 +119,7 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
 
             for (var i = 0; i < expectedProducers.Count; i++)
             {
-                producers[i].ToByteArray()
-                   .Should().BeEquivalentTo(expectedProducers[i].ToByteArray());
+                producers[i].Should().BeEquivalentTo(expectedProducers[i]);
             }
         }
 
@@ -131,7 +130,7 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
                     out Arg.Any<object>())
                .Returns(ci =>
                 {
-                    ci[1] = new List<PeerId>();
+                    ci[1] = new List<string>();
                     return true;
                 });
 

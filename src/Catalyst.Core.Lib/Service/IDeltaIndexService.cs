@@ -21,13 +21,14 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using Catalyst.Core.Lib.DAO.Ledger;
 using Lib.P2P;
 
 namespace Catalyst.Core.Lib.Service
 {
-    public interface IDeltaIndexService
+    public interface IDeltaIndexService : IDisposable
     {
         void Add(DeltaIndexDao deltaIndex);
         void Add(IEnumerable<DeltaIndexDao> deltaIndexes);

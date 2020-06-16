@@ -25,9 +25,7 @@ using Autofac;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.FileTransfer;
-using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Events;
-using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Network;
 using Catalyst.Abstractions.P2P;
@@ -36,19 +34,16 @@ using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
 using Catalyst.Abstractions.P2P.Models;
 using Catalyst.Abstractions.P2P.Protocols;
-using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Abstractions.Rpc.IO.Messaging.Correlation;
 using Catalyst.Abstractions.Util;
 using Catalyst.Abstractions.Validators;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.FileTransfer;
-using Catalyst.Core.Lib.IO.EventLoop;
 using Catalyst.Core.Lib.IO.Events;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.P2P.Discovery;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.Protocols;
 using Catalyst.Core.Lib.P2P.ReputationSystem;
@@ -59,7 +54,6 @@ using Catalyst.Protocol.Transaction;
 using DnsClient;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Options;
-using Catalyst.Core.Lib.P2P.Repository;
 using LibP2P = Lib.P2P;
 
 // ReSharper disable WrongIndentSize
@@ -74,30 +68,16 @@ namespace Catalyst.Core.Lib
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<LocalPeer>().As<LibP2P.Peer>()
-               .SingleInstance();
-
-            // Register IO.EventLoop
-            builder.RegisterType<UdpClientEventLoopGroupFactory>().As<IUdpClientEventLoopGroupFactory>()
-               .SingleInstance();
-            builder.RegisterType<UdpServerEventLoopGroupFactory>().As<IUdpServerEventLoopGroupFactory>()
-               .SingleInstance();
-            builder.RegisterType<TcpServerEventLoopGroupFactory>().As<ITcpServerEventLoopGroupFactory>()
-               .SingleInstance();
-            builder.RegisterType<TcpClientEventLoopGroupFactory>().As<ITcpClientEventLoopGroupFactory>();
-            builder.RegisterType<EventLoopGroupFactoryConfiguration>().As<IEventLoopGroupFactoryConfiguration>()
-               .WithProperty("TcpServerHandlerWorkerThreads", 4)
-               .WithProperty("TcpClientHandlerWorkerThreads", 4)
-               .WithProperty("UdpServerHandlerWorkerThreads", 8)
-               .WithProperty("UdpClientHandlerWorkerThreads", 2);
+            builder.RegisterType<LocalPeer>().As<LibP2P.Peer>().SingleInstance();
 
             // Register P2P
-            builder.RegisterType<PeerService>().As<IPeerService>().SingleInstance();
+            builder.RegisterType<LibP2PPeerService>().As<ILibP2PPeerService>().SingleInstance();
+            builder.RegisterType<LibP2PPeerClient>().As<ILibP2PPeerClient>().SingleInstance();
+
             builder.RegisterType<PeerSettings>().As<IPeerSettings>();
             builder.RegisterType<Peer>().As<IPeer>();
 
             builder.RegisterType<PeerIdValidator>().As<IPeerIdValidator>();
-            builder.RegisterType<PeerClient>().As<IPeerClient>().SingleInstance();
 
             builder.RegisterType<PeerChallengeRequest>().As<IPeerChallengeRequest>()
                .WithParameter("ttl", 5)
@@ -113,18 +93,12 @@ namespace Catalyst.Core.Lib
             // Register P2P.Discovery
             builder.RegisterType<HealthChecker>().As<IHealthChecker>();
 
-            // Register P2P.IO.Transport.Channels
-            builder.RegisterType<PeerServerChannelFactory>().As<IUdpServerChannelFactory>();
-            builder.RegisterType<PeerClientChannelFactory>().As<IUdpClientChannelFactory>();
 
             //  Register P2P.Messaging.Correlation
             builder.RegisterType<PeerMessageCorrelationManager>().As<IPeerMessageCorrelationManager>().SingleInstance();
 
             //  Register P2P.Messaging.Broadcast
             builder.RegisterType<BroadcastManager>().As<IBroadcastManager>().SingleInstance();
-
-            //  Register P2P.Service
-            builder.RegisterType<PeerRepository>().As<IPeerRepository>().SingleInstance();
 
             //  Register P2P.ReputationSystem
             builder.RegisterType<ReputationManager>().As<IReputationManager>().SingleInstance();
@@ -140,7 +114,7 @@ namespace Catalyst.Core.Lib
             builder.RegisterType<PasswordManager>().As<IPasswordManager>().SingleInstance();
 
             // Register FileSystem
-            builder.RegisterType<Catalyst.Core.Lib.FileSystem.FileSystem>().As<IFileSystem>().SingleInstance();
+            builder.RegisterType<FileSystem.FileSystem>().As<IFileSystem>().SingleInstance();
             
             // Register Rpc.IO.Messaging.Correlation
             builder.RegisterType<RpcMessageCorrelationManager>().As<IRpcMessageCorrelationManager>().SingleInstance();

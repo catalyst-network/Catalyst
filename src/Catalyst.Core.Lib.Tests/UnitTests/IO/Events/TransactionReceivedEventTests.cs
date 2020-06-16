@@ -24,7 +24,6 @@
 using System;
 using System.Linq;
 using Catalyst.Abstractions.Mempool;
-using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.Validators;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Extensions;
@@ -36,10 +35,10 @@ using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
-using Google.Protobuf.WellKnownTypes;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
 {
@@ -47,7 +46,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
     {
         private IMempool<PublicEntryDao> _mempool;
         private ITransactionValidator _transactionValidator;
-        private IBroadcastManager _broadcastManager;
+        private ILibP2PPeerClient _peerClient;
         private TransactionReceivedEvent _transactionReceivedEvent;
 
         [SetUp]
@@ -56,10 +55,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
             var mapperProvider = new TestMapperProvider();
             _mempool = Substitute.For<IMempool<PublicEntryDao>>();
             _transactionValidator = Substitute.For<ITransactionValidator>();
-            _broadcastManager = Substitute.For<IBroadcastManager>();
+            _peerClient = Substitute.For<ILibP2PPeerClient>();
             _transactionReceivedEvent = new TransactionReceivedEvent(_transactionValidator,
                 _mempool,
-                _broadcastManager,
+                _peerClient,
                 mapperProvider,
                 Substitute.For<ILogger>());
         }
@@ -70,9 +69,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
             _transactionValidator.ValidateTransaction(Arg.Any<PublicEntry>())
                .Returns(false);
             _transactionReceivedEvent.OnTransactionReceived(new TransactionBroadcast {PublicEntry = new PublicEntry{SenderAddress = new byte[32].ToByteString()}}
-                   .ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId())).Should()
+                   .ToProtocolMessage(MultiAddressHelper.GetAddress(), CorrelationId.GenerateCorrelationId())).Should()
                .Be(ResponseCode.Error);
-            _broadcastManager.DidNotReceiveWithAnyArgs()?.BroadcastAsync(default);
+            _peerClient.DidNotReceiveWithAnyArgs()?.BroadcastAsync(default);
         }
 
         [Test]
@@ -86,10 +85,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
             _mempool.Service.TryReadItem(Arg.Any<string>()).Returns(true);
 
             _transactionReceivedEvent
-               .OnTransactionReceived(transaction.ToProtocolMessage(PeerIdHelper.GetPeerId(),
+               .OnTransactionReceived(transaction.ToProtocolMessage(MultiAddressHelper.GetAddress(),
                     CorrelationId.GenerateCorrelationId()))
                .Should().Be(ResponseCode.Exists);
-            _broadcastManager.DidNotReceiveWithAnyArgs()?.BroadcastAsync(default);
+            _peerClient.DidNotReceiveWithAnyArgs()?.BroadcastAsync(default);
             _mempool.Service.DidNotReceiveWithAnyArgs().CreateItem(default);
         }
 
@@ -101,12 +100,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
             _transactionValidator.ValidateTransaction(Arg.Any<PublicEntry>())
                .Returns(true);
             _transactionReceivedEvent
-               .OnTransactionReceived(transaction.ToProtocolMessage(PeerIdHelper.GetPeerId(),
+               .OnTransactionReceived(transaction.ToProtocolMessage(MultiAddressHelper.GetAddress(),
                     CorrelationId.GenerateCorrelationId()))
                .Should().Be(ResponseCode.Successful);
 
             _mempool.Service.Received(1).CreateItem(Arg.Any<PublicEntryDao>());
-            _broadcastManager.Received(1)?.BroadcastAsync(Arg.Is<ProtocolMessage>(
+            _peerClient.Received(1)?.BroadcastAsync(Arg.Is<ProtocolMessage>(
                 broadcastedMessage => broadcastedMessage.Value.ToByteArray().SequenceEqual(transaction.ToByteArray())));
         }
     }

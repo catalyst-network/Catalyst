@@ -26,14 +26,14 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Transport.Channels;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.IO.Transport.Channels
 {
     public abstract class UdpServerChannelFactory : UdpChannelFactoryBase, IUdpServerChannelFactory
     {
         public abstract Task<IObservableChannel> BuildChannelAsync(IEventLoopGroupFactory eventLoopGroupFactory,
-            IPAddress targetAddress,
-            int targetPort,
+            MultiAddress address,
             X509Certificate2 certificate = null);
     }
 }

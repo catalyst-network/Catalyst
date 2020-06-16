@@ -31,6 +31,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels.Embedded;
+using MultiFormats;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -50,7 +51,7 @@ namespace Catalyst.Core.Modules.Authentication.Tests.UnitTests
             _authenticationStrategy = Substitute.For<IAuthenticationStrategy>();
             _serverChannel = new EmbeddedChannel(new AuthenticationHandler(_authenticationStrategy), _testObservableServiceHandler);
 
-            var senderId = PeerIdHelper.GetPeerId("Test");
+            var senderId = MultiAddressHelper.GetAddress("Test");
             _signedMessage = new GetPeerListRequest()
                .ToProtocolMessage(senderId)
                .ToSignedProtocolMessage(senderId, new byte[new FfiWrapper().SignatureLength]);
@@ -59,7 +60,7 @@ namespace Catalyst.Core.Modules.Authentication.Tests.UnitTests
         [Test]
         public void Can_Block_Pipeline_Non_Authorized_Node_Operator()
         {
-            _authenticationStrategy.Authenticate(Arg.Any<PeerId>()).Returns(false);
+            _authenticationStrategy.Authenticate(Arg.Any<MultiAddress>()).Returns(false);
 
             _serverChannel.WriteInbound(_signedMessage);
             _authenticationStrategy.ReceivedWithAnyArgs(1).Authenticate(null);
@@ -69,7 +70,7 @@ namespace Catalyst.Core.Modules.Authentication.Tests.UnitTests
         [Test]
         public void Can_Continue_Pipeline_On_Authorized_Node_Operator()
         {
-            _authenticationStrategy.Authenticate(Arg.Any<PeerId>()).Returns(true);
+            _authenticationStrategy.Authenticate(Arg.Any<MultiAddress>()).Returns(true);
 
             _serverChannel.WriteInbound(_signedMessage);
             _authenticationStrategy.ReceivedWithAnyArgs(1).Authenticate(null);

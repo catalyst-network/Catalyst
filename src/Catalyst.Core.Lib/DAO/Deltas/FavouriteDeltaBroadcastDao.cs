@@ -31,7 +31,7 @@ namespace Catalyst.Core.Lib.DAO.Deltas
     public class FavouriteDeltaBroadcastDao : DaoBase
     {
         public CandidateDeltaBroadcastDao Candidate { get; set; }
-        public PeerIdDao VoterId { get; set; }
+        public string Voter { get; set; }
     }
 
     public class FavouriteDeltaBroadcastMapperInitialiser : IMapperInitializer

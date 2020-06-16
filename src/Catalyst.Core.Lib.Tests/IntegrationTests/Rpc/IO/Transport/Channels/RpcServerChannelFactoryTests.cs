@@ -44,6 +44,7 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
 {
@@ -104,10 +105,10 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
         public async Task
             RpcServerChannelFactory_Pipeline_Should_Produce_Response_Object_RpcClientChannelFactory_Can_Process()
         {
-            var recipient = PeerIdHelper.GetPeerId("recipient");
-            var sender = PeerIdHelper.GetPeerId("sender");
+            var recipient = MultiAddressHelper.GetAddress("recipient");
+            var sender = MultiAddressHelper.GetAddress("sender");
             var signature = Substitute.For<ISignature>();
-            _peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
+            _peerIdValidator.ValidatePeerIdFormat(Arg.Any<MultiAddress>()).Returns(true);
             
             _serverKeySigner.Sign(Arg.Any<byte[]>(), default).ReturnsForAnyArgs(signature);
             
@@ -135,7 +136,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
                     default)
                .ReturnsForAnyArgs(true);
             
-            _authenticationStrategy.Authenticate(Arg.Any<PeerId>()).Returns(true);
+            _authenticationStrategy.Authenticate(Arg.Any<MultiAddress>()).Returns(true);
             
             var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
 

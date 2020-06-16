@@ -41,6 +41,7 @@ using NSubstitute;
 using Serilog;
 using NUnit.Framework;
 using Google.Protobuf;
+using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -49,6 +50,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         private ILogger _logger;
         private IKeySigner _keySigner;
         private IChannelHandlerContext _fakeContext;
+        private ILibP2PPeerClient _peerClient;
         private ISignature _signature;
 
         [SetUp]
@@ -59,9 +61,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             _signature.SignatureBytes.Returns(ByteUtil.GenerateRandomByteArray(new FfiWrapper().SignatureLength));
             _signature.PublicKeyBytes.Returns(ByteUtil.GenerateRandomByteArray(new FfiWrapper().PublicKeyLength));
             _logger = Substitute.For<ILogger>();
-            _fakeContext = Substitute.For<IChannelHandlerContext>();
-            var fakeChannel = Substitute.For<IChannel>();
-            _fakeContext.Channel.Returns(fakeChannel);
+            _peerClient = Substitute.For<ILibP2PPeerClient>();
 
             _keySigner.Sign(default, default).ReturnsForAnyArgs(_signature);
         }
@@ -80,19 +80,19 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             };
 
             var protocolMessage =
-                signMessageRequest.ToProtocolMessage(PeerIdHelper.GetPeerId("sender"));
+                signMessageRequest.ToProtocolMessage(MultiAddressHelper.GetAddress("sender"));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
-            var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
+            var peerSettings = MultiAddressHelper.GetAddress("sender").ToSubstitutedPeerSettings();
             var handler =
-                new SignMessageRequestObserver(peerSettings, _logger, _keySigner);
+                new SignMessageRequestObserver(peerSettings, _peerClient, _logger, _keySigner);
 
             handler.StartObserving(messageStream);
 
             testScheduler.Start();
 
-            var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
+            var receivedCalls = _peerClient.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();

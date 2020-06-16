@@ -64,7 +64,7 @@ namespace Catalyst.Core.Modules.Rpc.Server
 
         public override async Task StartAsync()
         {
-            var observableSocket = await ChannelFactory.BuildChannelAsync(EventLoopGroupFactory, Settings.BindAddress, Settings.Port, _certificate).ConfigureAwait(false);
+            var observableSocket = await ChannelFactory.BuildChannelAsync(EventLoopGroupFactory, Settings.Address, _certificate).ConfigureAwait(false);
             Channel = observableSocket.Channel;
             MessageStream = observableSocket.MessageStream;
             _requestHandlers.ToList().ForEach(h => h.StartObserving(MessageStream));

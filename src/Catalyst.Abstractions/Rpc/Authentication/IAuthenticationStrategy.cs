@@ -22,6 +22,7 @@
 #endregion
 
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 
 namespace Catalyst.Abstractions.Rpc.Authentication
 {
@@ -33,6 +34,6 @@ namespace Catalyst.Abstractions.Rpc.Authentication
         /// <summary>Authenticates the specified peer identifier.</summary>
         /// <param name="peerIdentifier">The peer identifier.</param>
         /// <returns>if [true] then whitelist node operator messages otherwise if [false] block messages</returns>
-        bool Authenticate(PeerId peerIdentifier);
+        bool Authenticate(MultiAddress Addressentifier);
     }
 }

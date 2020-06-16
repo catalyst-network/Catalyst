@@ -31,12 +31,10 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Transport;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Network;
-using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Rpc.Client;
-using Catalyst.Protocol.Peer;
 using Dawn;
 using Microsoft.Extensions.Configuration;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Cli.Commands
@@ -59,13 +57,13 @@ namespace Catalyst.Cli.Commands
             _rpcNodeConfigs = RpcClientSettings.BuildRpcNodeSettingList(config);
 
             SocketClientRegistry = socketClientRegistry;
-            PeerId = GetPeerIdentifierFromCliConfig(config);
+            Address = GetPeerIdentifierFromCliConfig(config);
             RpcClientFactory = rpcClientFactory;
             CertificateStore = certificateStore;
             UserOutput = userOutput;
         }
 
-        public PeerId PeerId { get; }
+        public MultiAddress Address { get; }
 
         public IRpcClientFactory RpcClientFactory { get; }
 
@@ -82,8 +80,7 @@ namespace Catalyst.Cli.Commands
             var nodeConfig = _rpcNodeConfigs.SingleOrDefault(node => node.NodeId.Equals(nodeId));
             Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull();
 
-            var registryId = SocketClientRegistry.GenerateClientHashCode(
-                EndpointBuilder.BuildNewEndPoint(nodeConfig?.HostAddress, nodeConfig.Port));
+            var registryId = SocketClientRegistry.GenerateClientHashCode(nodeConfig.Address.GetIPEndPoint());
 
             var nodeRpcClient = SocketClientRegistry.GetClientFromRegistry(registryId);
             Guard.Argument(nodeRpcClient).Require(IsSocketChannelActive(nodeRpcClient));
@@ -121,13 +118,11 @@ namespace Catalyst.Cli.Commands
             }
         }
 
-        private PeerId GetPeerIdentifierFromCliConfig(IConfigurationRoot configRoot)
+        private MultiAddress GetPeerIdentifierFromCliConfig(IConfigurationRoot configRoot)
         {
             var cliSettings = configRoot.GetSection("CatalystCliConfig");
-            var publicKey = cliSettings.GetSection("PublicKey").Value.KeyToBytes();
-            var ipAddress = IPAddress.Parse(cliSettings.GetSection("BindAddress").Value);
-            var port = int.Parse(cliSettings.GetSection("Port").Value);
-            return publicKey.BuildPeerIdFromPublicKey(ipAddress, port);
+            var address = cliSettings.GetSection("Address").Value;
+            return new MultiAddress(address);
         }
     }
 }

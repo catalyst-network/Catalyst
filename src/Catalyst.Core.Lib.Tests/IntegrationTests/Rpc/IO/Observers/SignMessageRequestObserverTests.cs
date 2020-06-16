@@ -49,6 +49,7 @@ using NSubstitute;
 using Serilog;
 using NUnit.Framework;
 using Google.Protobuf;
+using Catalyst.Core.Modules.Dfs;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 {
@@ -61,6 +62,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         private ILogger _logger;
         private IKeySigner _keySigner;
         private IChannelHandlerContext _fakeContext;
+        private ILibP2PPeerClient _peerClient;
 
         public SignMessageRequestObserverTests() : base(new[]
         {
@@ -81,12 +83,14 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             ContainerProvider.ContainerBuilder.RegisterModule(new KeySignerModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new BulletProofsModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new HashingModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new DfsModule());
             ContainerProvider.ConfigureContainerBuilder();
 
             _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);
             _keySigner = ContainerProvider.Container.Resolve<IKeySigner>();
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
+            _peerClient = Substitute.For<ILibP2PPeerClient>();
             var fakeChannel = Substitute.For<IChannel>();
             _fakeContext.Channel.Returns(fakeChannel);
         }
@@ -97,9 +101,9 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
        
         public async Task RpcServer_Can_Handle_SignMessageRequest(string message)
         {
-            var sender = PeerIdHelper.GetPeerId("sender");
+            var sender = MultiAddressHelper.GetAddress("sender");
             var peerSettings = Substitute.For<IPeerSettings>();
-            peerSettings.PeerId.Returns(sender);
+            peerSettings.Address.Returns(sender);
             var signMessageRequest = new SignMessageRequest
             {
                 Message = message.ToUtf8ByteString(),
@@ -115,13 +119,13 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             var messageStream =
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
             var handler =
-                new SignMessageRequestObserver(peerSettings, _logger, _keySigner);
+                new SignMessageRequestObserver(peerSettings, _peerClient, _logger, _keySigner);
 
             handler.StartObserving(messageStream);
 
             _testScheduler.Start();
 
-            var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
+            var receivedCalls =_peerClient.ReceivedCalls().ToList();
             _logger.DidNotReceiveWithAnyArgs().Error((Exception) default, default);
             receivedCalls.Count.Should().Be(1);
 

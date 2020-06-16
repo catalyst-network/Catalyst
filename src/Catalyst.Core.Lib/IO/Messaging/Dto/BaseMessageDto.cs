@@ -23,10 +23,11 @@
 
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Protocol.Peer;
+using Catalyst.Core.Lib.Extensions;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.IO.Messaging.Dto
 {
@@ -34,29 +35,28 @@ namespace Catalyst.Core.Lib.IO.Messaging.Dto
         where T : IMessage<T>
     {
         public ICorrelationId CorrelationId { get; }
-        public PeerId RecipientPeerIdentifier { get; }
-        public PeerId SenderPeerIdentifier { get; }
+        public MultiAddress RecipientAddress { get; }
+        public MultiAddress SenderAddress { get; }
 
         /// <summary>
         ///     Data transfer object to wrap up all parameters for sending protocol messages into a MessageFactors.
         /// </summary>
         /// <param name="content"></param>
-        /// <param name="senderPeerIdentifier"></param>
-        /// <param name="recipientPeerIdentifier"></param>
+        /// <param name="sender"></param>
+        /// <param name="recipient"></param>
         /// <param name="correlationId"></param>
         protected BaseMessageDto(T content,
-            PeerId senderPeerIdentifier,
-            PeerId recipientPeerIdentifier,
+            MultiAddress sender,
+            MultiAddress recipient,
             ICorrelationId correlationId)
-            : base(content, senderPeerIdentifier.IpEndPoint, recipientPeerIdentifier.IpEndPoint)
+            : base(content, sender.GetIPEndPoint(), recipient.GetIPEndPoint())
         {
-            Guard.Argument(senderPeerIdentifier.IpEndPoint.Address, nameof(senderPeerIdentifier.IpEndPoint.Address)).NotNull();
-            Guard.Argument(recipientPeerIdentifier.IpEndPoint.Address,
-                nameof(recipientPeerIdentifier.IpEndPoint.Address)).NotNull();
+            Guard.Argument(sender.GetIPEndPoint().Address).NotNull();
+            Guard.Argument(recipient.GetIPEndPoint().Address).NotNull();
 
             CorrelationId = correlationId;
-            SenderPeerIdentifier = senderPeerIdentifier;
-            RecipientPeerIdentifier = recipientPeerIdentifier;
+            SenderAddress = sender;
+            RecipientAddress = recipient;
         }
     }
 }

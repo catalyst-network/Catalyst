@@ -63,7 +63,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
             {
                 var message = new GetInfoResponse { Query = i.ToString() };
                 return message.ToProtocolMessage(
-                    PeerIdHelper.GetPeerId(i.ToString()),
+                    MultiAddressHelper.GetAddress(i.ToString()),
                     CorrelationId.GenerateCorrelationId());
             }).ToArray();
         }
@@ -110,11 +110,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
         public void MessageHandler_should_not_receive_messages_of_the_wrong_type()
         {
             _responseMessages[3] = new PingResponse().ToProtocolMessage(
-                _responseMessages[3].PeerId,
+                _responseMessages[3].Address,
                 _responseMessages[3].CorrelationId.ToCorrelationId());
 
             _responseMessages[7] = new PingRequest().ToProtocolMessage(
-                _responseMessages[7].PeerId,
+                _responseMessages[7].Address,
                 _responseMessages[7].CorrelationId.ToCorrelationId());
 
             var mixedTypesStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext, _testScheduler, _responseMessages);

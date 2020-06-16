@@ -23,14 +23,11 @@
 
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
-using Catalyst.Abstractions.KeySigner;
+using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
 using Catalyst.Abstractions.Types;
-using Catalyst.Core.Lib.Extensions;
-using System;
 using System.Reflection;
-using System.Security;
 using LibP2P = Lib.P2P;
 
 namespace Catalyst.Core.Lib.P2P
@@ -46,7 +43,7 @@ namespace Catalyst.Core.Lib.P2P
                      keyApi.CreateAsync("self", keyChainOptions.DefaultKeyType, 0).ConfigureAwait(false).GetAwaiter().GetResult();
 
             this.Id = self.Id;
-            this.PublicKey = keyApi.GetIpfsPublicKeyAsync("self").ConfigureAwait(false).GetAwaiter().GetResult();
+            this.PublicKey = keyApi.GetDfsPublicKeyAsync("self").ConfigureAwait(false).GetAwaiter().GetResult();
             this.ProtocolVersion = "ipfs/0.1.0";
 
             var version = typeof(IDfsService).GetTypeInfo().Assembly.GetName().Version;

@@ -34,6 +34,7 @@ using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Transport.Channels;
 using Catalyst.Protocol.Cryptography;
@@ -43,6 +44,7 @@ using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using Google.Protobuf;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
 {
@@ -97,11 +99,10 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
         /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Local TLS certificate</param>
         public override async Task<IObservableChannel> BuildChannelAsync(IEventLoopGroupFactory handlerEventLoopGroupFactory,
-            IPAddress targetAddress,
-            int targetPort,
+            MultiAddress address,
             X509Certificate2 certificate = null)
         {
-            var channel = await BootStrapChannelAsync(handlerEventLoopGroupFactory, targetAddress, targetPort).ConfigureAwait(false);
+            var channel = await BootStrapChannelAsync(handlerEventLoopGroupFactory, address.GetIpAddress(), address.GetPort()).ConfigureAwait(false);
             return new ObservableChannel(Observable.Never<IObserverDto<ProtocolMessage>>(), channel);
         }
     }

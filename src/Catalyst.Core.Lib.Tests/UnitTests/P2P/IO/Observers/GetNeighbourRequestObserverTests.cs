@@ -39,6 +39,8 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using MultiFormats;
+using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 {
@@ -46,15 +48,17 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
     {
         private readonly TestScheduler _testScheduler;
         private readonly ILogger _subbedLogger;
-        private readonly PeerId _peerId;
+        private readonly MultiAddress _peerId;
         private readonly IPeerRepository _subbedPeerRepository;
+        private readonly ILibP2PPeerClient _peerClient;
 
         public GetNeighbourRequestObserverTests()
         {
             _testScheduler = new TestScheduler();
             _subbedLogger = Substitute.For<ILogger>();
             _subbedPeerRepository = Substitute.For<IPeerRepository>();
-            _peerId = PeerIdHelper.GetPeerId("testPeer");
+            _peerId = MultiAddressHelper.GetAddress("testPeer");
+            _peerClient = Substitute.For<ILibP2PPeerClient>();
         }
 
         private static void AddMockPeerToDbAndSetReturnExpectation(IReadOnlyList<Peer> peer,
@@ -70,12 +74,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             // mock a random set of peers
             var randomPeers = new List<Peer>
             {
-                new Peer {PeerId = PeerIdHelper.GetPeerId("peer1"), LastSeen = DateTime.Now},
-                new Peer {PeerId = PeerIdHelper.GetPeerId("peer2"), LastSeen = DateTime.Now},
-                new Peer {PeerId = PeerIdHelper.GetPeerId("peer3"), LastSeen = DateTime.Now},
-                new Peer {PeerId = PeerIdHelper.GetPeerId("peer4"), LastSeen = DateTime.Now},
-                new Peer {PeerId = PeerIdHelper.GetPeerId("peer5"), LastSeen = DateTime.Now},
-                new Peer {PeerId = PeerIdHelper.GetPeerId("peer6")}
+                new Peer {Address = MultiAddressHelper.GetAddress("peer1"), LastSeen = DateTime.Now},
+                new Peer {Address = MultiAddressHelper.GetAddress("peer2"), LastSeen = DateTime.Now},
+                new Peer {Address = MultiAddressHelper.GetAddress("peer3"), LastSeen = DateTime.Now},
+                new Peer {Address = MultiAddressHelper.GetAddress("peer4"), LastSeen = DateTime.Now},
+                new Peer {Address = MultiAddressHelper.GetAddress("peer5"), LastSeen = DateTime.Now},
+                new Peer {Address = MultiAddressHelper.GetAddress("peer6")}
             };
 
             // add them to the mocked repository, and set return expectation
@@ -84,6 +88,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             var peerSettings = _peerId.ToSubstitutedPeerSettings();
             var neighbourRequestHandler = new GetNeighbourRequestObserver(peerSettings,
                 _subbedPeerRepository,
+                _peerClient,
                 _subbedLogger
             );
 
@@ -91,7 +96,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 
             var fakeContext = Substitute.For<IChannelHandlerContext>();
             var channeledAny = new ObserverDto(fakeContext,
-                peerNeighbourRequestMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(),
+                peerNeighbourRequestMessage.ToProtocolMessage(MultiAddressHelper.GetAddress(),
                     CorrelationId.GenerateCorrelationId()));
             var observableStream = new[] {channeledAny}.ToObservable(_testScheduler);
 
@@ -101,14 +106,15 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 
             for (var i = 0; i < 5; i++)
             {
-                peerNeighborsResponseMessage.Peers.Add(PeerIdHelper.GetPeerId());
+                peerNeighborsResponseMessage.Peers.Add(MultiAddressHelper.GetAddress().ToString());
             }
 
             _testScheduler.Start();
 
-            await fakeContext.Channel.ReceivedWithAnyArgs(1)
-               .WriteAndFlushAsync(
-                    peerNeighborsResponseMessage.ToProtocolMessage(_peerId, CorrelationId.GenerateCorrelationId()));
+            var dtoResponse = new MessageDto(peerNeighborsResponseMessage.ToProtocolMessage(_peerId, CorrelationId.GenerateCorrelationId()),
+            _peerId);
+
+            await _peerClient.ReceivedWithAnyArgs(1).SendMessageAsync(dtoResponse).ConfigureAwait(false);
         }
 
         public void Dispose() { _subbedPeerRepository?.Dispose(); }

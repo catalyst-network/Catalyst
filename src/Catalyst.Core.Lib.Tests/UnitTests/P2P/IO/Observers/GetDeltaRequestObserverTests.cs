@@ -41,6 +41,7 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 {
@@ -51,6 +52,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         private GetDeltaRequestObserver _observer;
         private IChannelHandlerContext _fakeContext;
         private IHashProvider _hashProvider;
+        private ILibP2PPeerClient _peerClient;
 
         [SetUp]
         public void Init()
@@ -64,10 +66,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 
             _testScheduler = new TestScheduler();
             var logger = Substitute.For<ILogger>();
-            var peerIdentifier = PeerIdHelper.GetPeerId("responder");
+            var peerIdentifier = MultiAddressHelper.GetAddress("responder");
             var peerSettings = peerIdentifier.ToSubstitutedPeerSettings();
+            _peerClient = Substitute.For<ILibP2PPeerClient>();
             _deltaCache = Substitute.For<IDeltaCache>();
-            _observer = new GetDeltaRequestObserver(_deltaCache, peerSettings, logger);
+            _observer = new GetDeltaRequestObserver(_deltaCache, peerSettings, _peerClient, logger);
             _fakeContext = Substitute.For<IChannelHandlerContext>();
         }
 
@@ -85,10 +88,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _deltaCache.Received(1).TryGetOrAddConfirmedDelta(Arg.Is<Cid>(
                 s => s.Equals(cid)), out Arg.Any<Delta>());
 
-            await _fakeContext.Channel.ReceivedWithAnyArgs(1)
-               .WriteAndFlushAsync(Arg.Is<IMessageDto<ProtocolMessage>>(pm =>
+            await _peerClient.ReceivedWithAnyArgs(1).SendMessageAsync(Arg.Is<IMessageDto<ProtocolMessage>>(pm =>
                     pm.Content.FromProtocolMessage<GetDeltaResponse>().Delta.PreviousDeltaDfsHash ==
-                    delta.PreviousDeltaDfsHash));
+                    delta.PreviousDeltaDfsHash)).ConfigureAwait(false);
         }
 
         [Test]
@@ -105,16 +107,15 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _deltaCache.Received(1).TryGetOrAddConfirmedDelta(Arg.Is<Cid>(
                 s => s.Equals(cid)), out Arg.Any<Delta>());
 
-            await _fakeContext.Channel.ReceivedWithAnyArgs(1)
-               .WriteAndFlushAsync(Arg.Is<IMessageDto<ProtocolMessage>>(pm =>
-                    pm.Content.FromProtocolMessage<GetDeltaResponse>().Delta == null));
+            await _peerClient.ReceivedWithAnyArgs(1).SendMessageAsync(Arg.Is<IMessageDto<ProtocolMessage>>(pm =>
+                    pm.Content.FromProtocolMessage<GetDeltaResponse>().Delta == null)).ConfigureAwait(false);
         }
 
         private IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithDeltaRequest(Cid cid)
         {
-            var deltaRequest = new GetDeltaRequest {DeltaDfsHash = cid.ToArray().ToByteString()};
+            var deltaRequest = new GetDeltaRequest { DeltaDfsHash = cid.ToArray().ToByteString() };
 
-            var message = deltaRequest.ToProtocolMessage(PeerIdHelper.GetPeerId("sender"));
+            var message = deltaRequest.ToProtocolMessage(MultiAddressHelper.GetAddress("sender"));
 
             var observable = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, message);
             return observable;

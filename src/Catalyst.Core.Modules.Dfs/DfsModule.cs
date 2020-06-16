@@ -21,19 +21,19 @@
 
 #endregion
 
-using System.Reflection;
 using Autofac;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Dfs.BlockExchange;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Dfs.Migration;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
-using Catalyst.Abstractions.Types;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Kernel;
 using Catalyst.Core.Lib.P2P;
+using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Modules.Dfs.BlockExchange;
 using Catalyst.Core.Modules.Dfs.CoreApi;
 using Catalyst.Core.Modules.Dfs.Migration;
@@ -41,7 +41,10 @@ using Catalyst.Core.Modules.Keystore;
 using Lib.P2P;
 using Lib.P2P.Protocols;
 using Lib.P2P.PubSub;
+using Lib.P2P.Routing;
 using Makaretu.Dns;
+using SharpRepository.InMemoryRepository;
+using SharpRepository.Repository;
 
 namespace Catalyst.Core.Modules.Dfs
 {
@@ -82,36 +85,31 @@ namespace Catalyst.Core.Modules.Dfs
                .SingleInstance();
 
             builder.RegisterType<BitSwapService>()
-               .As<BitSwapService>()
+               .As<IBitswapService>()
                .SingleInstance();
 
             builder.RegisterBuildCallback(x =>
             {
-                var localPeer = x.Resolve<Peer>();
-                var swarmService = x.Resolve<SwarmService>();
-
-                var bitSwapService = x.Resolve<BitSwapService>();
-                bitSwapService.SwarmService = swarmService;
+                var bitSwapService = x.Resolve<IBitswapService>();
                 bitSwapService.BlockService = x.Resolve<IBlockApi>();
-
-                var pubService = x.Resolve<PubSubService>();
-                pubService.LocalPeer = localPeer;
-                pubService.Routers.Add(new FloodRouter
-                {
-                    SwarmService = swarmService
-                });
             });
 
+            builder.RegisterType<LoopbackRouter>()
+               .As<IMessageRouter>();
+
+            builder.RegisterType<FloodRouter>()
+                .As<IMessageRouter>();
+
             builder.RegisterType<SwarmService>()
-               .As<SwarmService>()
+               .As<ISwarmService>()
                .SingleInstance();
 
             builder.RegisterType<KatDhtService>()
-               .As<KatDhtService>()
+               .As<IDhtService>()
                .SingleInstance();
 
             builder.RegisterType<PubSubService>()
-               .As<PubSubService>()
+               .As<IPubSubService>()
                .SingleInstance();
 
             builder.RegisterType<Makaretu.Dns.DnsClient>()
@@ -119,6 +117,11 @@ namespace Catalyst.Core.Modules.Dfs
 
             builder.RegisterType<Ping1>()
                .As<Ping1>();
+
+            builder.RegisterType<CatalystProtocol>().AsImplementedInterfaces().SingleInstance();
+
+            builder.RegisterType<InMemoryRepository<Lib.P2P.Models.Peer, string>>().As<IRepository<Lib.P2P.Models.Peer, string>>().SingleInstance();
+            builder.RegisterType<PeerRepository>().As<IPeerRepository>().SingleInstance();
 
             builder.RegisterType<MigrationManager>()
                .As<IMigrationManager>();
@@ -131,7 +134,7 @@ namespace Catalyst.Core.Modules.Dfs
             builder.RegisterType<RepositoryOptions>().SingleInstance()
                .WithParameter("dfsDirectory", Constants.DfsDataSubDir);
             //Disable Mdns in dfs as it causes a memoryleak/outofmemory exception
-            builder.RegisterType<DiscoveryOptions>().SingleInstance().WithProperty("DisableMdns", true);
+            builder.RegisterType<DiscoveryOptions>().SingleInstance().WithProperty("DisableMdns", true).WithProperty("UsePeerRepository", true);
             builder.RegisterType<KeyChainOptions>().SingleInstance().WithProperty("DefaultKeyType", "ed25519");
             builder.RegisterType<SwarmOptions>().SingleInstance();
         }

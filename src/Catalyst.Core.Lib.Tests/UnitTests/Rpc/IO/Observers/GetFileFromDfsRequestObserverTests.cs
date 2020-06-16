@@ -44,6 +44,7 @@ using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -60,8 +61,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _fileTransferFactory = Substitute.For<IUploadFileTransferFactory>();
             _dfsService = Substitute.For<IDfsService>();
-            var peerSettings = PeerIdHelper.GetPeerId("test").ToSubstitutedPeerSettings();
-            _observer = new GetFileFromDfsRequestObserver(_dfsService, peerSettings, _fileTransferFactory,
+            var peerSettings = MultiAddressHelper.GetAddress("test").ToSubstitutedPeerSettings();
+            _observer = new GetFileFromDfsRequestObserver(_dfsService, peerSettings, Substitute.For<ILibP2PPeerClient>(), _fileTransferFactory,
                 Substitute.For<ILogger>());
         }
 
@@ -102,7 +103,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 DfsHash = _hashProvider.ComputeUtf8MultiHash("test").ToCid()
             };
             var protocolMessage = getFileFromDfsRequestMessage
-               .ToProtocolMessage(PeerIdHelper.GetPeerId("TestMan"), CorrelationId.GenerateCorrelationId());
+               .ToProtocolMessage(MultiAddressHelper.GetAddress("TestMan"), CorrelationId.GenerateCorrelationId());
             return new ObserverDto(Substitute.For<IChannelHandlerContext>(), protocolMessage);
         }
 

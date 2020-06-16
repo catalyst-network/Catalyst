@@ -56,7 +56,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 
             var pingResponse = new PingResponse();
             var protocolMessage =
-                pingResponse.ToProtocolMessage(PeerIdHelper.GetPeerId("sender"),
+                pingResponse.ToProtocolMessage(MultiAddressHelper.GetAddress("sender"),
                     CorrelationId.GenerateCorrelationId());
 
             var pingResponseObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();

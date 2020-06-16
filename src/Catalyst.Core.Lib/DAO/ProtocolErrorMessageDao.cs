@@ -24,7 +24,6 @@
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO.Converters;
-using Catalyst.Core.Lib.DAO.Peer;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
@@ -34,7 +33,7 @@ namespace Catalyst.Core.Lib.DAO
     public class ProtocolErrorMessageDao : DaoBase
     {
         public Signature Signature { get; set; }
-        public PeerIdDao PeerId { get; set; }
+        public string Address { get; set; }
         public string CorrelationId { get; set; }
         public int Code { get; set; }
     }

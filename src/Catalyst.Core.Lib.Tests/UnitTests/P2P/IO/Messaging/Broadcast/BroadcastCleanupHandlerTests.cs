@@ -51,7 +51,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
             var correlationId = CorrelationId.GenerateCorrelationId();
             var fakeMessage =
                 new TransactionBroadcast()
-                   .ToProtocolMessage(PeerIdHelper.GetPeerId("Test"), correlationId);
+                   .ToProtocolMessage(MultiAddressHelper.GetAddress("Test"), correlationId);
             _fakeChannel.WriteInbound(fakeMessage);
             _broadcastManager.Received(1).RemoveSignedBroadcastMessageData(correlationId);
         }

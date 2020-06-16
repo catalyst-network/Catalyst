@@ -65,7 +65,12 @@ namespace Lib.P2P.PubSub
         /// <summary>
         ///   Provides access to other peers.
         /// </summary>
-        public SwarmService SwarmService { get; set; }
+        public ISwarmService SwarmService { get; set; }
+
+        public FloodRouter(ISwarmService swarmService)
+        {
+            SwarmService = swarmService;
+        }
 
         /// <inheritdoc />
         public Task StartAsync()

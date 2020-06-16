@@ -25,12 +25,8 @@ namespace Catalyst.Abstractions.Cli.Options
 {
     public interface IRemovePeerOptions : IOptionsBase
     {
-        /// <summary>Gets or sets the public key.</summary>
-        /// <value>The public key.</value>
-        string PublicKey { get; set; }
-
-        /// <summary>Gets or sets the ip.</summary>
-        /// <value>The ip.</value>
-        string Ip { get; set; }
+        /// <summary>Gets or sets the address.</summary>
+        /// <value>The multi address.</value>
+        public string Address { get; set; }
     }
 }

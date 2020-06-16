@@ -40,6 +40,7 @@ using Catalyst.Protocol.Wire;
 using Dawn;
 using Google.Protobuf;
 using Lib.P2P;
+using MultiFormats;
 using Polly;
 using Polly.Retry;
 using Serilog;
@@ -51,23 +52,26 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
     public class DeltaHub : IDeltaHub
     {
         private readonly IBroadcastManager _broadcastManager;
-        private readonly PeerId _peerId;
+        private readonly MultiAddress _peerId;
         private readonly IDfsService _dfsService;
         private readonly IHashProvider _hashProvider;
+        private readonly ILibP2PPeerClient _peerClient;
         private readonly ILogger _logger;
 
         protected virtual AsyncRetryPolicy<IFileSystemNode> DfsRetryPolicy { get; }
 
         public DeltaHub(IBroadcastManager broadcastManager,
+            ILibP2PPeerClient peerClient,
             IPeerSettings peerSettings,
             IDfsService dfsService,
             IHashProvider hashProvider,
             ILogger logger)
         {
             _broadcastManager = broadcastManager;
-            _peerId = peerSettings.PeerId;
+            _peerId = peerSettings.Address;
             _dfsService = dfsService;
             _hashProvider = hashProvider;
+            _peerClient = peerClient;
             _logger = logger;
 
             DfsRetryPolicy = Polly.Policy<IFileSystemNode>.Handle<Exception>()
@@ -81,7 +85,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             Guard.Argument(candidate, nameof(candidate)).NotNull().Require(c => c.IsValid());
             _logger.Information("Broadcasting candidate delta {0}", candidate);
 
-            if (!candidate.ProducerId.Equals(_peerId))
+            if (!candidate.Producer.Equals(_peerId.ToString()))
             {
                 _logger.Warning($"{nameof(BroadcastCandidate)} " +
                     "should only be called by the producer of a candidate.");
@@ -89,7 +93,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             }
 
             var protocolMessage = candidate.ToProtocolMessage(_peerId, CorrelationId.GenerateCorrelationId());
-            _broadcastManager.BroadcastAsync(protocolMessage).ConfigureAwait(false);
+            _peerClient.BroadcastAsync(protocolMessage).ConfigureAwait(false);
 
             _logger.Debug("Broadcast candidate {0} done.", candidate);
         }
@@ -100,7 +104,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             Guard.Argument(favourite, nameof(favourite)).NotNull().Require(c => c.IsValid());
 
             var protocolMessage = favourite.ToProtocolMessage(_peerId, CorrelationId.GenerateCorrelationId());
-            _broadcastManager.BroadcastAsync(protocolMessage).ConfigureAwait(false);
+            _peerClient.BroadcastAsync(protocolMessage).ConfigureAwait(false);
 
             _logger.Debug("Started broadcasting favourite candidate {0}", favourite);
         }
@@ -152,7 +156,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                     PreviousDeltaDfsHash = previousDeltaHash
                 }.ToProtocolMessage(_peerId, CorrelationId.GenerateCorrelationId());
 
-                await _broadcastManager.BroadcastAsync(newDeltaHashOnDfs).ConfigureAwait(false);
+                await _peerClient.BroadcastAsync(newDeltaHashOnDfs).ConfigureAwait(false);
             }
             catch (Exception exception)
             {

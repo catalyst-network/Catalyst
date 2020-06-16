@@ -42,13 +42,13 @@ namespace Lib.P2P.Tests.PubSub
                 "CAASXjBcMA0GCSqGSIb3DQEBAQUAA0sAMEgCQQCC5r4nQBtnd9qgjnG8fBN5+gnqIeWEIcUFUdCG4su/vrbQ1py8XGKNUBuDjkyTv25Gd3hlrtNJV3eOKZVSL8ePAgMBAAE="
         };
 
-        private Peer other1 = new Peer {Id = "QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ"};
-        private Peer other2 = new Peer {Id = "QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvUJ"};
+        private Peer other1 = new Peer { Id = "QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ" };
+        private Peer other2 = new Peer { Id = "QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvUJ" };
 
         [TestMethod]
         public async Task MessageID_Increments()
         {
-            var ns = new PubSubService {LocalPeer = self};
+            var ns = new PubSubService(self, new[] { new LoopbackRouter() });
             await ns.StartAsync();
             try
             {
@@ -65,13 +65,13 @@ namespace Lib.P2P.Tests.PubSub
         [TestMethod]
         public async Task Publish()
         {
-            var ns = new PubSubService {LocalPeer = self};
+            var ns = new PubSubService(self, new[] { new LoopbackRouter() });
             await ns.StartAsync();
             try
             {
                 await ns.PublishAsync("topic", "foo");
-                await ns.PublishAsync("topic", new byte[] {1, 2, 3});
-                await ns.PublishAsync("topic", new MemoryStream(new byte[] {1, 2, 3}));
+                await ns.PublishAsync("topic", new byte[] { 1, 2, 3 });
+                await ns.PublishAsync("topic", new MemoryStream(new byte[] { 1, 2, 3 }));
                 Assert.AreEqual(3ul, ns.MesssagesPublished);
                 Assert.AreEqual(3ul, ns.MesssagesReceived);
             }
@@ -84,7 +84,7 @@ namespace Lib.P2P.Tests.PubSub
         [TestMethod]
         public async Task Topics()
         {
-            var ns = new PubSubService {LocalPeer = self};
+            var ns = new PubSubService(self, new[] { new LoopbackRouter() });
             await ns.StartAsync();
             try
             {
@@ -120,7 +120,7 @@ namespace Lib.P2P.Tests.PubSub
         [TestMethod]
         public async Task Subscribe()
         {
-            var ns = new PubSubService {LocalPeer = self};
+            var ns = new PubSubService(self, new[] { new LoopbackRouter() });
             await ns.StartAsync();
             try
             {
@@ -142,7 +142,7 @@ namespace Lib.P2P.Tests.PubSub
         [TestMethod]
         public async Task Subscribe_HandlerExceptionIsIgnored()
         {
-            var ns = new PubSubService {LocalPeer = self};
+            var ns = new PubSubService(self, new[] { new LoopbackRouter() });
             await ns.StartAsync();
             try
             {
@@ -167,7 +167,7 @@ namespace Lib.P2P.Tests.PubSub
         [TestMethod]
         public async Task DuplicateMessagesAreIgnored()
         {
-            var ns = new PubSubService {LocalPeer = self};
+            var ns = new PubSubService(self, new[] { new LoopbackRouter() });
             ns.Routers.Add(new LoopbackRouter());
             await ns.StartAsync();
             try
@@ -193,8 +193,8 @@ namespace Lib.P2P.Tests.PubSub
         {
             var topic1 = Guid.NewGuid().ToString();
             var topic2 = Guid.NewGuid().ToString();
-            var ns = new PubSubService {LocalPeer = self};
-            var router = new FloodRouter() {SwarmService = new SwarmService()};
+            var router = new FloodRouter(new SwarmService(self));
+            var ns = new PubSubService(self, new[] { router });
             router.RemoteTopics.AddInterest(topic1, other1);
             router.RemoteTopics.AddInterest(topic2, other2);
             ns.Routers.Add(router);
@@ -220,8 +220,8 @@ namespace Lib.P2P.Tests.PubSub
         {
             var topic1 = Guid.NewGuid().ToString();
             var topic2 = Guid.NewGuid().ToString();
-            var ns = new PubSubService {LocalPeer = self};
-            var router = new FloodRouter {SwarmService = new SwarmService()};
+            var router = new FloodRouter(new SwarmService(self));
+            var ns = new PubSubService(self, new[] { router });
             router.RemoteTopics.AddInterest(topic1, other1);
             router.RemoteTopics.AddInterest(topic2, other2);
             ns.Routers.Add(router);

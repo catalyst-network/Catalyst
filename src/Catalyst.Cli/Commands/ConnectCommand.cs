@@ -24,6 +24,7 @@
 using Catalyst.Abstractions.Cli.Commands;
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
 using Dawn;
 using Serilog;
@@ -53,8 +54,7 @@ namespace Catalyst.Cli.Commands
                 return false;
             }
 
-            var clientHashCode = CommandContext.SocketClientRegistry.GenerateClientHashCode(
-                EndpointBuilder.BuildNewEndPoint(rpcNodeConfigs.HostAddress, rpcNodeConfigs.Port));
+            var clientHashCode = CommandContext.SocketClientRegistry.GenerateClientHashCode(rpcNodeConfigs.Address.GetIPEndPoint());
 
             CommandContext.SocketClientRegistry.AddClientToRegistry(clientHashCode, nodeRpcClient);
             CommandContext.UserOutput.WriteLine($"Connected to Node {nodeRpcClient.Channel.RemoteAddress}");

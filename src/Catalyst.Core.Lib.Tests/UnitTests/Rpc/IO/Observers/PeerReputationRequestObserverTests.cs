@@ -38,6 +38,9 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using MultiFormats;
+using Catalyst.Core.Lib.Util;
+using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -47,17 +50,15 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         private IChannelHandlerContext _fakeContext;
         private TestScheduler _testScheduler;
         private IPeerRepository _peerRepository;
-        private PeerId _senderId;
+        private MultiAddress _senderId;
+        private ILibP2PPeerClient _peerClient;
 
         [SetUp]
         public void Init()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-
-            var fakeChannel = Substitute.For<IChannel>();
-            _fakeContext.Channel.Returns(fakeChannel);
-            _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
+            _peerClient = Substitute.For<ILibP2PPeerClient>();
 
             _testScheduler = new TestScheduler();
             _peerRepository = Substitute.For<IPeerRepository>();
@@ -65,7 +66,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var fakePeers = PreparePeerRepositoryContent();
             _peerRepository.GetAll().Returns(fakePeers);
 
-            _senderId = PeerIdHelper.GetPeerId("sender");
+            _senderId = MultiAddressHelper.GetAddress("sender");
         }
 
         private static Peer[] PreparePeerRepositoryContent()
@@ -73,7 +74,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var knownPeers = Enumerable.Range(0, 5).Select(i => new Peer
             {
                 Reputation = i,
-                PeerId = PeerIdHelper.GetPeerId($"peer-{i}")
+                Address = MultiAddressHelper.GetAddress($"peer-{i}")
             });
 
             var fakePeers = knownPeers.ToArray();
@@ -85,9 +86,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         [TestCase("unknown", int.MinValue)]
         public void TestPeerReputationRequestResponse(string publicKeySeed, int expectedReputations)
         {
-            var peerId = PeerIdHelper.GetPeerId(publicKeySeed);
+            var peerId = MultiAddressHelper.GetAddress(publicKeySeed);
 
-            var request = new GetPeerReputationRequest {Ip = peerId.Ip, PublicKey = peerId.PublicKey};
+            var request = new GetPeerReputationRequest { Address = peerId.ToString() };
 
             var responseContent = GetGetPeerReputationResponse(request);
 
@@ -101,12 +102,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
 
             var peerSettings = _senderId.ToSubstitutedPeerSettings();
-            var handler = new PeerReputationRequestObserver(peerSettings, _logger, _peerRepository);
+            var handler = new PeerReputationRequestObserver(peerSettings, _peerClient, _logger, _peerRepository);
             handler.StartObserving(messageStream);
 
             _testScheduler.Start();
 
-            var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
+            var receivedCalls = _peerClient.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();

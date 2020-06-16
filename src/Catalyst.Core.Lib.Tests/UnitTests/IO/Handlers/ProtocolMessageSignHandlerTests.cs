@@ -55,8 +55,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
             _signature.SignatureBytes.Returns(ByteUtil.GenerateRandomByteArray(new FfiWrapper().SignatureLength));
             _signature.PublicKeyBytes.Returns(ByteUtil.GenerateRandomByteArray(new FfiWrapper().PublicKeyLength));
 
-            _dto = new MessageDto(new PingRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("sender")),
-                PeerIdHelper.GetPeerId("recipient")
+            _dto = new MessageDto(new PingRequest().ToProtocolMessage(MultiAddressHelper.GetAddress("sender")),
+                MultiAddressHelper.GetAddress("recipient")
             );
         }
 

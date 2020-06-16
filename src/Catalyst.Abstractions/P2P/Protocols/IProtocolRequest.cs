@@ -25,6 +25,6 @@ namespace Catalyst.Abstractions.P2P.Protocols
 {
     public interface IProtocolRequest : IProtocol
     {
-        IPeerClient PeerClient { get; }
+        ILibP2PPeerClient PeerClient { get; }
     }
 }

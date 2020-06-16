@@ -62,7 +62,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
 
             _signingContext = DevNetPeerSigningContext.Instance;
 
-            var peerId = PeerIdHelper.GetPeerId("Test");
+            var peerId = MultiAddressHelper.GetAddress("Test");
             var innerMessage = new TransactionBroadcast();
             _broadcastMessageSigned = innerMessage
                .ToSignedProtocolMessage(peerId, fakeSignature, _signingContext)

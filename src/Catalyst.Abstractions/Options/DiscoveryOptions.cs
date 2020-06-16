@@ -52,12 +52,14 @@ namespace Catalyst.Abstractions.Options
         /// </summary>
         public bool DisableMdns { set; get; }
 
+        public bool UsePeerRepository { set; get; }
+
         /// <summary>
         ///   Disables discovery of other peers by walking the
         ///   DHT.
         /// </summary>
         public bool DisableRandomWalk { set; get; }
 
-        public DiscoveryOptions(){}
+        public DiscoveryOptions() { }
     }
 }

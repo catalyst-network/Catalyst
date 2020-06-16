@@ -53,7 +53,7 @@ namespace Lib.P2P.Tests.Routing
         [TestMethod]
         public async Task StoppedEventRaised()
         {
-            var swarm = new SwarmService {LocalPeer = self};
+            var swarm = new SwarmService(self);
             var dht = new DhtService {SwarmService = swarm};
             var stopped = false;
             dht.Stopped += (s, e) => { stopped = true; };
@@ -65,7 +65,7 @@ namespace Lib.P2P.Tests.Routing
         [TestMethod]
         public async Task SeedsRoutingTableFromSwarm()
         {
-            var swarm = new SwarmService {LocalPeer = self};
+            var swarm = new SwarmService(self);
             var peer = swarm.RegisterPeerAddress(
                 "/ip4/127.0.0.1/tcp/4001/ipfs/QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCM1h");
             var dht = new DhtService {SwarmService = swarm};
@@ -83,7 +83,7 @@ namespace Lib.P2P.Tests.Routing
         [TestMethod]
         public async Task AddDiscoveredPeerToRoutingTable()
         {
-            var swarm = new SwarmService {LocalPeer = self};
+            var swarm = new SwarmService(self);
             var dht = new DhtService {SwarmService = swarm};
             await dht.StartAsync();
             try
@@ -101,7 +101,7 @@ namespace Lib.P2P.Tests.Routing
         [TestMethod]
         public async Task RemovesPeerFromRoutingTable()
         {
-            var swarm = new SwarmService {LocalPeer = self};
+            var swarm = new SwarmService(self);
             var dht = new DhtService {SwarmService = swarm};
             await dht.StartAsync();
             try
@@ -122,7 +122,7 @@ namespace Lib.P2P.Tests.Routing
         [TestMethod]
         public async Task ProcessFindNodeMessage_Self()
         {
-            var swarm = new SwarmService {LocalPeer = self};
+            var swarm = new SwarmService(self);
             var dht = new DhtService {SwarmService = swarm};
             await dht.StartAsync();
             try
@@ -147,7 +147,7 @@ namespace Lib.P2P.Tests.Routing
         [TestMethod]
         public async Task ProcessFindNodeMessage_InRoutingTable()
         {
-            var swarm = new SwarmService {LocalPeer = self};
+            var swarm = new SwarmService(self);
             var dht = new DhtService {SwarmService = swarm};
             await dht.StartAsync();
             try
@@ -175,7 +175,7 @@ namespace Lib.P2P.Tests.Routing
         [TestMethod]
         public async Task ProcessFindNodeMessage_InSwarm()
         {
-            var swarmA = new SwarmService {LocalPeer = self};
+            var swarmA = new SwarmService(self);
             var swarmB = swarmA.RegisterPeerAddress(
                 "/ip4/127.0.0.1/tcp/4001/ipfs/QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCM1h");
             var dht = new DhtService {SwarmService = swarmA};
@@ -206,7 +206,7 @@ namespace Lib.P2P.Tests.Routing
         [TestMethod]
         public async Task ProcessFindNodeMessage_Closest()
         {
-            var swarm = new SwarmService {LocalPeer = self};
+            var swarm = new SwarmService(self);
             swarm.RegisterPeerAddress("/ip4/127.0.0.1/tcp/4001/ipfs/QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCM1a");
             swarm.RegisterPeerAddress("/ip4/127.0.0.2/tcp/4001/ipfs/QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCM1b");
             swarm.RegisterPeerAddress("/ip4/127.0.0.3/tcp/4001/ipfs/QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCM1c");
@@ -234,7 +234,7 @@ namespace Lib.P2P.Tests.Routing
         [TestMethod]
         public async Task ProcessFindNodeMessage_BadNodeId()
         {
-            var swarm = new SwarmService {LocalPeer = self};
+            var swarm = new SwarmService(self);
             swarm.RegisterPeerAddress("/ip4/127.0.0.1/tcp/4001/ipfs/QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCM1a");
             swarm.RegisterPeerAddress("/ip4/127.0.0.2/tcp/4001/ipfs/QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCM1b");
             swarm.RegisterPeerAddress("/ip4/127.0.0.3/tcp/4001/ipfs/QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCM1c");
@@ -262,7 +262,7 @@ namespace Lib.P2P.Tests.Routing
         [TestMethod]
         public async Task ProcessFindNodeMessage_NoOtherPeers()
         {
-            var swarm = new SwarmService {LocalPeer = self};
+            var swarm = new SwarmService(self);
             var dht = new DhtService {SwarmService = swarm};
             await dht.StartAsync();
             try
@@ -284,7 +284,7 @@ namespace Lib.P2P.Tests.Routing
         [TestMethod]
         public async Task ProcessGetProvidersMessage_HasCloserPeers()
         {
-            var swarm = new SwarmService {LocalPeer = self};
+            var swarm = new SwarmService(self);
             var dht = new DhtService {SwarmService = swarm};
             await dht.StartAsync();
             try
@@ -309,7 +309,7 @@ namespace Lib.P2P.Tests.Routing
         [TestMethod]
         public async Task ProcessGetProvidersMessage_HasProvider()
         {
-            var swarm = new SwarmService {LocalPeer = self};
+            var swarm = new SwarmService(self);
             var dht = new DhtService {SwarmService = swarm};
             await dht.StartAsync();
             try
@@ -338,7 +338,7 @@ namespace Lib.P2P.Tests.Routing
         [TestMethod]
         public async Task ProcessAddProviderMessage()
         {
-            var swarm = new SwarmService {LocalPeer = self};
+            var swarm = new SwarmService(self);
             var dht = new DhtService {SwarmService = swarm};
             await dht.StartAsync();
             try
@@ -377,7 +377,7 @@ namespace Lib.P2P.Tests.Routing
         public async Task QueryIsCancelled_WhenDhtStops()
         {
             var unknownPeer = new MultiHash("QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCxxx");
-            var swarm = new SwarmService {LocalPeer = self};
+            var swarm = new SwarmService(self);
             swarm.RegisterPeerAddress(
                 "/ip4/178.62.158.247/tcp/4001/ipfs/QmSoLer265NRgSp2LA3dPaeykiS1J6DifTC88f5uVQKNAd");
             swarm.RegisterPeerAddress(
@@ -393,7 +393,7 @@ namespace Lib.P2P.Tests.Routing
         public async Task FindPeer_NoPeers()
         {
             var unknownPeer = new MultiHash("QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCxxx");
-            var swarm = new SwarmService {LocalPeer = self};
+            var swarm = new SwarmService(self);
             var dht = new DhtService {SwarmService = swarm};
             await dht.StartAsync();
 
@@ -412,7 +412,7 @@ namespace Lib.P2P.Tests.Routing
         public async Task FindPeer_Closest()
         {
             var unknownPeer = new MultiHash("QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCxxx");
-            var swarm = new SwarmService {LocalPeer = self};
+            var swarm = new SwarmService(self);
             await swarm.StartAsync();
             var dht = new DhtService {SwarmService = swarm};
             await dht.StartAsync();
@@ -433,7 +433,7 @@ namespace Lib.P2P.Tests.Routing
         public async Task Add_FindProviders()
         {
             Cid cid = "zBunRGrmCGokA1oMESGGTfrtcMFsVA8aEtcNzM54akPWXF97uXCqTjF3GZ9v8YzxHrG66J8QhtPFWwZebRZ2zeUEELu67";
-            var swarm = new SwarmService {LocalPeer = self};
+            var swarm = new SwarmService(self);
             var dht = new DhtService {SwarmService = swarm};
             await dht.StartAsync();
 
@@ -454,7 +454,7 @@ namespace Lib.P2P.Tests.Routing
         public async Task Provide()
         {
             Cid cid = "zBunRGrmCGokA1oMESGGTfrtcMFsVA8aEtcNzM54akPWXF97uXCqTjF3GZ9v8YzxHrG66J8QhtPFWwZebRZ2zeUEELu67";
-            var swarm = new SwarmService {LocalPeer = self};
+            var swarm = new SwarmService(self);
             var dht = new DhtService {SwarmService = swarm};
             await dht.StartAsync();
 

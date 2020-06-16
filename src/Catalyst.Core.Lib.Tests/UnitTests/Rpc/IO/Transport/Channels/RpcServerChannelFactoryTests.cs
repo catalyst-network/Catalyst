@@ -50,6 +50,7 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
 {
@@ -87,13 +88,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
             _keySigner.CryptoContext.SignatureLength.Returns(64);
 
             var authenticationStrategy = Substitute.For<IAuthenticationStrategy>();
-            authenticationStrategy.Authenticate(Arg.Any<PeerId>()).Returns(true);
+            authenticationStrategy.Authenticate(Arg.Any<MultiAddress>()).Returns(true);
 
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.NetworkType.Returns(NetworkType.Devnet);
 
             var peerIdValidator = Substitute.For<IPeerIdValidator>();
-            peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
+            peerIdValidator.ValidatePeerIdFormat(Arg.Any<MultiAddress>()).Returns(true);
             _factory = new TestRpcServerChannelFactory(
                 _correlationManager,
                 _keySigner,
@@ -126,7 +127,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());
 
-            var senderId = PeerIdHelper.GetPeerId("sender");
+            var senderId = MultiAddressHelper.GetAddress("sender");
             var correlationId = CorrelationId.GenerateCorrelationId();
             var signatureBytes = ByteUtil.GenerateRandomByteArray(new FfiWrapper().SignatureLength);
             _keySigner.Verify(Arg.Any<ISignature>(), Arg.Any<byte[]>(), Arg.Any<SigningContext>())
@@ -155,7 +156,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());
             
-            var senderId = PeerIdHelper.GetPeerId("sender");
+            var senderId = MultiAddressHelper.GetAddress("sender");
             var correlationId = CorrelationId.GenerateCorrelationId();
             var protocolMessage = new PingResponse().ToProtocolMessage(senderId, correlationId);
 

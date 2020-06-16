@@ -142,6 +142,8 @@ namespace Lib.P2P
         /// </summary>
         MultiAddressWhiteList WhiteList { get; set; }
 
+        ConnectionManager Manager { get; }
+
         /// <summary>
         ///   Register that a peer's address has been discovered.
         /// </summary>

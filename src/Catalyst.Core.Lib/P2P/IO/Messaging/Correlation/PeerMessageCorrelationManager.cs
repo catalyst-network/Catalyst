@@ -38,6 +38,7 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Dawn;
 using Microsoft.Extensions.Caching.Memory;
+using MultiFormats;
 using Serilog;
 using IMemoryCache = Microsoft.Extensions.Caching.Memory.IMemoryCache;
 
@@ -45,7 +46,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Correlation
 {
     public sealed class PeerMessageCorrelationManager : MessageCorrelationManagerBase, IPeerMessageCorrelationManager
     {
-        private readonly ReplaySubject<KeyValuePair<ICorrelationId, PeerId>> _evictionEvent;
+        private readonly ReplaySubject<KeyValuePair<ICorrelationId, MultiAddress>> _evictionEvent;
         private readonly ReplaySubject<IPeerReputationChange> _reputationEvent;
 
         public PeerMessageCorrelationManager(IReputationManager reputationManager,
@@ -57,14 +58,14 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Correlation
             var streamScheduler = scheduler ?? Scheduler.Default;
             _reputationEvent = new ReplaySubject<IPeerReputationChange>(0, streamScheduler);
             ReputationEventStream = _reputationEvent.AsObservable();
-            _evictionEvent = new ReplaySubject<KeyValuePair<ICorrelationId, PeerId>>(0, streamScheduler);
+            _evictionEvent = new ReplaySubject<KeyValuePair<ICorrelationId, MultiAddress>>(0, streamScheduler);
             EvictionEventStream = _evictionEvent.AsObservable();
 
             reputationManager.MergeReputationStream(ReputationEventStream);
         }
 
         public IObservable<IPeerReputationChange> ReputationEventStream { get; }
-        public IObservable<KeyValuePair<ICorrelationId, PeerId>> EvictionEventStream { get; }
+        public IObservable<KeyValuePair<ICorrelationId, MultiAddress>> EvictionEventStream { get; }
 
         /// <summary>
         ///     Takes a generic request type of IMessage, and generic response type of IMessage and the message and look them up in
@@ -81,7 +82,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Correlation
             {
                 Logger.Debug($"{response.CorrelationId} message not found");
 
-                _reputationEvent.OnNext(new ReputationChange(response.PeerId,
+                _reputationEvent.OnNext(new ReputationChange(response.Address,
                     ReputationEventType.UnCorrelatableMessage)
                 );
                 return false;
@@ -108,11 +109,11 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Correlation
             Logger.Verbose("{correlationId} message originally sent to {peer} is getting evicted", correlationId,
                 message.Recipient);
 
-            _reputationEvent.OnNext(new ReputationChange(message.Content.PeerId,
+            _reputationEvent.OnNext(new ReputationChange(message.Content.Address,
                 ReputationEventType.NoResponseReceived));
             Logger.Verbose("PeerReputationChange sent for {correlationId}", correlationId);
 
-            _evictionEvent.OnNext(new KeyValuePair<ICorrelationId, PeerId>(correlationId, message.Recipient));
+            _evictionEvent.OnNext(new KeyValuePair<ICorrelationId, MultiAddress>(correlationId, message.Recipient));
             Logger.Verbose("EvictionEvent sent for {correlationId}", correlationId);
         }
 

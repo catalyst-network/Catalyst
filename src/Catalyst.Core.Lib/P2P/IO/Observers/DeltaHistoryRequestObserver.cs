@@ -34,6 +34,8 @@ using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using DotNetty.Transport.Channels;
+using Lib.P2P.Protocols;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.IO.Observers
@@ -48,8 +50,9 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         public DeltaHistoryRequestObserver(IPeerSettings peerSettings,
             IDeltaIndexService deltaIndexService,
             IMapperProvider mapperProvider,
+            ILibP2PPeerClient peerClient,
             ILogger logger)
-            : base(logger, peerSettings)
+            : base(logger, peerSettings, peerClient)
         {
             _deltaIndexService = deltaIndexService;
             _mapperProvider = mapperProvider;
@@ -57,19 +60,18 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
 
         /// <param name="deltaHeightRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerId"></param>
+        /// <param name="sender"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override DeltaHistoryResponse HandleRequest(DeltaHistoryRequest deltaHeightRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(deltaHeightRequest, nameof(deltaHeightRequest)).NotNull();
-            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
 
-            Logger.Debug("PeerId: {0} requests: {1} deltas from height: {2}", senderPeerId, deltaHeightRequest.Range,
+            Logger.Debug("PeerId: {0} requests: {1} deltas from height: {2}", sender, deltaHeightRequest.Range,
                 deltaHeightRequest.Height);
 
             var rangeDao = _deltaIndexService.GetRange(deltaHeightRequest.Height, deltaHeightRequest.Range)

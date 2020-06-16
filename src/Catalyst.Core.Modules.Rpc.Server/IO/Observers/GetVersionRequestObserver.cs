@@ -30,6 +30,8 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
+using Lib.P2P.Protocols;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
@@ -39,25 +41,25 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             IRpcRequestObserver
     {
         public GetVersionRequestObserver(IPeerSettings peerSettings,
+            ILibP2PPeerClient peerClient,
             ILogger logger)
-            : base(logger, peerSettings) { }
+            : base(logger, peerSettings, peerClient) { }
 
         /// <summary>
         /// 
         /// </summary>
         /// <param name="versionRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerId"></param>
+        /// <param name="sender"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override VersionResponse HandleRequest(VersionRequest versionRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(versionRequest, nameof(versionRequest)).NotNull();
-            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
 
             Logger.Debug("received message of type VersionRequest");
 

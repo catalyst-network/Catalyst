@@ -24,18 +24,19 @@
 using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.P2P.ReputationSystem;
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.P2P.ReputationSystem
 {
     public sealed class ReputationChange
         : IPeerReputationChange
     {
-        public PeerId PeerId { get; }
+        public MultiAddress Address { get; }
         public IReputationEvents ReputationEvent { get; }
 
-        public ReputationChange(PeerId peerIdentifier, IReputationEvents reputationEvent)
+        public ReputationChange(MultiAddress address, IReputationEvents reputationEvent)
         {
-            PeerId = peerIdentifier;
+            Address = address;
             ReputationEvent = reputationEvent;
         }
     }

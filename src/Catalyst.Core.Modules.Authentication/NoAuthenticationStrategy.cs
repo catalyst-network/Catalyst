@@ -23,6 +23,7 @@
 
 using Catalyst.Abstractions.Rpc.Authentication;
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.Authentication
 {
@@ -33,6 +34,6 @@ namespace Catalyst.Core.Modules.Authentication
     public class NoAuthenticationStrategy : IAuthenticationStrategy
     {
         /// <inheritdoc cref="IAuthenticationStrategy"/>
-        public bool Authenticate(PeerId peerIdentifier) { return true; }
+        public bool Authenticate(MultiAddress Addressentifier) { return true; }
     }
 }

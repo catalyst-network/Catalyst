@@ -33,6 +33,7 @@ using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Peer;
 using DnsClient;
 using Google.Protobuf;
+using MultiFormats;
 using SimpleBase;
 
 namespace Catalyst.Core.Lib.Network
@@ -41,15 +42,16 @@ namespace Catalyst.Core.Lib.Network
     {
         private readonly IList<string> _seedServers;
         private readonly IList<string> _dnsQueryAnswerValues;
-        private readonly IEnumerable<PeerId> _peerIds;
+        private readonly IEnumerable<MultiAddress> _peerIds;
 
         public DevDnsClient(IPeerSettings peerSettings)
         {
             _seedServers = peerSettings.SeedServers;
 
             _peerIds = Enumerable.Range(0, 5)
-               .Select(i => ByteUtil.GenerateRandomByteArray(32).BuildPeerIdFromPublicKey(IPAddress.Any, 1234));
-            var peerIdsAsStrings = _peerIds.Select(p => Base16.EncodeLower(p.ToByteArray()));
+              .Select(i => new MultiAddress($"/ip4/192.168.0.181/tcp/{4000 + i}/ipfs/18n3naE9kBZoVvgYMV6saMZdwu2yu3QMzKa2BDkb5C5pcuhtrH1G9HHbztbbxA8tGmf4"));
+
+            var peerIdsAsStrings = _peerIds.Select(p => p.ToString());
             _dnsQueryAnswerValues = peerIdsAsStrings.ToArray();
         }
 
@@ -69,10 +71,10 @@ namespace Catalyst.Core.Lib.Network
             };
             return await Task.FromResult<IDnsQueryResponse>(devDnsQueryResponse).ConfigureAwait(false);
         }
-        
+
         /// <inheritdoc />
 #pragma warning disable 1998
-        public async Task<IEnumerable<PeerId>> GetSeedNodesFromDnsAsync(IEnumerable<string> seedServers)
+        public async Task<IEnumerable<MultiAddress>> GetSeedNodesFromDnsAsync(IEnumerable<string> seedServers)
 #pragma warning restore 1998
         {
             return _peerIds;

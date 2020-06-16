@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Protocol.Peer;
 using Google.Protobuf;
+using MultiFormats;
 
 namespace Catalyst.Abstractions.P2P.Repository
 {
@@ -37,7 +38,8 @@ namespace Catalyst.Abstractions.P2P.Repository
         IEnumerable<Peer> GetActivePeers(int count);
         IEnumerable<Peer> GetActivePoaPeers();
         IEnumerable<Peer> GetRandomPeers(int count);
-        IEnumerable<Peer> GetPeersByIpAndPublicKey(ByteString ip, ByteString publicKey);
+        IEnumerable<Peer> GetPeersByAddress(MultiAddress address);
+        IEnumerable<Peer> GetPoaPeersByPublicKey(string publicKeyBase58);
 
         void Add(Peer peer);
         void Add(IEnumerable<Peer> peer);
@@ -49,7 +51,7 @@ namespace Catalyst.Abstractions.P2P.Repository
         void Delete(Peer peer);
         void Delete(string id);
 
-        uint DeletePeersByIpAndPublicKey(ByteString ip, ByteString publicKey);
+        uint DeletePeersByAddress(MultiAddress address);
 
         bool Exists(string id);
 

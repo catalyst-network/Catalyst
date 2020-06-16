@@ -25,6 +25,7 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Abstractions.Util;
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.Protocols
@@ -34,13 +35,13 @@ namespace Catalyst.Core.Lib.P2P.Protocols
         protected readonly ILogger Logger;
         protected readonly ICancellationTokenProvider CancellationTokenProvider;
 
-        public IPeerClient PeerClient { get; }
+        public ILibP2PPeerClient PeerClient { get; }
         public bool Disposing { get; protected set; }
         
         protected ProtocolRequestBase(ILogger logger,
-            PeerId senderIdentifier,
+            MultiAddress sender,
             ICancellationTokenProvider cancellationTokenProvider,
-            IPeerClient peerClient) : base(senderIdentifier)
+            ILibP2PPeerClient peerClient) : base(sender)
         {
             Logger = logger;
             CancellationTokenProvider = cancellationTokenProvider;

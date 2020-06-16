@@ -24,6 +24,7 @@
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.IO.Messaging.Dto
 {
@@ -35,8 +36,8 @@ namespace Catalyst.Core.Lib.IO.Messaging.Dto
         /// <param name="content"></param>
         /// <param name="recipientPeerIdentifier"></param>
         public SignedMessageDto(ProtocolMessage content,
-            PeerId recipientPeerIdentifier)
-            : base(content, content.PeerId, recipientPeerIdentifier,
+            MultiAddress recipientPeerIdentifier)
+            : base(content, content.Address, recipientPeerIdentifier,
                 new CorrelationId(content.CorrelationId)) { }
     }
 }

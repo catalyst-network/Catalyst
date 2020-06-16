@@ -32,6 +32,7 @@ using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Transport.Channels;
 using DotNetty.Transport.Channels;
+using MultiFormats;
 using NSubstitute;
 
 namespace Catalyst.TestUtils
@@ -61,8 +62,7 @@ namespace Catalyst.TestUtils
         /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Local TLS certificate</param>
         public override async Task<IObservableChannel> BuildChannelAsync(IEventLoopGroupFactory eventLoopGroupFactory,
-            IPAddress targetAddress,
-            int targetPort,
+            MultiAddress multiAddress,
             X509Certificate2 certificate = null)
         {
             var channel = Substitute.For<IChannel>();

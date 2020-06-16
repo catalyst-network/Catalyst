@@ -22,6 +22,7 @@
 #endregion
 
 using Catalyst.Core.Lib.Cryptography.Proto;
+using Catalyst.Core.Lib.Util;
 using MultiFormats;
 using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.X509;
@@ -46,9 +47,14 @@ namespace Catalyst.Core.Lib.Extensions
     {
         public static byte[] GetPublicKeyBytesFromPeerId(this byte[] peerIdBytes)
         {
+            var peerId = new MultiHash("id", peerIdBytes);
+            return GetPublicKeyBytesFromPeerId(peerId);
+        }
+
+        public static byte[] GetPublicKeyBytesFromPeerId(this MultiHash peerId)
+        {
             try
             {
-                var peerId = new MultiHash("id", peerIdBytes);
                 using var ms = new MemoryStream(peerId.Digest);
                 var publicKey = Serializer.Deserialize<PublicKey>(ms);
                 using var aIn = new Asn1InputStream(publicKey.Data);
@@ -61,7 +67,7 @@ namespace Catalyst.Core.Lib.Extensions
             }
         }
 
-        public static string ToPeerId(this byte[] publicKeyBytes)
+        public static MultiHash ToPeerId(this byte[] publicKeyBytes)
         {
             var publicKey = new Ed25519PublicKeyParameters(publicKeyBytes, 0);
             var pksi = SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(publicKey).GetDerEncoded();
@@ -72,10 +78,11 @@ namespace Catalyst.Core.Lib.Extensions
             };
             using var ms = new MemoryStream();
             Serializer.Serialize(ms, pk);
-            return Convert.ToBase64String(ms.ToArray());
+            var id = new MultiHash("id", ms.ToArray());
+            return id;
         }
 
-        public static string ToPeerId(this AsymmetricKeyParameter publicKeyParameter)
+        public static MultiHash ToPeerId(this AsymmetricKeyParameter publicKeyParameter)
         {
             var ed25519PublicKeyParameter = (Ed25519PublicKeyParameters) publicKeyParameter;
             return ToPeerId(ed25519PublicKeyParameter.GetEncoded());
