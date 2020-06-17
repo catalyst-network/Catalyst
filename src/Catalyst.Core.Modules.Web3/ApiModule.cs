@@ -28,14 +28,17 @@ using System.Linq;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Core.Modules.Web3.Controllers.Handlers;
+using Catalyst.Core.Modules.Web3.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Server.Kestrel.Https;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Nethermind.Core;
 using Nethermind.Serialization.Json;
 using Serilog;
 using Module = Autofac.Module;
@@ -44,14 +47,22 @@ namespace Catalyst.Core.Modules.Web3
 {
     public sealed class ApiModule : Module
     {
-        private readonly string _apiBindingAddress;
+        private readonly HttpOptions _httpOptions;
+        private readonly HttpsOptions _httpsOptions;
         private readonly string[] _controllerModules;
         private IContainer _container;
         private readonly bool _addSwagger;
 
-        public ApiModule(string apiBindingAddress, List<string> controllerModules, bool addSwagger = true)
+        public ApiModule(HttpOptions httpOptions, List<string> controllerModules, bool addSwagger = true) : this(httpOptions, null, controllerModules, addSwagger)
+        { }
+
+        public ApiModule(HttpsOptions httpsOptions, List<string> controllerModules, bool addSwagger = true) : this(null, httpsOptions, controllerModules, addSwagger)
+        { }
+
+        public ApiModule(HttpOptions httpOptions, HttpsOptions httpsOptions, List<string> controllerModules, bool addSwagger = true)
         {
-            _apiBindingAddress = apiBindingAddress;
+            _httpOptions = httpOptions;
+            _httpsOptions = httpsOptions;
             _controllerModules = controllerModules.ToArray();
             _addSwagger = addSwagger;
         }
@@ -66,7 +77,7 @@ namespace Catalyst.Core.Modules.Web3
             {
                 _container = container;
                 var logger = _container.Resolve<ILogger>();
-
+                var certificateStore = _container.Resolve<ICertificateStore>();
                 try
                 {
                     await Host.CreateDefaultBuilder()
@@ -79,8 +90,24 @@ namespace Catalyst.Core.Modules.Web3
                                 webHostBuilder
                                    .ConfigureServices(ConfigureServices)
                                    .Configure(Configure)
-                                   .UseUrls(_apiBindingAddress)
                                    .UseWebRoot(webDirectory.FullName)
+                                   .ConfigureKestrel(options =>
+                                   {
+                                       if (_httpsOptions != null)
+                                       {
+                                           var certificate = certificateStore.ReadOrCreateCertificateFile(_httpsOptions.CertificateName);
+                                           options.Listen(_httpsOptions.BindingAddress, listenOptions =>
+                                           {
+                                               listenOptions.UseHttps(certificate);
+                                           });
+                                           options.ConfigureHttpsDefaults(o => o.ClientCertificateMode = ClientCertificateMode.RequireCertificate);
+                                       }
+
+                                       if (_httpOptions != null)
+                                       {
+                                           options.Listen(_httpOptions.BindingAddress);
+                                       }
+                                   })
                                    .UseSerilog();
                             }).RunConsoleAsync();
 
@@ -113,10 +140,20 @@ namespace Catalyst.Core.Modules.Web3
                        .AllowAnyHeader());
             });
 
+            services.AddAntiforgery(
+               options =>
+               {
+                   options.Cookie.Name = "_af";
+                   options.Cookie.HttpOnly = true;
+                   options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                   options.HeaderName = "X-XSRF-TOKEN";
+               }
+            );
+
             services.AddMvcCore().AddNewtonsoftJson(options =>
             {
                 var converters = options.SerializerSettings.Converters;
-                
+
                 converters.Add(new UInt256Converter());
                 converters.Add(new NullableUInt256Converter());
                 converters.Add(new KeccakConverter());
@@ -134,13 +171,14 @@ namespace Catalyst.Core.Modules.Web3
             if (_addSwagger)
                 services.AddSwaggerGen(swagger =>
                 {
-                    swagger.SwaggerDoc("v1", new OpenApiInfo {Title = "Catalyst API", Description = "Catalyst"});
+                    swagger.SwaggerDoc("v1", new OpenApiInfo { Title = "Catalyst API", Description = "Catalyst" });
                 });
         }
 
         public void Configure(IApplicationBuilder app)
         {
-            app.UseHttpsRedirection();
+            //enable to force http to upgrade to https, disabled because dashboard uses http, wallet https.
+            //app.UseHttpsRedirection();
             app.UseRouting();
             app.UseDeveloperExceptionPage();
             app.UseCors("AllowOrigin");
@@ -158,7 +196,7 @@ namespace Catalyst.Core.Modules.Web3
                 app.UseSwaggerUI(swagger => { swagger.SwaggerEndpoint("/swagger/v1/swagger.json", "Catalyst API"); });
             }
         }
-        
+
         private sealed class SharedContainerProviderFactory : IServiceProviderFactory<ContainerBuilder>
         {
             readonly IContainer _container;

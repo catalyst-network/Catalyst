@@ -29,6 +29,8 @@ using Microsoft.AspNetCore.Cors.Infrastructure;
 using Microsoft.Extensions.DependencyInjection;
 using Swashbuckle.AspNetCore.Swagger;
 using NUnit.Framework;
+using System.Net;
+using Catalyst.Core.Modules.Web3.Options;
 
 namespace Catalyst.Core.Modules.Web3.Client.Tests.UnitTests
 {
@@ -37,7 +39,7 @@ namespace Catalyst.Core.Modules.Web3.Client.Tests.UnitTests
         [Test]
         public void Can_Add_Swagger() {
             var serviceCollection = new ServiceCollection();
-            var apiModule = new ApiModule(null, new List<string>(), true);
+            var apiModule = new ApiModule(new HttpOptions(new IPEndPoint(IPAddress.Any, 5005)), new List<string>(), true);
             apiModule.ConfigureServices(serviceCollection);
             serviceCollection.Any(service => service.ServiceType == typeof(ISwaggerProvider)).Should().Be(true);
         }
@@ -45,7 +47,7 @@ namespace Catalyst.Core.Modules.Web3.Client.Tests.UnitTests
         [Test]
         public void Can_Not_Add_Swagger() {
             var serviceCollection = new ServiceCollection();
-            var apiModule = new ApiModule(null, new List<string>(), false);
+            var apiModule = new ApiModule(new HttpOptions(new IPEndPoint(IPAddress.Any, 5005)), new List<string>(), false);
             apiModule.ConfigureServices(serviceCollection);
             serviceCollection.Any(service => service.ServiceType == typeof(ISwaggerProvider)).Should().Be(false);
         }
@@ -59,7 +61,7 @@ namespace Catalyst.Core.Modules.Web3.Client.Tests.UnitTests
             };
 
             var serviceCollection = new ServiceCollection();
-            var apiModule = new ApiModule(null, new List<string>(), true);
+            var apiModule = new ApiModule(new HttpOptions(new IPEndPoint(IPAddress.Any, 5005)), new List<string>(), true);
             apiModule.ConfigureServices(serviceCollection);
 
             foreach (var serviceType in serviceTypes)

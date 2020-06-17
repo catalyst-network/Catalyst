@@ -308,10 +308,10 @@ namespace Lib.P2P
                 throw new ArgumentException("Cannot register self.");
             }
 
-            //if (!IsAllowed(peer))
-            //{
-            //    throw new Exception($"Communication with '{peer}' is not allowed.");
-            //}
+            if (!IsAllowed(peer))
+            {
+                throw new Exception($"Communication with '{peer}' is not allowed.");
+            }
 
             var isNew = false;
             var p = _otherPeers.AddOrUpdate(peer.Id.ToBase58(),
@@ -1010,8 +1010,10 @@ namespace Lib.P2P
                 connection.RemotePeer = await identify.GetRemotePeerAsync(connection, default)
                    .ConfigureAwait(false);
 
+                var remoteMultiAddress = new MultiAddress($"{remote}/ipfs/{connection.RemotePeer.Id}");
+                BlackList.Remove(remoteMultiAddress);
                 connection.RemotePeer = RegisterPeer(connection.RemotePeer);
-                connection.RemoteAddress = new MultiAddress($"{remote}/ipfs/{connection.RemotePeer.Id}");
+                connection.RemoteAddress = remoteMultiAddress;
                 var actual = Manager.Add(connection);
                 if (actual == connection)
                 {

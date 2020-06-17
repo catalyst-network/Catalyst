@@ -41,7 +41,6 @@ using Catalyst.Abstractions.Ledger.Models;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
-using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.P2P.Models;
@@ -53,7 +52,6 @@ using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Core.Modules.Mempool;
 using Catalyst.Core.Modules.Mempool.Repositories;
 using Catalyst.Protocol.Network;
-using Catalyst.Protocol.Peer;
 using NSubstitute;
 using NUnit.Framework;
 using SharpRepository.InMemoryRepository;
@@ -81,9 +79,9 @@ using Catalyst.Abstractions.Dfs.CoreApi;
 using Newtonsoft.Json.Linq;
 using MultiFormats;
 using Catalyst.Core.Abstractions.Sync;
-using Catalyst.Core.Lib.Extensions;
-using Lib.P2P.Protocols;
 using Catalyst.Abstractions.Sync.Interfaces;
+using System.Net;
+using Catalyst.Core.Modules.Web3.Options;
 
 namespace Catalyst.TestUtils
 {
@@ -195,7 +193,7 @@ namespace Catalyst.TestUtils
                 {typeof(AuthenticationModule), () => new AuthenticationModule()},
                 {
                     typeof(ApiModule),
-                    () => new ApiModule("http://*:5005", new List<string> {"Catalyst.Core.Modules.Web3", "Catalyst.Core.Modules.Dfs"})
+                    () => new ApiModule(new HttpOptions(new IPEndPoint(IPAddress.Any, 5005)), new HttpsOptions(new IPEndPoint(IPAddress.Any, 2053), "cert.pfx"), new List<string> {"Catalyst.Core.Modules.Web3", "Catalyst.Core.Modules.Dfs"})
                 },
                 {typeof(PoaConsensusModule), () => new PoaConsensusModule()},
                 {typeof(PoaP2PModule), () => new PoaP2PModule()}
