@@ -50,6 +50,7 @@ using Catalyst.Core.Modules.P2P.Discovery.Hastings;
 using Catalyst.Core.Modules.Rpc.Server;
 using Catalyst.Core.Modules.Sync;
 using Catalyst.Core.Modules.Web3;
+using Catalyst.Core.Modules.Web3.Options;
 using Catalyst.Modules.POA.Consensus;
 using Catalyst.Modules.POA.P2P;
 using Catalyst.Protocol.Deltas;
@@ -135,7 +136,7 @@ namespace Catalyst.Node.POA.CE
                 {typeof(AuthenticationModule), () => new AuthenticationModule()},
                 {
                     typeof(ApiModule),
-                    () => new ApiModule(new IPEndPoint(IPAddress.Any, 5005), new List<string> {"Catalyst.Core.Modules.Web3", "Catalyst.Core.Modules.Dfs"}, null)
+                    () => new ApiModule(new HttpOptions(new IPEndPoint(IPAddress.Any, 5005)), new HttpsOptions(new IPEndPoint(IPAddress.Any, 2053), "cert.pfx"), new List<string> {"Catalyst.Core.Modules.Web3", "Catalyst.Core.Modules.Dfs"})
                 },
                 {typeof(PoaConsensusModule), () => new PoaConsensusModule()},
                 {typeof(PoaP2PModule), () => new PoaP2PModule()}

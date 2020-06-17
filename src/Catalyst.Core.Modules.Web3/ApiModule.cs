@@ -32,6 +32,7 @@ using Autofac.Extensions.DependencyInjection;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Core.Modules.Web3.Controllers.Handlers;
+using Catalyst.Core.Modules.Web3.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -47,16 +48,21 @@ namespace Catalyst.Core.Modules.Web3
 {
     public sealed class ApiModule : Module
     {
-        private readonly IPEndPoint _apiBindingAddress;
-        private readonly string _certificateName;
+        private readonly HttpOptions _httpOptions;
+        private readonly HttpsOptions _httpsOptions;
         private readonly string[] _controllerModules;
         private IContainer _container;
         private readonly bool _addSwagger;
+        public ApiModule(HttpOptions httpOptions, List<string> controllerModules, bool addSwagger = true) : this(httpOptions, null, controllerModules, addSwagger)
+        { }
 
-        public ApiModule(IPEndPoint apiBindingAddress, List<string> controllerModules, string certificateName = null, bool addSwagger = true)
+        public ApiModule(HttpsOptions httpsOptions, List<string> controllerModules, bool addSwagger = true) : this(null, httpsOptions, controllerModules, addSwagger)
+        { }
+
+        public ApiModule(HttpOptions httpOptions, HttpsOptions httpsOptions, List<string> controllerModules, bool addSwagger = true)
         {
-            _apiBindingAddress = apiBindingAddress;
-            _certificateName = certificateName;
+            _httpOptions = httpOptions;
+            _httpsOptions = httpsOptions;
             _controllerModules = controllerModules.ToArray();
             _addSwagger = addSwagger;
         }
@@ -87,18 +93,19 @@ namespace Catalyst.Core.Modules.Web3
                                    .UseWebRoot(webDirectory.FullName)
                                    .ConfigureKestrel(options =>
                                    {
-                                       if (_certificateName != null)
+                                       if (_httpsOptions != null)
                                        {
-                                           var certificate = certificateStore.ReadOrCreateCertificateFile(_certificateName);
-                                           options.Listen(_apiBindingAddress, listenOptions =>
+                                           var certificate = certificateStore.ReadOrCreateCertificateFile(_httpsOptions.CertificateName);
+                                           options.Listen(_httpsOptions.BindingAddress, listenOptions =>
                                            {
                                                listenOptions.UseHttps(certificate);
                                            });
                                            options.ConfigureHttpsDefaults(o => o.ClientCertificateMode = ClientCertificateMode.RequireCertificate);
                                        }
-                                       else
+
+                                       if (_httpOptions != null)
                                        {
-                                           options.Listen(_apiBindingAddress);
+                                           options.Listen(_httpOptions.BindingAddress);
                                        }
                                    })
                                    .UseSerilog();
@@ -170,7 +177,8 @@ namespace Catalyst.Core.Modules.Web3
 
         public void Configure(IApplicationBuilder app)
         {
-            app.UseHttpsRedirection();
+            //enable to force http to upgrade to https, disabled because dashboard uses http, wallet https.
+            //app.UseHttpsRedirection();
             app.UseRouting();
             app.UseDeveloperExceptionPage();
             app.UseCors("AllowOrigin");
