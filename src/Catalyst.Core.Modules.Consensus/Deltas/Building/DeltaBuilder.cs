@@ -27,8 +27,10 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
+using Google.Protobuf;
 using Lib.P2P;
 using MultiFormats;
 using Nethermind.State;
@@ -101,6 +103,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
             // {
             //     return null;
             // }
+            var c = context.Candidate.Hash.ToByteArray().ToCid();
+            _logger.Debug("{c}", c);
 
             return context.Candidate;
         }

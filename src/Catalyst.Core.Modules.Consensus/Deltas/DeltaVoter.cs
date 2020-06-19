@@ -46,7 +46,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
     {
         public static string GetCandidateCacheKey(CandidateDeltaBroadcast candidate)
         {
-            return nameof(DeltaVoter) + "-" + candidate.Hash.ToByteArray().ToCid();
+            return nameof(DeltaVoter) + "-" + candidate.PreviousDeltaDfsHash.ToByteArray().ToCid() + "-" + candidate.Hash.ToByteArray().ToCid();
         }
 
         public static string GetCandidateListCacheKey(CandidateDeltaBroadcast candidate)
@@ -96,11 +96,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             try
             {
                 var rankingFactor = GetProducerRankFactor(candidate);
-
-
                 var candidateCacheKey = GetCandidateCacheKey(candidate);
-                if (_candidatesCache.TryGetValue<IScoredCandidateDelta>(candidateCacheKey, out var retrievedScoredDelta)
-                )
+                if (_candidatesCache.TryGetValue<IScoredCandidateDelta>(candidateCacheKey, out var retrievedScoredDelta))
                 {
                     retrievedScoredDelta.IncreasePopularity(1);
                     _logger.Debug("Candidate {candidate} increased popularity to {score}", candidate,
@@ -124,8 +121,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             var scoredDelta = new ScoredCandidateDelta(candidate, 100 * rankingFactor + 1);
             _candidatesCache.Set(candidateCacheKey, scoredDelta, _cacheEntryOptions());
             _logger.Verbose("Candidate {hash} with previous hash {previousHash} has score {scored}",
-                candidate.Hash.ToByteArray().ToBase32(),
-                candidate.PreviousDeltaDfsHash.ToByteArray().ToBase32(),
+                candidate.Hash.ToByteArray().ToCid(),
+                candidate.PreviousDeltaDfsHash.ToByteArray().ToCid(),
                 scoredDelta.Score);
         }
 
@@ -140,7 +137,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                     });
             candidatesForPreviousHash.Add(candidateCacheKey);
             _logger.Verbose("Candidates for previous hash {previousHash} are {candidates}",
-                candidate.PreviousDeltaDfsHash.ToByteArray().ToBase32(), candidatesForPreviousHash);
+                candidate.PreviousDeltaDfsHash.ToByteArray().ToCid(), candidatesForPreviousHash);
         }
 
         public bool TryGetFavouriteDelta(Cid previousDeltaDfsHash, out FavouriteDeltaBroadcast favourite)

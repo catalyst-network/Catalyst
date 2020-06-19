@@ -54,7 +54,9 @@ namespace Catalyst.Core.Modules.Consensus.Cycle
         {
             var phaseInProducingStatus = Observable
                .Timer(timings.Offset, cycleDuration, scheduler)
-               .Select(_ => new StatefulPhase(name, PhaseStatus.Producing));
+               .Select(_ => { 
+                   return new StatefulPhase(name, PhaseStatus.Producing); 
+               });
 
             var phaseInCollectingStatus = Observable
                .Timer(timings.Offset + timings.ProductionTime, cycleDuration, scheduler)
