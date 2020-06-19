@@ -162,6 +162,10 @@ namespace Catalyst.Core.Modules.Sync
 
             _scoredDeltaIndexRangeDisposable = _peerSyncManager.ScoredDeltaIndexRange.Subscribe(ProcessDeltaIndexRange);
 
+            //remove
+            //await Completed().ConfigureAwait(false);
+            //return;
+
             _deltaHeightWatcher.Start();
 
             using (var WaitForPeersCancellationSource = new CancellationTokenSource())

@@ -73,8 +73,6 @@ namespace Catalyst.Core.Modules.Consensus
 
         public void StartProducing()
         {
-            Task.Delay(_cycleEventsProvider.GetTimeSpanUntilNextCycleStart()).Wait();
-
             _constructionProducingSubscription = _cycleEventsProvider.PhaseChanges
                .Where(p => p.Name.Equals(PhaseName.Construction) && p.Status.Equals(PhaseStatus.Producing))
                .Select(p => {

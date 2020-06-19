@@ -25,6 +25,7 @@ using System;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Cycle;
 using Catalyst.Abstractions.Consensus.Deltas;
@@ -68,13 +69,19 @@ namespace Catalyst.Core.Modules.Consensus.Cycle
             _dateTimeProvider = timeProvider;
             var synchronisationOffset = GetTimeSpanUntilNextCycleStart();
 
+            var t = DateTime.UtcNow.Add(synchronisationOffset).Add(Configuration.CycleDuration);
+            Task.Delay(synchronisationOffset).Wait();
+
             PhaseChanges = constructionStatusChanges
                .Merge(campaigningStatusChanges, Scheduler)
                .Merge(votingStatusChanges, Scheduler)
                .Merge(synchronisationStatusChanges, Scheduler)
-               .Delay(synchronisationOffset, Scheduler)
+               //.Delay(synchronisationOffset, Scheduler)
                //.Where(x => syncState.IsSynchronized)
-               .Select(s => new Phase(deltaHashProvider.GetLatestDeltaHash(_dateTimeProvider.UtcNow), s.Name, s.Status, _dateTimeProvider.UtcNow))
+               .Select(s =>
+               {
+                   return new Phase(deltaHashProvider.GetLatestDeltaHash(_dateTimeProvider.UtcNow), s.Name, s.Status, _dateTimeProvider.UtcNow);
+               })
                .Do(p => logger.Debug("Current delta production phase {phase}", p),
                     exception => logger.Error(exception, "{PhaseChanges} stream failed and will stop producing cycle events.", nameof(PhaseChanges)),
                     () => logger.Debug("Stream {PhaseChanges} completed.", nameof(PhaseChanges)))
