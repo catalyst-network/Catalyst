@@ -1010,10 +1010,10 @@ namespace Lib.P2P
                 connection.RemotePeer = await identify.GetRemotePeerAsync(connection, default)
                    .ConfigureAwait(false);
 
-                var remoteMultiAddress = new MultiAddress($"{remote}/ipfs/{connection.RemotePeer.Id}");
-                BlackList.Remove(remoteMultiAddress);
+                //var remoteMultiAddress = new MultiAddress($"{remote}/ipfs/{connection.RemotePeer.Id}");
+                //BlackList.Remove(remoteMultiAddress);
                 connection.RemotePeer = RegisterPeer(connection.RemotePeer);
-                connection.RemoteAddress = remoteMultiAddress;
+                connection.RemoteAddress = new MultiAddress($"{remote}/ipfs/{connection.RemotePeer.Id}");
                 var actual = Manager.Add(connection);
                 if (actual == connection)
                 {
