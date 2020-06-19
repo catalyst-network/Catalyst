@@ -41,6 +41,8 @@ namespace Catalyst.Core.Modules.Consensus.Cycle
         private readonly CancellationTokenSource _cancellationTokenSource;
         protected readonly IScheduler Scheduler;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly IDeltaHashProvider _deltaHashProvider;
+        private readonly ILogger _logger;
 
         public CycleEventsProvider(ICycleConfiguration configuration,
             IDateTimeProvider timeProvider,
@@ -53,7 +55,14 @@ namespace Catalyst.Core.Modules.Consensus.Cycle
 
             Configuration = configuration;
             Scheduler = schedulerProvider.Scheduler;
+            _logger = logger;
 
+            _dateTimeProvider = timeProvider;
+            _deltaHashProvider = deltaHashProvider;
+        }
+
+        public Task StartAsync()
+        {
             var constructionStatusChanges = StatefulPhase.GetStatusChangeObservable(
                 PhaseName.Construction, Configuration.Construction, Configuration.CycleDuration, Scheduler);
 
@@ -66,26 +75,23 @@ namespace Catalyst.Core.Modules.Consensus.Cycle
             var synchronisationStatusChanges = StatefulPhase.GetStatusChangeObservable(
                 PhaseName.Synchronisation, Configuration.Synchronisation, Configuration.CycleDuration, Scheduler);
 
-            _dateTimeProvider = timeProvider;
             var synchronisationOffset = GetTimeSpanUntilNextCycleStart();
-
             var t = DateTime.UtcNow.Add(synchronisationOffset).Add(Configuration.CycleDuration);
-            Task.Delay(synchronisationOffset).Wait();
 
             PhaseChanges = constructionStatusChanges
                .Merge(campaigningStatusChanges, Scheduler)
                .Merge(votingStatusChanges, Scheduler)
                .Merge(synchronisationStatusChanges, Scheduler)
-               //.Delay(synchronisationOffset, Scheduler)
-               //.Where(x => syncState.IsSynchronized)
+               .Delay(synchronisationOffset, Scheduler)
                .Select(s =>
                {
-                   return new Phase(deltaHashProvider.GetLatestDeltaHash(_dateTimeProvider.UtcNow), s.Name, s.Status, _dateTimeProvider.UtcNow);
+                   return new Phase(_deltaHashProvider.GetLatestDeltaHash(_dateTimeProvider.UtcNow), s.Name, s.Status, _dateTimeProvider.UtcNow);
                })
-               .Do(p => logger.Debug("Current delta production phase {phase}", p),
-                    exception => logger.Error(exception, "{PhaseChanges} stream failed and will stop producing cycle events.", nameof(PhaseChanges)),
-                    () => logger.Debug("Stream {PhaseChanges} completed.", nameof(PhaseChanges)))
+               .Do(p => _logger.Debug("Current delta production phase {phase}", p),
+                    exception => _logger.Error(exception, "{PhaseChanges} stream failed and will stop producing cycle events.", nameof(PhaseChanges)),
+                    () => _logger.Debug("Stream {PhaseChanges} completed.", nameof(PhaseChanges)))
                .TakeWhile(_ => !_cancellationTokenSource.IsCancellationRequested);
+            return Task.CompletedTask;
         }
 
         public TimeSpan GetTimeSpanUntilNextCycleStart()
@@ -101,7 +107,7 @@ namespace Catalyst.Core.Modules.Consensus.Cycle
         public ICycleConfiguration Configuration { get; }
 
         /// <inheritdoc />
-        public IObservable<IPhase> PhaseChanges { get; }
+        public IObservable<IPhase> PhaseChanges { private set; get; }
 
         /// <inheritdoc />
         public void Close() { _cancellationTokenSource.Cancel(); }
