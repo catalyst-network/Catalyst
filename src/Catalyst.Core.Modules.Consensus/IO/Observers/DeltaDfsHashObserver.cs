@@ -94,13 +94,13 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
                     return;
                 }
 
-                var producers = _deltaProducersProvider.GetDeltaProducersFromPreviousDelta(previousHash);
-                var favoriteProducer = producers.FirstOrDefault();
-                if (favoriteProducer == null || favoriteProducer != multiAddress.GetPublicKey())
-                {
-                    Logger.Error($"Message from IP address '{multiAddress.GetIpAddress()}' with public key '{multiAddress.GetPublicKey()}' was not favorite producer.");
-                    return;
-                }
+                //var producers = _deltaProducersProvider.GetDeltaProducersFromPreviousDelta(previousHash);
+                //var favoriteProducer = producers.FirstOrDefault();
+                //if (favoriteProducer == null || favoriteProducer != multiAddress.GetPublicKey())
+                //{
+                //    Logger.Error($"Message from IP address '{multiAddress.GetIpAddress()}' with public key '{multiAddress.GetPublicKey()}' was not favorite producer.");
+                //    return;
+                //}
 
                 _deltaHashProvider.TryUpdateLatestHash(previousHash, newHash);
             }
