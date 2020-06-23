@@ -36,6 +36,7 @@ using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.IPPN;
+using Serilog;
 
 namespace Catalyst.Core.Modules.Sync.Manager
 {
@@ -61,11 +62,14 @@ namespace Catalyst.Core.Modules.Sync.Manager
 
         private readonly IDeltaHeightWatcher _deltaHeightWatcher;
 
+        private readonly ILogger _logger;
+
         public PeerSyncManager(ILibP2PPeerClient peerClient,
             ILibP2PPeerService peerService,
             IUserOutput userOutput,
             IDeltaHeightWatcher deltaHeightWatcher,
             ISwarmApi swarmApi,
+            ILogger logger,
             double threshold = 0.5d,
             int minimumPeers = 0,
             IScheduler scheduler = null)
@@ -79,6 +83,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
                 new ReplaySubject<IEnumerable<DeltaIndex>>(1, scheduler ?? Scheduler.Default);
             ScoredDeltaIndexRange = _scoredDeltaIndexRangeSubject.AsObservable();
 
+            _logger = logger;
             _threshold = threshold;
             _minimumPeers = minimumPeers;
         }
@@ -94,7 +99,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
                     await Task.Delay(1000, cancellationToken);
                 }
             }
-            catch(TaskCanceledException)
+            catch (TaskCanceledException)
             {
                 //Task has been canceled.
             }
@@ -137,6 +142,8 @@ namespace Catalyst.Core.Modules.Sync.Manager
                         _scoredDeltaIndexRangeSubject.OnNext(deltaIndexes);
                         continue;
                     }
+
+                    _logger.Information($"Sync - Requesting delta range {_deltaHistoryRanker.DeltaHistoryRequest.Height} - {_deltaHistoryRanker.DeltaHistoryRequest.Height + _deltaHistoryRanker.DeltaHistoryRequest.Range}");
                     await _peerClient.SendMessageToPeersAsync(_deltaHistoryRanker.DeltaHistoryRequest, peers.Select(x => x.ConnectedAddress)).ConfigureAwait(false);
                 }
                 await Task.Delay(2000);
