@@ -48,7 +48,6 @@ namespace Catalyst.Core.Modules.Consensus.Cycle
             IDateTimeProvider timeProvider,
             ICycleSchedulerProvider schedulerProvider,
             IDeltaHashProvider deltaHashProvider,
-            SyncState syncState,
             ILogger logger)
         {
             _cancellationTokenSource = new CancellationTokenSource();
@@ -76,7 +75,6 @@ namespace Catalyst.Core.Modules.Consensus.Cycle
                 PhaseName.Synchronisation, Configuration.Synchronisation, Configuration.CycleDuration, Scheduler);
 
             var synchronisationOffset = GetTimeSpanUntilNextCycleStart();
-            var t = DateTime.UtcNow.Add(synchronisationOffset).Add(Configuration.CycleDuration);
 
             PhaseChanges = constructionStatusChanges
                .Merge(campaigningStatusChanges, Scheduler)

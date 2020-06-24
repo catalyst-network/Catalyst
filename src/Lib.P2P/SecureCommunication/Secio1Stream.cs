@@ -111,7 +111,7 @@ namespace Lib.P2P.SecureCommunication
         public override bool CanSeek => false;
 
         /// <inheritdoc />
-        public override bool CanWrite => _stream.CanRead;
+        public override bool CanWrite => _stream.CanWrite;
 
         /// <inheritdoc />
         public override bool CanTimeout => false;

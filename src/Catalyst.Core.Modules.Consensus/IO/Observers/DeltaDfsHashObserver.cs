@@ -43,11 +43,13 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
     {
         private readonly IDeltaHashProvider _deltaHashProvider;
         private readonly IDeltaProducersProvider _deltaProducersProvider;
+        private readonly IDeltaElector _deltaElector;
         private readonly SyncState _syncState;
         private readonly IPeerRepository _peerRepository;
 
         public DeltaDfsHashObserver(IDeltaHashProvider deltaHashProvider,
             IDeltaProducersProvider deltaProducersProvider,
+            IDeltaElector deltaElector,
             SyncState syncState,
             IPeerRepository peerRepository,
             ILogger logger)
@@ -58,6 +60,7 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
             _syncState = syncState;
             _deltaHashProvider = deltaHashProvider;
             _deltaProducersProvider = deltaProducersProvider;
+            _deltaElector = deltaElector;
             _peerRepository = peerRepository;
         }
 
@@ -101,6 +104,13 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
                 //    Logger.Error($"Message from IP address '{multiAddress.GetIpAddress()}' with public key '{multiAddress.GetPublicKey()}' was not favorite producer.");
                 //    return;
                 //}
+
+                var mostPopularDelta = _deltaElector.GetMostPopularCandidateDelta(previousHash);
+                if (mostPopularDelta == null || newHash != mostPopularDelta.Hash.ToByteArray().ToCid())
+                {
+                    Logger.Error("Delta is null or not the most popular.");
+                    return;
+                }
 
                 _deltaHashProvider.TryUpdateLatestHash(previousHash, newHash);
             }

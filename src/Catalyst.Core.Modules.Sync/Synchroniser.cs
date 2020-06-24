@@ -215,22 +215,22 @@ namespace Catalyst.Core.Modules.Sync
 
         private void DownloadDeltas(IList<DeltaIndexDao> deltaIndexes)
         {
-            //Parallel.ForEach(deltaIndexes, async deltaIndex =>
-            //{
-            //    while (true)
-            //    {
-            //        try
-            //        {
-            //            if (DeltaCache.TryGetOrAddConfirmedDelta(deltaIndex.Cid, out Delta _))
-            //            {
-            //                break;
-            //            }
-            //        }
-            //        catch (Exception exc) { }
+            Parallel.ForEach(deltaIndexes, async deltaIndex =>
+            {
+                while (true)
+                {
+                    try
+                    {
+                        if (DeltaCache.TryGetOrAddConfirmedDelta(deltaIndex.Cid, out Delta _))
+                        {
+                            break;
+                        }
+                    }
+                    catch (Exception exc) { }
 
-            //        await Task.Delay(100).ConfigureAwait(false);
-            //    }
-            //});
+                    await Task.Delay(100).ConfigureAwait(false);
+                }
+            });
         }
 
         private async Task<int> GetSyncProgressPercentageAsync()

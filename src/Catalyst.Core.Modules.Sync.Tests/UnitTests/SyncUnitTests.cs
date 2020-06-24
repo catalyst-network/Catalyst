@@ -63,6 +63,8 @@ using NUnit.Framework;
 using MultiFormats;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using System.Reactive.Concurrency;
+using NUnit.Framework.Internal;
+using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 {
@@ -164,7 +166,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 
             var dfsService = Substitute.For<IDfsService>();
 
-            _peerSyncManager = new PeerSyncManager(_peerClient, peerService, _userOutput, _deltaHeightWatcher, swarmApi, 0.7, 0);
+            _peerSyncManager = new PeerSyncManager(_peerClient, peerService, _userOutput, _deltaHeightWatcher, swarmApi, Substitute.For<ILogger>(), 0.7, 0);
         }
 
         [TearDown]
