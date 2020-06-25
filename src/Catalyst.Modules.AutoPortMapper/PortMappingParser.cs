@@ -25,7 +25,7 @@ using System.Linq;
 using Mono.Nat;
 using Newtonsoft.Json.Linq;
 
-namespace Catalyst.Modules.UPnP
+namespace Catalyst.Modules.AutoPortMapper
 {
     public static class PortMappingParser
     {

@@ -1,17 +1,14 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <RootNamespace>Catalyst.UPnP.Tests</RootNamespace>
+        <RootNamespace>Catalyst.NetworkUtils.Tests</RootNamespace>
         <Authors>Fran (fran.sl@atlascity.io)</Authors>
-        <SignAssembly>true</SignAssembly>
-        <AssemblyOriginatorKeyFile>Catalyst.Modules.UPnP.Tests.snk</AssemblyOriginatorKeyFile>
-        <PublicSign>true</PublicSign>
     </PropertyGroup>
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-      <NoWarn>1701;1702;VSTHRD200;CS8002</NoWarn>
+        <NoWarn>1701;1702;VSTHRD200;CS8002</NoWarn>
     </PropertyGroup>
     <ItemGroup>
-         <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
+        <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
         <PackageReference Include="NSubstitute" Version="4.2.1" />
         <PackageReference Include="NUnit" Version="3.12.0" />
@@ -19,6 +16,6 @@
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Catalyst.Modules.UPnP\Catalyst.Modules.UPnP.csproj" />
-        <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
+        <ProjectReference Include="..\Catalyst.NetworkUtils\Catalyst.NetworkUtils.csproj" />
     </ItemGroup>
 </Project>

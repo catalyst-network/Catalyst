@@ -199,7 +199,7 @@ namespace Catalyst.Node.POA.CE
                    .WithDataDirectory()
                    .WithNetworksConfigFile(NetworkType.Devnet, options.OverrideNetworkFile)
                    .WithSerilogConfigFile()
-                   .WithConfigCopier(new PoaConfigCopier())
+                   .WithConfigWriters(new PoaConfigCopier(), new PoaConfigEditor(NetworkUtils.AddressProviderFactory.Create()))
                    .WithPersistenceConfiguration()
                    .BuildKernel(options.OverwriteConfig)
                    .WithPassword(PasswordRegistryTypes.DefaultNodePassword, options.NodePassword)

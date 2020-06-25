@@ -72,7 +72,7 @@ namespace Catalyst.Cli
             {
                 await Kernel.WithDataDirectory()
                    .WithSerilogConfigFile()
-                   .WithConfigCopier(new CliConfigCopier())
+                   .WithConfigWriters(new CliConfigCopier(), new CliConfigEditor())
                    .WithConfigurationFile(CliConstants.ShellNodesConfigFile)
                    .WithConfigurationFile(CliConstants.ShellConfigFile)
                    .WithNetworksConfigFile(NetworkType.Devnet, options.OverrideNetworkFile)

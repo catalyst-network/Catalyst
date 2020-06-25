@@ -15,7 +15,6 @@
     <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
         <NoWarn>1701;1702;CS8002</NoWarn>
     </PropertyGroup>
-    <Import Project="../Common.Projects.props" />
     <ItemGroup>
       <None Remove="Config\nodes.json" />
     </ItemGroup>
@@ -36,6 +35,7 @@
         <ProjectReference Include="..\Catalyst.Core.Modules.P2P.Discovery.Hastings\Catalyst.Core.Modules.P2P.Discovery.Hastings.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Modules.Rpc.Server\Catalyst.Core.Modules.Rpc.Server.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Modules.Web3\Catalyst.Core.Modules.Web3.csproj" />
+        <ProjectReference Include="..\Catalyst.NetworkUtils\Catalyst.NetworkUtils.csproj" />
         <ProjectReference Include="..\Catalyst.Protocol\Catalyst.Protocol.csproj" />
         <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />

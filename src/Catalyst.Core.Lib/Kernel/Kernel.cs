@@ -54,6 +54,7 @@ namespace Catalyst.Core.Lib.Kernel
         private readonly string _fileName;
         private string _targetConfigFolder;
         private IConfigCopier _configCopier;
+        private IConfigEditor _configEditor;
         private readonly ConfigurationBuilder _configurationBuilder;
         public ILifetimeScope Instance;
 
@@ -100,7 +101,8 @@ namespace Catalyst.Core.Lib.Kernel
         {
             _overwrite = overwrite;
             _configCopier.RunConfigStartUp(_targetConfigFolder, NetworkType.Devnet, null, _overwrite, overrideNetworkFile);
-            
+            _configEditor.RunConfigEditor(_targetConfigFolder);
+
             var config = _configurationBuilder.Build();
             var configurationModule = new ConfigurationModule(config);
 
@@ -168,9 +170,10 @@ namespace Catalyst.Core.Lib.Kernel
             return this;
         }
 
-        public Kernel WithConfigCopier(IConfigCopier configCopier)
+        public Kernel WithConfigWriters(IConfigCopier configCopier, IConfigEditor configEditor)
         {
             _configCopier = configCopier;
+            _configEditor = configEditor;
             return this;
         }
 

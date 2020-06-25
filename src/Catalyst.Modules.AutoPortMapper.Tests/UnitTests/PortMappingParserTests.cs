@@ -24,7 +24,7 @@ using FluentAssertions;
 using Mono.Nat;
 using NUnit.Framework;
 
-namespace Catalyst.Modules.UPnP.Tests.UnitTests
+namespace Catalyst.Modules.AutoPortMapper.UnitTests
 {
     public class PortMappingParserTests
     {
@@ -33,7 +33,7 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
         public void Can_Parse_Using_Default_Identifiers()
         {
             var json = @"{'CatalystNodeConfiguration': { 'Peer': {'Port': 42076},'Rpc': {'Port': 42066}}}";
-            var mappings = PortMappingParser.ParseJson(PortMapperConstants.DefaultTcpProperty, PortMapperConstants.DefaultUdpProperty,
+            var mappings = PortMappingParser.ParseJson(PortMappingConstants.DefaultTcpProperty, PortMappingConstants.DefaultUdpProperty,
                 json);
             mappings.Should().Contain(new Mapping(Mono.Nat.Protocol.Tcp, 42076, 42076));
             mappings.Should().Contain(new Mapping(Mono.Nat.Protocol.Udp, 42066, 42066));
@@ -43,7 +43,7 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
         public void Can_Parse_With_Non_Default_Identifiers()
         {
             var json = @"{'Peer': { 'Port': {'Port1': 42076}}}";
-            var mappings = PortMappingParser.ParseJson("Peer.Port.Port1", PortMapperConstants.DefaultUdpProperty,
+            var mappings = PortMappingParser.ParseJson("Peer.Port.Port1", PortMappingConstants.DefaultUdpProperty,
                 json);
             mappings.Should().Contain(new Mapping(Mono.Nat.Protocol.Tcp, 42076, 42076));
         }
@@ -52,7 +52,7 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
         public void Can_Parse_With_Multiple_Comma_Separated_Identifiers()
         {
             var json = @"{'Peer': { 'Port': {'Port1': 42076, 'Port2': 27676}}}";
-            var mappings = PortMappingParser.ParseJson("Peer.Port.Port1,Peer.Port.Port2", PortMapperConstants.DefaultUdpProperty,
+            var mappings = PortMappingParser.ParseJson("Peer.Port.Port1,Peer.Port.Port2", PortMappingConstants.DefaultUdpProperty,
                 json);
             mappings.Should().Contain(new Mapping(Mono.Nat.Protocol.Tcp, 42076, 42076));
             mappings.Should().Contain(new Mapping(Mono.Nat.Protocol.Tcp, 27676, 27676));
@@ -62,7 +62,7 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
         public void When_Identifiers_Do_Not_Exist_In_Json_Mapping_Is_Empty()
         {
             var json = @"{}";
-            var mappings = PortMappingParser.ParseJson(PortMapperConstants.DefaultTcpProperty, PortMapperConstants.DefaultUdpProperty,
+            var mappings = PortMappingParser.ParseJson(PortMappingConstants.DefaultTcpProperty, PortMappingConstants.DefaultUdpProperty,
                 json);
             mappings.Should().HaveCount(0);
         }

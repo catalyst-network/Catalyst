@@ -22,7 +22,7 @@
 
 namespace Catalyst.Modules.UPnP
 {
-    public static class PortMapperConstants
+    public static class UPnPConstants
     {
         public const string CouldNotCommunicateWithRouter = "Sorry, it wasn't possible to communicate with your router.";
         public const string CouldNotCommunicateWithRouterException = "Sorry, it wasn't possible to communicate with your router, recieved error message: {0}";
@@ -39,9 +39,7 @@ namespace Catalyst.Modules.UPnP
             "There is an existing mapping which conflicts with requested mapping protocol = {0}, public port = {1}, private port = {2}.";
         public const string StoppedSearching = "Stopped searching for the router.";
         public const string StartedSearching = "Started searching for a compatible router...";
-        public const string DefaultUdpProperty = "CatalystNodeConfiguration.Rpc.Port";
-        public const string DefaultTcpProperty = "CatalystNodeConfiguration.Peer.Port";
-             
+
         public enum Result 
         {
             Timeout,

@@ -1,4 +1,4 @@
-#region LICENSE
+﻿#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -24,13 +24,14 @@ using System;
 using CommandLine;
 using System.Collections.Generic;
 using System.IO;
-using System.Threading;
+using System.Net;
 using System.Threading.Tasks;
 using Mono.Nat;
-using Newtonsoft.Json;
 using Serilog;
+using Newtonsoft.Json;
+using Catalyst.Modules.UPnP;
 
-namespace Catalyst.Modules.UPnP
+namespace Catalyst.Modules.AutoPortMapper
 {
     internal class Options
     {
@@ -40,11 +41,11 @@ namespace Catalyst.Modules.UPnP
         [Option("filepath", Required = false, HelpText = "The path of the mapping file")]
         public string FilePath { get; set; }
 
-        [Option("tcp", Default = PortMapperConstants.DefaultTcpProperty,
+        [Option("tcp", Default = PortMappingConstants.DefaultTcpProperty,
             HelpText = "The identifier of the tcp ports to be mapped; multiple identifiers can be provided using comma separators")]
         public string TcpProperties { get; set; }
         
-        [Option( "udp", Default = PortMapperConstants.DefaultUdpProperty,
+        [Option( "udp", Default = PortMappingConstants.DefaultUdpProperty,
             HelpText = "The identifier of the udp ports to be mapped; multiple identifiers can be provided using comma separators")]
         public string UdpProperties { get; set; }
         
@@ -52,13 +53,14 @@ namespace Catalyst.Modules.UPnP
         public bool IsMappingDeletion { get; set; }
     }
 
-    public static partial class Program
+    public static class Program
     {
         public static Task<int> Main(string[] args)
         {
             var logger = new LoggerConfiguration()
                 .WriteTo.Console()
                 .CreateLogger();
+            
             return Start(args, logger, new NatUtilityProvider());
         }
 
@@ -79,11 +81,11 @@ namespace Catalyst.Modules.UPnP
             var mappings = ParseJsonWithLogging(options.TcpProperties, options.UdpProperties, json, logger);
             if (!(mappings?.Count > 0)) return 0;
             
-            var portMapper = new PortMapper(provider, logger);
+            var portMapper = new UPnPUtility(provider, logger);
             
-            var timeout = options.Timeout > 0 ? options.Timeout : PortMapperConstants.DefaultTimeout;
+            var timeout = options.Timeout > 0 ? options.Timeout : UPnPConstants.DefaultTimeout;
 
-            await portMapper.MapPorts(mappings.ToArray(), new CancellationTokenSource(), timeout, options.IsMappingDeletion);
+            await portMapper.MapPorts(mappings.ToArray(), timeout, options.IsMappingDeletion);
             return 0;
         }
 

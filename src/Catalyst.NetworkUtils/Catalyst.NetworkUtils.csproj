@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <Title>Network</Title>
+        <PackageDescription>Network Utils</PackageDescription>
+        <AssemblyCopyrightAttribute>Copyright © 2020 AtlasCity.io</AssemblyCopyrightAttribute>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+        <RootNamespace>Catalyst.NetworkUtils</RootNamespace>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <NoWarn>1701;1702;CS8002</NoWarn>
+    </PropertyGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Catalyst.Modules.UPnP\Catalyst.Modules.UPnP.csproj" />
+    </ItemGroup>
+</Project>

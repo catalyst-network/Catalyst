@@ -1,4 +1,4 @@
-#region LICENSE
+﻿#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -23,21 +23,18 @@
 
 using System.Threading.Tasks;
 using Catalyst.TestUtils;
-using Catalyst.UPnP.Tests.Utils;
-using FluentAssertions;
 using Mono.Nat;
 using NSubstitute;
 using NUnit.Framework;
 using Serilog;
+using Catalyst.UPnP.Tests.Utils;
+using FluentAssertions;
 
-
-
-
-namespace Catalyst.Modules.UPnP.Tests.IntegrationTests
+namespace Catalyst.Modules.AutoPortMapper.IntegrationTests
 {
     [TestFixture]
     [Category(Traits.IntegrationTest)] 
-    public class PortMapperTests
+    public class AutoPortMapperTests
     {
         private ILogger _logger;
         
@@ -78,3 +75,4 @@ namespace Catalyst.Modules.UPnP.Tests.IntegrationTests
         }
     }
 }
+

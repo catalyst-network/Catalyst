@@ -22,6 +22,7 @@
 
 using System;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 using Mono.Nat;
@@ -29,74 +30,66 @@ using Serilog;
 
 namespace Catalyst.Modules.UPnP
 {
-    public sealed class PortMapper
+    public sealed class UPnPUtility : IUPnPUtility
     {
         private readonly SemaphoreSlim _locker = new SemaphoreSlim(1, 1);
         private readonly INatUtilityProvider _natUtilityProvider;
         private readonly ILogger _logger;
 
-        public PortMapper(INatUtilityProvider natUtilityProvider, ILogger logger)
+        public UPnPUtility(INatUtilityProvider natUtilityProvider, ILogger logger)
         {
             _natUtilityProvider = natUtilityProvider;
             _logger = logger;
         }
         
-        public Task<PortMapperConstants.Result> MapPorts(Mapping[] ports, CancellationTokenSource tokenSource,
-            int timeoutInSeconds = PortMapperConstants.DefaultTimeout, bool delete = false)
+        public async Task<UPnPConstants.Result> MapPorts(Mapping[] ports, int timeoutInSeconds = UPnPConstants.DefaultTimeout, bool delete = false)
         {
+            var tcs = new TaskCompletionSource<bool>();
             var remappingLogic = delete ? (Func<Mapping[], Mapping[], INatDevice, Task>)DeletePortMappingsIfExisting : AddMappingsIfNotPreExisting;
-            return PerformEventOnDeviceFound(timeoutInSeconds, tokenSource.Token, device => ReMapPorts(device, ports, tokenSource, remappingLogic));
+            await PerformEventOnDeviceFound(timeoutInSeconds, tcs, device => ReMapPorts(device, ports, remappingLogic, tcs));
+            return tcs.Task.IsCompletedSuccessfully ? UPnPConstants.Result.TaskFinished : UPnPConstants.Result.Timeout;
+        }
+        
+        public async Task<IPAddress> GetPublicIpAddress(int timeoutInSeconds = UPnPConstants.DefaultTimeout)
+        {
+            var tcs = new TaskCompletionSource<IPAddress>(); 
+            await PerformEventOnDeviceFound(timeoutInSeconds, tcs, device => GetExternalIpAddress(device, tcs));
+            return tcs.Task.IsCompletedSuccessfully ? tcs.Task.Result : null;
         }
 
-        private async Task<PortMapperConstants.Result> PerformEventOnDeviceFound(int timeoutInSeconds, CancellationToken token, Action<INatDevice> onDeviceFound)
+        private async Task PerformEventOnDeviceFound<T>(int timeoutInSeconds, TaskCompletionSource<T> tcs, Action<INatDevice> onDeviceFound)
         {
             void DeviceFoundFunc(object o, DeviceEventArgs args) => onDeviceFound(args.Device);
             _natUtilityProvider.DeviceFound += DeviceFoundFunc;
             
             _natUtilityProvider.StartDiscovery();
-            _logger.Information(PortMapperConstants.StartedSearching);
+            _logger.Information(UPnPConstants.StartedSearching);
 
-            var result = await DelayUntilTimeoutOrMappingTaskEnds(timeoutInSeconds, token);
+            await Task.WhenAny(tcs.Task, Task.Delay(TimeSpan.FromSeconds(timeoutInSeconds)));
 
             _natUtilityProvider.DeviceFound -= DeviceFoundFunc;
-            
+
             _natUtilityProvider.StopDiscovery();
-            _logger.Information(PortMapperConstants.StoppedSearching);
-            
-            if(result==PortMapperConstants.Result.Timeout){_logger.Information(PortMapperConstants.CouldNotCommunicateWithRouter);}
-
-            return result;
+            _logger.Information(UPnPConstants.StoppedSearching);
         }
+        
 
-        private static async Task<PortMapperConstants.Result> DelayUntilTimeoutOrMappingTaskEnds(int timeoutInSeconds, CancellationToken token)
-        {
-            try
-            {
-                await Task.Delay(TimeSpan.FromSeconds(timeoutInSeconds), token);
-            }
-            catch(TaskCanceledException)
-            {
-                return PortMapperConstants.Result.TaskFinished;
-            }
-
-            return PortMapperConstants.Result.Timeout;
-        }
-
-        private async void ReMapPorts(INatDevice device, Mapping[] newMappings, CancellationTokenSource tokenSource, Func<Mapping[], Mapping[], INatDevice, Task> remappingLogic)
+        private async void ReMapPorts(INatDevice device, Mapping[] newMappings, Func<Mapping[], Mapping[], INatDevice, Task> remappingLogic, TaskCompletionSource<bool> tcs)
         {
             await _locker.WaitAsync();
             try
             {
                 var existingMappings = await device.GetAllMappingsAsync();
                 await remappingLogic(existingMappings, newMappings, device);
+                tcs.SetResult(true);
             }
             catch(Exception e)
             {
-                _logger.Information(PortMapperConstants.CouldNotCommunicateWithRouterException, e.ToString());
+                _logger.Information(UPnPConstants.CouldNotCommunicateWithRouterException, e.ToString());
+                tcs.SetException(e);
             }
             finally
             {
-                tokenSource.Cancel();
                 _locker.Release();
             }
         }
@@ -110,12 +103,12 @@ namespace Catalyst.Modules.UPnP
                     var portDeleted = await device.DeletePortMapAsync(newMapping);
                     _logger.Information(
                         portDeleted.Equals(newMapping)
-                            ? PortMapperConstants.DeletedMapping
-                            : PortMapperConstants.CouldNotDeleteMapping, newMapping.Protocol, newMapping.PublicPort, newMapping.PrivatePort);
+                            ? UPnPConstants.DeletedMapping
+                            : UPnPConstants.CouldNotDeleteMapping, newMapping.Protocol, newMapping.PublicPort, newMapping.PrivatePort);
                 }
                 else
                 {
-                    _logger.Information(PortMapperConstants.NoExistingMapping
+                    _logger.Information(UPnPConstants.NoExistingMapping
                         ,
                         newMapping.Protocol, newMapping.PublicPort, newMapping.PrivatePort);
                 }
@@ -131,20 +124,41 @@ namespace Catalyst.Modules.UPnP
                     var portMapped = await device.CreatePortMapAsync(newMapping);
                     if (portMapped.Equals(newMapping))
                     {
-                        _logger.Information(PortMapperConstants.CreatedMapping, newMapping.Protocol, newMapping.PublicPort, newMapping.PrivatePort);
+                        _logger.Information(UPnPConstants.CreatedMapping, newMapping.Protocol, newMapping.PublicPort, newMapping.PrivatePort);
                     }
                     else
                     {
                         await device.DeletePortMapAsync(portMapped);
-                        _logger.Information(PortMapperConstants.CouldNotCreateMapping, newMapping.Protocol, newMapping.PublicPort, newMapping.PrivatePort);
+                        _logger.Information(UPnPConstants.CouldNotCreateMapping, newMapping.Protocol, newMapping.PublicPort, newMapping.PrivatePort);
                     }
                 }
                 else
                 {
                     _logger.Information(
-                        PortMapperConstants.ConflictingMappingExists,
+                        UPnPConstants.ConflictingMappingExists,
                         newMapping.Protocol, newMapping.PublicPort, newMapping.PrivatePort);
                 }
+            }
+        }
+        
+        private async void GetExternalIpAddress(INatDevice device, TaskCompletionSource<IPAddress> tcs)
+        {
+            await _locker.WaitAsync();
+            try
+            {
+                var ipAddress = await device.GetExternalIPAsync();
+                tcs.SetResult(ipAddress);
+                
+            }
+            catch(Exception e)
+            {
+                _logger.Information(UPnPConstants.CouldNotCommunicateWithRouterException, e.ToString());
+                
+                tcs.SetException(e);
+            }
+            finally
+            {
+                _locker.Release();
             }
         }
     }
