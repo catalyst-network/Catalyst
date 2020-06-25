@@ -106,7 +106,9 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
                 //}
 
                 var mostPopularDelta = _deltaElector.GetMostPopularCandidateDelta(previousHash);
-                if (mostPopularDelta == null || newHash != mostPopularDelta.Hash.ToByteArray().ToCid())
+                var mostPopularDeltaPreviousHash = mostPopularDelta.Hash.ToByteArray().ToCid();
+                var mostPopularDeltaProducer = new MultiAddress(mostPopularDelta.Producer).GetPublicKey();
+                if (mostPopularDelta == null || multiAddress.GetPublicKey() != mostPopularDeltaProducer)
                 {
                     Logger.Error("Delta is null or not the most popular.");
                     return;
