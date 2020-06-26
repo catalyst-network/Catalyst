@@ -46,14 +46,14 @@ namespace Catalyst.Modules.UPnP
         {
             var tcs = new TaskCompletionSource<bool>();
             var remappingLogic = delete ? (Func<Mapping[], Mapping[], INatDevice, Task>)DeletePortMappingsIfExisting : AddMappingsIfNotPreExisting;
-            await PerformEventOnDeviceFound(timeoutInSeconds, tcs, device => ReMapPorts(device, ports, remappingLogic, tcs));
+            await PerformEventOnDeviceFound(timeoutInSeconds, tcs, device => ReMapPorts(device, ports, remappingLogic, tcs)).ConfigureAwait(false);
             return tcs.Task.IsCompletedSuccessfully ? UPnPConstants.Result.TaskFinished : UPnPConstants.Result.Timeout;
         }
         
         public async Task<IPAddress> GetPublicIpAddress(int timeoutInSeconds = UPnPConstants.DefaultTimeout)
         {
             var tcs = new TaskCompletionSource<IPAddress>(); 
-            await PerformEventOnDeviceFound(timeoutInSeconds, tcs, device => GetExternalIpAddress(device, tcs));
+            await PerformEventOnDeviceFound(timeoutInSeconds, tcs, device => GetExternalIpAddress(device, tcs)).ConfigureAwait(false);
             return tcs.Task.IsCompletedSuccessfully ? tcs.Task.Result : null;
         }
 
@@ -65,7 +65,7 @@ namespace Catalyst.Modules.UPnP
             _natUtilityProvider.StartDiscovery();
             _logger.Information(UPnPConstants.StartedSearching);
 
-            await Task.WhenAny(tcs.Task, Task.Delay(TimeSpan.FromSeconds(timeoutInSeconds)));
+            await Task.WhenAny(tcs.Task, Task.Delay(TimeSpan.FromSeconds(timeoutInSeconds))).ConfigureAwait(false);
 
             _natUtilityProvider.DeviceFound -= DeviceFoundFunc;
 
@@ -76,11 +76,11 @@ namespace Catalyst.Modules.UPnP
 
         private async void ReMapPorts(INatDevice device, Mapping[] newMappings, Func<Mapping[], Mapping[], INatDevice, Task> remappingLogic, TaskCompletionSource<bool> tcs)
         {
-            await _locker.WaitAsync();
+            await _locker.WaitAsync().ConfigureAwait(false);
             try
             {
-                var existingMappings = await device.GetAllMappingsAsync();
-                await remappingLogic(existingMappings, newMappings, device);
+                var existingMappings = await device.GetAllMappingsAsync().ConfigureAwait(false);
+                await remappingLogic(existingMappings, newMappings, device).ConfigureAwait(false);
                 tcs.SetResult(true);
             }
             catch(Exception e)
@@ -100,7 +100,7 @@ namespace Catalyst.Modules.UPnP
             {
                 if (Array.Exists(existingMappings, m => m.Equals(newMapping)))
                 {
-                    var portDeleted = await device.DeletePortMapAsync(newMapping);
+                    var portDeleted = await device.DeletePortMapAsync(newMapping).ConfigureAwait(false);
                     _logger.Information(
                         portDeleted.Equals(newMapping)
                             ? UPnPConstants.DeletedMapping
@@ -121,7 +121,7 @@ namespace Catalyst.Modules.UPnP
             {
                 if (!existingMappings.Any(m =>  m.PrivatePort==newMapping.PrivatePort || m.PublicPort==newMapping.PublicPort))
                 {
-                    var portMapped = await device.CreatePortMapAsync(newMapping);
+                    var portMapped = await device.CreatePortMapAsync(newMapping).ConfigureAwait(false);
                     if (portMapped.Equals(newMapping))
                     {
                         _logger.Information(UPnPConstants.CreatedMapping, newMapping.Protocol, newMapping.PublicPort, newMapping.PrivatePort);
@@ -143,7 +143,7 @@ namespace Catalyst.Modules.UPnP
         
         private async void GetExternalIpAddress(INatDevice device, TaskCompletionSource<IPAddress> tcs)
         {
-            await _locker.WaitAsync();
+            await _locker.WaitAsync().ConfigureAwait(false);
             try
             {
                 var ipAddress = await device.GetExternalIPAsync();

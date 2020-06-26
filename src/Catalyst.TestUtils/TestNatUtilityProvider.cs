@@ -24,7 +24,7 @@ using System;
 using Catalyst.Modules.UPnP;
 using Mono.Nat;
 
-namespace Catalyst.UPnP.Tests.Utils
+namespace Catalyst.TestUtils
 {
     public class TestNatUtilityProvider : INatUtilityProvider
     {

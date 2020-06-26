@@ -1,13 +1,29 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿#region LICENSE
+
+/**
+* Copyright (c) 2019 Catalyst Network
+*
+* This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
+*
+* Catalyst.Node is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
+*
+* Catalyst.Node is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+#endregion
 using System.Net;
 using System.Net.Sockets;
-using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Modules.UPnP;
-using Serilog;
-using Serilog.Core;
 
 namespace Catalyst.NetworkUtils
 {
@@ -26,7 +42,7 @@ namespace Catalyst.NetworkUtils
         
         public async Task<IPAddress> GetPublicIpAsync()
         {
-            var ipAddress = await _uPnPUtility.GetPublicIpAddress(2);
+            var ipAddress = await _uPnPUtility.GetPublicIpAddress(2).ConfigureAwait(false);
 
             if(ipAddress!=null)
             {
@@ -40,7 +56,7 @@ namespace Catalyst.NetworkUtils
         public async Task<IPAddress> GetLocalIpAsync()
         {
             using var socket = _socketFactory.Create(AddressFamily.InterNetwork, SocketType.Dgram, 0);
-            await socket.ConnectAsync("8.8.8.8", 65530);
+            await socket.ConnectAsync("8.8.8.8", 65530).ConfigureAwait(false);
             var endPoint = socket.LocalEndPoint as IPEndPoint;
             return endPoint?.Address;
         }
@@ -51,7 +67,7 @@ namespace Catalyst.NetworkUtils
 
             foreach(var url in urls)
             {
-                var ipAddress = await _webClientFactory.Create().DownloadStringTaskAsync(url);
+                var ipAddress = await _webClientFactory.Create().DownloadStringTaskAsync(url).ConfigureAwait(false);
                 if(IPAddress.TryParse(ipAddress, out var validIpAddress))
                 {
                     return validIpAddress;

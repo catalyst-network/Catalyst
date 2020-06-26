@@ -27,7 +27,6 @@ using Mono.Nat;
 using NSubstitute;
 using NUnit.Framework;
 using Serilog;
-using Catalyst.UPnP.Tests.Utils;
 using FluentAssertions;
 
 namespace Catalyst.Modules.AutoPortMapper.IntegrationTests
@@ -48,11 +47,11 @@ namespace Catalyst.Modules.AutoPortMapper.IntegrationTests
         public async Task Can_Add_Ports_From_Devnet_File()
         {
             Mapping[] existingMappings = {};
-            var device = new TestNatDeviceWithInternalMappings(existingMappings);
+            var device = new TestNatDevice(existingMappings);
             
             device.GetAllMappingsAsync().Result.Should().HaveCount(0);
             
-            await Program.Start(new [] {"--filepath", "./Config/devnet.json"}, _logger, new TestNatUtilityProvider(device));
+            await Program.Start(new [] {"--filepath", "./Config/devnet.json"}, _logger, new TestNatUtilityProvider(device)).ConfigureAwait(false);
            
             device.GetAllMappingsAsync().Result.Should().HaveCount(2);
         }
@@ -61,15 +60,15 @@ namespace Catalyst.Modules.AutoPortMapper.IntegrationTests
         public async Task Can_Add_Ports_From_Devnet_File_And_Delete()
         {
             Mapping[] existingMappings = {};
-            var device = new TestNatDeviceWithInternalMappings(existingMappings);
+            var device = new TestNatDevice(existingMappings);
             
             device.GetAllMappingsAsync().Result.Should().HaveCount(0);
             
-            await Program.Start(new string[] {"--filepath", "./Config/devnet.json"}, _logger, new TestNatUtilityProvider(device));
+            await Program.Start(new string[] {"--filepath", "./Config/devnet.json"}, _logger, new TestNatUtilityProvider(device)).ConfigureAwait(false);
            
             device.GetAllMappingsAsync().Result.Should().HaveCount(2);
            
-           await Program.Start(new string[] {"--filepath", "./Config/devnet.json", "--delete"}, _logger, new TestNatUtilityProvider(device));
+           await Program.Start(new string[] {"--filepath", "./Config/devnet.json", "--delete"}, _logger, new TestNatUtilityProvider(device)).ConfigureAwait(false);
            
            device.GetAllMappingsAsync().Result.Should().HaveCount(0);
         }

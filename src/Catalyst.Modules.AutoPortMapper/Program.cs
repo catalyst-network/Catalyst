@@ -85,7 +85,7 @@ namespace Catalyst.Modules.AutoPortMapper
             
             var timeout = options.Timeout > 0 ? options.Timeout : UPnPConstants.DefaultTimeout;
 
-            await portMapper.MapPorts(mappings.ToArray(), timeout, options.IsMappingDeletion);
+            await portMapper.MapPorts(mappings.ToArray(), timeout, options.IsMappingDeletion).ConfigureAwait(false);
             return 0;
         }
 

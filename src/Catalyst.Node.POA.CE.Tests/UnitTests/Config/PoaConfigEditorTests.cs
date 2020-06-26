@@ -57,7 +57,7 @@ namespace Catalyst.Node.POA.CE.Tests.UnitTests.Config
         {
             Setup(TestContext.CurrentContext);
             _addressProvider.GetLocalIpAsync().ReturnsForAnyArgs(IPAddress.Parse("192.168.0.12"));
-            _addressProvider.GetPublicIpAsync().ReturnsForAnyArgs(IPAddress.Parse("86.13.185.24"));
+            _addressProvider.GetPublicIpAsync().ReturnsForAnyArgs(IPAddress.Parse("86.13.186.26"));
         }
 
         [TestCaseSource(typeof(ConfigFilesEditTestData))]

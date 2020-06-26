@@ -8,7 +8,7 @@ namespace Catalyst.Node.POA.CE
 {
     public class PoaConfigEditor : ConfigEditor
     {
-        private IAddressProvider _addressProvider;
+        private readonly IAddressProvider _addressProvider;
         public PoaConfigEditor(IAddressProvider addressProvider)
         {
             _addressProvider = addressProvider;

@@ -27,13 +27,13 @@ using System.Net;
 using System.Threading.Tasks;
 using Mono.Nat;
 
-namespace Catalyst.UPnP.Tests.Utils
+namespace Catalyst.TestUtils
 {
-    public class TestNatDeviceWithInternalMappings : INatDevice
+    public class TestNatDevice : INatDevice
     {
         private readonly List<Mapping> _mappings;
         
-        public TestNatDeviceWithInternalMappings(IEnumerable<Mapping> existingMappings)
+        public TestNatDevice(IEnumerable<Mapping> existingMappings)
         {
             _mappings = existingMappings.ToList();
         }
