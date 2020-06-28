@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading;
@@ -29,7 +30,6 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Cycle;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Core.Abstractions.Sync;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Consensus.Cycle
@@ -74,7 +74,7 @@ namespace Catalyst.Core.Modules.Consensus.Cycle
             var synchronisationStatusChanges = StatefulPhase.GetStatusChangeObservable(
                 PhaseName.Synchronisation, Configuration.Synchronisation, Configuration.CycleDuration, Scheduler);
 
-            var synchronisationOffset = GetTimeSpanUntilNextCycleStart();
+            var synchronisationOffset = _dateTimeProvider.GetTimeSpanUntilNextCycleStart(Configuration.CycleDuration);
 
             PhaseChanges = constructionStatusChanges
                .Merge(campaigningStatusChanges, Scheduler)
@@ -94,11 +94,7 @@ namespace Catalyst.Core.Modules.Consensus.Cycle
 
         public TimeSpan GetTimeSpanUntilNextCycleStart()
         {
-            var cycleDurationTicks = _dateTimeProvider.UtcNow.Ticks % Configuration.CycleDuration.Ticks;
-            var ticksUntilNextCycleStart = cycleDurationTicks == 0
-                ? 0
-                : Configuration.CycleDuration.Ticks - cycleDurationTicks;
-            return TimeSpan.FromTicks(ticksUntilNextCycleStart);
+            return _dateTimeProvider.GetTimeSpanUntilNextCycleStart(Configuration.CycleDuration);
         }
 
         /// <inheritdoc />

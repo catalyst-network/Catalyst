@@ -63,10 +63,10 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
 
         public override void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto)
         {
-            if (!_syncState.IsSynchronized)
-            {
-                return;
-            }
+            //if (!_syncState.IsSynchronized)
+            //{
+            //    return;
+            //}
 
             try
             {

@@ -31,5 +31,19 @@ namespace Catalyst.Core.Modules.Consensus
     {
         /// <inheritdoc />
         public DateTime UtcNow => DateTime.UtcNow;
+
+        public TimeSpan GetTimeSpanUntilNextCycleStart(TimeSpan cycleDuration)
+        {
+            var cycleDurationTicks = DateTime.UtcNow.Ticks % cycleDuration.Ticks;
+            var ticksUntilNextCycleStart = cycleDurationTicks == 0
+                ? 0
+                : cycleDuration.Ticks - cycleDurationTicks;
+            return TimeSpan.FromTicks(ticksUntilNextCycleStart);
+        }
+
+        public DateTime GetDateUntilNextCycleStart(TimeSpan cycleDuration)
+        {
+            return UtcNow.Add(GetTimeSpanUntilNextCycleStart(cycleDuration));
+        }
     }
 }

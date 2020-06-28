@@ -30,7 +30,6 @@ using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Wire;
 using Dawn;
@@ -42,13 +41,11 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
     public class DeltaDfsHashObserver : BroadcastObserverBase<DeltaDfsHashBroadcast>, IP2PMessageObserver
     {
         private readonly IDeltaHashProvider _deltaHashProvider;
-        private readonly IDeltaProducersProvider _deltaProducersProvider;
         private readonly IDeltaElector _deltaElector;
         private readonly SyncState _syncState;
         private readonly IPeerRepository _peerRepository;
 
         public DeltaDfsHashObserver(IDeltaHashProvider deltaHashProvider,
-            IDeltaProducersProvider deltaProducersProvider,
             IDeltaElector deltaElector,
             SyncState syncState,
             IPeerRepository peerRepository,
@@ -59,7 +56,6 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
 
             _syncState = syncState;
             _deltaHashProvider = deltaHashProvider;
-            _deltaProducersProvider = deltaProducersProvider;
             _deltaElector = deltaElector;
             _peerRepository = peerRepository;
         }
@@ -97,16 +93,7 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
                     return;
                 }
 
-                //var producers = _deltaProducersProvider.GetDeltaProducersFromPreviousDelta(previousHash);
-                //var favoriteProducer = producers.FirstOrDefault();
-                //if (favoriteProducer == null || favoriteProducer != multiAddress.GetPublicKey())
-                //{
-                //    Logger.Error($"Message from IP address '{multiAddress.GetIpAddress()}' with public key '{multiAddress.GetPublicKey()}' was not favorite producer.");
-                //    return;
-                //}
-
                 var mostPopularDelta = _deltaElector.GetMostPopularCandidateDelta(previousHash);
-                var mostPopularDeltaPreviousHash = mostPopularDelta.Hash.ToByteArray().ToCid();
                 var mostPopularDeltaProducer = new MultiAddress(mostPopularDelta.Producer).GetPublicKey();
                 if (mostPopularDelta == null || multiAddress.GetPublicKey() != mostPopularDeltaProducer)
                 {
