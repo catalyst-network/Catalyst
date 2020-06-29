@@ -40,9 +40,10 @@ using NSubstitute;
 using Serilog;
 using NUnit.Framework;
 
+
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
 {
-    public sealed class CycleEventsProviderTests : IDisposable
+    public sealed class RxCycleEventsProviderTests : IDisposable
     {
         private const int PhaseCountPerCycle = 12;
 
@@ -50,10 +51,11 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
             {PhaseStatus.Producing, PhaseStatus.Collecting, PhaseStatus.Idle};
 
         private TestScheduler _testScheduler;
-        private CycleEventsProvider _cycleProvider;
+        private RxCycleEventsProvider _cycleProvider;
         private IDisposable _subscription;
         private IObserver<IPhase> _spy;
         private IDateTimeProvider _dateTimeProvider;
+        private ICycleSchedulerProvider _schedulerProvider;
         private TestContext _output;
         private IStopwatch _stopWatch;
         private IDeltaHashProvider _deltaHashProvider;
@@ -67,6 +69,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
             _output = TestContext.CurrentContext;
             _testScheduler = new TestScheduler();
 
+            _schedulerProvider = Substitute.For<ICycleSchedulerProvider>();
+            _schedulerProvider.Scheduler.Returns(_testScheduler);
             _dateTimeProvider = Substitute.For<IDateTimeProvider>();
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
             _logger = Substitute.For<ILogger>();
@@ -75,7 +79,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
                .Returns(hashProvider.ComputeUtf8MultiHash("test"));
 
             _dateTimeProvider.UtcNow.Returns(_ => _testScheduler.Now.DateTime);
-            _cycleProvider = new CycleEventsProvider(CycleConfiguration.Default, _dateTimeProvider, _deltaHashProvider, _logger);
+            _cycleProvider = new RxCycleEventsProvider(CycleConfiguration.Default, _dateTimeProvider, _schedulerProvider,
+                _deltaHashProvider, _logger);
 
             _cycleProvider.StartAsync().Wait();
 
@@ -176,7 +181,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
             _testScheduler.AdvanceBy(secondProviderStartOffset.Ticks);
 
             var spy2 = Substitute.For<IObserver<IPhase>>();
-            using (var cycleProvider2 = new CycleEventsProvider(CycleConfiguration.Default, _dateTimeProvider, _deltaHashProvider, _logger))
+            using (var cycleProvider2 = new RxCycleEventsProvider(CycleConfiguration.Default, _dateTimeProvider,
+                _schedulerProvider, _deltaHashProvider, _logger))
             {
                 cycleProvider2.StartAsync().Wait();
 

@@ -55,7 +55,7 @@ namespace Catalyst.TestUtils
 
             dateTimeProvider.UtcNow.Returns(_ => Scheduler.Now.DateTime);
 
-            _cycleEventsProvider = new CycleEventsProvider(
+            _cycleEventsProvider = new RxCycleEventsProvider(
                 CycleConfiguration.Default, dateTimeProvider, schedulerProvider, deltaHashProvider,
                 logger ?? Substitute.For<ILogger>());
 

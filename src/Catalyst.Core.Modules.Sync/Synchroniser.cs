@@ -215,22 +215,23 @@ namespace Catalyst.Core.Modules.Sync
 
         private void DownloadDeltas(IList<DeltaIndexDao> deltaIndexes)
         {
-            Parallel.ForEach(deltaIndexes, async deltaIndex =>
-            {
-                while (true)
-                {
-                    try
-                    {
-                        if (DeltaCache.TryGetOrAddConfirmedDelta(deltaIndex.Cid, out Delta _))
-                        {
-                            break;
-                        }
-                    }
-                    catch (Exception exc) { }
+            //Upgrade the DFS to batch download files using the wantlist rather then a task or thread for each file request.
+            //Parallel.ForEach(deltaIndexes, async deltaIndex =>
+            //{
+            //    while (true)
+            //    {
+            //        try
+            //        {
+            //            if (DeltaCache.TryGetOrAddConfirmedDelta(deltaIndex.Cid, out Delta _))
+            //            {
+            //                break;
+            //            }
+            //        }
+            //        catch (Exception exc) { }
 
-                    await Task.Delay(100).ConfigureAwait(false);
-                }
-            });
+            //        await Task.Delay(100).ConfigureAwait(false);
+            //    }
+            //});
         }
 
         private async Task<int> GetSyncProgressPercentageAsync()

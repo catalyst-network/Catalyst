@@ -70,7 +70,6 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
             try
             {
                 var deserialised = messageDto.Payload.FromProtocolMessage<DeltaDfsHashBroadcast>();
-
                 var previousHash = deserialised.PreviousDeltaDfsHash.ToByteArray().ToCid();
                 if (previousHash == null)
                 {
@@ -92,6 +91,14 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
                     Logger.Error($"Message from IP address '{multiAddress.GetIpAddress()}' with public key '{multiAddress.GetPublicKey()}' is not found in producer node list.");
                     return;
                 }
+
+                //var mostPopularDelta = _deltaElector.GetMostPopularCandidateDelta(previousHash);
+                //var mostPopularDeltaProducer = new MultiAddress(mostPopularDelta.Producer).GetPublicKey();
+                //if (mostPopularDelta == null || multiAddress.GetPublicKey() != mostPopularDeltaProducer)
+                //{
+                //    Logger.Error("Delta is null or not the most popular.");
+                //    return;
+                //}
 
                 var mostPopularDelta = _deltaElector.GetMostPopularCandidateDelta(previousHash);
                 var mostPopularDeltaProducer = new MultiAddress(mostPopularDelta.Producer).GetPublicKey();
