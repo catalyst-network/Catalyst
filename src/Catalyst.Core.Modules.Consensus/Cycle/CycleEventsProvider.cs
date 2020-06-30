@@ -140,7 +140,7 @@ namespace Catalyst.Core.Modules.Consensus
             _logger.Debug($"Event Provider Cycle {cycleNumber} Starting at: {startTime}");
             _logger.Debug($"Event Provider Cycle {cycleNumber + 1} Starting at: {nextCycleStartTime}");
 
-            while (phaseNumber < _orderedPhaseNamesByOffset.Count || !_cancellationTokenSource.IsCancellationRequested)
+            while (phaseNumber < _orderedPhaseNamesByOffset.Count && !_cancellationTokenSource.IsCancellationRequested)
             {
                 var currentPhaseName = _orderedPhaseNamesByOffset[phaseNumber];
                 var currentPhaseTiming = Configuration.TimingsByName[currentPhaseName];
