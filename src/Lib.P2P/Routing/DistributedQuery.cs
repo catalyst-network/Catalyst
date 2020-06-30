@@ -53,7 +53,7 @@ namespace Lib.P2P.Routing
         /// <summary>
         ///   The maximum time spent on waiting for an answer from a peer.
         /// </summary>
-        private static readonly TimeSpan AskTime = TimeSpan.FromSeconds(10);
+        private static readonly TimeSpan AskTime = TimeSpan.FromSeconds(100);
 
         /// <summary>
         ///   Controls the running of the distributed query.

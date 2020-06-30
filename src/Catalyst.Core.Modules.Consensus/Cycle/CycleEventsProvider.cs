@@ -37,7 +37,6 @@ using Serilog;
 
 namespace Catalyst.Core.Modules.Consensus
 {
-    [Obsolete]
     public class CycleEventsProvider : ICycleEventsProvider, IDisposable
     {
         private readonly CancellationTokenSource _cancellationTokenSource;
@@ -48,7 +47,7 @@ namespace Catalyst.Core.Modules.Consensus
         private readonly IList<IPhaseStatus> _orderedPhaseStatuses;
         private readonly IDictionary<IPhaseStatus, Func<IPhaseTimings, TimeSpan>> _phaseOffsetMappings;
 
-        private readonly ReplaySubject<IPhase> _messageSubject;
+        private readonly ReplaySubject<IPhase> _phaseChangesMessageSubject;
         public IObservable<IPhase> PhaseChanges { set; get; }
 
         public ICycleConfiguration Configuration { get; }
@@ -67,8 +66,8 @@ namespace Catalyst.Core.Modules.Consensus
             _deltaHashProvider = deltaHashProvider;
             _logger = logger;
 
-            _messageSubject = new ReplaySubject<IPhase>();
-            PhaseChanges = _messageSubject.AsObservable();
+            _phaseChangesMessageSubject = new ReplaySubject<IPhase>();
+            PhaseChanges = _phaseChangesMessageSubject.AsObservable();
 
             _orderedPhaseNamesByOffset = CreateAndOrderPhaseNamesByOffset();
             _orderedPhaseStatuses = CreateAndOrderPhaseStatuses();
@@ -127,7 +126,7 @@ namespace Catalyst.Core.Modules.Consensus
             }
 
             _logger.Debug("Stream {PhaseChanges} completed.", nameof(PhaseChanges));
-            _messageSubject.OnCompleted();
+            _phaseChangesMessageSubject.OnCompleted();
         }
 
         private void StartCycle(ulong cycleNumber)
@@ -144,14 +143,14 @@ namespace Catalyst.Core.Modules.Consensus
             while (phaseNumber < _orderedPhaseNamesByOffset.Count || !_cancellationTokenSource.IsCancellationRequested)
             {
                 var currentPhaseName = _orderedPhaseNamesByOffset[phaseNumber];
-                var currentPhase = Configuration.TimingsByName[currentPhaseName];
+                var currentPhaseTiming = Configuration.TimingsByName[currentPhaseName];
 
                 var currentPhaseStatus = _orderedPhaseStatuses[statusNumber];
-                var phase = GetPhase(startTime, _phaseOffsetMappings[currentPhaseStatus](currentPhase), currentPhaseName, currentPhaseStatus);
+                var phase = GetPhase(startTime, _phaseOffsetMappings[currentPhaseStatus](currentPhaseTiming), currentPhaseName, currentPhaseStatus);
                 if (phase != null)
                 {
                     _logger.Debug("Current delta production phase {phase}", phase);
-                    _messageSubject.OnNext(phase);
+                    _phaseChangesMessageSubject.OnNext(phase);
                     statusNumber++;
                 }
 
@@ -193,6 +192,7 @@ namespace Catalyst.Core.Modules.Consensus
                 Close();
             }
 
+            _phaseChangesMessageSubject.Dispose();
             _cancellationTokenSource.Dispose();
         }
 
