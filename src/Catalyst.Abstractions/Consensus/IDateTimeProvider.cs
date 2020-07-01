@@ -36,9 +36,5 @@ namespace Catalyst.Abstractions.Consensus
         /// Returns the current time expressed in UTC.
         /// </summary>
         DateTime UtcNow { get; }
-
-        TimeSpan GetTimeSpanUntilNextCycleStart(TimeSpan cycleDuration);
-
-        DateTime GetDateUntilNextCycleStart(TimeSpan cycleDuration);
     }
 }

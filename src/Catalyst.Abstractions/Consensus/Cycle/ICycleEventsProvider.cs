@@ -42,7 +42,6 @@ namespace Catalyst.Abstractions.Consensus.Cycle
         /// </summary>
         IObservable<IPhase> PhaseChanges { get; }
 
-        //todo
         /// <summary>
         /// Use this method to find out in how much time the next production cycle will start.
         /// </summary>

@@ -87,6 +87,11 @@ namespace Catalyst.Core.Modules.Consensus
             return TimeSpan.FromTicks(ticksUntilNextCycleStart);
         }
 
+        private DateTime GetDateUntilNextCycleStart()
+        {
+            return _dateTimeProvider.UtcNow.Add(GetTimeSpanUntilNextCycleStart());
+        }
+
         private static IList<IPhaseName> CreateAndOrderPhaseNamesByOffset(ICycleConfiguration configuration)
         {
             return configuration.TimingsByName.Keys.OrderBy(x => configuration.TimingsByName[x].Offset).ToList();
@@ -117,6 +122,9 @@ namespace Catalyst.Core.Modules.Consensus
             return Task.CompletedTask;
         }
 
+        /// <summary>
+        /// EventCycle Thread to loop through each cycle continuously, we want time precision for each phase.
+        /// </summary>
         private void EventCycleLoopThread()
         {
             var cycleNumber = 1UL;
@@ -129,12 +137,16 @@ namespace Catalyst.Core.Modules.Consensus
             _phaseChangesMessageSubject.OnCompleted();
         }
 
+        /// <summary>
+        /// Each cycle will produce 8 phase events excluding 'idle' phase status: 4 phases * 2 phase statuses = 8 phase events.
+        /// </summary>
+        /// <param name="cycleNumber">The current cycle</param>
         private void StartCycle(ulong cycleNumber)
         {
             var phaseNumber = 0;
             var statusNumber = 0;
 
-            var startTime = _dateTimeProvider.GetDateUntilNextCycleStart(Configuration.CycleDuration);
+            var startTime = GetDateUntilNextCycleStart();
             var nextCycleStartTime = startTime.Add(Configuration.CycleDuration);
 
             _logger.Debug($"Event Provider Cycle {cycleNumber} Starting at: {startTime}");
