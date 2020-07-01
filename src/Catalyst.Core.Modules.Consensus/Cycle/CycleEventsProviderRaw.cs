@@ -69,7 +69,7 @@ namespace Catalyst.Core.Modules.Consensus
             _phaseChangesMessageSubject = new ReplaySubject<IPhase>();
             PhaseChanges = _phaseChangesMessageSubject.AsObservable();
 
-            _orderedPhaseNamesByOffset = CreateAndOrderPhaseNamesByOffset();
+            _orderedPhaseNamesByOffset = CreateAndOrderPhaseNamesByOffset(Configuration);
             _orderedPhaseStatuses = CreateAndOrderPhaseStatuses();
             _phaseOffsetMappings = CreatePhaseOffsetMappings();
 
@@ -87,12 +87,12 @@ namespace Catalyst.Core.Modules.Consensus
             return TimeSpan.FromTicks(ticksUntilNextCycleStart);
         }
 
-        private IList<IPhaseName> CreateAndOrderPhaseNamesByOffset()
+        private static IList<IPhaseName> CreateAndOrderPhaseNamesByOffset(ICycleConfiguration configuration)
         {
-            return Configuration.TimingsByName.Keys.OrderBy(x => Configuration.TimingsByName[x].Offset).ToList();
+            return configuration.TimingsByName.Keys.OrderBy(x => configuration.TimingsByName[x].Offset).ToList();
         }
 
-        private IList<IPhaseStatus> CreateAndOrderPhaseStatuses()
+        private static IList<IPhaseStatus> CreateAndOrderPhaseStatuses()
         {
             return Enumeration.GetAll<PhaseStatus>().Cast<IPhaseStatus>().ToList();
         }
