@@ -97,7 +97,7 @@ namespace Catalyst.Core.Modules.Consensus
             return Enumeration.GetAll<PhaseStatus>().Cast<IPhaseStatus>().ToList();
         }
 
-        private IDictionary<IPhaseStatus, Func<IPhaseTimings, TimeSpan>> CreatePhaseOffsetMappings()
+        private static IDictionary<IPhaseStatus, Func<IPhaseTimings, TimeSpan>> CreatePhaseOffsetMappings()
         {
             var phaseOffsetMappings = new Dictionary<IPhaseStatus, Func<IPhaseTimings, TimeSpan>>();
             phaseOffsetMappings.Add(PhaseStatus.Producing, x => x.Offset);
