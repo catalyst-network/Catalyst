@@ -296,7 +296,7 @@ namespace Lib.P2P
         /// <exception cref="Exception">
         ///   The <see cref="BlackList"/> or <see cref="WhiteList"/> policies forbid it.
         /// </exception>
-        public Peer RegisterPeer(Peer peer)
+        public Peer RegisterPeer(Peer peer, bool forceAllow = false)
         {
             if (peer.Id == null)
             {
@@ -308,7 +308,7 @@ namespace Lib.P2P
                 throw new ArgumentException("Cannot register self.");
             }
 
-            if (!IsAllowed(peer))
+            if (!IsAllowed(peer) && !forceAllow)
             {
                 throw new Exception($"Communication with '{peer}' is not allowed.");
             }
@@ -705,7 +705,7 @@ namespace Lib.P2P
 
                 await identify.GetRemotePeerAsync(connection, cancel).ConfigureAwait(false);
             }
-            catch (Exception)
+            catch (Exception exc)
             {
                 connection.Dispose();
                 throw;
@@ -1013,7 +1013,7 @@ namespace Lib.P2P
                 //BlackList.Remove($"/p2p/{connection.RemotePeer.Id}");
                 //ConnectionEstablished?.Invoke(this, connection);
 
-                connection.RemotePeer = RegisterPeer(connection.RemotePeer);
+                connection.RemotePeer = RegisterPeer(connection.RemotePeer, true);
                 connection.RemoteAddress = new MultiAddress($"{remote}/ipfs/{connection.RemotePeer.Id}");
                 var actual = Manager.Add(connection);
                 if (actual == connection)

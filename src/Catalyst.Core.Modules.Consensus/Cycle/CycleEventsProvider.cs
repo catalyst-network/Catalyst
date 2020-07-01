@@ -21,61 +21,76 @@
 
 #endregion
 
+using System;
+using System.Linq;
+using System.Reactive.Concurrency;
+using System.Reactive.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Cycle;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Abstractions.Enumerator;
-using Catalyst.Core.Modules.Consensus.Cycle;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reactive.Linq;
-using System.Reactive.Subjects;
-using System.Threading;
-using System.Threading.Tasks;
 using Serilog;
 
-namespace Catalyst.Core.Modules.Consensus
+namespace Catalyst.Core.Modules.Consensus.Cycle
 {
+    /// <inheritdoc cref="ICycleEventsProvider"/>
+    /// <inheritdoc cref="IDisposable"/>
+    [Obsolete]
     public class CycleEventsProvider : ICycleEventsProvider, IDisposable
     {
         private readonly CancellationTokenSource _cancellationTokenSource;
+        protected readonly IScheduler Scheduler;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IDeltaHashProvider _deltaHashProvider;
-
-        private readonly IList<IPhaseName> _orderedPhaseNamesByOffset;
-        private readonly IList<IPhaseStatus> _orderedPhaseStatuses;
-        private readonly IDictionary<IPhaseStatus, Func<IPhaseTimings, TimeSpan>> _phaseOffsetMappings;
-
-        private readonly ReplaySubject<IPhase> _phaseChangesMessageSubject;
-        public IObservable<IPhase> PhaseChanges { set; get; }
-
-        public ICycleConfiguration Configuration { get; }
-
         private readonly ILogger _logger;
 
         public CycleEventsProvider(ICycleConfiguration configuration,
-            IDateTimeProvider dateTimeProvider,
+            IDateTimeProvider timeProvider,
+            ICycleSchedulerProvider schedulerProvider,
             IDeltaHashProvider deltaHashProvider,
             ILogger logger)
         {
             _cancellationTokenSource = new CancellationTokenSource();
 
             Configuration = configuration;
-            _dateTimeProvider = dateTimeProvider;
-            _deltaHashProvider = deltaHashProvider;
+            Scheduler = schedulerProvider.Scheduler;
             _logger = logger;
 
-            _phaseChangesMessageSubject = new ReplaySubject<IPhase>();
-            PhaseChanges = _phaseChangesMessageSubject.AsObservable();
+            _dateTimeProvider = timeProvider;
+            _deltaHashProvider = deltaHashProvider;
+        }
 
-            _orderedPhaseNamesByOffset = CreateAndOrderPhaseNamesByOffset();
-            _orderedPhaseStatuses = CreateAndOrderPhaseStatuses();
-            _phaseOffsetMappings = CreatePhaseOffsetMappings();
+        public Task StartAsync()
+        {
+            var constructionStatusChanges = StatefulPhase.GetStatusChangeObservable(
+                PhaseName.Construction, Configuration.Construction, Configuration.CycleDuration, Scheduler);
 
-            //Idle phase status is not needed, it is to keep timing in RXObserver event cycles.
-            _orderedPhaseStatuses.Remove(PhaseStatus.Idle);
-            _phaseOffsetMappings.Remove(PhaseStatus.Idle);
+            var campaigningStatusChanges = StatefulPhase.GetStatusChangeObservable(
+                PhaseName.Campaigning, Configuration.Campaigning, Configuration.CycleDuration, Scheduler);
+
+            var votingStatusChanges = StatefulPhase.GetStatusChangeObservable(
+                PhaseName.Voting, Configuration.Voting, Configuration.CycleDuration, Scheduler);
+
+            var synchronisationStatusChanges = StatefulPhase.GetStatusChangeObservable(
+                PhaseName.Synchronisation, Configuration.Synchronisation, Configuration.CycleDuration, Scheduler);
+
+            var synchronisationOffset = GetTimeSpanUntilNextCycleStart();
+
+            PhaseChanges = constructionStatusChanges
+               .Merge(campaigningStatusChanges, Scheduler)
+               .Merge(votingStatusChanges, Scheduler)
+               .Merge(synchronisationStatusChanges, Scheduler)
+               .Delay(synchronisationOffset, Scheduler)
+               .Select(s =>
+               {
+                   return new Phase(_deltaHashProvider.GetLatestDeltaHash(_dateTimeProvider.UtcNow), s.Name, s.Status, _dateTimeProvider.UtcNow);
+               })
+               .Do(p => _logger.Debug("Current delta production phase {phase}", p),
+                    exception => _logger.Error(exception, "{PhaseChanges} stream failed and will stop producing cycle events.", nameof(PhaseChanges)),
+                    () => _logger.Debug("Stream {PhaseChanges} completed.", nameof(PhaseChanges)))
+               .TakeWhile(_ => !_cancellationTokenSource.IsCancellationRequested);
+            return Task.CompletedTask;
         }
 
         public TimeSpan GetTimeSpanUntilNextCycleStart()
@@ -87,98 +102,14 @@ namespace Catalyst.Core.Modules.Consensus
             return TimeSpan.FromTicks(ticksUntilNextCycleStart);
         }
 
-        private IList<IPhaseName> CreateAndOrderPhaseNamesByOffset()
-        {
-            return Configuration.TimingsByName.Keys.OrderBy(x => Configuration.TimingsByName[x].Offset).ToList();
-        }
+        /// <inheritdoc />
+        public ICycleConfiguration Configuration { get; }
 
-        private IList<IPhaseStatus> CreateAndOrderPhaseStatuses()
-        {
-            return Enumeration.GetAll<PhaseStatus>().Cast<IPhaseStatus>().ToList();
-        }
+        /// <inheritdoc />
+        public IObservable<IPhase> PhaseChanges { private set; get; }
 
-        private IDictionary<IPhaseStatus, Func<IPhaseTimings, TimeSpan>> CreatePhaseOffsetMappings()
-        {
-            var phaseOffsetMappings = new Dictionary<IPhaseStatus, Func<IPhaseTimings, TimeSpan>>();
-            phaseOffsetMappings.Add(PhaseStatus.Producing, x => x.Offset);
-            phaseOffsetMappings.Add(PhaseStatus.Collecting, x => x.Offset + x.ProductionTime);
-            phaseOffsetMappings.Add(PhaseStatus.Idle, x => x.Offset + x.TotalTime);
-            return phaseOffsetMappings;
-        }
-
-        public Task StartAsync()
-        {
-            var eventCycleThread = new Thread(new ThreadStart(EventCycleLoopThread))
-            {
-                IsBackground = true,
-                Priority = ThreadPriority.Highest
-            };
-            eventCycleThread.Start();
-            return Task.CompletedTask;
-        }
-
-        private void EventCycleLoopThread()
-        {
-            var cycleNumber = 1UL;
-            while (!_cancellationTokenSource.IsCancellationRequested)
-            {
-                StartCycle(cycleNumber++);
-            }
-
-            _logger.Debug("Stream {PhaseChanges} completed.", nameof(PhaseChanges));
-            _phaseChangesMessageSubject.OnCompleted();
-        }
-
-        private void StartCycle(ulong cycleNumber)
-        {
-            var phaseNumber = 0;
-            var statusNumber = 0;
-
-            var startTime = _dateTimeProvider.GetDateUntilNextCycleStart(Configuration.CycleDuration);
-            var nextCycleStartTime = startTime.Add(Configuration.CycleDuration);
-
-            _logger.Debug($"Event Provider Cycle {cycleNumber} Starting at: {startTime}");
-            _logger.Debug($"Event Provider Cycle {cycleNumber + 1} Starting at: {nextCycleStartTime}");
-
-            while (phaseNumber < _orderedPhaseNamesByOffset.Count && !_cancellationTokenSource.IsCancellationRequested)
-            {
-                var currentPhaseName = _orderedPhaseNamesByOffset[phaseNumber];
-                var currentPhaseTiming = Configuration.TimingsByName[currentPhaseName];
-
-                var currentPhaseStatus = _orderedPhaseStatuses[statusNumber];
-                var phase = GetPhase(startTime, _phaseOffsetMappings[currentPhaseStatus](currentPhaseTiming), currentPhaseName, currentPhaseStatus);
-                if (phase != null)
-                {
-                    _logger.Debug("Current delta production phase {phase}", phase);
-                    _phaseChangesMessageSubject.OnNext(phase);
-                    statusNumber++;
-                }
-
-                if (statusNumber >= _orderedPhaseStatuses.Count)
-                {
-                    statusNumber = 0;
-                    phaseNumber++;
-                }
-
-                Thread.Sleep(10);
-            }
-        }
-
-        private IPhase GetPhase(DateTime cycleStartTime, TimeSpan phaseOffset, IPhaseName phaseName, IPhaseStatus phaseStatus)
-        {
-            var phaseStartTime = cycleStartTime.Add(phaseOffset);
-            if (_dateTimeProvider.UtcNow.Ticks >= phaseStartTime.Ticks)
-            {
-                return new Phase(_deltaHashProvider.GetLatestDeltaHash(_dateTimeProvider.UtcNow), phaseName, phaseStatus, _dateTimeProvider.UtcNow);
-            }
-
-            return null;
-        }
-
-        public void Close()
-        {
-            _cancellationTokenSource.Cancel();
-        }
+        /// <inheritdoc />
+        public void Close() { _cancellationTokenSource.Cancel(); }
 
         protected virtual void Dispose(bool disposing)
         {
@@ -192,7 +123,6 @@ namespace Catalyst.Core.Modules.Consensus
                 Close();
             }
 
-            _phaseChangesMessageSubject.Dispose();
             _cancellationTokenSource.Dispose();
         }
 

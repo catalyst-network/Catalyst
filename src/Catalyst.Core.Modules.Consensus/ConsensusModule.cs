@@ -42,7 +42,7 @@ namespace Catalyst.Core.Modules.Consensus
             builder.RegisterType<DateTimeProvider>().As<IDateTimeProvider>();
             builder.RegisterType<CycleSchedulerProvider>().As<ICycleSchedulerProvider>();
             //builder.RegisterType<CycleEventsProvider>().As<ICycleEventsProvider>();
-            builder.RegisterType<CycleEventsProvider>().As<ICycleEventsProvider>();
+            builder.RegisterType<CycleEventsProviderRaw>().As<ICycleEventsProvider>();
             builder.RegisterType<DeltaCacheChangeTokenProvider>().As<IDeltaCacheChangeTokenProvider>().WithParameter("timeToLiveInMs", 600000);
             builder.RegisterType<FavouriteDeltaObserver>().As<IP2PMessageObserver>();
             builder.RegisterType<DeltaDfsHashObserver>().As<IP2PMessageObserver>();

@@ -298,7 +298,7 @@ namespace Lib.P2P.Multiplex
             {
                 // eat it
             }
-            catch (IOException)
+            catch (IOException ioe)
             {
                 // eat it
             }
