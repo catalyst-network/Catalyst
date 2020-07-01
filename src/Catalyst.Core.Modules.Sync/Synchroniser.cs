@@ -213,26 +213,9 @@ namespace Catalyst.Core.Modules.Sync
             Progress(CurrentHighestDeltaIndexStored, _rangeSize);
         }
 
-        //I want to beable to download files in batches from the dfs want list instead of a awaiting Task on every download request
         private void DownloadDeltas(IList<DeltaIndexDao> deltaIndexes)
         {
             //Upgrade the DFS to batch download files using the wantlist rather then a task or thread for each file request.
-            //Parallel.ForEach(deltaIndexes, async deltaIndex =>
-            //{
-            //    while (true)
-            //    {
-            //        try
-            //        {
-            //            if (DeltaCache.TryGetOrAddConfirmedDelta(deltaIndex.Cid, out Delta _))
-            //            {
-            //                break;
-            //            }
-            //        }
-            //        catch (Exception exc) { }
-
-            //        await Task.Delay(100).ConfigureAwait(false);
-            //    }
-            //});
         }
 
         private async Task<int> GetSyncProgressPercentageAsync()

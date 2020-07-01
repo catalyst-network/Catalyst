@@ -101,9 +101,6 @@ namespace Catalyst.Node.POA.CE
 
         static Program()
         {
-            //var phaseCaculator = new PhaseCalculator(CycleConfiguration.Default, new DateTimeProvider(), );
-            //phaseCaculator.StartAsync().Wait();
-
             Kernel = Kernel.Initramfs();
 
             AppDomain.CurrentDomain.UnhandledException += Kernel.LogUnhandledException;

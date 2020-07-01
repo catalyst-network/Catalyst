@@ -92,14 +92,7 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
                     return;
                 }
 
-                //var mostPopularDelta = _deltaElector.GetMostPopularCandidateDelta(previousHash);
-                //var mostPopularDeltaProducer = new MultiAddress(mostPopularDelta.Producer).GetPublicKey();
-                //if (mostPopularDelta == null || multiAddress.GetPublicKey() != mostPopularDeltaProducer)
-                //{
-                //    Logger.Error("Delta is null or not the most popular.");
-                //    return;
-                //}
-
+                //Add functionality to check Candidate MerkleRoot against transactions in delta
                 var mostPopularDelta = _deltaElector.GetMostPopularCandidateDelta(previousHash);
                 var mostPopularDeltaProducer = new MultiAddress(mostPopularDelta.Producer).GetPublicKey();
                 if (mostPopularDelta == null || multiAddress.GetPublicKey() != mostPopularDeltaProducer)
