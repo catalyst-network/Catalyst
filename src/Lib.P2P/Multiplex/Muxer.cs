@@ -294,7 +294,7 @@ namespace Lib.P2P.Multiplex
                     }
                 }
             }
-            catch (EndOfStreamException)
+            catch (EndOfStreamException eofe)
             {
                 // eat it
             }
