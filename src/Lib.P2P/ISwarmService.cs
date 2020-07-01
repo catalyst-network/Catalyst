@@ -190,7 +190,8 @@ namespace Lib.P2P
         /// <exception cref="Exception">
         ///   The <see cref="SwarmService.BlackList"/> or <see cref="SwarmService.WhiteList"/> policies forbid it.
         /// </exception>
-        Peer RegisterPeer(Peer peer, bool forceAllow = false);
+        Peer RegisterPeer(Peer peer, bool forceAllow);
+        Peer RegisterPeer(Peer peer);
 
         /// <summary>
         ///   Deregister a peer.

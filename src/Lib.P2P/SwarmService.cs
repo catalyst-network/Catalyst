@@ -296,7 +296,12 @@ namespace Lib.P2P
         /// <exception cref="Exception">
         ///   The <see cref="BlackList"/> or <see cref="WhiteList"/> policies forbid it.
         /// </exception>
-        public Peer RegisterPeer(Peer peer, bool forceAllow = false)
+        public Peer RegisterPeer(Peer peer)
+        {
+            return RegisterPeer(peer, false);
+        }
+
+        public Peer RegisterPeer(Peer peer, bool forceAllow)
         {
             if (peer.Id == null)
             {
