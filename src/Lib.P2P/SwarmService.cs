@@ -308,10 +308,10 @@ namespace Lib.P2P
                 throw new ArgumentException("Cannot register self.");
             }
 
-            //if (!IsAllowed(peer))
-            //{
-            //    throw new Exception($"Communication with '{peer}' is not allowed.");
-            //}
+            if (!IsAllowed(peer))
+            {
+                throw new Exception($"Communication with '{peer}' is not allowed.");
+            }
 
             var isNew = false;
             var p = _otherPeers.AddOrUpdate(peer.Id.ToBase58(),

@@ -298,23 +298,6 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
         }
 
         [Test]
-        public async Task Sync_Can_Download_Deltas()
-        {
-            _syncTestHeight = 10;
-
-            var sync = new Synchroniser(new SyncState(), _peerSyncManager, _deltaCache, _deltaHeightWatcher, _deltaHashProvider, _deltaIndexService,
-                _mapperProvider, _userOutput, Substitute.For<ILogger>(), _syncTestHeight, 1, 30, Scheduler.Default);
-
-            sync.SyncCompleted.Subscribe(x => { _manualResetEventSlim.Set(); });
-
-            await sync.StartAsync(CancellationToken.None);
-
-            _manualResetEventSlim.Wait();
-
-            _deltaCache.Received(_syncTestHeight).TryGetOrAddConfirmedDelta(Arg.Any<Cid>(), out Arg.Any<Delta>());
-        }
-
-        [Test]
         public async Task Sync_Can_Update_State()
         {
             _syncTestHeight = 10;
