@@ -198,8 +198,8 @@ namespace Lib.P2P.SecureCommunication
             hmac.Reset();
             hmac.BlockUpdate(encryptedData, 0, encryptedData.Length);
             hmac.DoFinal(mac, 0);
-            //if (!signature.SequenceEqual(mac))
-                //throw new InvalidDataException("HMac error");
+            if (!signature.SequenceEqual(mac))
+                throw new InvalidDataException("HMac error");
 
             // Decrypt the data in-place.
             _decrypt.ProcessBytes(encryptedData, 0, encryptedData.Length, encryptedData, 0);
