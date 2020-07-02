@@ -78,7 +78,7 @@ namespace Catalyst.Core.Modules.Sync
            IDeltaIndexService deltaIndexService,
            IMapperProvider mapperProvider,
            IUserOutput userOutput,
-           ILogger logger) : this(syncState, peerSyncManager, deltaCache, deltaHeightWatcher, deltaHashProvider, deltaIndexService, mapperProvider, userOutput, logger, 20, 10, 30, Scheduler.Default)
+           ILogger logger) : this(syncState, peerSyncManager, deltaCache, deltaHeightWatcher, deltaHashProvider, deltaIndexService, mapperProvider, userOutput, logger, 100, 10, 30, Scheduler.Default)
         { }
 
         public Synchroniser(SyncState syncState,

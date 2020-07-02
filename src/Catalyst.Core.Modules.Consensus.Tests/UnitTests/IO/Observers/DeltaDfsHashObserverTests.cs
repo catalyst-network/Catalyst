@@ -50,7 +50,6 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
     {
         private IHashProvider _hashProvider;
         private IDeltaHashProvider _deltaHashProvider;
-        private IDeltaProducersProvider _deltaProducersProvider;
         private IChannelHandlerContext _fakeChannelContext;
         private SyncState _syncState;
         private ILogger _logger;
@@ -61,7 +60,6 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
         {
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
-            _deltaProducersProvider = Substitute.For<IDeltaProducersProvider>();
             _fakeChannelContext = Substitute.For<IChannelHandlerContext>();
             _syncState = new SyncState { IsSynchronized = true };
             _logger = Substitute.For<ILogger>();
@@ -86,7 +84,6 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             var deltaElector = Substitute.For<IDeltaElector>();
             deltaElector.GetMostPopularCandidateDelta(prevHash).Returns(candidateDeltaBroadcast);
 
-            _deltaProducersProvider.GetDeltaProducersFromPreviousDelta(prevHash).Returns(new[] { multiAddress.GetPublicKey() });
             _peerRepository.GetPoaPeersByPublicKey(multiAddress.GetPublicKey()).Returns(new List<Peer>() { new Peer() });
             var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, deltaElector, _syncState, _peerRepository, _logger);
 

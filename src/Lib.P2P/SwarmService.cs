@@ -301,7 +301,8 @@ namespace Lib.P2P
             return RegisterPeer(peer, false);
         }
 
-        public Peer RegisterPeer(Peer peer, bool forceAllow)
+        /// <inheritdoc/>
+        public Peer RegisterPeer(Peer peer, bool ignoreRestrictionLists)
         {
             if (peer.Id == null)
             {
@@ -313,7 +314,7 @@ namespace Lib.P2P
                 throw new ArgumentException("Cannot register self.");
             }
 
-            if (!IsAllowed(peer) && !forceAllow)
+            if (!IsAllowed(peer) && !ignoreRestrictionLists)
             {
                 throw new Exception($"Communication with '{peer}' is not allowed.");
             }
@@ -710,7 +711,7 @@ namespace Lib.P2P
 
                 await identify.GetRemotePeerAsync(connection, cancel).ConfigureAwait(false);
             }
-            catch (Exception exc)
+            catch (Exception)
             {
                 connection.Dispose();
                 throw;

@@ -103,8 +103,6 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
             // {
             //     return null;
             // }
-            var c = context.Candidate.Hash.ToByteArray().ToCid();
-            _logger.Debug("{c}", c);
 
             return context.Candidate;
         }

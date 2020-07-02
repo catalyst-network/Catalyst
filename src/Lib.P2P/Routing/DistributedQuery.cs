@@ -83,13 +83,7 @@ namespace Lib.P2P.Routing
         /// <summary>
         ///   The received answers for the query.
         /// </summary>
-        public IEnumerable<T> Answers
-        {
-            get
-            {
-                return _answers.Values;
-            }
-        }
+        public IEnumerable<T> Answers => _answers.Values;
 
         /// <summary>
         ///   The number of answers needed.
@@ -98,7 +92,7 @@ namespace Lib.P2P.Routing
         ///   When the numbers <see cref="Answers"/> reaches this limit
         ///   the <see cref="RunAsync">running query</see> will stop.
         /// </remarks>
-        public int AnswersNeeded { get; set; } = 1;
+        internal int AnswersNeeded { get; set; } = 1;
 
         /// <summary>
         ///   The maximum number of concurrent peer queries to perform
@@ -120,12 +114,12 @@ namespace Lib.P2P.Routing
         /// <summary>
         ///   The type of query to perform.
         /// </summary>
-        public MessageType QueryType { get; set; }
+        internal MessageType QueryType { get; set; }
 
         /// <summary>
         ///   The key to find.
         /// </summary>
-        public MultiHash QueryKey { get; set; }
+        internal MultiHash QueryKey { get; set; }
 
         /// <summary>
         ///   Starts the distributed query.
@@ -175,10 +169,10 @@ namespace Lib.P2P.Routing
         /// <summary>
         ///   Ask the next peer the question.
         /// </summary>
-        async Task AskAsync(int taskId)
+        public async Task AskAsync(int taskId)
         {
-            int pass = 0;
-            int waits = 20;
+            var pass = 0;
+            var waits = 20;
             while (!_runningQuery.IsCancellationRequested && waits > 0)
             {
                 // Get the nearest peer that has not been visited.
@@ -235,7 +229,7 @@ namespace Lib.P2P.Routing
             }
         }
 
-        void ProcessProviders(DhtPeerMessage[] providers)
+        private void ProcessProviders(DhtPeerMessage[] providers)
         {
             if (providers == null)
             {
@@ -265,7 +259,7 @@ namespace Lib.P2P.Routing
             }
         }
 
-        void ProcessCloserPeers(DhtPeerMessage[] closerPeers)
+        private void ProcessCloserPeers(DhtPeerMessage[] closerPeers)
         {
             if (closerPeers == null)
             {
@@ -298,7 +292,7 @@ namespace Lib.P2P.Routing
         /// </param>
         /// <remarks>
         /// </remarks>
-        public void AddAnswer(T answer)
+        internal void AddAnswer(T answer)
         {
             if (answer == null)
             {
