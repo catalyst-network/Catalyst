@@ -48,6 +48,10 @@ namespace Catalyst.Abstractions.Consensus.Cycle
         /// <returns>A TimeSpan representing the time to wait until next delta production cycle starts.</returns>
         TimeSpan GetTimeSpanUntilNextCycleStart();
 
+        /// <summary>
+        /// Starts the event cycle provider.
+        /// </summary>
+        /// <returns>A Task represending the corresponding async method.</returns>
         Task StartAsync();
 
         /// <summary>

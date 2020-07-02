@@ -294,16 +294,11 @@ namespace Lib.P2P.Multiplex
                     }
                 }
             }
-            catch(InvalidDataException ivde)
-            {
-                _log.Error("Invalid data: ", ivde);
-                return;
-            }
-            catch (EndOfStreamException eofe)
+            catch (EndOfStreamException)
             {
                 // eat it
             }
-            catch (IOException ioe)
+            catch (IOException)
             {
                 // eat it
             }

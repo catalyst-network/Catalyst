@@ -37,6 +37,7 @@ using Serilog;
 
 namespace Catalyst.Core.Modules.Consensus
 {
+    /// <inheritdoc />
     public class CycleEventsProviderRaw : ICycleEventsProvider, IDisposable
     {
         private readonly CancellationTokenSource _cancellationTokenSource;
@@ -70,7 +71,7 @@ namespace Catalyst.Core.Modules.Consensus
             PhaseChanges = _phaseChangesMessageSubject.AsObservable();
 
             _orderedPhaseNamesByOffset = CreateAndOrderPhaseNamesByOffset(Configuration);
-            _orderedPhaseStatuses = CreateAndOrderPhaseStatuses();
+            _orderedPhaseStatuses = CreatePhaseStatuses();
             _phaseOffsetMappings = CreatePhaseOffsetMappings();
 
             //Idle phase status is not needed, it is to keep timing in RXObserver event cycles.
@@ -78,6 +79,7 @@ namespace Catalyst.Core.Modules.Consensus
             _phaseOffsetMappings.Remove(PhaseStatus.Idle);
         }
 
+        /// <inheritdoc />
         public TimeSpan GetTimeSpanUntilNextCycleStart()
         {
             var cycleDurationTicks = _dateTimeProvider.UtcNow.Ticks % Configuration.CycleDuration.Ticks;
@@ -87,30 +89,49 @@ namespace Catalyst.Core.Modules.Consensus
             return TimeSpan.FromTicks(ticksUntilNextCycleStart);
         }
 
+        /// <summary>
+        /// Use this method to find what time the next production cycle will start.
+        /// </summary>
+        /// <returns>A DateTime representing the time until next delta production cycle starts.</returns>
         private DateTime GetDateUntilNextCycleStart()
         {
             return _dateTimeProvider.UtcNow.Add(GetTimeSpanUntilNextCycleStart());
         }
 
+        /// <summary>
+        /// Use this method to create and order all the PhaseNames
+        /// </summary>
+        /// <param name="configuration">The cycle configuration settings</param>
+        /// <returns>A list of all the PhaseNames</returns>
         private static IList<IPhaseName> CreateAndOrderPhaseNamesByOffset(ICycleConfiguration configuration)
         {
             return configuration.TimingsByName.Keys.OrderBy(x => configuration.TimingsByName[x].Offset).ToList();
         }
 
-        private static IList<IPhaseStatus> CreateAndOrderPhaseStatuses()
+        /// <summary>
+        /// Use this method to create all the PhaseStatuses
+        /// </summary>
+        /// <returns>A list of all the PhaseStatus</returns>
+        private static IList<IPhaseStatus> CreatePhaseStatuses()
         {
             return Enumeration.GetAll<PhaseStatus>().Cast<IPhaseStatus>().ToList();
         }
 
+        /// <summary>
+        /// Use this method to create all the PhaseStatus to PhaseTiming mappings.
+        /// </summary>
+        /// <returns>A dictionary of all the PhaseStatus to PhaseTiming mappings</returns>
         private static IDictionary<IPhaseStatus, Func<IPhaseTimings, TimeSpan>> CreatePhaseOffsetMappings()
         {
-            var phaseOffsetMappings = new Dictionary<IPhaseStatus, Func<IPhaseTimings, TimeSpan>>();
-            phaseOffsetMappings.Add(PhaseStatus.Producing, x => x.Offset);
-            phaseOffsetMappings.Add(PhaseStatus.Collecting, x => x.Offset + x.ProductionTime);
-            phaseOffsetMappings.Add(PhaseStatus.Idle, x => x.Offset + x.TotalTime);
-            return phaseOffsetMappings;
+            return new Dictionary<IPhaseStatus, Func<IPhaseTimings, TimeSpan>>
+            {
+                { PhaseStatus.Producing, x => x.Offset },
+                { PhaseStatus.Collecting, x => x.Offset + x.ProductionTime },
+                { PhaseStatus.Idle, x => x.Offset + x.TotalTime }
+            };
         }
 
+        /// <inheritdoc />
         public Task StartAsync()
         {
             var eventCycleThread = new Thread(new ThreadStart(EventCycleLoopThread))
@@ -176,6 +197,14 @@ namespace Catalyst.Core.Modules.Consensus
             }
         }
 
+        /// <summary>
+        /// Find's the current phase after the specified time in the cycle.
+        /// </summary>
+        /// <param name="cycleStartTime">The cycle start time.</param>
+        /// <param name="phaseOffset">The offset the phase will run in the cycle.</param>
+        /// <param name="phaseName">The name of the phase.</param>
+        /// <param name="phaseStatus">The phase status</param>
+        /// <returns>The phase with the corresponding data.</returns>
         private IPhase GetPhase(DateTime cycleStartTime, TimeSpan phaseOffset, IPhaseName phaseName, IPhaseStatus phaseStatus)
         {
             var phaseStartTime = cycleStartTime.Add(phaseOffset);
@@ -187,6 +216,7 @@ namespace Catalyst.Core.Modules.Consensus
             return null;
         }
 
+        /// <inheritdoc />
         public void Close()
         {
             _cancellationTokenSource.Cancel();
