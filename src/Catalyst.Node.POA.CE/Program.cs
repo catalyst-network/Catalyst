@@ -38,6 +38,7 @@ using Catalyst.Core.Lib.Kernel;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Modules.Authentication;
 using Catalyst.Core.Modules.Consensus;
+using Catalyst.Core.Modules.Consensus.Cycle;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.Hashing;
@@ -203,7 +204,6 @@ namespace Catalyst.Node.POA.CE
                    .WithPersistenceConfiguration()
                    .BuildKernel(options.OverwriteConfig)
                    .WithPassword(PasswordRegistryTypes.DefaultNodePassword, options.NodePassword)
-                   .WithPassword(PasswordRegistryTypes.DefaultNodePassword, options.IpfsPassword)
                    .WithPassword(PasswordRegistryTypes.CertificatePassword, options.SslCertPassword)
                    .Reset(options.Reset)
                    .StartCustomAsync(CustomBootLogicAsync);

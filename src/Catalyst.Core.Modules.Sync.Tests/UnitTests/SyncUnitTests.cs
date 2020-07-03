@@ -63,6 +63,8 @@ using NUnit.Framework;
 using MultiFormats;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using System.Reactive.Concurrency;
+using NUnit.Framework.Internal;
+using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 {
@@ -164,7 +166,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 
             var dfsService = Substitute.For<IDfsService>();
 
-            _peerSyncManager = new PeerSyncManager(_peerClient, peerService, _userOutput, _deltaHeightWatcher, swarmApi, 0.7, 0);
+            _peerSyncManager = new PeerSyncManager(_peerClient, peerService, _userOutput, _deltaHeightWatcher, swarmApi, Substitute.For<ILogger>(), 0.7, 0);
         }
 
         [TearDown]
@@ -293,23 +295,6 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 
             var range = _deltaIndexService.GetRange(0, (ulong) _syncTestHeight).Select(x => DeltaIndexDao.ToProtoBuff<DeltaIndex>(x, _mapperProvider));
             range.Should().BeEquivalentTo(expectedData.DeltaIndex);
-        }
-
-        [Test]
-        public async Task Sync_Can_Download_Deltas()
-        {
-            _syncTestHeight = 10;
-
-            var sync = new Synchroniser(new SyncState(), _peerSyncManager, _deltaCache, _deltaHeightWatcher, _deltaHashProvider, _deltaIndexService,
-                _mapperProvider, _userOutput, Substitute.For<ILogger>(), _syncTestHeight, 1, 30, Scheduler.Default);
-
-            sync.SyncCompleted.Subscribe(x => { _manualResetEventSlim.Set(); });
-
-            await sync.StartAsync(CancellationToken.None);
-
-            _manualResetEventSlim.Wait();
-
-            _deltaCache.Received(_syncTestHeight).TryGetOrAddConfirmedDelta(Arg.Any<Cid>(), out Arg.Any<Delta>());
         }
 
         [Test]

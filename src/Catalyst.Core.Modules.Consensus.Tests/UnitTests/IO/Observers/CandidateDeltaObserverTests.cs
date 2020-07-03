@@ -26,10 +26,8 @@ using System.Text;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P.Repository;
-using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Core.Lib.Service;
 using Catalyst.Core.Modules.Consensus.IO.Observers;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
@@ -70,9 +68,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             var peerRepository = Substitute.For<IPeerRepository>();
             peerRepository.GetPoaPeersByPublicKey(Arg.Any<string>()).Returns(new List<Lib.P2P.Models.Peer> { new Lib.P2P.Models.Peer() });
 
-            var deltaIndexService = Substitute.For<IDeltaIndexService>();
-            deltaIndexService.LatestDeltaIndex().Returns(new Lib.DAO.Ledger.DeltaIndexDao() { Cid = _prevHash, Height = 0 });
-            _candidateDeltaObserver = new CandidateDeltaObserver(_deltaVoter, deltaIndexService, new SyncState() { IsSynchronized = true }, peerRepository, hashProvider, logger);
+            _candidateDeltaObserver = new CandidateDeltaObserver(_deltaVoter, peerRepository, hashProvider, logger);
         }
 
         [Test]

@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
@@ -52,7 +53,6 @@ namespace Catalyst.Core.Modules.Web3
         private readonly string[] _controllerModules;
         private IContainer _container;
         private readonly bool _addSwagger;
-
         public ApiModule(HttpOptions httpOptions, List<string> controllerModules, bool addSwagger = true) : this(httpOptions, null, controllerModules, addSwagger)
         { }
 
