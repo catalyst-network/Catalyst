@@ -1,0 +1,30 @@
+version: "3"
+
+services:
+   
+  db:
+    image: mongo:3.2
+    ports:
+      - 27017:27017
+  
+  app:
+    image: atlascity/catalyst
+    stdin_open: true
+    tty: true
+    links:
+      - db
+    build: 
+        context: .
+        dockerfile: Dockerfile
+    depends_on:
+      - db
+    command: /bin/bash
+    ports:
+      - 5000:80
+      - 42076:42076
+      - 42066:42066
+      - 4001:4001
+      - 5005:5005
+    environment: 
+      - db:27017
+   
