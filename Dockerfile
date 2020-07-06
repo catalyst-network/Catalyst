@@ -22,7 +22,7 @@ RUN git clone https://github.com/catalyst-network/Catalyst.git
 WORKDIR Catalyst
 RUN git checkout develop
 RUN ls
-COPY docker_resources.json /app/core/.dolittle/resources.json
+RUN mkdir -p /data/db
 
 RUN git submodule update --init --recursive --force
 
