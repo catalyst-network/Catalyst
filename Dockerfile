@@ -33,3 +33,7 @@ RUN git submodule update --init --recursive --force
 WORKDIR src
 
 RUN dotnet build Catalyst.sln
+
+WORKDIR Catalyst.Node.POA.CE
+
+# RUN dotnet run
