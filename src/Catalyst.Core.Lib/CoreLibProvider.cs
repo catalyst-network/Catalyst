@@ -77,20 +77,6 @@ namespace Catalyst.Core.Lib
             builder.RegisterType<LocalPeer>().As<LibP2P.Peer>()
                .SingleInstance();
 
-            // Register IO.EventLoop
-            builder.RegisterType<UdpClientEventLoopGroupFactory>().As<IUdpClientEventLoopGroupFactory>()
-               .SingleInstance();
-            builder.RegisterType<UdpServerEventLoopGroupFactory>().As<IUdpServerEventLoopGroupFactory>()
-               .SingleInstance();
-            builder.RegisterType<TcpServerEventLoopGroupFactory>().As<ITcpServerEventLoopGroupFactory>()
-               .SingleInstance();
-            builder.RegisterType<TcpClientEventLoopGroupFactory>().As<ITcpClientEventLoopGroupFactory>();
-            builder.RegisterType<EventLoopGroupFactoryConfiguration>().As<IEventLoopGroupFactoryConfiguration>()
-               .WithProperty("TcpServerHandlerWorkerThreads", 4)
-               .WithProperty("TcpClientHandlerWorkerThreads", 4)
-               .WithProperty("UdpServerHandlerWorkerThreads", 8)
-               .WithProperty("UdpClientHandlerWorkerThreads", 2);
-
             // Register P2P
             builder.RegisterType<PeerService>().As<IPeerService>().SingleInstance();
             builder.RegisterType<PeerSettings>().As<IPeerSettings>();
@@ -140,7 +126,7 @@ namespace Catalyst.Core.Lib
             builder.RegisterType<PasswordManager>().As<IPasswordManager>().SingleInstance();
 
             // Register FileSystem
-            builder.RegisterType<Catalyst.Core.Lib.FileSystem.FileSystem>().As<IFileSystem>().SingleInstance();
+            builder.RegisterType<FileSystem.FileSystem>().As<IFileSystem>().SingleInstance();
             
             // Register Rpc.IO.Messaging.Correlation
             builder.RegisterType<RpcMessageCorrelationManager>().As<IRpcMessageCorrelationManager>().SingleInstance();
