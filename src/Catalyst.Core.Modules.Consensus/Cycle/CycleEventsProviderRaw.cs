@@ -38,7 +38,7 @@ using Serilog;
 namespace Catalyst.Core.Modules.Consensus
 {
     /// <inheritdoc />
-    public class CycleEventsProviderRaw : ICycleEventsProvider, IDisposable
+    public class CycleEventsProviderRaw : ICycleEventsProvider
     {
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly IDateTimeProvider _dateTimeProvider;
@@ -156,6 +156,7 @@ namespace Catalyst.Core.Modules.Consensus
 
             _logger.Debug("Stream {PhaseChanges} completed.", nameof(PhaseChanges));
             _phaseChangesMessageSubject.OnCompleted();
+            _phaseChangesMessageSubject.Dispose();
         }
 
         /// <summary>
@@ -177,8 +178,8 @@ namespace Catalyst.Core.Modules.Consensus
             {
                 var currentPhaseName = _orderedPhaseNamesByOffset[phaseNumber];
                 var currentPhaseTiming = Configuration.TimingsByName[currentPhaseName];
-
                 var currentPhaseStatus = _orderedPhaseStatuses[statusNumber];
+
                 var phase = GetPhase(startTime, _phaseOffsetMappings[currentPhaseStatus](currentPhaseTiming), currentPhaseName, currentPhaseStatus);
                 if (phase != null)
                 {
@@ -233,9 +234,6 @@ namespace Catalyst.Core.Modules.Consensus
             {
                 Close();
             }
-
-            _phaseChangesMessageSubject.Dispose();
-            _cancellationTokenSource.Dispose();
         }
 
         /// <inheritdoc />

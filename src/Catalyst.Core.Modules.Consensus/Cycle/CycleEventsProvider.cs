@@ -37,7 +37,7 @@ namespace Catalyst.Core.Modules.Consensus.Cycle
     /// <inheritdoc cref="ICycleEventsProvider"/>
     /// <inheritdoc cref="IDisposable"/>
     [Obsolete]
-    public class CycleEventsProvider : ICycleEventsProvider, IDisposable
+    public class CycleEventsProvider : ICycleEventsProvider
     {
         private readonly CancellationTokenSource _cancellationTokenSource;
         protected readonly IScheduler Scheduler;
