@@ -85,50 +85,52 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override GetFileFromDfsResponse HandleRequest(GetFileFromDfsRequest getFileFromDfsRequest,
-            IChannelHandlerContext channelHandlerContext,
             MultiAddress sender,
             ICorrelationId correlationId)
         {
-            Guard.Argument(getFileFromDfsRequest, nameof(getFileFromDfsRequest)).NotNull();
-            Guard.Argument(sender, nameof(sender)).NotNull();
+            return null;
 
-            long fileLen = 0;
+            //todo
+            //Guard.Argument(getFileFromDfsRequest, nameof(getFileFromDfsRequest)).NotNull();
+            //Guard.Argument(sender, nameof(sender)).NotNull();
 
-            FileTransferResponseCodeTypes responseCodeType;
+            //long fileLen = 0;
 
-            var response = Task.Run(async () =>
-            {
-                try
-                {
-                    responseCodeType = await Task.Run(async () =>
-                    {
-                        var stream = await _dfsService.UnixFsApi.ReadFileAsync(Cid.Decode(getFileFromDfsRequest.DfsHash))
-                           .ConfigureAwait(false);
-                        fileLen = stream.Length;
-                        using (var fileTransferInformation = new UploadFileTransferInformation(
-                            stream,
-                            sender,
-                            PeerSettings.Address,
-                            channelHandlerContext.Channel,
-                            correlationId
-                        ))
-                        {
-                            return _fileTransferFactory.RegisterTransfer(fileTransferInformation);
-                        }
-                    }).ConfigureAwait(false);
-                }
-                catch (Exception e)
-                {
-                    Logger.Error(e,
-                        "Failed to handle GetFileFromDfsRequestHandler after receiving message {0}",
-                        getFileFromDfsRequest);
-                    responseCodeType = FileTransferResponseCodeTypes.Error;
-                }
+            //FileTransferResponseCodeTypes responseCodeType;
 
-                return ReturnResponse(responseCodeType, fileLen);
-            }).ConfigureAwait(false).GetAwaiter().GetResult();
+            //var response = Task.Run(async () =>
+            //{
+            //    try
+            //    {
+            //        responseCodeType = await Task.Run(async () =>
+            //        {
+            //            var stream = await _dfsService.UnixFsApi.ReadFileAsync(Cid.Decode(getFileFromDfsRequest.DfsHash))
+            //               .ConfigureAwait(false);
+            //            fileLen = stream.Length;
+            //            using (var fileTransferInformation = new UploadFileTransferInformation(
+            //                stream,
+            //                sender,
+            //                PeerSettings.Address,
+            //                channelHandlerContext.Channel,
+            //                correlationId
+            //            ))
+            //            {
+            //                return _fileTransferFactory.RegisterTransfer(fileTransferInformation);
+            //            }
+            //        }).ConfigureAwait(false);
+            //    }
+            //    catch (Exception e)
+            //    {
+            //        Logger.Error(e,
+            //            "Failed to handle GetFileFromDfsRequestHandler after receiving message {0}",
+            //            getFileFromDfsRequest);
+            //        responseCodeType = FileTransferResponseCodeTypes.Error;
+            //    }
 
-            return response;
+            //    return ReturnResponse(responseCodeType, fileLen);
+            //}).ConfigureAwait(false).GetAwaiter().GetResult();
+
+            //return response;
         }
 
         public override void OnNext(IObserverDto<ProtocolMessage> messageDto)

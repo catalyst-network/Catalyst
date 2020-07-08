@@ -28,9 +28,6 @@ using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Protocol.IPPN;
-using Catalyst.Protocol.Peer;
-using DotNetty.Transport.Channels;
-using Lib.P2P.Protocols;
 using MultiFormats;
 using Serilog;
 
@@ -46,7 +43,6 @@ namespace Catalyst.TestUtils
         public FailingRequestObserver(ILogger logger, IPeerSettings peerSettings, IPeerClient peerClient) : base(logger, peerSettings, peerClient) { }
 
         protected override PeerNeighborsResponse HandleRequest(PeerNeighborsRequest messageDto,
-            IChannelHandlerContext channelHandlerContext,
             MultiAddress sender,
             ICorrelationId correlationId)
         {

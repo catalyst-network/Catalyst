@@ -64,7 +64,6 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <param name="correlationId">The correlationId</param>
         /// <returns>The GetPeerInfoResponse</returns>
         protected override GetPeerInfoResponse HandleRequest(GetPeerInfoRequest getPeerInfoRequest,
-            IChannelHandlerContext channelHandlerContext,
             MultiAddress sender,
             ICorrelationId correlationId)
         {

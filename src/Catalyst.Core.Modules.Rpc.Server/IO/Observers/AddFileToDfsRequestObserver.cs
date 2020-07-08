@@ -92,51 +92,52 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override AddFileToDfsResponse HandleRequest(AddFileToDfsRequest addFileToDfsRequest,
-            IChannelHandlerContext channelHandlerContext,
             MultiAddress sender,
             ICorrelationId correlationId)
         {
-            Guard.Argument(addFileToDfsRequest, nameof(addFileToDfsRequest)).NotNull();
-            Guard.Argument(sender, nameof(sender)).NotNull();
+            return null;
+            //todo
+            //Guard.Argument(addFileToDfsRequest, nameof(addFileToDfsRequest)).NotNull();
+            //Guard.Argument(sender, nameof(sender)).NotNull();
 
-            var fileTransferInformation = new DownloadFileTransferInformation(PeerSettings.Address,
-                sender, channelHandlerContext.Channel,
-                correlationId, addFileToDfsRequest.FileName, addFileToDfsRequest.FileSize);
+            //var fileTransferInformation = new DownloadFileTransferInformation(PeerSettings.Address,
+            //    sender, channelHandlerContext.Channel,
+            //    correlationId, addFileToDfsRequest.FileName, addFileToDfsRequest.FileSize);
 
-            FileTransferResponseCodeTypes responseCodeType;
-            try
-            {
-                responseCodeType = _fileTransferFactory.RegisterTransfer(fileTransferInformation);
-            }
-            catch (Exception e)
-            {
-                Logger.Error(e,
-                    "Failed to handle AddFileToDfsRequestHandler after receiving message {0}", addFileToDfsRequest);
-                responseCodeType = FileTransferResponseCodeTypes.Error;
-            }
+            //FileTransferResponseCodeTypes responseCodeType;
+            //try
+            //{
+            //    responseCodeType = _fileTransferFactory.RegisterTransfer(fileTransferInformation);
+            //}
+            //catch (Exception e)
+            //{
+            //    Logger.Error(e,
+            //        "Failed to handle AddFileToDfsRequestHandler after receiving message {0}", addFileToDfsRequest);
+            //    responseCodeType = FileTransferResponseCodeTypes.Error;
+            //}
 
-            var message = GetResponse(fileTransferInformation, responseCodeType);
+            //var message = GetResponse(fileTransferInformation, responseCodeType);
 
-            if (responseCodeType != FileTransferResponseCodeTypes.Successful)
-            {
-                return message;
-            }
+            //if (responseCodeType != FileTransferResponseCodeTypes.Successful)
+            //{
+            //    return message;
+            //}
 
-            var ctx = new CancellationTokenSource();
+            //var ctx = new CancellationTokenSource();
 
-            _fileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationId, CancellationToken.None)
-               .ContinueWith(task =>
-                {
-                    if (fileTransferInformation.ChunkIndicatorsTrue())
-                    {
-                        OnSuccessAsync(fileTransferInformation).ConfigureAwait(false).GetAwaiter().GetResult();
-                    }
+            //_fileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationId, CancellationToken.None)
+            //   .ContinueWith(task =>
+            //    {
+            //        if (fileTransferInformation.ChunkIndicatorsTrue())
+            //        {
+            //            OnSuccessAsync(fileTransferInformation).ConfigureAwait(false).GetAwaiter().GetResult();
+            //        }
 
-                    fileTransferInformation.Dispose();
-                }, ctx.Token)
-               .ConfigureAwait(false);
+            //        fileTransferInformation.Dispose();
+            //    }, ctx.Token)
+            //   .ConfigureAwait(false);
 
-            return message;
+            //return message;
         }
 
         private async Task<FileTransferResponseCodeTypes> AddFileToDfsAsync(IFileTransferInformation fileTransferInformation)

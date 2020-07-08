@@ -64,7 +64,6 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override DeltaHistoryResponse HandleRequest(DeltaHistoryRequest deltaHeightRequest,
-            IChannelHandlerContext channelHandlerContext,
             MultiAddress sender,
             ICorrelationId correlationId)
         {

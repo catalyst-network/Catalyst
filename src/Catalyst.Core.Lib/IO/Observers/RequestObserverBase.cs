@@ -56,7 +56,7 @@ namespace Catalyst.Core.Lib.IO.Observers
             logger.Verbose("{interface} instantiated", nameof(IRequestMessageObserver));
         }
 
-        protected abstract TProtoRes HandleRequest(TProtoReq messageDto, IChannelHandlerContext channelHandlerContext, MultiAddress sender, ICorrelationId correlationId);
+        protected abstract TProtoRes HandleRequest(TProtoReq messageDto, MultiAddress sender, ICorrelationId correlationId);
 
         public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
         {
@@ -68,7 +68,6 @@ namespace Catalyst.Core.Lib.IO.Observers
                 var recipientPeerId = new MultiAddress(messageDto.Payload.Address);
 
                 var response = HandleRequest(messageDto.Payload.FromProtocolMessage<TProtoReq>(),
-                    messageDto.Context,
                     recipientPeerId,
                     correlationId);
 

@@ -25,11 +25,8 @@ using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
-using DotNetty.Transport.Channels;
-using Lib.P2P.Protocols;
 using Microsoft.Extensions.Configuration;
 using MultiFormats;
 using Newtonsoft.Json;
@@ -52,7 +49,6 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         }
 
         protected override GetInfoResponse HandleRequest(GetInfoRequest getInfoRequest,
-            IChannelHandlerContext channelHandlerContext,
             MultiAddress sender,
             ICorrelationId correlationId)
         {
