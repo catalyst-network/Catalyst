@@ -27,6 +27,7 @@ using System.Linq;
 using System.Net;
 using Autofac;
 using Autofac.Configuration;
+using Catalyst.Abstractions.Config;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Protocol.Network;
@@ -36,7 +37,6 @@ using SharpRepository.Repository;
 using NUnit.Framework;
 using NSubstitute;
 using Lib.P2P;
-using Catalyst.Abstractions.Dfs.CoreApi;
 using Newtonsoft.Json.Linq;
 using MultiFormats;
 
@@ -87,7 +87,7 @@ namespace Catalyst.Node.POA.CE.Tests.UnitTests.Config
                 Id = address.PeerId
             };
 
-            var config = Substitute.For<IConfigApi>();
+            var config = Substitute.For<IDfsConfigApi>();
             var swarm = JToken.FromObject(new List<string> { $"/ip4/0.0.0.0/tcp/4100" });
             config.GetAsync("Addresses.Swarm").Returns(swarm);
             var peerSettings = new PeerSettings(configRoot, peer, config);

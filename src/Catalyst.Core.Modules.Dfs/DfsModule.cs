@@ -22,6 +22,7 @@
 #endregion
 
 using Autofac;
+using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.BlockExchange;
@@ -61,7 +62,7 @@ namespace Catalyst.Core.Modules.Dfs
             builder.RegisterType<BitSwapApi>().As<IBitSwapApi>().SingleInstance();
             builder.RegisterType<BlockRepositoryApi>().As<IBlockRepositoryApi>().SingleInstance();
             builder.RegisterType<BootstrapApi>().As<IBootstrapApi>().SingleInstance();
-            builder.RegisterType<ConfigApi>().As<IConfigApi>().SingleInstance();
+            builder.RegisterType<DfsConfigApi>().As<IDfsConfigApi>().SingleInstance();
             builder.RegisterType<DagApi>().As<IDagApi>().SingleInstance();
             builder.RegisterType<DnsApi>().As<IDnsApi>().SingleInstance();
             builder.RegisterType<UnixFsApi>().As<IUnixFsApi>().SingleInstance();

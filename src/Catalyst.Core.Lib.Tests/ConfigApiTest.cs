@@ -23,7 +23,7 @@
 
 using System;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.Dfs.CoreApi;
+using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.Config;
 using Catalyst.TestUtils;
@@ -37,7 +37,7 @@ namespace Catalyst.Core.Lib.Tests
 {
     public sealed class ConfigApiTest : FileSystemBasedTest
     {
-        private IConfigApi _configApi;
+        private IDfsConfigApi _configApi;
 
         private const string ApiAddress = "/ip4/127.0.0.1/tcp/";
         private const string GatewayAddress = "/ip4/127.0.0.1/tcp/";
@@ -47,7 +47,7 @@ namespace Catalyst.Core.Lib.Tests
         {
             this.Setup(TestContext.CurrentContext);
             var dfsOptions = new DfsOptions(Substitute.For<BlockOptions>(), Substitute.For<DiscoveryOptions>(), new RepositoryOptions(FileSystem, Constants.DfsDataSubDir), Substitute.For<KeyChainOptions>(), Substitute.For<SwarmOptions>(), Substitute.For<IDnsClient>());
-            _configApi = new ConfigApi(dfsOptions);
+            _configApi = new DfsConfigApi(dfsOptions);
         }
         
         [Test]
@@ -62,22 +62,22 @@ namespace Catalyst.Core.Lib.Tests
         public async Task Get_Scalar_Key_Value()
         {
             var api = await _configApi.GetAsync("Addresses.API");
-            Assert.That(api.Value<string>().StartsWith(ApiAddress));
+            Assert.That((bool) api.Value<string>().StartsWith(ApiAddress));
         }
 
         [Test]
         public async Task Get_Object_Key_Value()
         {
             var addresses = await _configApi.GetAsync("Addresses");
-            Assert.That(addresses["API"].Value<string>().StartsWith(ApiAddress));
-            Assert.That(addresses["Gateway"].Value<string>().StartsWith(GatewayAddress));
+            Assert.That((bool) addresses["API"].Value<string>().StartsWith(ApiAddress));
+            Assert.That((bool) addresses["Gateway"].Value<string>().StartsWith(GatewayAddress));
         }
 
         [Test]
         public void Keys_are_Case_Sensitive()
         {
             var api = _configApi.GetAsync("Addresses.API").Result;
-            Assert.That(api.Value<string>().StartsWith(ApiAddress));
+            Assert.That((bool) api.Value<string>().StartsWith(ApiAddress));
 
             ExceptionAssert.Throws<Exception>(() =>
             {

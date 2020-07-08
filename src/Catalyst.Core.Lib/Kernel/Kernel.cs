@@ -170,10 +170,9 @@ namespace Catalyst.Core.Lib.Kernel
             return this;
         }
 
-        public Kernel WithConfigWriters(IConfigCopier configCopier, IConfigEditor configEditor)
+        public Kernel WithConfigCopier(IConfigCopier configCopier)
         {
             _configCopier = configCopier;
-            _configEditor = configEditor;
             return this;
         }
 

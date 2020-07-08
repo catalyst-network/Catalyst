@@ -28,6 +28,7 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Reflection;
+using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Keystore;
@@ -108,7 +109,7 @@ namespace Catalyst.Core.Lib.P2P
         ///     Set attributes
         /// </summary>
         /// <param name="rootSection"></param>
-        public PeerSettings(IConfigurationRoot rootSection, Peer localPeer, IConfigApi configApi)
+        public PeerSettings(IConfigurationRoot rootSection, Peer localPeer, IDfsConfigApi dfsConfigApi)
         {
             Guard.Argument(rootSection, nameof(rootSection)).NotNull();
 
@@ -128,7 +129,7 @@ namespace Catalyst.Core.Lib.P2P
 
             var publicIpAddress = IPAddress.Parse(section.GetSection("PublicIpAddress").Value);
 
-            var json = configApi.GetAsync("Addresses.Swarm").ConfigureAwait(false).GetAwaiter().GetResult();
+            var json = dfsConfigApi.GetAsync("Addresses.Swarm").ConfigureAwait(false).GetAwaiter().GetResult();
             List<MultiAddress> addresses = new List<MultiAddress>();
             foreach (string a in json)
             {

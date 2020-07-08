@@ -81,6 +81,7 @@ using MultiFormats;
 using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Abstractions.Sync.Interfaces;
 using System.Net;
+using Catalyst.Abstractions.Config;
 using Catalyst.Core.Modules.Web3.Options;
 
 namespace Catalyst.TestUtils
@@ -208,7 +209,7 @@ namespace Catalyst.TestUtils
             _localPeer = _scope.Resolve<Lib.P2P.Peer>();
             var synchronizer = _scope.Resolve<ISynchroniser>();
             var peerSettings = _scope.Resolve<IPeerSettings>();
-            var config = _scope.Resolve<IConfigApi>();
+            var config = _scope.Resolve<IDfsConfigApi>();
             _dfsService = _scope.Resolve<IDfsService>();
 
             await _dfsService.StartAsync().ConfigureAwait(false);

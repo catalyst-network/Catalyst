@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.Keystore;
 
 namespace Catalyst.Abstractions.Dfs.CoreApi
@@ -72,7 +73,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// <value>
         ///   An object that implements <see cref="IConfigApi"/>.
         /// </value>
-        IConfigApi ConfigApi { get; }
+        IDfsConfigApi DfsConfigApi { get; }
 
         /// <summary>
         ///   Provides access to the Dag API.

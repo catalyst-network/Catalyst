@@ -47,7 +47,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         ///  Get all the configuration settings.
         /// </summary>
         [HttpGet, HttpPost, Route("config/show")]
-        public Task<JObject> GetAllKeys() { return DfsService.ConfigApi.GetAsync(Cancel); }
+        public Task<JObject> GetAllKeys() { return DfsService.DfsConfigApi.GetAsync(Cancel); }
 
         /// <summary>
         ///   Gets or sets the configuration setting.
@@ -67,7 +67,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
             {
                 case 1:
                 {
-                    var value = await DfsService.ConfigApi.GetAsync(arg[0], Cancel);
+                    var value = await DfsService.DfsConfigApi.GetAsync(arg[0], Cancel);
                     return new ConfigDetailDto
                     {
                         Key = arg[0],
@@ -77,7 +77,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
                 case 2 when json:
                 {
                     var value = JToken.Parse(arg[1]);
-                    await DfsService.ConfigApi.SetAsync(arg[0], value, Cancel);
+                    await DfsService.DfsConfigApi.SetAsync(arg[0], value, Cancel);
                     return new ConfigDetailDto
                     {
                         Key = arg[0],
@@ -85,7 +85,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
                     };
                 }
                 case 2:
-                    await DfsService.ConfigApi.SetAsync(arg[0], arg[1], Cancel);
+                    await DfsService.DfsConfigApi.SetAsync(arg[0], arg[1], Cancel);
                     return new ConfigDetailDto
                     {
                         Key = arg[0],
@@ -117,7 +117,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
                     using (var reader = new JsonTextReader(text))
                     {
                         var json = await JObject.LoadAsync(reader);
-                        await DfsService.ConfigApi.ReplaceAsync(json);
+                        await DfsService.DfsConfigApi.ReplaceAsync(json);
                     }
                 }
             }

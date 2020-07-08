@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Options;
 using MultiFormats;
@@ -50,10 +51,10 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             //"/ip4/192.168.1.232/tcp/4001/ipfs/QmaZtpXfM713jTpLACJ2njMm7Qi4D2FNrAjZKM1e6L9bLM"
         };
 
-        private readonly IConfigApi _configApi;
+        private readonly IDfsConfigApi _configApi;
         private readonly DiscoveryOptions _discoveryOptions;
 
-        public BootstrapApi(IConfigApi configApi, DiscoveryOptions discoveryOptions)
+        public BootstrapApi(IDfsConfigApi configApi, DiscoveryOptions discoveryOptions)
         {
             _configApi = configApi;
             _discoveryOptions = discoveryOptions;

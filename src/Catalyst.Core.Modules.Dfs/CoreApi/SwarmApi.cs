@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Common.Logging;
 using Lib.P2P;
@@ -39,9 +40,9 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         private readonly ISwarmService _swarmService;
 
         private static readonly MultiAddress[] DefaultFilters = { };
-        private readonly IConfigApi _configApi;
+        private readonly IDfsConfigApi _configApi;
 
-        public SwarmApi(ISwarmService swarmService, IConfigApi configApi)
+        public SwarmApi(ISwarmService swarmService, IDfsConfigApi configApi)
         {
             _swarmService = swarmService;
             _configApi = configApi;

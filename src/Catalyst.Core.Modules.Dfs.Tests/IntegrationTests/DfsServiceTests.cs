@@ -256,36 +256,36 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         [Test]
         public async Task Start_NoListeners()
         {
-            var swarm = await _dfs1.ConfigApi.GetAsync("Addresses.Swarm");
+            var swarm = await _dfs1.DfsConfigApi.GetAsync("Addresses.Swarm");
             try
             {
-                await _dfs1.ConfigApi.SetAsync("Addresses.Swarm", "[]");
+                await _dfs1.DfsConfigApi.SetAsync("Addresses.Swarm", "[]");
                 await _dfs1.StartAsync();
             }
             finally
             {
                 await _dfs1.StopAsync();
-                await _dfs1.ConfigApi.SetAsync("Addresses.Swarm", swarm);
+                await _dfs1.DfsConfigApi.SetAsync("Addresses.Swarm", swarm);
             }
         }
 
         [Test]
         public async Task Start_InvalidListener()
         {
-            var swarm = await _dfs1.ConfigApi.GetAsync("Addresses.Swarm");
+            var swarm = await _dfs1.DfsConfigApi.GetAsync("Addresses.Swarm");
             try
             {
                 // 1 - missing ip address
                 // 2 - invalid protocol name
                 // 3 - okay
                 var values = JToken.Parse("['/tcp/0', '/foo/bar', '/ip4/0.0.0.0/tcp/0']");
-                await _dfs1.ConfigApi.SetAsync("Addresses.Swarm", values);
+                await _dfs1.DfsConfigApi.SetAsync("Addresses.Swarm", values);
                 await _dfs1.StartAsync();
             }
             finally
             {
                 await _dfs1.StopAsync();
-                await _dfs1.ConfigApi.SetAsync("Addresses.Swarm", swarm);
+                await _dfs1.DfsConfigApi.SetAsync("Addresses.Swarm", swarm);
             }
         }
 

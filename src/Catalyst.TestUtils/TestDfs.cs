@@ -80,7 +80,7 @@ namespace Catalyst.TestUtils
             var scope = container.BeginLifetimeScope(nodeGuid);
             var dfsService = scope.Resolve<IDfsService>();
 
-            dfsService.ConfigApi.SetAsync(
+            dfsService.DfsConfigApi.SetAsync(
                 "Addresses.Swarm",
                 JToken.FromObject(new[]
                 {

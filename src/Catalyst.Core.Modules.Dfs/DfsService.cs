@@ -26,7 +26,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.Cryptography;
+using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.BlockExchange;
 using Catalyst.Abstractions.Dfs.CoreApi;
@@ -35,8 +35,6 @@ using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
 using Catalyst.Abstractions.P2P.Repository;
-using Catalyst.Core.Lib.P2P;
-using Catalyst.Core.Modules.Dfs.BlockExchange;
 using Common.Logging;
 using Common.Logging.Serilog;
 using Lib.P2P;
@@ -79,7 +77,7 @@ namespace Catalyst.Core.Modules.Dfs
             IPubSubService pubSubService,
             ISwarmService swarmService,
             IBootstrapApi bootstrapApi,
-            IConfigApi configApi,
+            IDfsConfigApi dfsConfigApi,
             IBitSwapApi bitSwapApi,
             IBlockApi blockApi,
             IBlockRepositoryApi blockRepositoryApi,
@@ -111,7 +109,7 @@ namespace Catalyst.Core.Modules.Dfs
             SwarmService = swarmService;
 
             BootstrapApi = bootstrapApi;
-            ConfigApi = configApi;
+            DfsConfigApi = dfsConfigApi;
             BitSwapApi = bitSwapApi;
             BlockApi = blockApi;
             BlockRepositoryApi = blockRepositoryApi;
@@ -253,7 +251,7 @@ namespace Catalyst.Core.Modules.Dfs
             await Task.WhenAll(tasks.Select(t => t())).ConfigureAwait(false);
 
             // Starting listening to the swarm.
-            var json = await ConfigApi.GetAsync("Addresses.Swarm").ConfigureAwait(false);
+            var json = await DfsConfigApi.GetAsync("Addresses.Swarm").ConfigureAwait(false);
             var numberListeners = 0;
             foreach (string a in json)
             {
@@ -486,7 +484,7 @@ namespace Catalyst.Core.Modules.Dfs
         public IBootstrapApi BootstrapApi { get; set; }
 
         /// <inheritdoc />
-        public IConfigApi ConfigApi { get; set; }
+        public IDfsConfigApi DfsConfigApi { get; set; }
 
         /// <inheritdoc />
         public IDagApi DagApi { get; set; }
