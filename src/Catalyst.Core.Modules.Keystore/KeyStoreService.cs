@@ -357,7 +357,7 @@ namespace Catalyst.Core.Modules.Keystore
         ///     a type and the DER encoding of the PKCS Subject Public Key Info.
         /// </remarks>
         /// <seealso href="https://tools.ietf.org/html/rfc5280#section-4.1.2.7" />
-        public async Task<string> GetIpfsPublicKeyAsync(string name, CancellationToken cancel = default)
+        public async Task<string> GetDfsPublicKeyAsync(string name, CancellationToken cancel = default)
         {
             string result = null;
             var ekey = await _store.TryGetAsync(name, cancel).ConfigureAwait(false);
@@ -564,19 +564,6 @@ namespace Catalyst.Core.Modules.Keystore
             AsymmetricKeyParameter kp = null;
             UseEncryptedKey(key, pkey => { kp = pkey; });
             return kp;
-        }
-
-        public async Task<AsymmetricKeyParameter> GetPublicKeyAsync(string name, CancellationToken cancel = default)
-        {
-            var key = await _store.TryGetAsync(name, cancel).ConfigureAwait(false);
-            if (key == null)
-            {
-                throw new KeyNotFoundException($"The key '{name}' does not exist.");
-            }
-
-            AsymmetricCipherKeyPair kp = null;
-            UseEncryptedKey(key, pkey => { kp = GetKeyPairFromPrivateKey(pkey); });
-            return kp.Public;
         }
 
         private void UseEncryptedKey(EncryptedKey key, Action<AsymmetricKeyParameter> action)

@@ -39,7 +39,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc
         public void Null_Message_Throws_Exception()
         {
             var channelHandlerContext = Substitute.For<IChannelHandlerContext>();
-            var senderPeerId = PeerIdHelper.GetPeerId();
+            var sender = MultiAddressHelper.GetAddress();
             var correlationId = CorrelationId.GenerateCorrelationId();
 
             var logger = Substitute.For<ILogger>();
@@ -47,25 +47,25 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc
 
             Assert.Throws<ArgumentNullException>(() => responseObserver
                .HandleResponseObserver(null, channelHandlerContext,
-                    senderPeerId, correlationId));
+                    sender, correlationId));
         }
 
+        //[Test]
+        //public void Null_ChannelHandlerContext_Throws_Exception()
+        //{
+        //    var senderentifier = MultiAddressHelper.GetAddress();
+        //    var correlationId = CorrelationId.GenerateCorrelationId();
+
+        //    var logger = Substitute.For<ILogger>();
+        //    var responseObserver = new TestRpcResponseObserver(logger);
+
+        //    Assert.Throws<ArgumentNullException>(() => responseObserver
+        //       .HandleResponseObserver(new VersionResponse(), null,
+        //            senderentifier, correlationId));
+        //}
+
         [Test]
-        public void Null_ChannelHandlerContext_Throws_Exception()
-        {
-            var senderPeerIdentifier = PeerIdHelper.GetPeerId();
-            var correlationId = CorrelationId.GenerateCorrelationId();
-
-            var logger = Substitute.For<ILogger>();
-            var responseObserver = new TestRpcResponseObserver(logger);
-
-            Assert.Throws<ArgumentNullException>(() => responseObserver
-               .HandleResponseObserver(new VersionResponse(), null,
-                    senderPeerIdentifier, correlationId));
-        }
-
-        [Test]
-        public void Null_SenderPeerIdentifierContext_Throws_Exception()
+        public void Null_senderentifierContext_Throws_Exception()
         {
             var channelHandlerContext = Substitute.For<IChannelHandlerContext>();
             var correlationId = CorrelationId.GenerateCorrelationId();

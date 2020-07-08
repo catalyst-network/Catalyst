@@ -41,7 +41,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         private static readonly MultiAddress[] DefaultFilters = { };
         private readonly IConfigApi _configApi;
 
-        public SwarmApi(SwarmService swarmService, IConfigApi configApi)
+        public SwarmApi(ISwarmService swarmService, IConfigApi configApi)
         {
             _swarmService = swarmService;
             _configApi = configApi;

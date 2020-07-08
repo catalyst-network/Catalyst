@@ -24,55 +24,76 @@
 using System.Collections.Generic;
 using System.Net;
 using System.Reflection;
+using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.EventLoop;
+using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Abstractions.IO.Transport;
 using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.IO.Transport;
-using Catalyst.Protocol.Peer;
+using Catalyst.Protocol.Wire;
 using Google.Protobuf;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P
 {
-    public sealed class PeerClient : UdpClient, IPeerClient
+    public sealed class DotnettyPeerClient : UdpClient, IPeerClient, ISocketClient
     {
         private readonly IPeerSettings _peerSettings;
+        private readonly IBroadcastManager _broadcastManager;
 
         /// <param name="clientChannelFactory">A factory used to build the appropriate kind of channel for a udp client.</param>
         /// <param name="eventLoopGroupFactory"></param>
         /// <param name="peerSettings"></param>
-        public PeerClient(IUdpClientChannelFactory clientChannelFactory,
+        public DotnettyPeerClient(IUdpClientChannelFactory clientChannelFactory,
             IUdpClientEventLoopGroupFactory eventLoopGroupFactory,
+            IBroadcastManager broadcastManager,
             IPeerSettings peerSettings)
             : base(clientChannelFactory,
                 Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType),
                 eventLoopGroupFactory)
         {
+            _broadcastManager = broadcastManager;
             _peerSettings = peerSettings;
         }
 
         public override async Task StartAsync()
         {
-            var bindingEndpoint = new IPEndPoint(_peerSettings.BindAddress, IPEndPoint.MinPort);
-            var observableChannel = await ChannelFactory.BuildChannelAsync(EventLoopGroupFactory,
-                    bindingEndpoint.Address,
-                    bindingEndpoint.Port)
-               .ConfigureAwait(false);
+            await StartAsync(CancellationToken.None).ConfigureAwait(false);
+        }
+
+        public async Task StartAsync(CancellationToken cancellationToken)
+        {
+            var observableChannel = await ChannelFactory.BuildChannelAsync(EventLoopGroupFactory, _peerSettings.Address).ConfigureAwait(false);
             Channel = observableChannel.Channel;
         }
 
-        public void SendMessageToPeers(IMessage message, IEnumerable<PeerId> peers)
+        public Task SendMessageToPeersAsync(IMessage message, IEnumerable<MultiAddress> peers)
         {
-            var protocolMessage = message.ToProtocolMessage(_peerSettings.PeerId);
+            var protocolMessage = message.ToProtocolMessage(_peerSettings.Address);
             foreach (var peer in peers)
             {
                 SendMessage(new MessageDto(
                     protocolMessage,
                     peer));
             }
+            return Task.CompletedTask;
+        }
+
+        public Task SendMessageAsync<T>(IMessageDto<T> message) where T : IMessage<T>
+        {
+            SendMessage(message);
+            return Task.CompletedTask;
+        }
+
+        public async Task BroadcastAsync(ProtocolMessage message)
+        {
+            await _broadcastManager.BroadcastAsync(message).ConfigureAwait(false);
         }
     }
 }

@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Catalyst.Protocol.Peer;
 using DnsClient;
+using MultiFormats;
 
 namespace Catalyst.Abstractions.Network
 {
@@ -47,6 +48,6 @@ namespace Catalyst.Abstractions.Network
         /// </summary>
         /// <param name="urls"></param>
         /// <returns></returns>
-        Task<IEnumerable<PeerId>> GetSeedNodesFromDnsAsync(IEnumerable<string> urls);
+        Task<IEnumerable<MultiAddress>> GetSeedNodesFromDnsAsync(IEnumerable<string> urls);
     }
 }

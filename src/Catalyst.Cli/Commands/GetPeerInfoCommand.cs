@@ -40,8 +40,7 @@ namespace Catalyst.Cli.Commands
         {
             return new GetPeerInfoRequest
             {
-                PublicKey = option.PublicKey.ToUtf8ByteString(),
-                Ip = option.IpAddress.ToUtf8ByteString()
+                Address = option.Address
             };
         }
     }

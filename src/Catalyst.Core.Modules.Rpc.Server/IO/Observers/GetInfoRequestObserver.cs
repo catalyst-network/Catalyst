@@ -29,7 +29,9 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
+using Lib.P2P.Protocols;
 using Microsoft.Extensions.Configuration;
+using MultiFormats;
 using Newtonsoft.Json;
 using Serilog;
 
@@ -42,20 +44,20 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         private readonly IConfigurationRoot _config;
 
         public GetInfoRequestObserver(IPeerSettings peerSettings,
+            IPeerClient peerClient,
             IConfigurationRoot config,
-            ILogger logger) : base(logger, peerSettings)
+            ILogger logger) : base(logger, peerSettings, peerClient)
         {
             _config = config;
         }
 
         protected override GetInfoResponse HandleRequest(GetInfoRequest getInfoRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(getInfoRequest, nameof(getInfoRequest)).NotNull();
-            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
             Logger.Debug("received message of type GetInfoRequest");
 
             Logger.Debug("message content is {0}", getInfoRequest);

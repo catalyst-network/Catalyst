@@ -67,7 +67,7 @@ namespace Catalyst.Cli.Commands
                 request.FileSize = (ulong) fileStream.Length;
             }
 
-            var protocolMessage = request.ToProtocolMessage(SenderPeerId);
+            var protocolMessage = request.ToProtocolMessage(sender);
             var requestMessage = new MessageDto(
                 protocolMessage,
                 RecipientPeerId
@@ -75,7 +75,7 @@ namespace Catalyst.Cli.Commands
 
             IUploadFileInformation fileTransfer = new UploadFileTransferInformation(
                 File.Open(options.File, FileMode.Open),
-                SenderPeerId,
+                sender,
                 RecipientPeerId,
                 Target.Channel,
                 requestMessage.CorrelationId);

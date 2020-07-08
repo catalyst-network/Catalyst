@@ -55,7 +55,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 
             var deltaHeightResponse = new LatestDeltaHashResponse();
             var protocolMessage =
-                deltaHeightResponse.ToProtocolMessage(PeerIdHelper.GetPeerId("sender"),
+                deltaHeightResponse.ToProtocolMessage(MultiAddressHelper.GetAddress("sender"),
                     CorrelationId.GenerateCorrelationId());
 
             var deltaHeightResponseObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();

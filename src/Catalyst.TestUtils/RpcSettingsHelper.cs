@@ -32,8 +32,7 @@ namespace Catalyst.TestUtils
         public static IRpcServerSettings GetRpcServerSettings(int port = 42051)
         {
             var settings = Substitute.For<IRpcServerSettings>();
-            settings.Port.Returns(port);
-            settings.BindAddress.Returns(IPAddress.Loopback);
+            settings.Address.Returns($"/ip4/192.168.0.181/tcp/{port}/ipfs/18n3naE9kBZoVvgYMV6saMZdwu2yu3QMzKa2BDkb5C5pcuhtrH1G9HHbztbbxA8tGmf4");
             return settings;
         }
     }

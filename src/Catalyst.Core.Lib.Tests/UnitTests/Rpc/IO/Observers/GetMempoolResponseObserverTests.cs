@@ -38,7 +38,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         public void Null_Mempool_Throws_Exception()
         {
             var channelHandlerContext = Substitute.For<IChannelHandlerContext>();
-            var senderPeerIdentifier = PeerIdHelper.GetPeerId();
+            var senderentifier = MultiAddressHelper.GetAddress();
             var correlationId = CorrelationId.GenerateCorrelationId();
 
             var logger = Substitute.For<ILogger>();
@@ -46,7 +46,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             Assert.Throws<ArgumentNullException>(() => getMempoolResponseObserver
                .HandleResponseObserver(null, channelHandlerContext,
-                    senderPeerIdentifier, correlationId));
+                    senderentifier, correlationId));
         }
     }
 }

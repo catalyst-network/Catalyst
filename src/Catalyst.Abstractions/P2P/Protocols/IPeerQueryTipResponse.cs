@@ -23,12 +23,13 @@
 
 using Catalyst.Protocol.Peer;
 using Lib.P2P;
+using MultiFormats;
 
 namespace Catalyst.Abstractions.P2P.Protocols
 {
     public interface IPeerQueryTipResponse
     {
-        PeerId PeerId { get; }
+        MultiAddress Address { get; }
         Cid DeltaHash { get; }
     }
 }

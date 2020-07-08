@@ -24,12 +24,13 @@
 using System.Collections.Generic;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 
 namespace Catalyst.Abstractions.P2P.Protocols
 {
     public interface IPeerDeltaHistoryResponse
     {
-        PeerId PeerId { get; }
+        MultiAddress Address { get; }
         ICollection<DeltaIndex> DeltaCid { get; }
     }
 }

@@ -23,15 +23,16 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Transport.Channels;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Transport.Bootstrapping;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.IO.Transport.Channels
 {
@@ -47,13 +48,11 @@ namespace Catalyst.Core.Lib.IO.Transport.Channels
         }
         
         public abstract Task<IObservableChannel> BuildChannelAsync(IEventLoopGroupFactory eventLoopGroupFactory,
-            IPAddress targetAddress,
-            int targetPort,
+            MultiAddress address,
             X509Certificate2 certificate = null);
 
         protected async Task<IChannel> BootstrapAsync(IEventLoopGroupFactory handlerEventLoopGroupFactory,
-            IPAddress targetAddress,
-            int targetPort,
+            MultiAddress address,
             X509Certificate2 certificate)
         {
             var supervisorLoopGroup = ((ITcpServerEventLoopGroupFactory) handlerEventLoopGroupFactory)
@@ -66,7 +65,7 @@ namespace Catalyst.Core.Lib.IO.Transport.Channels
                .Option(ChannelOption.SoBacklog, _backLogValue)
                .Handler(new LoggingHandler(LogLevel.DEBUG))
                .ChildHandler(channelHandler)
-               .BindAsync(targetAddress, targetPort)
+               .BindAsync(address.GetIpAddress(), address.GetPort())
                .ConfigureAwait(false);
         }
     }

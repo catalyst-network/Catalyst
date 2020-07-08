@@ -36,6 +36,8 @@ namespace Lib.P2P.Routing
         /// </summary>
         ISwarmService SwarmService { get; set; }
 
+        RoutingTable RoutingTable { get; }
+
         /// <summary>
         ///   The number of closer peers to return.
         /// </summary>

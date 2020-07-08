@@ -30,27 +30,28 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils.Protocol;
 using Google.Protobuf;
+using MultiFormats;
 
 namespace Catalyst.TestUtils
 {
     public static class ProtocolMessageExtensions
     {
         public static ProtocolMessage ToSignedProtocolMessage(this IMessage proto,
-            PeerId senderId,
+            MultiAddress sender,
             ISignature signature = default,
             SigningContext signingContext = default,
             ICorrelationId correlationId = default)
         {
-            return ToSignedProtocolMessage(proto, senderId, signature?.SignatureBytes, signingContext, correlationId);
+            return ToSignedProtocolMessage(proto, sender, signature?.SignatureBytes, signingContext, correlationId);
         }
 
         public static ProtocolMessage ToSignedProtocolMessage(this IMessage proto,
-            PeerId senderId = default,
+            MultiAddress sender = default,
             byte[] signature = default,
             SigningContext signingContext = default,
             ICorrelationId correlationId = default)
         {
-            var peerId = senderId ?? PeerIdHelper.GetPeerId("sender");
+            var peerId = sender ?? MultiAddressHelper.GetAddress("sender");
             var protocolMessage = proto.ToProtocolMessage(peerId, 
                 correlationId ?? CorrelationId.GenerateCorrelationId());
             var newSignature = SignatureHelper.GetSignature(signature, signingContext);

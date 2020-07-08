@@ -93,7 +93,7 @@ namespace Catalyst.Core.Modules.Rpc.Client
             }
 
             var handler = _handlers[observer.Payload.TypeUrl];
-            handler.HandleResponseObserver(message, observer.Context, observer.Payload.PeerId,
+            handler.HandleResponseObserver(message, observer.Context, observer.Payload.Address,
                 observer.Payload.CorrelationId.ToCorrelationId());
 
             return message;
@@ -101,8 +101,7 @@ namespace Catalyst.Core.Modules.Rpc.Client
 
         public override async Task StartAsync()
         {
-            var socket = await _channelFactory.BuildChannelAsync(EventLoopGroupFactory, _clientConfig.HostAddress, _clientConfig.Port,
-                _certificate).ConfigureAwait(false);
+            var socket = await _channelFactory.BuildChannelAsync(EventLoopGroupFactory, _clientConfig.Address, _certificate).ConfigureAwait(false);
 
             _socketMessageStream = socket.MessageStream;
 

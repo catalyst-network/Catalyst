@@ -22,6 +22,7 @@
 #endregion
 
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 
 namespace Catalyst.Abstractions.P2P
 {
@@ -33,6 +34,6 @@ namespace Catalyst.Abstractions.P2P
         /// <summary>Validates the peer.</summary>
         /// <param name="peerId">The Peer Id <see cref="PeerId"/></param>
         /// <returns>[true] if valid [false] if invalid</returns>
-        bool ValidatePeerIdFormat(PeerId peerId);
+        bool ValidatePeerIdFormat(MultiAddress Address);
     }
 }

@@ -55,12 +55,12 @@ namespace Lib.P2P.Routing
         /// <summary>
         ///  Routing information on peers.
         /// </summary>
-        public RoutingTable RoutingTable;
+        public RoutingTable RoutingTable { private set; get; }
 
         /// <summary>
         ///   Peers that can provide some content.
         /// </summary>
-        public ContentRouter ContentRouter;
+        public ContentRouter ContentRouter { private set; get; }
 
         /// <summary>
         ///   The number of closer peers to return.

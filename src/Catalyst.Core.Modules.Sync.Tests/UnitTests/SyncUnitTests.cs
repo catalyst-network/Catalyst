@@ -33,8 +33,6 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Core.Abstractions.Sync;
@@ -43,7 +41,6 @@ using Catalyst.Core.Lib.DAO.Ledger;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Lib.Service;
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Core.Modules.Dfs.Extensions;
@@ -52,41 +49,34 @@ using Catalyst.Core.Modules.Sync.Manager;
 using Catalyst.Core.Modules.Sync.Watcher;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.IPPN;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
-using DotNetty.Transport.Channels;
+using LibP2P = Lib.P2P;
 using FluentAssertions;
 using Google.Protobuf;
 using Lib.P2P;
-using Microsoft.Reactive.Testing;
 using MultiFormats.Registry;
 using NSubstitute;
 using SharpRepository.InMemoryRepository;
 using Serilog;
-using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
-using Catalyst.Core.Lib.P2P.Repository;
 using NUnit.Framework;
+using MultiFormats;
+using Catalyst.Abstractions.Dfs.CoreApi;
+using System.Reactive.Concurrency;
+using NUnit.Framework.Internal;
+using ILogger = Serilog.ILogger;
 
 namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 {
     public class SyncUnitTests
     {
-        private TestScheduler _testScheduler;
         private IHashProvider _hashProvider;
         private IPeerSettings _peerSettings;
-        private IDeltaDfsReader _deltaDfsReader;
-        private ILedger _ledger;
         private IPeerClient _peerClient;
         private IDeltaIndexService _deltaIndexService;
-        private IPeerRepository _peerRepository;
 
-        private IPeerService _peerService;
-
-        private IP2PMessageObserver _deltaHeightResponseObserver;
         private ReplaySubject<IObserverDto<ProtocolMessage>> _deltaHeightReplaySubject;
 
-        private IP2PMessageObserver _deltaHistoryResponseObserver;
         private ReplaySubject<IObserverDto<ProtocolMessage>> _deltaHistoryReplaySubject;
 
         private IMapperProvider _mapperProvider;
@@ -108,25 +98,25 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
         [SetUp]
         public void Init()
         {
+            var peerService = Substitute.For<IPeerService>();
+
+            var peers = new List<LibP2P.Peer>();
+            Enumerable.Range(0, 5).Select(x => MultiAddressHelper.GetAddress(x.ToString(), port: x)).Select(x => new LibP2P.Peer { Id = x.PeerId, ConnectedAddress = x }).ToList().ForEach(peers.Add);
+
+            var swarmApi = Substitute.For<ISwarmApi>();
+            swarmApi.PeersAsync().Returns(peers);
+
             _cancellationToken = new CancellationToken();
 
             _manualResetEventSlim = new ManualResetEventSlim(false);
 
-            _testScheduler = new TestScheduler();
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
             _peerSettings = Substitute.For<IPeerSettings>();
-            _peerSettings.PeerId.Returns(PeerIdHelper.GetPeerId());
-
-            _deltaDfsReader = Substitute.For<IDeltaDfsReader>();
-            _deltaDfsReader.TryReadDeltaFromDfs(Arg.Any<Cid>(), out Arg.Any<Delta>()).Returns(x => true);
+            _peerSettings.Address.Returns(MultiAddressHelper.GetAddress());
 
             _deltaCache = Substitute.For<IDeltaCache>();
             _deltaCache.GenesisHash.Returns("bafk2bzacecji5gcdd6lxsoazgnbg46c3vttjwwkptiw27enachziizhhkir2w".ToCid());
-
-            _ledger = Substitute.For<ILedger>();
-
-            _peerService = Substitute.For<IPeerService>();
 
             _deltaHashProvider = new DeltaHashProvider(_deltaCache, Substitute.For<IDeltaIndexService>(), Substitute.For<ILogger>());
 
@@ -134,7 +124,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
             _deltaIndexService.Add(new DeltaIndexDao { Cid = _hashProvider.ComputeUtf8MultiHash("0").ToCid(), Height = 0 });
 
             _peerClient = Substitute.For<IPeerClient>();
-            ModifyPeerClient<LatestDeltaHashRequest>((request, senderPeerIdentifier) =>
+            ModifyPeerClient<LatestDeltaHashRequest>((request, senderentifier) =>
             {
                 var deltaHeightResponse = new LatestDeltaHashResponse
                 {
@@ -142,26 +132,20 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
                     {
                         Cid = _hashProvider.ComputeUtf8MultiHash(_syncTestHeight.ToString()).ToCid().ToArray()
                            .ToByteString(),
-                        Height = (uint)_syncTestHeight
+                        Height = (uint) _syncTestHeight
                     }
                 };
 
-                _deltaHeightReplaySubject.OnNext(new ObserverDto(Substitute.For<IChannelHandlerContext>(),
-                    deltaHeightResponse.ToProtocolMessage(senderPeerIdentifier, CorrelationId.GenerateCorrelationId())));
+                _deltaHeightReplaySubject.OnNext(new ObserverDto(null, deltaHeightResponse.ToProtocolMessage(senderentifier, CorrelationId.GenerateCorrelationId())));
             });
 
-            ModifyPeerClient<DeltaHistoryRequest>((request, senderPeerIdentifier) =>
+            ModifyPeerClient<DeltaHistoryRequest>((request, senderentifier) =>
             {
-                var data = GenerateSampleData((int)request.Height, (int)request.Range, (int)_syncTestHeight);
+                var data = GenerateSampleData((int) request.Height, (int) request.Range, (int) _syncTestHeight);
                 _deltaIndexService.Add(data.DeltaIndex.Select(x => DeltaIndexDao.ToDao<DeltaIndex>(x, _mapperProvider)));
 
-                _deltaHistoryReplaySubject.OnNext(new ObserverDto(Substitute.For<IChannelHandlerContext>(),
-                    data
-                       .ToProtocolMessage(senderPeerIdentifier, CorrelationId.GenerateCorrelationId())));
+                _deltaHistoryReplaySubject.OnNext(new ObserverDto(null, data.ToProtocolMessage(senderentifier, CorrelationId.GenerateCorrelationId())));
             });
-
-            _peerRepository = new PeerRepository(new InMemoryRepository<Peer, string>());
-            Enumerable.Repeat(new Peer { PeerId = PeerIdHelper.GetPeerId() }, 5).ToList().ForEach(_peerRepository.Add);
 
             _deltaHeightReplaySubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1);
             _deltaHistoryReplaySubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1);
@@ -169,7 +153,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
             var mergeMessageStreams = _deltaHeightReplaySubject.AsObservable()
                .Merge(_deltaHistoryReplaySubject.AsObservable());
 
-            _peerService.MessageStream.Returns(mergeMessageStreams);
+            peerService.MessageStream.Returns(mergeMessageStreams);
 
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
             _deltaHashProvider.TryUpdateLatestHash(Arg.Any<Cid>(), Arg.Any<Cid>()).Returns(true);
@@ -178,12 +162,19 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 
             _userOutput = Substitute.For<IUserOutput>();
 
-            _deltaHeightWatcher = new DeltaHeightWatcher(_peerClient, _peerRepository, _peerService, minimumPeers: 0);
+            _deltaHeightWatcher = new DeltaHeightWatcher(_peerClient, swarmApi, peerService);
 
             var dfsService = Substitute.For<IDfsService>();
 
-            _peerSyncManager = new PeerSyncManager(_peerClient, _peerRepository,
-                _peerService, _userOutput, _deltaHeightWatcher, Substitute.For<IDfsService>(), 0.7, 0);
+            _peerSyncManager = new PeerSyncManager(_peerClient, peerService, _userOutput, _deltaHeightWatcher, swarmApi, Substitute.For<ILogger>(), 0.7, 0);
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _deltaIndexService.Dispose();
+            _deltaHeightWatcher.Dispose();
+            _peerSyncManager.Dispose();
         }
 
         private DeltaHistoryResponse GenerateSampleData(int height, int range, int maxHeight = -1)
@@ -202,7 +193,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
                 deltaIndexList.Add(new DeltaIndex
                 {
                     Cid = ByteString.CopyFrom(_hashProvider.ComputeUtf8MultiHash(i.ToString()).ToCid().ToArray()),
-                    Height = (uint)i
+                    Height = (uint) i
                 });
             }
 
@@ -210,15 +201,15 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
             return deltaHeightResponse;
         }
 
-        private void ModifyPeerClient<TRequest>(Action<TRequest, PeerId> callback) where TRequest : IMessage<TRequest>
+        private void ModifyPeerClient<TRequest>(Action<TRequest, MultiAddress> callback) where TRequest : IMessage<TRequest>
         {
             _peerClient.When(x =>
-                x.SendMessageToPeers(
-                    Arg.Is<IMessage>(y => y.Descriptor.ClrType.Name.EndsWith(typeof(TRequest).Name)), Arg.Any<IEnumerable<PeerId>>())).Do(
+                x.SendMessageToPeersAsync(
+                    Arg.Is<TRequest>(y => y.Descriptor.ClrType.Name.EndsWith(typeof(TRequest).Name)), Arg.Any<IEnumerable<MultiAddress>>())).Do(
                 z =>
                 {
-                    var request = (TRequest)z[0];
-                    var peers = (IEnumerable<PeerId>)z[1];
+                    var request = (TRequest) z[0];
+                    var peers = (IEnumerable<MultiAddress>) z[1];
                     foreach (var peer in peers)
                     {
                         callback.Invoke(request, peer);
@@ -230,30 +221,30 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
         public async Task StartAsync_Should_Start_Sync()
         {
             _deltaHeightWatcher = Substitute.For<IDeltaHeightWatcher>();
-            _deltaHeightWatcher.GetHighestDeltaIndexAsync().Returns(new DeltaIndex { Cid = ByteString.Empty, Height = 10000 });
+            _deltaHeightWatcher.WaitForDeltaIndexAsync(Arg.Any<TimeSpan>(), Arg.Any<CancellationToken>()).Returns(new DeltaIndex { Cid = ByteString.Empty, Height = 10000 });
 
-            var sync = new Synchroniser(new SyncState(), _peerSyncManager, _deltaCache, _deltaHeightWatcher, _deltaHashProvider, _deltaDfsReader,
+            var sync = new Synchroniser(new SyncState(), _peerSyncManager, _deltaCache, _deltaHeightWatcher, _deltaHashProvider,
                 _deltaIndexService, _mapperProvider, _userOutput, Substitute.For<ILogger>());
 
             await sync.StartAsync(CancellationToken.None);
 
-            sync.State.IsRunning.Should().BeTrue();
+            sync.IsRunning.Should().BeTrue();
         }
 
         [Test]
         public async Task StopAsync_Should_Stop_Sync()
         {
             _deltaHeightWatcher = Substitute.For<IDeltaHeightWatcher>();
-            _deltaHeightWatcher.GetHighestDeltaIndexAsync().Returns(new DeltaIndex { Cid = ByteString.Empty, Height = 10000 });
+            _deltaHeightWatcher.WaitForDeltaIndexAsync(Arg.Any<TimeSpan>(), Arg.Any<CancellationToken>()).Returns(new DeltaIndex { Cid = ByteString.Empty, Height = 10000 });
 
-            var sync = new Synchroniser(new SyncState(), _peerSyncManager, _deltaCache, _deltaHeightWatcher, _deltaHashProvider, _deltaDfsReader,
+            var sync = new Synchroniser(new SyncState(), _peerSyncManager, _deltaCache, _deltaHeightWatcher, _deltaHashProvider,
                 _deltaIndexService, _mapperProvider, _userOutput, Substitute.For<ILogger>());
 
             await sync.StartAsync(CancellationToken.None);
-            sync.State.IsRunning.Should().BeTrue();
+            sync.IsRunning.Should().BeTrue();
 
             await sync.StopAsync(CancellationToken.None);
-            sync.State.IsRunning.Should().BeFalse();
+            sync.IsRunning.Should().BeFalse();
         }
 
         [Test]
@@ -262,14 +253,14 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
             _deltaHeightWatcher = Substitute.For<IDeltaHeightWatcher>();
             _deltaHeightWatcher.GetHighestDeltaIndexAsync().Returns(new DeltaIndex { Cid = ByteString.Empty, Height = 10000 });
 
-            var sync = new Synchroniser(new SyncState(), _peerSyncManager, _deltaCache, _deltaHeightWatcher, _deltaHashProvider, _deltaDfsReader,
+            var sync = new Synchroniser(new SyncState(), _peerSyncManager, _deltaCache, _deltaHeightWatcher, _deltaHashProvider,
                 _deltaIndexService, _mapperProvider, _userOutput, Substitute.For<ILogger>());
 
             await sync.StopAsync(CancellationToken.None);
 
             _userOutput.Received(1).WriteLine("Sync is not currently running.");
 
-            sync.State.IsRunning.Should().BeFalse();
+            sync.IsRunning.Should().BeFalse();
         }
 
         [Test]
@@ -280,7 +271,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
             var cid = _hashProvider.ComputeUtf8MultiHash(sampleCurrentDeltaHeight.ToString()).ToCid();
             _deltaIndexService.Add(new DeltaIndexDao { Cid = cid, Height = sampleCurrentDeltaHeight });
 
-            var sync = new Synchroniser(new SyncState(), _peerSyncManager, _deltaCache, Substitute.For<IDeltaHeightWatcher>(), _deltaHashProvider, _deltaDfsReader,
+            var sync = new Synchroniser(new SyncState(), _peerSyncManager, _deltaCache, Substitute.For<IDeltaHeightWatcher>(), _deltaHashProvider,
                 _deltaIndexService, _mapperProvider, _userOutput, Substitute.For<ILogger>());
 
             await sync.StartAsync(CancellationToken.None);
@@ -293,8 +284,8 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
         {
             _syncTestHeight = 10;
             var expectedData = GenerateSampleData(0, _syncTestHeight, _syncTestHeight);
-            var sync = new Synchroniser(new SyncState(), _peerSyncManager, _deltaCache, _deltaHeightWatcher, _deltaHashProvider, _deltaDfsReader, _deltaIndexService,
-                _mapperProvider, _userOutput, Substitute.For<ILogger>(), _syncTestHeight);
+            var sync = new Synchroniser(new SyncState(), _peerSyncManager, _deltaCache, _deltaHeightWatcher, _deltaHashProvider, _deltaIndexService,
+                _mapperProvider, _userOutput, Substitute.For<ILogger>(), _syncTestHeight, 1, 30, Scheduler.Default);
 
             sync.SyncCompleted.Subscribe(x => { _manualResetEventSlim.Set(); });
 
@@ -302,25 +293,8 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 
             _manualResetEventSlim.Wait();
 
-            var range = _deltaIndexService.GetRange(0, (ulong)_syncTestHeight).Select(x => DeltaIndexDao.ToProtoBuff<DeltaIndex>(x, _mapperProvider));
+            var range = _deltaIndexService.GetRange(0, (ulong) _syncTestHeight).Select(x => DeltaIndexDao.ToProtoBuff<DeltaIndex>(x, _mapperProvider));
             range.Should().BeEquivalentTo(expectedData.DeltaIndex);
-        }
-
-        [Test]
-        public async Task Sync_Can_Download_Deltas()
-        {
-            _syncTestHeight = 10;
-
-            var sync = new Synchroniser(new SyncState(), _peerSyncManager, _deltaCache, _deltaHeightWatcher, _deltaHashProvider, _deltaDfsReader, _deltaIndexService,
-                _mapperProvider, _userOutput, Substitute.For<ILogger>(), _syncTestHeight);
-
-            sync.SyncCompleted.Subscribe(x => { _manualResetEventSlim.Set(); });
-
-            await sync.StartAsync(CancellationToken.None);
-
-            _manualResetEventSlim.Wait();
-
-            _deltaCache.Received(_syncTestHeight).TryGetOrAddConfirmedDelta(Arg.Any<Cid>(), out Arg.Any<Delta>());
         }
 
         [Test]
@@ -328,8 +302,8 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
         {
             _syncTestHeight = 10;
 
-            var sync = new Synchroniser(new SyncState(), _peerSyncManager, _deltaCache, _deltaHeightWatcher, _deltaHashProvider, _deltaDfsReader, _deltaIndexService,
-                _mapperProvider, _userOutput, Substitute.For<ILogger>(), _syncTestHeight);
+            var sync = new Synchroniser(new SyncState(), _peerSyncManager, _deltaCache, _deltaHeightWatcher, _deltaHashProvider, _deltaIndexService,
+                _mapperProvider, _userOutput, Substitute.For<ILogger>(), _syncTestHeight, 1, 30, Scheduler.Default);
 
             sync.SyncCompleted.Subscribe(x => { _manualResetEventSlim.Set(); });
 
@@ -345,7 +319,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
         {
             _syncTestHeight = 10;
 
-            var sync = new Synchroniser(new SyncState(), _peerSyncManager, _deltaCache, _deltaHeightWatcher, _deltaHashProvider, _deltaDfsReader, _deltaIndexService,
+            var sync = new Synchroniser(new SyncState(), _peerSyncManager, _deltaCache, _deltaHeightWatcher, _deltaHashProvider, _deltaIndexService,
                 _mapperProvider, _userOutput, Substitute.For<ILogger>());
 
             sync.SyncCompleted.Subscribe(x => { _manualResetEventSlim.Set(); });
@@ -360,7 +334,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
         [Test]
         public async Task Sync_Can_Complete()
         {
-            var sync = new Synchroniser(new SyncState(), _peerSyncManager, _deltaCache, _deltaHeightWatcher, _deltaHashProvider, _deltaDfsReader, _deltaIndexService,
+            var sync = new Synchroniser(new SyncState(), _peerSyncManager, _deltaCache, _deltaHeightWatcher, _deltaHashProvider, _deltaIndexService,
                 _mapperProvider, _userOutput, Substitute.For<ILogger>());
 
             sync.SyncCompleted.Subscribe(x => { _manualResetEventSlim.Set(); });
@@ -369,7 +343,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 
             _manualResetEventSlim.Wait();
 
-            sync.CurrentHighestDeltaIndexStored.Should().Be((ulong)_syncTestHeight);
+            sync.CurrentHighestDeltaIndexStored.Should().Be((ulong) _syncTestHeight);
         }
 
         private Dictionary<Cid, Delta> BuildChainedDeltas(int chainSize)
@@ -406,7 +380,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
         [Test]
         public void CacheDeltasBetween_Should_Stop_When_One_Of_Deltas_Is_Missing()
         {
-            var sync = new Synchroniser(new SyncState(), _peerSyncManager, _deltaCache, _deltaHeightWatcher, _deltaHashProvider, _deltaDfsReader, _deltaIndexService,
+            var sync = new Synchroniser(new SyncState(), _peerSyncManager, _deltaCache, _deltaHeightWatcher, _deltaHashProvider, _deltaIndexService,
             _mapperProvider, _userOutput, Substitute.For<ILogger>());
 
             var chainSize = 5;
@@ -441,7 +415,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
         [Test]
         public void CacheDeltasBetween_Should_Complete_When_LatestKnownDelta_Is_Found()
         {
-            var sync = new Synchroniser(new SyncState(), _peerSyncManager, _deltaCache, _deltaHeightWatcher, _deltaHashProvider, _deltaDfsReader, _deltaIndexService,
+            var sync = new Synchroniser(new SyncState(), _peerSyncManager, _deltaCache, _deltaHeightWatcher, _deltaHashProvider, _deltaIndexService,
             _mapperProvider, _userOutput, Substitute.For<ILogger>());
 
             var chainSize = 7;

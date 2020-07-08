@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Transport;
 using Catalyst.Abstractions.IO.Transport.Channels;

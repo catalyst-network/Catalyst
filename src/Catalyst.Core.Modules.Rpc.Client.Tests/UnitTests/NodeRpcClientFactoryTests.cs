@@ -50,10 +50,9 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
         public async Task GetClient_Should_Return_RpcClient()
         {
             var nodeRpcConfig = Substitute.For<IRpcClientConfig>();
-            nodeRpcConfig.HostAddress = IPAddress.Any;
             nodeRpcConfig.NodeId = "0";
             nodeRpcConfig.PfxFileName = "pfx";
-            nodeRpcConfig.Port = 9000;
+            nodeRpcConfig.Address = "/ip4/127.0.0.1/tcp/9000";
             var rpcClient = await _rpcClientFactory.GetClientAsync(null, nodeRpcConfig);
 
             rpcClient.Should().BeAssignableTo<IRpcClient>();

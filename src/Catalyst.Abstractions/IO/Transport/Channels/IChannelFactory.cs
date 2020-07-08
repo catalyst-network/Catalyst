@@ -25,14 +25,14 @@ using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.EventLoop;
+using MultiFormats;
 
 namespace Catalyst.Abstractions.IO.Transport.Channels
 {
     public interface IChannelFactory
     {
         Task<IObservableChannel> BuildChannelAsync(IEventLoopGroupFactory eventLoopGroupFactory,
-            IPAddress targetAddress,
-            int targetPort,
+            MultiAddress address,
             X509Certificate2 certificate = null);
     }
 }

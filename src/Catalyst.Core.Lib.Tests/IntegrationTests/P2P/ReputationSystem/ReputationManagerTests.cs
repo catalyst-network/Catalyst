@@ -26,9 +26,11 @@ using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.P2P.ReputationSystem;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.ReputationSystem;
+using Catalyst.Core.Modules.Dfs;
 using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using MultiFormats;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -47,15 +49,16 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
             Setup(TestContext.CurrentContext);
 
             ContainerProvider.ConfigureContainerBuilder();
+            ContainerProvider.ContainerBuilder.RegisterModule<DfsModule>();
             _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);
             _reputationManager = _scope.Resolve<IReputationManager>();
         }
 
-        private Peer SavePeerInRepo(PeerId pid, int initialRep = 100)
+        private Peer SavePeerInRepo(MultiAddress pid, int initialRep = 100)
         {
             var subbedPeer = new Peer
             {
-                PeerId = pid,
+                Address = pid,
                 Reputation = initialRep
             };
             _reputationManager.PeerRepository.Add(subbedPeer);
@@ -65,11 +68,11 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
         [Test]
         public void Can_Save_Increased_Peer()
         {
-            var pid = PeerIdHelper.GetPeerId("some_peer");
+            var pid = MultiAddressHelper.GetAddress("some_peer");
 
             var savedPeer = SavePeerInRepo(pid);
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
-            peerReputationChange.PeerId.Returns(pid);
+            peerReputationChange.Address.Returns(pid);
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(100);
             _reputationManager.OnNext(peerReputationChange);
@@ -80,11 +83,11 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
         [Test]
         public void Can_Save_Decreased_Peer()
         {
-            var pid = PeerIdHelper.GetPeerId("some_peer");
+            var pid = MultiAddressHelper.GetAddress("some_peer");
 
             var savedPeer = SavePeerInRepo(pid);
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
-            peerReputationChange.PeerId.Returns(pid);
+            peerReputationChange.Address.Returns(pid);
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(-100);
             _reputationManager.OnNext(peerReputationChange);
@@ -95,11 +98,11 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
         [Test]
         public void Can_Save_Decreased_Peer_To_Negative_Number()
         {
-            var pid = PeerIdHelper.GetPeerId("some_peer");
+            var pid = MultiAddressHelper.GetAddress("some_peer");
 
             var savedPeer = SavePeerInRepo(pid);
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
-            peerReputationChange.PeerId.Returns(pid);
+            peerReputationChange.Address.Returns(pid);
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(-200);
             _reputationManager.OnNext(peerReputationChange);
@@ -110,11 +113,11 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
         [Test]
         public void Can_Save_Increased_Peer_From_Negative_Number_To_Positive_Number()
         {
-            var pid = PeerIdHelper.GetPeerId("some_peer");
+            var pid = MultiAddressHelper.GetAddress("some_peer");
 
             var savedPeer = SavePeerInRepo(pid, -100);
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
-            peerReputationChange.PeerId.Returns(pid);
+            peerReputationChange.Address.Returns(pid);
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(200);
             _reputationManager.OnNext(peerReputationChange);

@@ -142,6 +142,8 @@ namespace Lib.P2P
         /// </summary>
         MultiAddressWhiteList WhiteList { get; set; }
 
+        ConnectionManager Manager { get; }
+
         /// <summary>
         ///   Register that a peer's address has been discovered.
         /// </summary>
@@ -189,6 +191,37 @@ namespace Lib.P2P
         ///   The <see cref="SwarmService.BlackList"/> or <see cref="SwarmService.WhiteList"/> policies forbid it.
         /// </exception>
         Peer RegisterPeer(Peer peer);
+
+        /// <summary>
+        ///   Register that a peer has been discovered.
+        /// </summary>
+        /// <param name="peer">
+        ///   The newly discovered peer.
+        /// </param>
+        /// <param name="ignoreRestrictionLists">
+        ///   Ignores the blacklist or whitelist restrictions.
+        /// </param>
+        /// <returns>
+        ///   The registered peer.
+        /// </returns>
+        /// <remarks>
+        ///   If the peer already exists, then the existing peer is updated with supplied
+        ///   information and is then returned.  Otherwise, the <paramref name="peer"/>
+        ///   is added to known peers and is returned.
+        ///   <para>
+        ///   If the peer already exists, then a union of the existing and new addresses
+        ///   is used.  For all other information the <paramref name="peer"/>'s information
+        ///   is used if not <b>null</b>.
+        ///   </para>
+        ///   <para>
+        ///   If peer does not already exist, then the <see cref="SwarmService.PeerDiscovered"/> event
+        ///   is raised.
+        ///   </para>
+        /// </remarks>
+        /// <exception cref="Exception">
+        ///   The <see cref="SwarmService.BlackList"/> or <see cref="SwarmService.WhiteList"/> policies forbid it.
+        /// </exception>
+        Peer RegisterPeer(Peer peer, bool ignoreRestrictionLists);
 
         /// <summary>
         ///   Deregister a peer.

@@ -27,6 +27,7 @@ using Catalyst.Core.Lib.Rpc.IO;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
@@ -50,11 +51,11 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
         /// </summary>
         /// <param name="getPeerInfoResponse">The response</param>
         /// <param name="channelHandlerContext">The channel handler context</param>
-        /// <param name="senderPeerIdentifier">The sender peer identifier</param>
+        /// <param name="senderentifier">The sender peer identifier</param>
         /// <param name="correlationId">The correlationId</param>
         protected override void HandleResponse(GetPeerInfoResponse getPeerInfoResponse,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerIdentifier,
+            MultiAddress senderentifier,
             ICorrelationId correlationId) { }
     }
 }

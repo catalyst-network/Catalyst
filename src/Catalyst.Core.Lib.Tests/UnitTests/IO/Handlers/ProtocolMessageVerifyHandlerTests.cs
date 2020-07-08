@@ -53,7 +53,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
 
             var signatureBytes = ByteUtil.GenerateRandomByteArray(new FfiWrapper().SignatureLength);
             var publicKeyBytes = ByteUtil.GenerateRandomByteArray(new FfiWrapper().PublicKeyLength);
-            var peerId = PeerIdHelper.GetPeerId(publicKeyBytes);
+            var peerId = MultiAddressHelper.GetAddress(publicKeyBytes);
 
             _protocolMessageSigned = new PingRequest()
                .ToSignedProtocolMessage(peerId, signatureBytes, _signingContext)

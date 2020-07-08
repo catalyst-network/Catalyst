@@ -37,13 +37,10 @@ using Catalyst.Abstractions.DAO;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Ledger.Models;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
-using Catalyst.Abstractions.Rpc;
-using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.P2P.Models;
@@ -55,7 +52,6 @@ using Catalyst.Core.Modules.Ledger.Repository;
 using Catalyst.Core.Modules.Mempool;
 using Catalyst.Core.Modules.Mempool.Repositories;
 using Catalyst.Protocol.Network;
-using Catalyst.Protocol.Peer;
 using NSubstitute;
 using NUnit.Framework;
 using SharpRepository.InMemoryRepository;
@@ -79,51 +75,47 @@ using Catalyst.Modules.POA.Consensus;
 using Catalyst.Modules.POA.P2P;
 using Catalyst.Node.POA.CE;
 using SharpRepository.Repository;
-using Catalyst.Core.Lib.Cryptography;
-using Catalyst.Core.Lib.FileSystem;
+using Catalyst.Abstractions.Dfs.CoreApi;
+using Newtonsoft.Json.Linq;
+using MultiFormats;
+using Catalyst.Core.Abstractions.Sync;
+using Catalyst.Abstractions.Sync.Interfaces;
+using System.Net;
+using Catalyst.Core.Modules.Web3.Options;
 
 namespace Catalyst.TestUtils
 {
     public sealed class PoaTestNode : ICatalystNode, IDisposable
     {
-        private readonly IDfsService _dfsService;
+        public delegate void PeerActivedHandler(MultiAddress peerAddress);
+        public event PeerActivedHandler PeerActive;
+
+        private IDfsService _dfsService;
         private readonly IMempool<PublicEntryDao> _memPool;
         private readonly ICatalystNode _node;
         private readonly DirectoryInfo _nodeDirectory;
-        private readonly PeerId _nodePeerId;
-        private readonly IPeerSettings _nodeSettings;
         private readonly IPeerRepository _peerRepository;
-        private readonly IRpcServerSettings _rpcSettings;
         private readonly ILifetimeScope _scope;
         private readonly ContainerProvider _containerProvider;
         private readonly IDeltaByNumberRepository _deltaByNumber;
+        private readonly bool _isSynchronized;
+        private Lib.P2P.Peer _localPeer;
 
-        public PoaTestNode(string name,
-            IPrivateKey privateKey,
-            IPeerSettings nodeSettings,
-            IDfsService dfsService,
-            IEnumerable<PeerId> knownPeerIds,
+        public ContainerProvider GetContainerProvider()
+        {
+            return _containerProvider;
+        }
+
+        public PoaTestNode(int nodeNumber, bool isSynchronized,
             IFileSystem parentTestFileSystem)
         {
-            Name = name;
-            _nodeSettings = nodeSettings;
+            NodeNumber = nodeNumber;
+            _isSynchronized = isSynchronized;
 
             _nodeDirectory = parentTestFileSystem.GetCatalystDataDir();
 
-            _dfsService = dfsService;
-
-            _rpcSettings = RpcSettingsHelper.GetRpcServerSettings(nodeSettings.Port + 100);
-            _nodePeerId = nodeSettings.PeerId;
-
             _memPool = new Mempool(new MempoolService(new InMemoryRepository<PublicEntryDao, string>()));
             _peerRepository = new PeerRepository(new InMemoryRepository<Peer, string>());
-            var peersInRepo = knownPeerIds.Select(p => new Peer
-            {
-                PeerId = p,
-                IsPoaNode = true,
-                LastSeen = DateTime.UtcNow
-            }).ToList();
-            _peerRepository.Add(peersInRepo);
 
             _deltaByNumber = new DeltaByNumberRepository(new InMemoryRepository<DeltaByNumber, string>());
 
@@ -144,10 +136,10 @@ namespace Catalyst.TestUtils
             _containerProvider.ConfigureContainerBuilder(true, true);
             OverrideContainerBuilderRegistrations();
 
-            _scope = _containerProvider.Container.BeginLifetimeScope(Name);
+            _scope = _containerProvider.Container.BeginLifetimeScope(NodeNumber);
             _node = _scope.Resolve<ICatalystNode>();
         }
-        
+
         public static void RegisterNodeDependencies(ContainerBuilder containerBuilder,
             List<IModule> extraModuleInstances = default,
             List<Type> excludedModules = default)
@@ -181,7 +173,7 @@ namespace Catalyst.TestUtils
                 containerBuilder.RegisterModule(module);
             }
         }
-        
+
         private static readonly Dictionary<Type, Func<IModule>> DefaultModulesByTypes =
             new Dictionary<Type, Func<IModule>>
             {
@@ -201,19 +193,69 @@ namespace Catalyst.TestUtils
                 {typeof(AuthenticationModule), () => new AuthenticationModule()},
                 {
                     typeof(ApiModule),
-                    () => new ApiModule("http://*:5005", new List<string> {"Catalyst.Core.Modules.Web3", "Catalyst.Core.Modules.Dfs"})
+                    () => new ApiModule(new HttpOptions(new IPEndPoint(IPAddress.Any, 5005)), new HttpsOptions(new IPEndPoint(IPAddress.Any, 2053), "cert.pfx"), new List<string> {"Catalyst.Core.Modules.Web3", "Catalyst.Core.Modules.Dfs"})
                 },
                 {typeof(PoaConsensusModule), () => new PoaConsensusModule()},
                 {typeof(PoaP2PModule), () => new PoaP2PModule()}
             };
 
-        private string Name { get; }
+        private int NodeNumber { get; }
 
         public IConsensus Consensus => _node.Consensus;
 
         public async Task RunAsync(CancellationToken cancellationSourceToken)
         {
-            await _node.RunAsync(cancellationSourceToken).ConfigureAwait(false);
+            _localPeer = _scope.Resolve<Lib.P2P.Peer>();
+            var synchronizer = _scope.Resolve<ISynchroniser>();
+            var peerSettings = _scope.Resolve<IPeerSettings>();
+            var config = _scope.Resolve<IConfigApi>();
+            _dfsService = _scope.Resolve<IDfsService>();
+
+            await _dfsService.StartAsync().ConfigureAwait(false);
+
+            PeerActive.Invoke(peerSettings.Address);
+
+            await StartSocketsAsync().ConfigureAwait(false);
+
+            var peers = await _dfsService.SwarmApi.PeersAsync().ConfigureAwait(false);
+            while (peers.Count() < 2)
+            {
+                peers = await _dfsService.SwarmApi.PeersAsync().ConfigureAwait(false);
+                await Task.Delay(100).ConfigureAwait(false);
+            }
+
+            if (!_isSynchronized)
+            {
+                await synchronizer.StartAsync().ConfigureAwait(false);
+                synchronizer.SyncCompleted.Subscribe((x) =>
+                {
+                    Consensus.StartProducing();
+                });
+            }
+            else
+            {
+                Consensus.StartProducing();
+            }
+
+            do
+            {
+                await Task.Delay(300, cancellationSourceToken).ConfigureAwait(false);
+            } while (!cancellationSourceToken.IsCancellationRequested);
+        }
+
+        public async Task RegisterPeerAddressAsync(MultiAddress multiAddress)
+        {
+            _peerRepository.Add(new Peer
+            {
+                Address = multiAddress,
+                IsPoaNode = true,
+                LastSeen = DateTime.UtcNow
+            });
+
+            if (_localPeer.Id != multiAddress.PeerId)
+            {
+                await _dfsService.SwarmService.ConnectAsync(multiAddress).ConfigureAwait(false);
+            }
         }
 
         public async Task StartSocketsAsync() { await _node.StartSocketsAsync(); }
@@ -224,6 +266,7 @@ namespace Catalyst.TestUtils
         {
             var builder = _containerProvider.ContainerBuilder;
 
+            builder.RegisterInstance(new SyncState { IsSynchronized = _isSynchronized }).As<SyncState>();
             builder.RegisterInstance(_deltaByNumber).As<IDeltaByNumberRepository>();
             builder.RegisterInstance(new MemDb()).As<IDb>().SingleInstance();
             builder.RegisterInstance(new StateDb()).As<ISnapshotableDb>().SingleInstance();
@@ -234,18 +277,17 @@ namespace Catalyst.TestUtils
             builder.RegisterInstance(new InMemoryRepository<TransactionToDelta, string>())
                .AsImplementedInterfaces();
 
-            builder.RegisterInstance(_dfsService.KeyApi).As<IKeyApi>().SingleInstance();
-
             _containerProvider.ContainerBuilder.RegisterInstance(new TestPasswordReader()).As<IPasswordReader>();
-            _containerProvider.ContainerBuilder.RegisterInstance(_nodeSettings).As<IPeerSettings>();
-            _containerProvider.ContainerBuilder.RegisterInstance(_rpcSettings).As<IRpcServerSettings>();
-            _containerProvider.ContainerBuilder.RegisterInstance(_nodePeerId).As<PeerId>();
             _containerProvider.ContainerBuilder.RegisterInstance(_memPool).As<IMempool<PublicEntryDao>>();
-            _containerProvider.ContainerBuilder.RegisterInstance(_dfsService).As<IDfsService>();
             _containerProvider.ContainerBuilder.RegisterInstance(_peerRepository).As<IPeerRepository>();
             _containerProvider.ContainerBuilder.RegisterType<TestFileSystem>().As<IFileSystem>()
                .WithParameter("rootPath", _nodeDirectory.FullName);
             _containerProvider.ContainerBuilder.RegisterInstance(Substitute.For<IPeerDiscovery>()).As<IPeerDiscovery>();
+
+            var config = Substitute.For<IConfigApi>();
+            var swarm = JToken.FromObject(new List<string> { $"/ip4/0.0.0.0/tcp/410{NodeNumber}" });
+            config.GetAsync("Addresses.Swarm").Returns(swarm);
+            _containerProvider.ContainerBuilder.RegisterInstance(config).As<IConfigApi>();
         }
 
         private void Dispose(bool disposing)

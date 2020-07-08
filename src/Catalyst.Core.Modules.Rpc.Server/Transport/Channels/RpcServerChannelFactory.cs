@@ -36,6 +36,7 @@ using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc.Authentication;
 using Catalyst.Abstractions.Rpc.IO.Messaging.Correlation;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Codecs;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Transport.Channels;
@@ -43,6 +44,7 @@ using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.Rpc.Server.Transport.Channels
 {
@@ -110,11 +112,10 @@ namespace Catalyst.Core.Modules.Rpc.Server.Transport.Channels
         /// <param name="certificate">Local TLS certificate</param>
         /// <param name="targetAddress"></param>
         public override async Task<IObservableChannel> BuildChannelAsync(IEventLoopGroupFactory handlerEventLoopGroupFactory,
-            IPAddress targetAddress,
-            int targetPort,
+            MultiAddress address,
             X509Certificate2 certificate = null)
         {
-            var channel = await BootstrapAsync(handlerEventLoopGroupFactory, targetAddress, targetPort, certificate).ConfigureAwait(false);
+            var channel = await BootstrapAsync(handlerEventLoopGroupFactory, address, certificate).ConfigureAwait(false);
 
             var messageStream = _observableServiceHandler.MessageStream;
 

@@ -36,6 +36,7 @@ using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.Protocols
@@ -56,26 +57,24 @@ namespace Catalyst.Core.Lib.P2P.Protocols
             IPeerClient peerClient,
             IPeerSettings peerSettings,
             ICancellationTokenProvider cancellationTokenProvider,
-            IScheduler scheduler = null) : base(logger, peerSettings.PeerId, cancellationTokenProvider, peerClient)
+            IScheduler scheduler = null) : base(logger, peerSettings.Address, cancellationTokenProvider, peerClient)
         {
             QueryTipResponseMessageStreamer = new ReplaySubject<IPeerQueryTipResponse>(1, scheduler ?? Scheduler.Default);
         }
 
-        public async Task<bool> QueryPeerTipAsync(PeerId recipientPeerId)
+        public async Task<bool> QueryPeerTipAsync(MultiAddress recipientPeerId)
         {
             try
             {
-                PeerClient.SendMessage(new MessageDto(
-                    new LatestDeltaHashRequest().ToProtocolMessage(PeerId, CorrelationId.GenerateCorrelationId()),
+                await PeerClient.SendMessageAsync(new MessageDto(
+                    new LatestDeltaHashRequest().ToProtocolMessage(Address, CorrelationId.GenerateCorrelationId()),
                     recipientPeerId
                 ));
-                
+
                 using (CancellationTokenProvider.CancellationTokenSource)
                 {
                     await QueryTipResponseMessageStreamer
-                       .FirstAsync(a => a != null 
-                         && a.PeerId.PublicKey.SequenceEqual(recipientPeerId.PublicKey) 
-                         && a.PeerId.Ip.SequenceEqual(recipientPeerId.Ip))
+                       .FirstAsync(a => a != null && a.Address == recipientPeerId)
                        .ToTask(CancellationTokenProvider.CancellationTokenSource.Token)
                        .ConfigureAwait(false);
                 }

@@ -156,7 +156,7 @@ Rw==
             Assert.AreEqual("jsipfs", key.Name);
             Assert.AreEqual("QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb", key.Id.ToString());
 
-            var pubKey = await _keyStoreService.GetIpfsPublicKeyAsync("jsipfs");
+            var pubKey = await _keyStoreService.GetDfsPublicKeyAsync("jsipfs");
             Assert.AreEqual(spki, pubKey);
         }
 
@@ -311,7 +311,7 @@ MIIFDTA/BgkqhkiG9w0BBQ0wMjAaBgkqhkiG9w0BBQwwDQQILdGJynKmkrMCAWQw
 
                 var priv = await _keyStoreService.GetPrivateKeyAsync(name);
                 Assert.NotNull(priv);
-                var pub = await _keyStoreService.GetIpfsPublicKeyAsync(name);
+                var pub = await _keyStoreService.GetDfsPublicKeyAsync(name);
                 Assert.NotNull(pub);
 
                 // Verify key can be used as peer ID.

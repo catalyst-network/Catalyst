@@ -22,11 +22,12 @@
 #endregion
 
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 
 namespace Catalyst.Abstractions.P2P.Protocols
 {
     public interface IProtocol
     {
-        PeerId PeerId { get; }
+        MultiAddress Address { get; }
     }
 }

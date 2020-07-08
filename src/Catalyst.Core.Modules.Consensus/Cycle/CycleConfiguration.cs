@@ -30,7 +30,7 @@ namespace Catalyst.Core.Modules.Consensus.Cycle
     /// <inheritdoc />
     public class CycleConfiguration : ICycleConfiguration
     {
-        protected CycleConfiguration(PhaseTimings construction, 
+        protected CycleConfiguration(IPhaseTimings construction, 
             IPhaseTimings campaigning, 
             IPhaseTimings voting, 
             IPhaseTimings synchronisation)
@@ -68,30 +68,30 @@ namespace Catalyst.Core.Modules.Consensus.Cycle
         private static readonly TimeSpan ConstructionProduction = TimeSpan.FromSeconds(2);
         private static readonly TimeSpan ConstructionCollection = TimeSpan.FromSeconds(2);
 
-        private static readonly PhaseTimings DefaultConstructionTimings = 
+        private static readonly IPhaseTimings DefaultConstructionTimings = 
             new PhaseTimings(ConstructionOffset, ConstructionProduction, ConstructionCollection);
 
         private static readonly TimeSpan CampaigningOffset = ConstructionOffset + ConstructionProduction + ConstructionCollection;
         private static readonly TimeSpan CampaigningProduction = TimeSpan.FromSeconds(3);
         private static readonly TimeSpan CampaigningCollection = TimeSpan.FromSeconds(3);
 
-        private static readonly PhaseTimings DefaultCampaigningTimings = 
+        private static readonly IPhaseTimings DefaultCampaigningTimings = 
             new PhaseTimings(CampaigningOffset, CampaigningProduction, CampaigningCollection);
 
         private static readonly TimeSpan VotingOffset = CampaigningOffset + CampaigningProduction + CampaigningCollection;
         private static readonly TimeSpan VotingProduction = TimeSpan.FromSeconds(3);
         private static readonly TimeSpan VotingCollection = TimeSpan.FromSeconds(2);
 
-        private static readonly PhaseTimings DefaultVotingTimings = 
+        private static readonly IPhaseTimings DefaultVotingTimings = 
             new PhaseTimings(VotingOffset, VotingProduction, VotingCollection);
 
         private static readonly TimeSpan SynchronisationOffset = VotingOffset + VotingProduction + VotingCollection;
         private static readonly TimeSpan SynchronisationProduction = TimeSpan.FromSeconds(1);
         private static readonly TimeSpan SynchronisationCollection = TimeSpan.FromSeconds(3);
 
-        private static readonly PhaseTimings DefaultSynchronisationTimings = 
+        private static readonly IPhaseTimings DefaultSynchronisationTimings = 
             new PhaseTimings(SynchronisationOffset, SynchronisationProduction, SynchronisationCollection);
 
-        public static readonly CycleConfiguration Default = new CycleConfiguration(DefaultConstructionTimings, DefaultCampaigningTimings, DefaultVotingTimings, DefaultSynchronisationTimings);
+        public static readonly ICycleConfiguration Default = new CycleConfiguration(DefaultConstructionTimings, DefaultCampaigningTimings, DefaultVotingTimings, DefaultSynchronisationTimings);
     }
 }

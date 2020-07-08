@@ -32,6 +32,8 @@ using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using DotNetty.Transport.Channels;
+using Lib.P2P.Protocols;
+using MultiFormats;
 using Serilog;
 using System;
 
@@ -44,8 +46,9 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         private readonly IPeerRepository _peerRepository;
         public PingRequestObserver(IPeerSettings peerSettings, 
             IPeerRepository peerRepository,
+            IPeerClient peerClient,
             ILogger logger)
-            : base(logger, peerSettings) {
+            : base(logger, peerSettings, peerClient) {
             _peerRepository = peerRepository;
         }
         
@@ -54,29 +57,16 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         /// </summary>
         /// <param name="pingRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerId"></param>
+        /// <param name="sender"></param>
         /// <param name="correlationId"></param>
         /// <returns><see cref="PingResponse"/></returns>
         protected override PingResponse HandleRequest(PingRequest pingRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(pingRequest, nameof(pingRequest)).NotNull();
-            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
-            
-            Logger.Debug("message content is {0} IP: {1} PeerId: {2}", pingRequest, senderPeerId.Ip, senderPeerId);
-
-            var peer = _peerRepository.Get(senderPeerId);
-            if (peer == null)
-            {
-                _peerRepository.Add(new Peer
-                {
-                    PeerId = senderPeerId,
-                    LastSeen = DateTime.UtcNow
-                });
-            }
+            Guard.Argument(sender, nameof(sender)).NotNull();
 
             return new PingResponse();
         }

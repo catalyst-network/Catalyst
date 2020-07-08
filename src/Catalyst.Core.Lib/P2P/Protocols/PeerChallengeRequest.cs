@@ -37,6 +37,7 @@ using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.Protocols
@@ -44,7 +45,7 @@ namespace Catalyst.Core.Lib.P2P.Protocols
     public sealed class PeerChallengeRequest : ProtocolRequestBase, IPeerChallengeRequest
     {
         private readonly ILogger _logger;
-        private readonly PeerId _senderIdentifier;
+        private readonly MultiAddress _senderIdentifier;
         private readonly IPeerClient _peerClient;
         private readonly int _ttl;
 
@@ -56,19 +57,19 @@ namespace Catalyst.Core.Lib.P2P.Protocols
             int ttl,
             IScheduler scheduler = null)
             : base(logger,
-                peerSettings.PeerId,
+                peerSettings.Address,
                 new CancellationTokenProvider(ttl),
                 peerClient)
         {
             var observableScheduler = scheduler ?? Scheduler.Default;
             ChallengeResponseMessageStreamer = new ReplaySubject<IPeerChallengeResponse>(1, observableScheduler);
-            _senderIdentifier = peerSettings.PeerId;
+            _senderIdentifier = peerSettings.Address;
             _logger = logger;
             _peerClient = peerClient;
             _ttl = ttl;
         }
 
-        public async Task<bool> ChallengePeerAsync(PeerId recipientPeerId)
+        public async Task<bool> ChallengePeerAsync(MultiAddress recipientPeerId)
         {
             try
             {
@@ -80,14 +81,13 @@ namespace Catalyst.Core.Lib.P2P.Protocols
                 );
 
                 _logger.Verbose($"Sending peer challenge request to IP: {recipientPeerId}");
-                _peerClient.SendMessage(messageDto);
+                await _peerClient.SendMessageAsync(messageDto).ConfigureAwait(false);
+
                 using (var cancellationTokenSource =
                     new CancellationTokenSource(TimeSpan.FromSeconds(_ttl)))
                 {
                     await ChallengeResponseMessageStreamer
-                       .FirstAsync(a => a != null
-                         && a.PeerId.PublicKey.SequenceEqual(recipientPeerId.PublicKey)
-                         && a.PeerId.Ip.SequenceEqual(recipientPeerId.Ip))
+                       .FirstAsync(a => a != null && a.Address == recipientPeerId)
                        .ToTask(cancellationTokenSource.Token)
                        .ConfigureAwait(false);
                 }

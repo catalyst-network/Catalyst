@@ -35,8 +35,10 @@ using Catalyst.Core.Lib;
 using Catalyst.Core.Lib.Cli;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Kernel;
+using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Modules.Authentication;
 using Catalyst.Core.Modules.Consensus;
+using Catalyst.Core.Modules.Consensus.Cycle;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.Hashing;
@@ -49,18 +51,24 @@ using Catalyst.Core.Modules.P2P.Discovery.Hastings;
 using Catalyst.Core.Modules.Rpc.Server;
 using Catalyst.Core.Modules.Sync;
 using Catalyst.Core.Modules.Web3;
+using Catalyst.Core.Modules.Web3.Options;
+using Catalyst.Modules.Network.LibP2P;
 using Catalyst.Modules.POA.Consensus;
 using Catalyst.Modules.POA.P2P;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Network;
 using CommandLine;
 using Lib.P2P;
+using Lib.P2P.Protocols;
 using MultiFormats;
+using SharpRepository.MongoDbRepository;
+using SharpRepository.Repository;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
@@ -123,7 +131,6 @@ namespace Catalyst.Node.POA.CE
                 {typeof(LedgerModule), () => new LedgerModule()},
                 {typeof(HashingModule), () => new HashingModule()},
                 {typeof(DiscoveryHastingModule), () => new DiscoveryHastingModule()},
-                {typeof(RpcServerModule), () => new RpcServerModule()},
                 {typeof(BulletProofsModule), () => new BulletProofsModule()},
                 {typeof(KeystoreModule), () => new KeystoreModule()},
                 {typeof(KeySignerModule), () => new KeySignerModule()},
@@ -131,10 +138,11 @@ namespace Catalyst.Node.POA.CE
                 {typeof(AuthenticationModule), () => new AuthenticationModule()},
                 {
                     typeof(ApiModule),
-                    () => new ApiModule("http://*:5005", new List<string> {"Catalyst.Core.Modules.Web3", "Catalyst.Core.Modules.Dfs"})
+                    () => new ApiModule(new HttpOptions(new IPEndPoint(IPAddress.Any, 5005)), new HttpsOptions(new IPEndPoint(IPAddress.Any, 2053), "cert.pfx"), new List<string> {"Catalyst.Core.Modules.Web3", "Catalyst.Core.Modules.Dfs"})
                 },
                 {typeof(PoaConsensusModule), () => new PoaConsensusModule()},
-                {typeof(PoaP2PModule), () => new PoaP2PModule()}
+                {typeof(PoaP2PModule), () => new PoaP2PModule()},
+                {typeof(LibP2PNetworkModule), () => new LibP2PNetworkModule()}
             };
 
         public static void RegisterNodeDependencies(ContainerBuilder containerBuilder,
@@ -149,10 +157,6 @@ namespace Catalyst.Node.POA.CE
             // message handlers
             containerBuilder.RegisterAssemblyTypes(typeof(CoreLibProvider).Assembly)
                .AssignableTo<IP2PMessageObserver>().As<IP2PMessageObserver>();
-
-            containerBuilder.RegisterAssemblyTypes(typeof(RpcServerModule).Assembly)
-               .AssignableTo<IRpcRequestObserver>().As<IRpcRequestObserver>()
-               .PublicOnly();
 
             // DAO MapperInitialisers
             containerBuilder.RegisterAssemblyTypes(typeof(CoreLibProvider).Assembly)
@@ -202,7 +206,6 @@ namespace Catalyst.Node.POA.CE
                    .WithPersistenceConfiguration()
                    .BuildKernel(options.OverwriteConfig)
                    .WithPassword(PasswordRegistryTypes.DefaultNodePassword, options.NodePassword)
-                   .WithPassword(PasswordRegistryTypes.DefaultNodePassword, options.IpfsPassword)
                    .WithPassword(PasswordRegistryTypes.CertificatePassword, options.SslCertPassword)
                    .Reset(options.Reset)
                    .StartCustomAsync(CustomBootLogicAsync);

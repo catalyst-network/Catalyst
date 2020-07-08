@@ -31,6 +31,8 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
+using Lib.P2P.Protocols;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
@@ -42,9 +44,10 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         private readonly IKeySigner _keySigner;
 
         public SignMessageRequestObserver(IPeerSettings peerSettings,
+            IPeerClient peerClient,
             ILogger logger,
             IKeySigner keySigner)
-            : base(logger, peerSettings)
+            : base(logger, peerSettings, peerClient)
         {
             _keySigner = keySigner;
         }
@@ -54,17 +57,16 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// </summary>
         /// <param name="signMessageRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerId"></param>
+        /// <param name="sender"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override SignMessageResponse HandleRequest(SignMessageRequest signMessageRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(signMessageRequest, nameof(signMessageRequest)).NotNull();
-            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
             Logger.Debug("received message of type SignMessageRequest");
 
             var decodedMessage = signMessageRequest.Message.ToByteArray();

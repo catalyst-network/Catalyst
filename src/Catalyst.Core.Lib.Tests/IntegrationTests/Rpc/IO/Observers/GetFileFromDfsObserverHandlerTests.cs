@@ -57,6 +57,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
         private IDownloadFileTransferFactory _fileDownloadFactory;
         private IDfsService _dfsService;
         private IHashProvider _hashProvider;
+        private IPeerClient _peerClient;
 
         [SetUp]
         public void Init()
@@ -69,6 +70,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             _fileDownloadFactory = new DownloadFileTransferFactory(_logger);
             _logger = Substitute.For<ILogger>();
             _dfsService = Substitute.For<IDfsService>();
+            _peerClient = Substitute.For<IPeerClient>();
         }
 
         [TestCase(1000L)]
@@ -82,10 +84,10 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 
             try
             {
-                var nodePeerId = PeerIdHelper.GetPeerId("sender");
-                var rpcPeerId = PeerIdHelper.GetPeerId("recipient");
+                var nodePeerId = MultiAddressHelper.GetAddress("sender");
+                var rpcPeerId = MultiAddressHelper.GetAddress("recipient");
                 var peerSettings = Substitute.For<IPeerSettings>();
-                peerSettings.PeerId.Returns(rpcPeerId);
+                peerSettings.Address.Returns(rpcPeerId);
                 var nodePeer = nodePeerId;
                 var rpcPeer = rpcPeerId;
                 var correlationId = CorrelationId.GenerateCorrelationId();
@@ -96,7 +98,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
                 var getFileFromDfsResponseHandler =
                     new GetFileFromDfsResponseObserver(_logger, _fileDownloadFactory);
                 var transferBytesHandler =
-                    new TransferFileBytesRequestObserver(_fileDownloadFactory, peerSettings, _logger);
+                    new TransferFileBytesRequestObserver(_fileDownloadFactory, peerSettings, _peerClient, _logger);
 
                 _fileDownloadFactory.RegisterTransfer(fileDownloadInformation);
 

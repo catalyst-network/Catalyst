@@ -22,6 +22,7 @@
 #endregion
 
 using System.Reflection;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Protocol.Wire
@@ -38,13 +39,14 @@ namespace Catalyst.Protocol.Wire
                 return false;
             }
 
-            if (VoterId == null)
+            var address = MultiAddress.TryCreate(Voter);
+            if (address == null || !address.HasPeerId)
             {
-                Logger.Debug("{field} cannot be null", nameof(VoterId));
+                Logger.Debug("{field} is a invalid multi address with peerId", nameof(Voter));
                 return false;
             }
 
-            return Candidate.IsValid() && VoterId.IsValid();
+            return Candidate.IsValid();
         }
     }
 }

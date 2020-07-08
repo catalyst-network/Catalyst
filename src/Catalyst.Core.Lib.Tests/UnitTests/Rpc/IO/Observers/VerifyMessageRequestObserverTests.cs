@@ -36,9 +36,10 @@ using System.Linq;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Network;
-using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils.Fakes;
 using NUnit.Framework;
+using MultiFormats;
+using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -47,9 +48,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         private IKeySigner _keySigner;
         private VerifyMessageRequestObserver _verifyMessageRequestObserver;
         private IChannelHandlerContext _fakeContext;
-        private PeerId _testPeerId;
+        private MultiAddress _testPeerId;
         private VerifyMessageRequest _verifyMessageRequest;
         private SigningContext _signingContext;
+        private IPeerClient _peerClient;
 
         [SetUp]
         public void Init()
@@ -60,7 +62,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 SignatureType = SignatureType.ProtocolRpc
             };
 
-            _testPeerId = PeerIdHelper.GetPeerId("TestPeerIdentifier");
+            _peerClient = Substitute.For<IPeerClient>();
+
+            _testPeerId = MultiAddressHelper.GetAddress("TestPeerIdentifier");
 
             var peerSettings = _testPeerId.ToSubstitutedPeerSettings();
 
@@ -68,11 +72,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             _keySigner.CryptoContext.Returns(new FfiWrapper());
 
             var logger = Substitute.For<ILogger>();
-            _fakeContext = Substitute.For<IChannelHandlerContext>();
 
-            var fakeChannel = Substitute.For<IChannel>();
-            _fakeContext.Channel.Returns(fakeChannel);
-            _verifyMessageRequestObserver = new VerifyMessageRequestObserver(peerSettings, logger, _keySigner);
+            _verifyMessageRequestObserver = new VerifyMessageRequestObserver(peerSettings, _peerClient, logger, _keySigner);
 
             _verifyMessageRequest = GetValidVerifyMessageRequest();
         }
@@ -127,7 +128,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         {
             _verifyMessageRequestObserver.OnNext(new ObserverDto(_fakeContext, _verifyMessageRequest.ToProtocolMessage(_testPeerId)));
 
-            var responseList = _fakeContext.Channel.ReceivedCalls().ToList();
+            var responseList = _peerClient.ReceivedCalls().ToList();
             var response = ((MessageDto) responseList[0].GetArguments()[0]).Content
                .FromProtocolMessage<VerifyMessageResponse>();
             response.IsSignedByKey.Should().Be(valid);

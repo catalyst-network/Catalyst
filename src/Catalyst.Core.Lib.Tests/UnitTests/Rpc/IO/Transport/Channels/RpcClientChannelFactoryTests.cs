@@ -49,6 +49,7 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
 {
@@ -84,7 +85,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
             _keySigner = Substitute.For<FakeKeySigner>();
 
             var peerIdValidator = Substitute.For<IPeerIdValidator>();
-            peerIdValidator.ValidatePeerIdFormat(Arg.Any<PeerId>()).Returns(true);
+            peerIdValidator.ValidatePeerIdFormat(Arg.Any<MultiAddress>()).Returns(true);
 
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.NetworkType.Returns(NetworkType.Devnet);
@@ -116,7 +117,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());
 
-            var senderId = PeerIdHelper.GetPeerId("sender");
+            var senderId = MultiAddressHelper.GetAddress("sender");
             var correlationId = CorrelationId.GenerateCorrelationId();
             var signatureBytes = ByteUtil.GenerateRandomByteArray(new FfiWrapper().SignatureLength);
 
@@ -153,7 +154,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
             var testingChannel = new EmbeddedChannel("test".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());
 
-            var senderId = PeerIdHelper.GetPeerId("sender");
+            var senderId = MultiAddressHelper.GetAddress("sender");
             var correlationId = CorrelationId.GenerateCorrelationId();
             var protocolMessage = new PingRequest().ToProtocolMessage(senderId, correlationId);
 

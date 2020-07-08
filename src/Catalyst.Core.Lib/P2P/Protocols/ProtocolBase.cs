@@ -22,14 +22,14 @@
 #endregion
 
 using Catalyst.Abstractions.P2P.Protocols;
-using Catalyst.Protocol.Peer;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.P2P.Protocols
 {
     public class ProtocolBase : IProtocol
     {
-        public PeerId PeerId { get; }
+        public MultiAddress Address { get; }
 
-        protected ProtocolBase(PeerId peerId) { PeerId = peerId; }
+        protected ProtocolBase(MultiAddress address) { Address = address; }
     }
 }

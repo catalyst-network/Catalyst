@@ -32,6 +32,8 @@ using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
+using Lib.P2P.Protocols;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
@@ -49,8 +51,9 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <param name="logger">The logger.</param>
         public TransferFileBytesRequestObserver(IDownloadFileTransferFactory fileTransferFactory,
             IPeerSettings peerSettings,
+            IPeerClient peerClient,
             ILogger logger)
-            : base(logger, peerSettings)
+            : base(logger, peerSettings, peerClient)
         {
             _fileTransferFactory = fileTransferFactory;
         }
@@ -60,17 +63,16 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// </summary>
         /// <param name="transferFileBytesRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerId"></param>
+        /// <param name="sender"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override TransferFileBytesResponse HandleRequest(TransferFileBytesRequest transferFileBytesRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(transferFileBytesRequest, nameof(transferFileBytesRequest)).NotNull();
-            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
             Logger.Debug("received message of type TransferFileBytesRequest");
 
             FileTransferResponseCodeTypes responseCodeType = _fileTransferFactory.DownloadChunk(transferFileBytesRequest);

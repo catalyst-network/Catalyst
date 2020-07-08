@@ -36,6 +36,7 @@ using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
+using MultiFormats;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -44,7 +45,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Correlation
     public sealed class PeerMessageCorrelationManagerTests : MessageCorrelationManagerTests<IPeerMessageCorrelationManager>
     {
         private TestScheduler _testScheduler;
-        private Dictionary<PeerId, int> _reputationByPeerIdentifier;
+        private Dictionary<MultiAddress, int> _reputationByPeerIdentifier;
 
         [SetUp]
         public void Init()
@@ -66,12 +67,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Correlation
 
             CorrelationManager.ReputationEventStream.Subscribe(change =>
             {
-                if (!_reputationByPeerIdentifier.ContainsKey(change.PeerId))
+                if (!_reputationByPeerIdentifier.ContainsKey(change.Address))
                 {
                     return;
                 }
                 
-                _reputationByPeerIdentifier[change.PeerId] += change.ReputationEvent.Amount;
+                _reputationByPeerIdentifier[change.Address] += change.ReputationEvent.Amount;
             });
         }
 
@@ -134,7 +135,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Correlation
 
                 _testScheduler.Start();
 
-                observer.Received(1).OnNext(Arg.Is<IPeerReputationChange>(c => c.PeerId.Equals(PendingRequests[0].Content.PeerId) 
+                observer.Received(1).OnNext(Arg.Is<IPeerReputationChange>(c => c.Address.Equals(PendingRequests[0].Content.Address) 
                  && c.ReputationEvent.Equals(ReputationEventType.NoResponseReceived)));
             }
         }

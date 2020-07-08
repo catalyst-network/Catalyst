@@ -47,6 +47,7 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
 {
@@ -57,13 +58,13 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
             var logger = Substitute.For<ILogger>();
             _testScheduler = new TestScheduler();
             _rpcServerSettings = Substitute.For<IRpcServerSettings>();
-            _peerId = PeerIdHelper.GetPeerId(nameof(RpcServerTests));
+            _peerId = MultiAddressHelper.GetAddress(nameof(RpcServerTests));
             _channelHandlerContext = Substitute.For<IChannelHandlerContext>();
             _mockSocketReplySubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1, _testScheduler);
 
             var tcpServerEventLoopGroupFactory = Substitute.For<ITcpServerEventLoopGroupFactory>();
             var tcpServerChannelFactory = Substitute.For<ITcpServerChannelFactory>();
-            tcpServerChannelFactory.BuildChannelAsync(tcpServerEventLoopGroupFactory, Arg.Any<IPAddress>(), Arg.Any<int>(),
+            tcpServerChannelFactory.BuildChannelAsync(tcpServerEventLoopGroupFactory, Arg.Any<MultiAddress>(),
                 Arg.Any<X509Certificate2>()).Returns(ObservableHelpers.MockObservableChannel(_mockSocketReplySubject));
 
             var certificateStore = Substitute.For<ICertificateStore>();
@@ -77,7 +78,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
 
         private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _mockSocketReplySubject;
         private readonly TestScheduler _testScheduler;
-        private readonly PeerId _peerId;
+        private readonly MultiAddress _peerId;
         private readonly RpcServer _rpcServer;
         private readonly IRpcServerSettings _rpcServerSettings;
         private readonly IChannelHandlerContext _channelHandlerContext;

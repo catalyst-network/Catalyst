@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using Catalyst.Abstractions.Cli.Options;
 using CommandLine;
 using CommandLine.Text;
+using MultiFormats;
 
 namespace Catalyst.Cli.Options
 {
@@ -34,13 +35,8 @@ namespace Catalyst.Cli.Options
     [Verb("removepeer", HelpText = "removes a peer")]
     public sealed class RemovePeerOptions : OptionsBase, IRemovePeerOptions
     {
-        /// <inheritdoc />
-        [Option('p', "publickey", HelpText = "Public key of the peer to remove.", Required = false)]
-        public string PublicKey { get; set; }
-
-        /// <inheritdoc />
-        [Option('i', "ip", HelpText = "IP address of the peer to remove.", Required = true)]
-        public string Ip { get; set; }
+        [Option('a', "address", HelpText = "MultiAddress of the peer whose info is of interest.")]
+        public string Address { get; set; }
 
         /// <summary>
         /// Gets the examples.
@@ -53,7 +49,7 @@ namespace Catalyst.Cli.Options
             new List<Example>
             {
                 new Example("Removes a peer from the specified node.",
-                    new RemovePeerOptions {Ip = "127.0.0.1", Node = "node1", PublicKey = "302a300506032b657003"})
+                    new MultiAddress("/ip4/192.168.0.181/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdwu2yu3QMzKa2BDkb5C5pcuhtrH1G9HHbztbbxA8tGmf4"))
             };
     }
 }

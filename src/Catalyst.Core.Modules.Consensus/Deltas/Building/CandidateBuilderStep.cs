@@ -42,12 +42,12 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
 {
     internal sealed class CandidateBuilderStep : IDeltaBuilderStep
     {
-        private readonly PeerId _producerUniqueId;
+        private readonly MultiAddress _producerUniqueId;
         private readonly IDeterministicRandomFactory _randomFactory;
         private readonly IHashProvider _hashProvider;
         private readonly ILogger _logger;
 
-        public CandidateBuilderStep(PeerId producerUniqueId,
+        public CandidateBuilderStep(MultiAddress producerUniqueId,
             IDeterministicRandomFactory randomFactory,
             IHashProvider hashProvider,
             ILogger logger)
@@ -90,7 +90,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
             context.CoinbaseEntry = new CoinbaseEntry
             {
                 Amount = summedFees.ToUint256ByteString(),
-                ReceiverPublicKey = _producerUniqueId.PublicKey.ToByteString()
+                ReceiverPublicKey = _producerUniqueId.GetPublicKeyBytes().ToByteString()
             };
             
             byte[] globalLedgerStateUpdate = shuffledEntriesBytes
@@ -106,7 +106,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
                    .ToByteString(),
 
                 // Idj
-                ProducerId = _producerUniqueId,
+                Producer = _producerUniqueId.ToString(),
                 PreviousDeltaDfsHash = context.PreviousDeltaHash.ToArray().ToByteString()
             };
             

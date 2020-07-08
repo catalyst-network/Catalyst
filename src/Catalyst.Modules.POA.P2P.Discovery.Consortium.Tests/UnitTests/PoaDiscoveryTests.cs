@@ -52,12 +52,11 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
         public async Task Can_Populate_Peers_Correctly()
         {
             var peerRepository = Substitute.For<IPeerRepository>();
-            var pubkey = _hashProvider.ComputeUtf8MultiHash("hello").ToBase58();
 
             var peers = new[]
             {
-                new PoaPeer {Ip = "92.207.178.198", Port = 42069, PublicKey = pubkey},
-                new PoaPeer {Ip = "127.0.0.1", Port = 42069, PublicKey = pubkey}
+                 new PoaPeer {Address="/ip4/192.168.0.181/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdwu2yu3QMzKa2BDkb5C5pcuhtrH1G9HHbztbbxA8tGmf4"},
+                 new PoaPeer {Address=MultiAddressHelper.GetAddress().ToString()},
             };
 
             await FileSystem.WriteTextFileToCddAsync(PoaDiscovery.PoaPeerFile, JsonConvert.SerializeObject(peers));

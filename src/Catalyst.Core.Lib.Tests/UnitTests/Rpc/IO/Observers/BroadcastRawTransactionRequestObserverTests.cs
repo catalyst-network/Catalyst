@@ -22,6 +22,8 @@
 #endregion
 
 using Catalyst.Abstractions.IO.Events;
+using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
@@ -37,18 +39,22 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
     public class BroadcastRawTransactionRequestObserverTests
     {
-        private readonly BroadcastRawTransactionRequestObserver _broadcastRawTransactionRequestObserver;
-        private readonly ITransactionReceivedEvent _transactionReceivedEvent;
+        private BroadcastRawTransactionRequestObserver _broadcastRawTransactionRequestObserver;
+        private ITransactionReceivedEvent _transactionReceivedEvent;
+        private IPeerClient _peerClient;
 
-        public BroadcastRawTransactionRequestObserverTests()
+        [SetUp]
+        public void Init()
         {
+            _peerClient = Substitute.For<IPeerClient>();
             _transactionReceivedEvent = Substitute.For<ITransactionReceivedEvent>();
 
-            var peerSettings = PeerIdHelper.GetPeerId("Test").ToSubstitutedPeerSettings();
+            var peerSettings = MultiAddressHelper.GetAddress("Test").ToSubstitutedPeerSettings();
 
             _broadcastRawTransactionRequestObserver = new BroadcastRawTransactionRequestObserver(
                 Substitute.For<ILogger>(),
                 peerSettings,
+                _peerClient,
                 _transactionReceivedEvent);
         }
 
@@ -68,10 +74,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                .Returns(expectedResponse);
             _broadcastRawTransactionRequestObserver
                .OnNext(new ObserverDto(channelContext,
-                    new BroadcastRawTransactionRequest {Transaction = new TransactionBroadcast()}.ToProtocolMessage(
-                        PeerIdHelper.GetPeerId("FakeSender"))));
-            channelContext.Channel.Received(1)?.WriteAndFlushAsync(
-                Arg.Is<object>(transactionObj =>
+                    new BroadcastRawTransactionRequest { Transaction = new TransactionBroadcast() }.ToProtocolMessage(
+                        MultiAddressHelper.GetAddress("FakeSender"))));
+            _peerClient.Received(1).SendMessageAsync(Arg.Is<IMessageDto<ProtocolMessage>>(transactionObj =>
                     ((MessageDto) transactionObj)
                    .Content.FromProtocolMessage<BroadcastRawTransactionResponse>()
                    .ResponseCode == expectedResponse));

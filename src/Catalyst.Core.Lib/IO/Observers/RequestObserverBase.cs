@@ -29,11 +29,13 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Protocol.Peer;
+using Catalyst.Core.Lib.P2P;
 using Catalyst.Protocol.Wire;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
+using Lib.P2P.Protocols;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Lib.IO.Observers
@@ -43,15 +45,18 @@ namespace Catalyst.Core.Lib.IO.Observers
     {
         public IPeerSettings PeerSettings { get; }
 
-        protected RequestObserverBase(ILogger logger, IPeerSettings peerSettings) : base(logger, typeof(TProtoReq).ShortenedProtoFullName())
+        private readonly IPeerClient _peerClient;
+
+        protected RequestObserverBase(ILogger logger, IPeerSettings peerSettings, IPeerClient peerClient) : base(logger, typeof(TProtoReq).ShortenedProtoFullName())
         {
             Guard.Argument(typeof(TProtoReq), nameof(TProtoReq)).Require(t => t.IsRequestType(),
                 t => $"{nameof(TProtoReq)} is not of type {MessageTypes.Request.Name}");
             PeerSettings = peerSettings;
+            _peerClient = peerClient;
             logger.Verbose("{interface} instantiated", nameof(IRequestMessageObserver));
         }
 
-        protected abstract TProtoRes HandleRequest(TProtoReq messageDto, IChannelHandlerContext channelHandlerContext, PeerId senderPeerId, ICorrelationId correlationId);
+        protected abstract TProtoRes HandleRequest(TProtoReq messageDto, IChannelHandlerContext channelHandlerContext, MultiAddress sender, ICorrelationId correlationId);
 
         public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
         {
@@ -60,7 +65,7 @@ namespace Catalyst.Core.Lib.IO.Observers
             try
             {
                 var correlationId = messageDto.Payload.CorrelationId.ToCorrelationId();
-                var recipientPeerId = messageDto.Payload.PeerId;
+                var recipientPeerId = new MultiAddress(messageDto.Payload.Address);
 
                 var response = HandleRequest(messageDto.Payload.FromProtocolMessage<TProtoReq>(),
                     messageDto.Context,
@@ -68,10 +73,10 @@ namespace Catalyst.Core.Lib.IO.Observers
                     correlationId);
 
                 var responseDto = new MessageDto(
-                    response.ToProtocolMessage(PeerSettings.PeerId, correlationId),
+                    response.ToProtocolMessage(PeerSettings.Address, correlationId),
                     recipientPeerId);
 
-                messageDto.Context.Channel?.WriteAndFlushAsync(responseDto).ConfigureAwait(false).GetAwaiter().GetResult();
+                _peerClient.SendMessageAsync(responseDto);
             }
             catch (Exception exception)
             {

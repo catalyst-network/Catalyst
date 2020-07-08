@@ -32,6 +32,8 @@ using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using DotNetty.Transport.Channels;
+using Lib.P2P.Protocols;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.IO.Observers
@@ -44,8 +46,9 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
 
         public GetNeighbourRequestObserver(IPeerSettings peerSettings,
             IPeerRepository repository,
+            IPeerClient peerClient,
             ILogger logger)
-            : base(logger, peerSettings)
+            : base(logger, peerSettings, peerClient)
         {
             _repository = repository;
         }
@@ -55,17 +58,16 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         /// </summary>
         /// <param name="peerNeighborsRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerId"></param>
+        /// <param name="sender"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override PeerNeighborsResponse HandleRequest(PeerNeighborsRequest peerNeighborsRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(peerNeighborsRequest, nameof(peerNeighborsRequest)).NotNull();
-            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
 
             Logger.Debug("PeerNeighborsRequest Message Received");
 
@@ -77,7 +79,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
 
             for (var i = 0; i < Constants.NumberOfRandomPeers; i++)
             {
-                peerNeighborsResponseMessage.Peers.Add(activePeersList.RandomElement().PeerId);
+                peerNeighborsResponseMessage.Peers.Add(activePeersList.RandomElement().Address.ToString());
             }
 
             return peerNeighborsResponseMessage;

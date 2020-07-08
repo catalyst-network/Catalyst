@@ -25,8 +25,6 @@ namespace Catalyst.Abstractions.Cli.Options
 {
     public interface IPeerReputationOptions : IOptionsBase
     {
-        string IpAddress { get; set; }
-        
-        string PublicKey { get; set; }
+        public string Address { get; set; }
     }
 }

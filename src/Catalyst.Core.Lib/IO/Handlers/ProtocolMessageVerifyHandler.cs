@@ -26,6 +26,7 @@ using Catalyst.Abstractions.KeySigner;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Lib.IO.Handlers
@@ -70,7 +71,8 @@ namespace Catalyst.Core.Lib.IO.Handlers
             }
 
             var sig = signedMessage.Signature.RawBytes.ToByteArray();
-            var pub = signedMessage.PeerId.PublicKey.ToByteArray();
+            var address = new MultiAddress(signedMessage.Address);
+            var pub = address.GetPublicKeyBytes();
 
             var signature = _keySigner.CryptoContext.GetSignatureFromBytes(sig, pub);
             var messageWithoutSig = signedMessage.Clone();

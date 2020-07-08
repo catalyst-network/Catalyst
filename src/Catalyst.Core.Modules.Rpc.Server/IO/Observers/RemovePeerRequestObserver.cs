@@ -31,6 +31,8 @@ using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Serilog;
+using MultiFormats;
+using Lib.P2P.Protocols;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
@@ -51,7 +53,8 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <param name="logger">The logger.</param>
         public RemovePeerRequestObserver(IPeerSettings peerSettings,
             IPeerRepository peerRepository,
-            ILogger logger) : base(logger, peerSettings)
+            IPeerClient peerClient,
+            ILogger logger) : base(logger, peerSettings, peerClient)
         {
             _peerRepository = peerRepository;
         }
@@ -60,21 +63,19 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// </summary>
         /// <param name="removePeerRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerId"></param>
+        /// <param name="sender"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override RemovePeerResponse HandleRequest(RemovePeerRequest removePeerRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(removePeerRequest, nameof(removePeerRequest)).NotNull();
-            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
             Logger.Debug("Received message of type RemovePeerRequest");
 
-            var peerDeletedCount =
-                _peerRepository.DeletePeersByIpAndPublicKey(removePeerRequest.PeerIp, removePeerRequest.PublicKey);
+            var peerDeletedCount = _peerRepository.DeletePeersByAddress(removePeerRequest.Address);
 
             return new RemovePeerResponse
             {

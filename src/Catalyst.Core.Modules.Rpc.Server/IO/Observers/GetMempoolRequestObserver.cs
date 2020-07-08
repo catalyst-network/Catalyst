@@ -35,6 +35,8 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using Dawn;
 using DotNetty.Transport.Channels;
+using Lib.P2P.Protocols;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
@@ -47,10 +49,11 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         private readonly IMapperProvider _mappingProvider;
 
         public GetMempoolRequestObserver(IPeerSettings peerSettings,
+            IPeerClient peerClient,
             IMempool<PublicEntryDao> mempool,
             IMapperProvider mappingProvider,
             ILogger logger)
-            : base(logger, peerSettings)
+            : base(logger, peerSettings, peerClient)
         {
             _mempool = mempool;
             _mappingProvider = mappingProvider;
@@ -60,17 +63,16 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// </summary>
         /// <param name="getMempoolRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerId"></param>
+        /// <param name="sender"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override GetMempoolResponse HandleRequest(GetMempoolRequest getMempoolRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(getMempoolRequest, nameof(getMempoolRequest)).NotNull();
-            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
             Logger.Debug("GetMempoolRequestHandler starting ...");
 
             try

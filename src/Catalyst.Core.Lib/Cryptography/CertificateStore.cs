@@ -62,15 +62,6 @@ namespace Catalyst.Core.Lib.Cryptography
                 return certificate;
             }
 
-            if (Environment.OSVersion.Platform == PlatformID.Unix)
-            {
-                throw new PlatformNotSupportedException(
-                    "Catalyst network currently doesn't support on the fly creation of self signed certificate. " +
-                    $"Please create a password protected certificate at {pfxFilePath}." +
-                    Environment.NewLine +
-                    "cf. `https://github.com/catalyst-network/Catalyst.Node/wiki/Creating-a-Self-Signed-Certificate` for instructions");
-            }
-
             certificate = CreateAndSaveSelfSignedCertificate(pfxFilePath);
 
             return certificate;

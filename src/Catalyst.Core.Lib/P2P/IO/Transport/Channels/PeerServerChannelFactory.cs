@@ -26,6 +26,7 @@ using System.Collections.Generic;
 using System.Net;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
+using System.Reactive.Subjects;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.EventLoop;
@@ -36,6 +37,7 @@ using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Transport.Channels;
 using Catalyst.Protocol.Cryptography;
@@ -44,6 +46,7 @@ using DotNetty.Codecs;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
 {
@@ -55,6 +58,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
         private readonly IKeySigner _keySigner;
         private readonly IPeerIdValidator _peerIdValidator;
         private readonly SigningContext _signingContext;
+        public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
 
         public PeerServerChannelFactory(IPeerMessageCorrelationManager messageCorrelationManager,
             IBroadcastManager broadcastManager,
@@ -69,6 +73,9 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
             _keySigner = keySigner;
             _peerIdValidator = peerIdValidator;
             _signingContext = new SigningContext {NetworkType = peerSettings.NetworkType, SignatureType = SignatureType.ProtocolPeer};
+            
+            var messageSubject = new ReplaySubject<IObserverDto<ProtocolMessage>>();
+            MessageStream = messageSubject.AsObservable();
         }
 
         protected override Func<List<IChannelHandler>> HandlerGenerationFunction
@@ -106,11 +113,10 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
         /// <param name="certificate">Ignored</param>
         /// <returns></returns>
         public override async Task<IObservableChannel> BuildChannelAsync(IEventLoopGroupFactory handlerEventLoopGroupFactory,
-            IPAddress targetAddress,
-            int targetPort,
+            MultiAddress address,
             X509Certificate2 certificate = null)
         {
-            var channel = await BootStrapChannelAsync(handlerEventLoopGroupFactory, targetAddress, targetPort).ConfigureAwait(false);
+            var channel = await BootStrapChannelAsync(handlerEventLoopGroupFactory, address.GetIpAddress(), address.GetPort()).ConfigureAwait(false);
 
             var messageStream = channel.Pipeline.Get<IObservableServiceHandler>()?.MessageStream;
 

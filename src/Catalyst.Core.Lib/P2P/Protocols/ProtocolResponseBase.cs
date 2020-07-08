@@ -21,12 +21,12 @@
 
 #endregion
 
-using Catalyst.Protocol.Peer;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.P2P.Protocols
 {
     public class ProtocolResponseBase : ProtocolBase
     {
-        protected ProtocolResponseBase(PeerId peerId) : base(peerId) { }
+        protected ProtocolResponseBase(MultiAddress address) : base(address) { }
     }
 }

@@ -30,6 +30,8 @@ using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
+using Lib.P2P.Protocols;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
@@ -40,21 +42,21 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
     {
         private readonly IFileSystem _fileSystem;
 
-        public ChangeDataFolderRequestObserver(IPeerSettings peerSettings, 
+        public ChangeDataFolderRequestObserver(IPeerSettings peerSettings,
+            IPeerClient peerClient,
             IFileSystem fileSystem,
-            ILogger logger) : base(logger, peerSettings)
+            ILogger logger) : base(logger, peerSettings, peerClient)
         {
             _fileSystem = fileSystem;
         }
 
         protected override SetPeerDataFolderResponse HandleRequest(SetPeerDataFolderRequest setDataFolderRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(setDataFolderRequest, nameof(setDataFolderRequest)).NotNull();
-            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
 
             Logger.Debug("received message of type SetPeerDataFolderRequest");
 

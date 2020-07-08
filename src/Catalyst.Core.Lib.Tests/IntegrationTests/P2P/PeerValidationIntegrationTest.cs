@@ -43,6 +43,7 @@ using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
 using Catalyst.Core.Lib.P2P.Protocols;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.KeySigner;
 using Catalyst.Core.Modules.Keystore;
@@ -57,7 +58,7 @@ using Serilog;
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 {
     [TestFixture]
-    [Category(Traits.IntegrationTest)] 
+    [Category(Traits.IntegrationTest)]
     public sealed class PeerValidationIntegrationTest : FileSystemBasedTest
     {
         private IPeerService _peerService;
@@ -79,6 +80,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             ContainerProvider.ContainerBuilder.RegisterModule(new KeySignerModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new HashingModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new BulletProofsModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new DfsModule());
 
             ContainerProvider.ContainerBuilder.RegisterType<ConsoleUserOutput>().As<IUserOutput>();
             ContainerProvider.ContainerBuilder.RegisterType<ConsoleUserInput>().As<IUserInput>();
@@ -96,7 +98,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
                 return new PeerChallengeRequest(logger, peerClient, _peerSettings, 10);
             }).As<IPeerChallengeRequest>().SingleInstance();
 
-            
+
             _peerChallengeRequest = ContainerProvider.Container.Resolve<IPeerChallengeRequest>();
 
             var eventLoopGroupFactoryConfiguration = new EventLoopGroupFactoryConfiguration
@@ -109,7 +111,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 
             var keySigner = ContainerProvider.Container.Resolve<IKeySigner>(); // @@
 
-            _peerService = new PeerService(
+            _peerService = new DotnettyPeerService(
                 new UdpServerEventLoopGroupFactory(eventLoopGroupFactoryConfiguration),
                 new PeerServerChannelFactory(ContainerProvider.Container.Resolve<IPeerMessageCorrelationManager>(),
                     ContainerProvider.Container.Resolve<IBroadcastManager>(),
@@ -123,6 +125,12 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
                 ContainerProvider.Container.Resolve<IHealthChecker>());
 
             _peerService.StartAsync().Wait();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            this.Dispose();
         }
 
         // [Fact(Skip = "this wont work as it tries to connect to a real node!! We need to instantiate two sockets here")]
@@ -153,8 +161,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             TestContext.WriteLine(ip.ToString());
             TestContext.WriteLine(port.ToString());
 
-            var recipient = publicKey.BuildPeerIdFromBase58Key(ip, port);
-
+            var recipient = MultiAddressHelper.GetAddress(publicKey, ip, port);
             return await _peerChallengeRequest.ChallengePeerAsync(recipient);
         }
 

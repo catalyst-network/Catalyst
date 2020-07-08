@@ -70,7 +70,7 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
         {
             try
             {
-                var peer = PeerRepository.GetAll().FirstOrDefault(p => p.PeerId.Equals(peerReputationChange.PeerId));
+                var peer = PeerRepository.GetAll().FirstOrDefault(p => p.Address.Equals(peerReputationChange.Address));
                 //todo come back to later
                 if (peer == null)
                 {

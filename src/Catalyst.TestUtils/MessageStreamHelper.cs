@@ -61,7 +61,7 @@ namespace Catalyst.TestUtils
             where T : IMessage<T>, IMessage
         {
             var protoMessages = messages.Select(m =>
-                m.ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId()));
+                m.ToProtocolMessage(MultiAddressHelper.GetAddress(), CorrelationId.GenerateCorrelationId()));
 
             var context = Substitute.For<IChannelHandlerContext>();
 

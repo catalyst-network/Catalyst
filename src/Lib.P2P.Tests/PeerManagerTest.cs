@@ -43,7 +43,7 @@ namespace Lib.P2P.Tests
         public void IsNotReachable()
         {
             var peer = new Peer {Id = "QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb"};
-            var manager = new PeerManager {SwarmService = new SwarmService()};
+            var manager = new PeerManager {SwarmService = new SwarmService(null)};
             Assert.AreEqual(0, manager.DeadPeers.Count);
 
             manager.SetNotReachable(peer);
@@ -63,7 +63,7 @@ namespace Lib.P2P.Tests
         public void BlackListsThePeer()
         {
             var peer = new Peer {Id = "QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb"};
-            var manager = new PeerManager {SwarmService = new SwarmService()};
+            var manager = new PeerManager {SwarmService = new SwarmService(null)};
             Assert.AreEqual(0, manager.DeadPeers.Count);
 
             manager.SetNotReachable(peer);
@@ -86,7 +86,7 @@ namespace Lib.P2P.Tests
                     "/ip4/127.0.0.1/tcp/4040/ipfs/QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTxx"
                 }
             };
-            var swarm = new SwarmService {LocalPeer = self};
+            var swarm = new SwarmService(self);
             var manager = new PeerManager
             {
                 SwarmService = swarm,
@@ -133,7 +133,7 @@ namespace Lib.P2P.Tests
                     "/ip4/127.0.0.1/tcp/4040/ipfs/QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb"
                 }
             };
-            var swarm = new SwarmService {LocalPeer = self};
+            var swarm = new SwarmService(self);
             var manager = new PeerManager
             {
                 SwarmService = swarm,

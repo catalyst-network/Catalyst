@@ -62,7 +62,7 @@ namespace Catalyst.Core.Modules.Ledger
         public IHashProvider HashProvider { get; }
         public IDfsService DfsService { get; }
         public SyncState SyncState { get; }
-        private readonly PeerId _peerId;
+        private readonly MultiAddress _peerId;
 
         public Web3EthApi(IStateReader stateReader,
             IDeltaResolver deltaResolver,
@@ -83,7 +83,7 @@ namespace Catalyst.Core.Modules.Ledger
             _receipts = receipts;
             _transactionReceived = transactionReceived ?? throw new ArgumentNullException(nameof(transactionReceived));
             HashProvider = hashProvider;
-            _peerId = peerSettings.PeerId;
+            _peerId = peerSettings.Address;
             _mempoolRepository = mempoolRepository;
             PeerRepository = peerRepository;
             _mapperProvider = mapperProvider;

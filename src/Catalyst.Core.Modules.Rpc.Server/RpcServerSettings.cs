@@ -25,6 +25,7 @@ using System.Net;
 using Catalyst.Abstractions.Rpc;
 using Dawn;
 using Microsoft.Extensions.Configuration;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.Rpc.Server
 {
@@ -46,14 +47,12 @@ namespace Catalyst.Core.Modules.Rpc.Server
 
             var section = rootSection.GetSection("CatalystNodeConfiguration").GetSection("Rpc");
 
-            Port = int.Parse(section.GetSection("Port").Value);
             PfxFileName = section.GetSection("PfxFileName").Value;
-            BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value);
+            Address = section.GetSection("Address").Value;
         }
 
         public IConfigurationRoot NodeConfig { get; }
-        public int Port { get; }
-        public IPAddress BindAddress { get; }
+        public MultiAddress Address { get; }
         public string PfxFileName { get; }
     }
 }

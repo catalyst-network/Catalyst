@@ -21,15 +21,28 @@
 
 #endregion
 
-using Catalyst.Abstractions.IO.Transport;
-using Catalyst.Protocol.Peer;
+using Catalyst.Abstractions.IO.Messaging.Dto;
+using Catalyst.Protocol.Wire;
 using Google.Protobuf;
+using MultiFormats;
+using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Catalyst.Abstractions.P2P
 {
-    public interface IPeerClient : ISocketClient
+    public interface IPeerClient : IDisposable
     {
-        void SendMessageToPeers(IMessage message, IEnumerable<PeerId> peers);
+        Task SendMessageToPeersAsync(IMessage message, IEnumerable<MultiAddress> peers);
+        Task SendMessageAsync<T>(IMessageDto<T> message) where T : IMessage<T>;
+        Task BroadcastAsync(ProtocolMessage message);
+        Task StartAsync();
+        Task StartAsync(CancellationToken cancellationToken);
     }
+
+    //public interface IPeerClient : ISocketClient
+    //{
+    //    void SendMessageToPeers(IMessage message, IEnumerable<MultiAddress> peers);
+    //}
 }

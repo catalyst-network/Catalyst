@@ -27,8 +27,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs.BlockExchange;
 using Catalyst.Abstractions.Dfs.CoreApi;
-using Catalyst.Abstractions.Keystore;
-using Catalyst.Core.Modules.Dfs.BlockExchange;
 using Lib.P2P;
 using MultiFormats;
 
@@ -39,7 +37,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         private readonly IBitswapService _bitSwapService;
         private readonly Peer _localPeer;
 
-        public BitSwapApi(BitSwapService bitSwapService, IKeyApi keyApi, Peer localPeer)
+        public BitSwapApi(IBitswapService bitSwapService, Peer localPeer)
         {
             _bitSwapService = bitSwapService;
             _localPeer = localPeer;

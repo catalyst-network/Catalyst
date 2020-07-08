@@ -35,19 +35,11 @@ namespace Catalyst.Abstractions.Cli.Options
         bool BlackListFlag { get; set; }
 
         /// <summary>
-        /// Gets or sets the ip address.
+        /// Gets or sets the address.
         /// </summary>
         /// <value>
-        /// The ip address.
+        /// The multi address.
         /// </value>
-        string IpAddress { get; set; }
-
-        /// <summary>
-        /// Gets or sets the public key.
-        /// </summary>
-        /// <value>
-        /// The public key.
-        /// </value>
-        string PublicKey { get; set; }
+        public string Address { get; set; }
     }
 }

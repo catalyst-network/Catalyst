@@ -24,7 +24,7 @@
 using System;
 using Catalyst.Abstractions.IO.Events;
 using Catalyst.Abstractions.Mempool;
-using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Validators;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Transaction;
@@ -33,10 +33,8 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
-using Google.Protobuf.WellKnownTypes;
 using MultiFormats;
 using Nethermind.Core.Crypto;
-using Newtonsoft.Json;
 using Serilog;
 
 namespace Catalyst.Core.Lib.IO.Events
@@ -46,17 +44,17 @@ namespace Catalyst.Core.Lib.IO.Events
         private readonly ITransactionValidator _validator;
         private readonly ILogger _logger;
         private readonly IMempool<PublicEntryDao> _mempool;
-        private readonly IBroadcastManager _broadcastManager;
+        private readonly IPeerClient _peerClient;
         private readonly IMapperProvider _mapperProvider;
 
         public TransactionReceivedEvent(ITransactionValidator validator,
             IMempool<PublicEntryDao> mempool,
-            IBroadcastManager broadcastManager,
+            IPeerClient peerClient,
             IMapperProvider mapperProvider,
             ILogger logger)
         {
             _mapperProvider = mapperProvider;
-            _broadcastManager = broadcastManager;
+            _peerClient = peerClient;
             _mempool = mempool;
             _validator = validator;
             _logger = logger;
@@ -77,7 +75,7 @@ namespace Catalyst.Core.Lib.IO.Events
                 byte[] kvmAddressBytes = Keccak.Compute(publicEntry.SenderAddress.ToByteArray()).Bytes.AsSpan(12).ToArray();
                 string hex = kvmAddressBytes.ToHexString() ?? throw new ArgumentNullException("kvmAddressBytes.ToHexString()");
                 publicEntry.SenderAddress = kvmAddressBytes.ToByteString();
-                
+
                 if (publicEntry.ReceiverAddress.Length == 1)
                 {
                     publicEntry.ReceiverAddress = ByteString.Empty;
@@ -97,7 +95,7 @@ namespace Catalyst.Core.Lib.IO.Events
             _mempool.Service.CreateItem(transactionDao);
 
             _logger.Information("Broadcasting {signature} transaction", protocolMessage);
-            _broadcastManager.BroadcastAsync(protocolMessage).ConfigureAwait(false);
+            _peerClient.BroadcastAsync(protocolMessage).ConfigureAwait(false);
 
             return ResponseCode.Successful;
         }

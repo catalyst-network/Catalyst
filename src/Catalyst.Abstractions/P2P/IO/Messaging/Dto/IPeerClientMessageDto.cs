@@ -24,6 +24,7 @@
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Protocol.Peer;
 using Google.Protobuf;
+using MultiFormats;
 
 namespace Catalyst.Abstractions.P2P.IO.Messaging.Dto
 {
@@ -33,7 +34,7 @@ namespace Catalyst.Abstractions.P2P.IO.Messaging.Dto
     public interface IPeerClientMessageDto
     {
         ICorrelationId CorrelationId { get; set; }
-        PeerId Sender { get; set; }
+        MultiAddress Sender { get; set; }
         IMessage Message { get; set; }
     }
 }

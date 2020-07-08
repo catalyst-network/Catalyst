@@ -32,20 +32,6 @@ namespace Catalyst.Modules.POA.P2P
 {
     public sealed class PoaPeer
     {
-        public string Ip { get; set; }
-
-        public int Port { get; set; }
-
-        public string PublicKey { get; set; }
-
-        public PeerId ToPeerId()
-        {
-            return new PeerId
-            {
-                PublicKey = PublicKey.FromBase58().ToByteString(),
-                Ip = IPAddress.Parse(Ip).To16Bytes().ToByteString(),
-                Port = (uint) Port
-            };
-        }
+        public string Address { set; get; }
     }
 }

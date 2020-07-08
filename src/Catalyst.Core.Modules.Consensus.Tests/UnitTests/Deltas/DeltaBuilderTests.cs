@@ -39,7 +39,6 @@ using Catalyst.Core.Modules.Kvm;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Core.Modules.Consensus.Deltas.Building;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
@@ -57,6 +56,7 @@ using Nethermind.State;
 using NSubstitute;
 using NUnit.Framework;
 using ILogger = Serilog.ILogger;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
@@ -66,7 +66,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         private IHashProvider _hashProvider;
         private IDeterministicRandomFactory _randomFactory;
         private Random _random;
-        private PeerId _producerId;
+        private MultiAddress _producer;
         private Cid _previousDeltaHash;
         private CoinbaseEntry _zeroCoinbaseEntry;
         private IDeltaCache _cache;
@@ -88,14 +88,14 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _randomFactory.GetDeterministicRandomFromSeed(Arg.Any<byte[]>())
                .Returns(ci => new IsaacRandom(((byte[]) ci[0]).ToHex()));
 
-            _producerId = PeerIdHelper.GetPeerId("producer");
-            _peerSettings = _producerId.ToSubstitutedPeerSettings();
+            _producer = MultiAddressHelper.GetAddress("producer");
+            _peerSettings = _producer.ToSubstitutedPeerSettings();
 
             _previousDeltaHash = _hashProvider.ComputeUtf8MultiHash("previousDelta").ToCid();
             _zeroCoinbaseEntry = new CoinbaseEntry
             {
                 Amount = UInt256.Zero.ToUint256ByteString(),
-                ReceiverPublicKey = _producerId.PublicKey.ToByteString()
+                ReceiverPublicKey = _producer.GetPublicKeyBytes().ToByteString()
             };
 
             _logger = Substitute.For<ILogger>();
@@ -361,7 +361,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var expectedCoinBase = new CoinbaseEntry
             {
                 Amount = selectedTransactions.Sum(t => t.GasPrice.ToUInt256() * t.GasLimit).ToUint256ByteString(),
-                ReceiverPublicKey = _producerId.PublicKey.ToByteString()
+                ReceiverPublicKey = _producer.GetPublicKeyBytes().ToByteString()
             };
 
             var expectedBytesToHash = shuffledEntriesBytes.Concat(signaturesInOrder)
@@ -372,7 +372,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         private void ValidateDeltaCandidate(CandidateDeltaBroadcast candidate, byte[] expectedBytesToHash)
         {
             candidate.Should().NotBeNull();
-            candidate.ProducerId.Should().Be(_producerId);
+            candidate.Producer.Should().Be(_producer.ToString());
             candidate.PreviousDeltaDfsHash.ToByteArray().SequenceEqual(_previousDeltaHash.ToArray()).Should().BeTrue();
 
             var expectedHash = _hashProvider.ComputeMultiHash(expectedBytesToHash).ToCid();

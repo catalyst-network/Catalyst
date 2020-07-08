@@ -24,15 +24,16 @@
 using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using MultiFormats;
 using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
 {
     public sealed class HastingsOriginatorTests
     {
-        private readonly PeerId _peer;
+        private readonly MultiAddress _peer;
 
-        public HastingsOriginatorTests() { _peer = PeerIdHelper.GetPeerId("current_peer"); }
+        public HastingsOriginatorTests() { _peer = MultiAddressHelper.GetAddress("current_peer"); }
 
         [Test]
         public void Can_Create_Memento_From_Current_State()

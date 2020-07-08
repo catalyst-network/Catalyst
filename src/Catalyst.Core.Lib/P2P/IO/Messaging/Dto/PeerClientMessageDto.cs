@@ -26,16 +26,17 @@ using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
 using Catalyst.Protocol.Peer;
 using Dawn;
 using Google.Protobuf;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.P2P.IO.Messaging.Dto
 {
     public sealed class PeerClientMessageDto : IPeerClientMessageDto
     {
         public ICorrelationId CorrelationId { get; set; }
-        public PeerId Sender { get; set; }
+        public MultiAddress Sender { get; set; }
         public IMessage Message { get; set; }
 
-        public PeerClientMessageDto(IMessage message, PeerId sender, ICorrelationId correlationId)
+        public PeerClientMessageDto(IMessage message, MultiAddress sender, ICorrelationId correlationId)
         {
             var ns = message.GetType().Namespace;
             Guard.Argument(message, nameof(message))

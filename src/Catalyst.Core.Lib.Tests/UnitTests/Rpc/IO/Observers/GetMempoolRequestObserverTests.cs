@@ -26,6 +26,7 @@ using System.Linq;
 using System.Net;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.Mempool;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Extensions;
@@ -48,15 +49,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         private ILogger _logger;
         private IChannelHandlerContext _fakeContext;
         private TestMapperProvider _mapperProvider;
+        private IPeerClient _peerClient;
 
         [SetUp]
         public void Init()
         {
             _logger = Substitute.For<ILogger>();
-            _fakeContext = Substitute.For<IChannelHandlerContext>();
-            var fakeChannel = Substitute.For<IChannel>();
-            _fakeContext.Channel.Returns(fakeChannel);
-            _fakeContext.Channel.RemoteAddress.Returns(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort));
+            _peerClient = Substitute.For<IPeerClient>();
             _mapperProvider = new TestMapperProvider();
         }
 
@@ -86,19 +85,19 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var mempool = Substitute.For<IMempool<PublicEntryDao>>();
             mempool.Service.GetAll().Returns(mempoolTransactions);
 
-            var protocolMessage = new GetMempoolRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("sender_key"));
+            var protocolMessage = new GetMempoolRequest().ToProtocolMessage(MultiAddressHelper.GetAddress("sender_key"));
 
             var messageStream =
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
-            var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
-            var handler = new GetMempoolRequestObserver(peerSettings, mempool, _mapperProvider, _logger);
+            var peerSettings = MultiAddressHelper.GetAddress("sender").ToSubstitutedPeerSettings();
+            var handler = new GetMempoolRequestObserver(peerSettings, _peerClient, mempool, _mapperProvider, _logger);
 
             handler.StartObserving(messageStream);
 
             testScheduler.Start();
 
-            var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
+            var receivedCalls = _peerClient.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();

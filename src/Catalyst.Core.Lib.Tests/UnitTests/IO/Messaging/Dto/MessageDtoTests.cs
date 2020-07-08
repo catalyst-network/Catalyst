@@ -40,8 +40,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Dto
         public MessageDtoTests()
         {
             var pingRequest = new PingRequest();
-            _messageDto = new MessageDto(pingRequest.ToProtocolMessage(PeerIdHelper.GetPeerId("Sender_Key")),
-                PeerIdHelper.GetPeerId("Recipient_Key")
+            _messageDto = new MessageDto(pingRequest.ToProtocolMessage(MultiAddressHelper.GetAddress("Sender_Key")),
+                MultiAddressHelper.GetAddress("Recipient_Key")
             );
         }
 
@@ -52,8 +52,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Dto
 
             _messageDto.Should().BeOfType<MessageDto>();
             _messageDto.Content.Should().NotBeNull().And.BeAssignableTo(typeof(IMessage<ProtocolMessage>));
-            _messageDto.RecipientPeerIdentifier.Should().NotBeNull();
-            _messageDto.SenderPeerIdentifier.Should().NotBeNull();
+            _messageDto.Recipient.Should().NotBeNull();
+            _messageDto.Sender.Should().NotBeNull();
         }
     }
 }

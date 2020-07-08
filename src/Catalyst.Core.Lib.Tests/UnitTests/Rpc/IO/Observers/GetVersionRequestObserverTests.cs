@@ -36,6 +36,7 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -43,15 +44,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
     {
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
+        private readonly IPeerClient _peerClient;
 
         public GetVersionRequestObserverTests()
         {
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
-
-            var fakeChannel = Substitute.For<IChannel>();
-            _fakeContext.Channel.Returns(fakeChannel);
-            _fakeContext.Channel.RemoteAddress.Returns(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort));
+            _peerClient = Substitute.For<IPeerClient>();
         }
 
         [Test]
@@ -61,20 +60,20 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             var versionRequest = new VersionRequest();
             var protocolMessage =
-                versionRequest.ToProtocolMessage(PeerIdHelper.GetPeerId("sender"));
+                versionRequest.ToProtocolMessage(MultiAddressHelper.GetAddress("sender"));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler,
                 protocolMessage
             );
 
-            var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
-            var handler = new GetVersionRequestObserver(peerSettings, _logger);
+            var peerSettings = MultiAddressHelper.GetAddress("sender").ToSubstitutedPeerSettings();
+            var handler = new GetVersionRequestObserver(peerSettings, _peerClient, _logger);
 
             handler.StartObserving(messageStream);
 
             testScheduler.Start();
 
-            var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
+            var receivedCalls = _peerClient.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
             var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();

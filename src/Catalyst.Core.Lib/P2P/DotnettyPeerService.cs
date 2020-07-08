@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Messaging.Dto;
@@ -37,7 +38,7 @@ using Serilog;
 
 namespace Catalyst.Core.Lib.P2P
 {
-    public sealed class PeerService : UdpServer, IPeerService
+    public sealed class DotnettyPeerService : UdpServer, IPeerService
     {
         private readonly IEnumerable<IP2PMessageObserver> _messageHandlers;
         private readonly IPeerSettings _peerSettings;
@@ -45,7 +46,7 @@ namespace Catalyst.Core.Lib.P2P
         public IPeerDiscovery Discovery { get; }
         public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; private set; }
 
-        public PeerService(IUdpServerEventLoopGroupFactory udpServerEventLoopGroupFactory,
+        public DotnettyPeerService(IUdpServerEventLoopGroupFactory udpServerEventLoopGroupFactory,
             IUdpServerChannelFactory serverChannelFactory,
             IPeerDiscovery peerDiscovery,
             IEnumerable<IP2PMessageObserver> messageHandlers,
@@ -62,7 +63,12 @@ namespace Catalyst.Core.Lib.P2P
 
         public override async Task StartAsync()
         {
-            var observableChannel = await ChannelFactory.BuildChannelAsync(EventLoopGroupFactory, _peerSettings.BindAddress, _peerSettings.Port).ConfigureAwait(false);
+            await StartAsync(CancellationToken.None).ConfigureAwait(false);
+        }
+
+        public async Task StartAsync(CancellationToken cancellationToken)
+        {
+            var observableChannel = await ChannelFactory.BuildChannelAsync(EventLoopGroupFactory, _peerSettings.Address).ConfigureAwait(false);
             Channel = observableChannel.Channel;
 
             MessageStream = observableChannel.MessageStream;

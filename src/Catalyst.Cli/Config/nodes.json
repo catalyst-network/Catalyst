@@ -3,19 +3,15 @@
         "nodes": [
             {
                 "nodeId": "node1",
-                "host": "127.0.0.1",
-                "Port": 42066,
+                "Address": "/ip4/127.0.0.1/tcp/42066/ipfs/18n3naE9kBZoVvgYMV6saMZdwu2yu3QMzKa2BDkb5C5pcuhtrH1G9HHbztbbxA8tGmf4",
                 "PfxFileName": "mycert.pfx",
-                "SslCertPassword": "test",
-                "PublicKey": "42Bm3dA9xKjnMYp5CztnUYqEme4Y46suNCvKx6ueDhz"
+                "SslCertPassword": "test"
             },
             {
                 "nodeId": "node2",
-                "host": "127.0.0.2",
-                "Port": 42066,
+                "Address": "/ip4/127.0.0.2/tcp/42066/ipfs/18n3naE9kBZoVvgYMV6saMZdwu2yu3QMzKa2BDkb5C5pcuhtrH1G9HHbztbbxA8tGmf4",
                 "PfxFileName": "mycert.pfx",
                 "SslCertPassword": "test",
-                "PublicKey": "42Bm3dA9xKjnMYp5CztnUYqEme4Y46suNCvKx6ueDhz"
             }
         ]
     }

@@ -39,7 +39,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Dto
         public void Can_Create_Dto_For_IPPN_Message()
         {
             var pingRequest = new PingRequest();
-            var pid = PeerIdHelper.GetPeerId("sender");
+            var pid = MultiAddressHelper.GetAddress("sender");
             var dto = new PeerClientMessageDto(pingRequest,
                 pid,
                 Substitute.For<ICorrelationId>()
@@ -58,7 +58,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Dto
             {
                 // ReSharper disable once ObjectCreationAsStatement
                 new PeerClientMessageDto(rpcMessage,
-                    PeerIdHelper.GetPeerId("sender"),
+                    MultiAddressHelper.GetAddress("sender"),
                     Substitute.For<ICorrelationId>()
                 );
             });

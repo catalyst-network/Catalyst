@@ -38,13 +38,12 @@ using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
-using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
-
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
 {
@@ -52,7 +51,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
     {
         private ICorrelationId _guid;
         private ILogger _logger;
-        private PeerId _pid;
+        private MultiAddress _pid;
         private IUdpServerChannelFactory _udpServerServerChannelFactory;
         private IPeerDiscovery _peerDiscovery;
         private List<IP2PMessageObserver> _p2PMessageHandlers;
@@ -65,7 +64,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
         {
             this.Setup(TestContext.CurrentContext);
 
-            _pid = PeerIdHelper.GetPeerId("im_a_key");
+            _pid = MultiAddressHelper.GetAddress("im_a_key");
             _guid = CorrelationId.GenerateCorrelationId();
             _logger = Substitute.For<ILogger>();
 
@@ -76,7 +75,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
             _peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
             _peerSettings.Port.Returns(1234);
 
-            _udpServerServerChannelFactory.BuildChannelAsync(Arg.Any<IEventLoopGroupFactory>(), _peerSettings.BindAddress, _peerSettings.Port)
+            _udpServerServerChannelFactory.BuildChannelAsync(Arg.Any<IEventLoopGroupFactory>(), _peerSettings.Address)
                .Returns(_serverChannel);
 
             _peerDiscovery = Substitute.For<IPeerDiscovery>();
@@ -120,7 +119,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
         public async Task Can_receive_PeerNeighborsResponse()
         {
             var pingRequestHandler = new TestMessageObserver<PeerNeighborsResponse>(_logger);
-            var neighbourIds = "abc".Select(i => PeerIdHelper.GetPeerId(i.ToString()));
+            var neighbourIds = "abc".Select(i => MultiAddressHelper.GetAddress(i.ToString()).ToString());
             var responseContent = new PeerNeighborsResponse();
             responseContent.Peers.AddRange(neighbourIds);
 
@@ -138,7 +137,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
         {
             _p2PMessageHandlers.Add(pingRequestHandler);
 
-            _peerService = new PeerService(new UdpServerEventLoopGroupFactory(new EventLoopGroupFactoryConfiguration()), 
+            _peerService = new DotnettyPeerService(new UdpServerEventLoopGroupFactory(new EventLoopGroupFactoryConfiguration()), 
                 _udpServerServerChannelFactory,
                 _peerDiscovery,
                 _p2PMessageHandlers,

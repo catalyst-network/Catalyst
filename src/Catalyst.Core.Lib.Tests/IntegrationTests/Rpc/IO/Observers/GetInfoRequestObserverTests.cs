@@ -23,7 +23,6 @@
 
 using System.IO;
 using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Config;
@@ -40,17 +39,19 @@ using Newtonsoft.Json;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 {
     [TestFixture]
-    [Category(Traits.IntegrationTest)] 
+    [Category(Traits.IntegrationTest)]
     public sealed class GetInfoRequestObserverTests
     {
         private readonly TestScheduler _testScheduler;
         private readonly ILogger _logger;
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IConfigurationRoot _config;
+        private readonly IPeerClient _peerClient;
 
         public GetInfoRequestObserverTests()
         {
@@ -58,13 +59,9 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             _config = new ConfigurationBuilder()
                .AddJsonFile(Path.Combine(Constants.ConfigSubFolder, TestConstants.TestShellNodesConfigFile))
                .Build();
-            
-            _logger = Substitute.For<ILogger>();
-            _fakeContext = Substitute.For<IChannelHandlerContext>();
 
-            var fakeChannel = Substitute.For<IChannel>();
-            _fakeContext.Channel.Returns(fakeChannel);
-            _fakeContext.Channel.RemoteAddress.Returns(new IPEndPoint(IPAddress.Loopback, IPEndPoint.MaxPort));
+            _logger = Substitute.For<ILogger>();
+            _peerClient = Substitute.For<IPeerClient>();
         }
 
         [Test]
@@ -73,7 +70,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             var protocolMessage = new GetInfoRequest
             {
                 Query = true
-            }.ToProtocolMessage(PeerIdHelper.GetPeerId("sender"));
+            }.ToProtocolMessage(MultiAddressHelper.GetAddress("sender"));
 
             var expectedResponseContent = JsonConvert
                .SerializeObject(_config.GetSection("CatalystNodeConfiguration").AsEnumerable(),
@@ -83,18 +80,18 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
                 protocolMessage
             );
 
-            var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
+            var peerSettings = MultiAddressHelper.GetAddress("sender").ToSubstitutedPeerSettings();
             var handler = new GetInfoRequestObserver(
-                peerSettings, _config, _logger);
+                peerSettings, _peerClient, _config, _logger);
 
             handler.StartObserving(messageStream);
 
             _testScheduler.Start();
 
-            await _fakeContext.Channel.Received(1).WriteAndFlushAsync(Arg.Any<object>());
+            await _peerClient.Received(1).SendMessageAsync(Arg.Any<IMessageDto<ProtocolMessage>>());
 
-            var receivedCalls = _fakeContext.Channel.ReceivedCalls().ToList();
-            receivedCalls.Count.Should().Be(1, 
+            var receivedCalls = _peerClient.ReceivedCalls().ToList();
+            receivedCalls.Count.Should().Be(1,
                 "the only call should be the one we checked above");
 
             var response = ((IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments()[0])

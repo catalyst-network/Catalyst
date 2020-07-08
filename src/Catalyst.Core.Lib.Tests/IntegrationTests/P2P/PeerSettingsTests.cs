@@ -23,6 +23,7 @@
 
 using Autofac;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Modules.Dfs;
 using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -44,6 +45,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         public void CanResolveIPeerSettings()
         {
             ContainerProvider.ConfigureContainerBuilder();
+            ContainerProvider.ContainerBuilder.RegisterModule(new DfsModule());
 
             using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
             {

@@ -41,6 +41,8 @@ using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using MultiFormats;
+using Catalyst.Core.Modules.Consensus.Deltas;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
 {
@@ -59,7 +61,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
             _fakeChannelContext = Substitute.For<IChannelHandlerContext>();
-            _syncState = new SyncState {IsSynchronized = true, IsRunning = true};
+            _syncState = new SyncState { IsSynchronized = true };
             _logger = Substitute.For<ILogger>();
             _peerRepository = Substitute.For<IPeerRepository>();
         }
@@ -71,8 +73,19 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             var prevHash = _hashProvider.ComputeUtf8MultiHash("prevHash").ToCid();
             var receivedMessage = PrepareReceivedMessage(newHash.ToArray(), prevHash.ToArray());
 
-            _peerRepository.GetPeersByIpAndPublicKey(receivedMessage.Payload.PeerId.Ip, receivedMessage.Payload.PeerId.PublicKey).Returns(new List<Peer>() { new Peer() });
-            var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _syncState, _peerRepository, _logger);
+            var multiAddress = new MultiAddress(receivedMessage.Payload.Address);
+
+            var candidateDeltaBroadcast = new CandidateDeltaBroadcast
+            {
+                PreviousDeltaDfsHash = prevHash.ToArray().ToByteString(),
+                Producer = multiAddress.ToString()
+            };
+
+            var deltaElector = Substitute.For<IDeltaElector>();
+            deltaElector.GetMostPopularCandidateDelta(prevHash).Returns(candidateDeltaBroadcast);
+
+            _peerRepository.GetPoaPeersByPublicKey(multiAddress.GetPublicKey()).Returns(new List<Peer>() { new Peer() });
+            var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, deltaElector, _syncState, _peerRepository, _logger);
 
             deltaDfsHashObserver.HandleBroadcast(receivedMessage);
 
@@ -86,7 +99,18 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             var prevHash = _hashProvider.ComputeUtf8MultiHash("prevHash").ToCid();
             var receivedMessage = PrepareReceivedMessage(invalidNewHash, prevHash.ToArray());
 
-            var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _syncState, _peerRepository, _logger);
+            var multiAddress = new MultiAddress(receivedMessage.Payload.Address);
+
+            var candidateDeltaBroadcast = new CandidateDeltaBroadcast
+            {
+                PreviousDeltaDfsHash = prevHash.ToArray().ToByteString(),
+                Producer = multiAddress.ToString()
+            };
+
+            var deltaElector = Substitute.For<IDeltaElector>();
+            deltaElector.GetMostPopularCandidateDelta(prevHash).Returns(candidateDeltaBroadcast);
+
+            var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, deltaElector, _syncState, _peerRepository, _logger);
 
             deltaDfsHashObserver.HandleBroadcast(receivedMessage);
 
@@ -100,8 +124,19 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             var prevHash = _hashProvider.ComputeUtf8MultiHash("prevHash").ToCid();
             var receivedMessage = PrepareReceivedMessage(newHash.ToArray(), prevHash.ToArray());
 
-            _peerRepository.GetPeersByIpAndPublicKey(receivedMessage.Payload.PeerId.Ip, receivedMessage.Payload.PeerId.PublicKey).Returns(new List<Peer>());
-            var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, _syncState, _peerRepository, _logger);
+            var multiAddress = new MultiAddress(receivedMessage.Payload.Address);
+
+            var candidateDeltaBroadcast = new CandidateDeltaBroadcast
+            {
+                PreviousDeltaDfsHash = prevHash.ToArray().ToByteString(),
+                Producer = multiAddress.ToString()
+            };
+
+            var deltaElector = Substitute.For<IDeltaElector>();
+            deltaElector.GetMostPopularCandidateDelta(prevHash).Returns(candidateDeltaBroadcast);
+
+            _peerRepository.GetPoaPeersByPublicKey(multiAddress.GetPublicKey()).Returns(new List<Peer>());
+            var deltaDfsHashObserver = new DeltaDfsHashObserver(_deltaHashProvider, deltaElector, _syncState, _peerRepository, _logger);
 
             deltaDfsHashObserver.HandleBroadcast(receivedMessage);
 
@@ -118,7 +153,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             };
 
             var receivedMessage = new ObserverDto(_fakeChannelContext,
-                message.ToProtocolMessage(PeerIdHelper.GetPeerId()));
+                message.ToProtocolMessage(MultiAddressHelper.GetAddress()));
             return receivedMessage;
         }
     }

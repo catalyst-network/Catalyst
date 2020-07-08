@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Threading.Tasks;
 using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Cycle;
 using Catalyst.Abstractions.Consensus.Deltas;
@@ -37,7 +38,7 @@ namespace Catalyst.TestUtils
     public class TestCycleEventProvider : ICycleEventsProvider, IDisposable
     {
         private readonly ICycleEventsProvider _cycleEventsProvider;
-        private readonly IDisposable _deltaUpdatesSubscription;
+        private IDisposable _deltaUpdatesSubscription;
 
         public TestCycleEventProvider(ILogger logger = null)
         {
@@ -55,14 +56,18 @@ namespace Catalyst.TestUtils
             dateTimeProvider.UtcNow.Returns(_ => Scheduler.Now.DateTime);
 
             _cycleEventsProvider = new CycleEventsProvider(
-                CycleConfiguration.Default, dateTimeProvider, schedulerProvider, deltaHashProvider, new Core.Abstractions.Sync.SyncState() { IsSynchronized = true },
+                CycleConfiguration.Default, dateTimeProvider, schedulerProvider, deltaHashProvider,
                 logger ?? Substitute.For<ILogger>());
 
             deltaHashProvider.GetLatestDeltaHash(Arg.Any<DateTime>())
                .Returns(ci => hashingProvider.ComputeMultiHash(
                     BitConverter.GetBytes(((DateTime)ci[0]).Ticks /
                         (int)_cycleEventsProvider.Configuration.CycleDuration.Ticks)));
+        }
 
+        public async Task StartAsync()
+        {
+            await _cycleEventsProvider.StartAsync();
             _deltaUpdatesSubscription = PhaseChanges.Subscribe(p => CurrentPhase = p);
         }
 

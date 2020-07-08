@@ -99,8 +99,10 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
         /// <summary>
         ///   Creates a new instance of the <see cref="BitSwapService"/> class.
         /// </summary>
-        public BitSwapService()
+        public BitSwapService(ISwarmService swarmService)
         {
+            SwarmService = swarmService;
+    
             Protocols = new IBitswapProtocol[]
             {
                 new Bitswap11 {BitswapService = this}
@@ -110,7 +112,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
         /// <summary>
         ///   Provides access to other peers.
         /// </summary>
-        public SwarmService SwarmService { get; set; }
+        public ISwarmService SwarmService { get; set; }
 
         /// <summary>
         ///   Provides access to blocks of data.
