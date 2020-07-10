@@ -120,8 +120,8 @@ namespace Catalyst.Core.Modules.Sync.Watcher
         public void Start()
         {
             _deltaHeightSubscription = _peerService.MessageStream.Where(x => x != null &&
-                    x.Payload.TypeUrl.EndsWith(typeof(LatestDeltaHashResponse).ShortenedProtoFullName()))
-               .Select(x => x.Payload)
+                    x.TypeUrl.EndsWith(typeof(LatestDeltaHashResponse).ShortenedProtoFullName()))
+               .Select(x => x)
                .Subscribe(DeltaHeightOnNext);
 
             _requestDeltaHeightTimer = new Timer(RequestDeltaHeightTimerCallback, null, TimeSpan.Zero, TimeSpan.FromSeconds(10));

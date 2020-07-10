@@ -132,8 +132,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         private SetPeerBlackListResponse GetSetPeerBlacklistRequest(SetPeerBlackListRequest request)
         {
             var protocolMessage = request.ToProtocolMessage(_senderId);
-            var messageStream =
-                MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_testScheduler, protocolMessage);
 
             var peerSettings = _senderId.ToSubstitutedPeerSettings();
             var handler = new PeerBlackListingRequestObserver(peerSettings, _peerClient, _logger, _peerRepository);
@@ -144,9 +143,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var receivedCalls = _peerClient.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
-            var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
-
-            return sentResponseDto.Content.FromProtocolMessage<SetPeerBlackListResponse>();
+            var sentResponse = (ProtocolMessage) receivedCalls.Single().GetArguments().First();
+            return sentResponse.FromProtocolMessage<SetPeerBlackListResponse>();
         }
     }
 }

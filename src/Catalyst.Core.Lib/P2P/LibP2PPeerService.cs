@@ -57,8 +57,8 @@ namespace Catalyst.Core.Lib.P2P
         private readonly IEnumerable<IP2PMessageObserver> _messageObservers;
         private readonly IPubSubService _pubSubService;
 
-        private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _messageSubject;
-        public IObservable<IObserverDto<ProtocolMessage>> MessageStream { private set; get; }
+        private readonly ReplaySubject<ProtocolMessage> _messageSubject;
+        public IObservable<ProtocolMessage> MessageStream { private set; get; }
 
         /// <param name="clientChannelFactory">A factory used to build the appropriate kind of channel for a udp client.</param>
         /// <param name="eventLoopGroupFactory"></param>
@@ -92,7 +92,7 @@ namespace Catalyst.Core.Lib.P2P
             _pubSubApi = pubSubApi;
             _catalystProtocol = catalystProtocol;
             _pubSubService = pubSubService;
-            _messageSubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(scheduler);
+            _messageSubject = new ReplaySubject<ProtocolMessage>(scheduler);
             MessageStream = _messageSubject.AsObservable();
 
             _handlers = new List<IInboundMessageHandler>
@@ -111,7 +111,7 @@ namespace Catalyst.Core.Lib.P2P
         /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Ignored</param>
         /// <returns></returns>
-        public async Task<IObservable<IObserverDto<ProtocolMessage>>> BuildMessageStreamAsync()
+        public async Task<IObservable<ProtocolMessage>> BuildMessageStreamAsync()
         {
             await SubscribeToCatalystLibP2PProtocol().ConfigureAwait(false);
 
@@ -153,7 +153,7 @@ namespace Catalyst.Core.Lib.P2P
                 }
             }
 
-            _messageSubject.OnNext(new ObserverDto(null, message));
+            _messageSubject.OnNext(message);
         }
 
         public async Task StartAsync()

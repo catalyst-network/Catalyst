@@ -24,11 +24,9 @@
 using System.Linq;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
@@ -39,7 +37,6 @@ using NSubstitute;
 using Serilog;
 using NUnit.Framework;
 using MultiFormats;
-using Catalyst.Core.Lib.Util;
 using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
@@ -98,8 +95,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         private GetPeerReputationResponse GetGetPeerReputationResponse(GetPeerReputationRequest request)
         {
             var protocolMessage = request.ToProtocolMessage(_senderId);
-            var messageStream =
-                MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_testScheduler, protocolMessage);
 
             var peerSettings = _senderId.ToSubstitutedPeerSettings();
             var handler = new PeerReputationRequestObserver(peerSettings, _peerClient, _logger, _peerRepository);
@@ -110,9 +106,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var receivedCalls = _peerClient.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
-            var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
-
-            return sentResponseDto.Content.FromProtocolMessage<GetPeerReputationResponse>();
+            var sentResponse = (ProtocolMessage) receivedCalls.Single().GetArguments().First();
+            return sentResponse.FromProtocolMessage<GetPeerReputationResponse>();
         }
     }
 }

@@ -24,26 +24,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
-using DotNetty.Transport.Channels;
 using FluentAssertions;
-using Google.Protobuf;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using SharpRepository.InMemoryRepository;
 using NUnit.Framework;
 using Catalyst.Core.Lib.P2P.Repository;
-using Org.BouncyCastle.Utilities.Net;
-using Catalyst.Core.Lib.Util;
 using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
@@ -55,9 +49,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
     {
         /// <summary>The logger</summary>
         private ILogger _logger;
-
-        /// <summary>The fake channel context</summary>
-        private IChannelHandlerContext _fakeContext;
 
         private IPeerClient _peerClient;
 
@@ -72,7 +63,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         public void Init()
         {
             _logger = Substitute.For<ILogger>();
-            _fakeContext = Substitute.For<IChannelHandlerContext>();
             _peerClient = Substitute.For<IPeerClient>();
         }
 
@@ -123,7 +113,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var protocolMessage = removePeerRequest.ToProtocolMessage(peerId);
 
             var messageStream =
-                MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
+                MessageStreamHelper.CreateStreamWithMessage(testScheduler, protocolMessage);
 
             var peerSettings = peerId.ToSubstitutedPeerSettings();
             var handler = new RemovePeerRequestObserver(peerSettings, peerRepository, _peerClient, _logger);
@@ -134,9 +124,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var receivedCalls = _peerClient.ReceivedCalls().ToList();
             receivedCalls.Count().Should().Be(1);
 
-            var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls[0].GetArguments().Single();
+            var sentResponse = (ProtocolMessage) receivedCalls[0].GetArguments().First();
 
-            var signResponseMessage = sentResponseDto.Content.FromProtocolMessage<RemovePeerResponse>();
+            var signResponseMessage = sentResponse.FromProtocolMessage<RemovePeerResponse>();
 
             signResponseMessage.DeletedCount.Should().Be(1);
         }

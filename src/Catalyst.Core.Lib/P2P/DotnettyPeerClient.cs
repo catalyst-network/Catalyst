@@ -22,12 +22,10 @@
 #endregion
 
 using System.Collections.Generic;
-using System.Net;
 using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.EventLoop;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Transport;
 using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.P2P;
@@ -73,27 +71,24 @@ namespace Catalyst.Core.Lib.P2P
             Channel = observableChannel.Channel;
         }
 
-        public Task SendMessageToPeersAsync(IMessage message, IEnumerable<MultiAddress> peers)
+        public async Task SendMessageToPeersAsync(IMessage message, IEnumerable<MultiAddress> peers)
         {
             var protocolMessage = message.ToProtocolMessage(_peerSettings.Address);
             foreach (var peer in peers)
             {
-                SendMessage(new MessageDto(
-                    protocolMessage,
-                    peer));
+                await SendMessageAsync(protocolMessage, peer);
             }
-            return Task.CompletedTask;
-        }
-
-        public Task SendMessageAsync<T>(IMessageDto<T> message) where T : IMessage<T>
-        {
-            SendMessage(message);
-            return Task.CompletedTask;
         }
 
         public async Task BroadcastAsync(ProtocolMessage message)
         {
             await _broadcastManager.BroadcastAsync(message).ConfigureAwait(false);
+        }
+
+        public Task SendMessageAsync(ProtocolMessage message, MultiAddress recipient)
+        {;
+            SendMessage(new MessageDto(message, recipient));
+            return Task.CompletedTask;
         }
     }
 }

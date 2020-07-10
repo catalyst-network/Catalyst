@@ -117,7 +117,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
                 TimeSpan.FromSeconds(2));
 
             var messageStream =
-                MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
+                MessageStreamHelper.CreateStreamWithMessage(_testScheduler, protocolMessage);
             var handler =
                 new SignMessageRequestObserver(peerSettings, _peerClient, _logger, _keySigner);
 
@@ -129,8 +129,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
             _logger.DidNotReceiveWithAnyArgs().Error((Exception) default, default);
             receivedCalls.Count.Should().Be(1);
 
-            var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
-            var signResponseMessage = sentResponseDto.Content.FromProtocolMessage<SignMessageResponse>();
+            var sentResponse = (ProtocolMessage) receivedCalls.Single().GetArguments().First();
+            var signResponseMessage = sentResponse.FromProtocolMessage<SignMessageResponse>();
 
             signResponseMessage.OriginalMessage.Should().Equal(ByteString.CopyFromUtf8(message));
             signResponseMessage.Signature.Should().NotBeEmpty();

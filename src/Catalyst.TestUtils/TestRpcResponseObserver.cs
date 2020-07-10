@@ -24,9 +24,7 @@
 using System;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Rpc.IO;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
-using DotNetty.Transport.Channels;
 using MultiFormats;
 using Serilog;
 
@@ -48,8 +46,7 @@ namespace Catalyst.TestUtils
         /// <param name="senderentifier"></param>
         /// <param name="correlationId"></param>
         protected override void HandleResponse(VersionResponse testResponse,
-            IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderentifier,
+            MultiAddress address,
             ICorrelationId correlationId)
         {
             /* Empty method as this is a Stub class for testing base */

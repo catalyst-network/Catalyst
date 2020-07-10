@@ -25,16 +25,13 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
-using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
@@ -53,7 +50,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
     public sealed class GetPeerInfoRequestObserverTests
     {
         private ILogger _logger;
-        private IChannelHandlerContext _fakeContext;
         private IPeerRepository _peerRepository;
         private IPeerClient _peerClient;
 
@@ -61,7 +57,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         public void Init()
         {
             _logger = Substitute.For<ILogger>();
-            _fakeContext = Substitute.For<IChannelHandlerContext>();
             _peerClient = Substitute.For<IPeerClient>();
 
             _peerRepository = new PeerRepository(new InMemoryRepository<Peer, string>());
@@ -144,11 +139,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var senderentifier = MultiAddressHelper.GetAddress("sender");
             var getPeerInfoRequest = new GetPeerInfoRequest {Address = address.ToString()};
 
-            var protocolMessage =
-                getPeerInfoRequest.ToProtocolMessage(senderentifier);
+            var protocolMessage = getPeerInfoRequest.ToProtocolMessage(senderentifier);
 
-            var messageStream =
-                MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(testScheduler, protocolMessage);
 
             var peerSettings = senderentifier.ToSubstitutedPeerSettings();
             var handler = new GetPeerInfoRequestObserver(peerSettings, _logger, _peerRepository, _peerClient);
@@ -160,9 +153,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var receivedCalls = _peerClient.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
-            var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls[0].GetArguments().Single();
+            var sentResponse = (ProtocolMessage) receivedCalls[0].GetArguments().First();
 
-            return sentResponseDto.Content.FromProtocolMessage<GetPeerInfoResponse>();
+            return sentResponse.FromProtocolMessage<GetPeerInfoResponse>();
         }
     }
 }

@@ -27,8 +27,6 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reflection;
 using Catalyst.Abstractions.IO.Handlers;
-using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 using Serilog;
@@ -41,19 +39,19 @@ namespace Catalyst.Core.Lib.IO.Handlers
     /// </summary>
     public sealed class ObservableServiceHandler : InboundChannelHandlerBase<ProtocolMessage>, IObservableServiceHandler
     {
-        private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _messageSubject;
+        private readonly ReplaySubject<ProtocolMessage> _messageSubject;
 
         public ObservableServiceHandler(IScheduler scheduler = null)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             var observableScheduler = scheduler ?? Scheduler.Default;
-            _messageSubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1, observableScheduler);
+            _messageSubject = new ReplaySubject<ProtocolMessage>(1, observableScheduler);
             MessageStream = _messageSubject.AsObservable();
         }
 
         public override bool IsSharable => true;
 
-        public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
+        public IObservable<ProtocolMessage> MessageStream { get; }
 
         public override void ExceptionCaught(IChannelHandlerContext context, Exception e)
         {
@@ -81,8 +79,7 @@ namespace Catalyst.Core.Lib.IO.Handlers
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage message)
         {
             Logger.Verbose("Received {message}", message);
-            var contextAny = new ObserverDto(ctx, message);
-            _messageSubject.OnNext(contextAny);
+            _messageSubject.OnNext(message);
             ctx.FireChannelRead(message);
         }
     }

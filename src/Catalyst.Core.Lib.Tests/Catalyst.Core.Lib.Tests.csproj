@@ -32,6 +32,7 @@
         <ProjectReference Include="..\Catalyst.Core.Modules.Mempool\Catalyst.Core.Modules.Mempool.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Modules.Rpc.Client\Catalyst.Core.Modules.Rpc.Client.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Modules.Rpc.Server\Catalyst.Core.Modules.Rpc.Server.csproj" />
+        <ProjectReference Include="..\Catalyst.Modules.Network.Dotnetty\Catalyst.Modules.Network.Dotnetty.csproj" />
         <ProjectReference Include="..\Catalyst.Modules.Repository.CosmosDb\Catalyst.Modules.Repository.CosmosDb.csproj" />
         <ProjectReference Include="..\Catalyst.Modules.Repository.MongoDb\Catalyst.Modules.Repository.MongoDb.csproj" />
         <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />

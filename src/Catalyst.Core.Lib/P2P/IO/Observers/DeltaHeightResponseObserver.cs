@@ -57,7 +57,6 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         }
 
         protected override void HandleResponse(LatestDeltaHashResponse deltaHeightResponse,
-            IChannelHandlerContext channelHandlerContext,
             MultiAddress sender,
             ICorrelationId correlationId)
         {

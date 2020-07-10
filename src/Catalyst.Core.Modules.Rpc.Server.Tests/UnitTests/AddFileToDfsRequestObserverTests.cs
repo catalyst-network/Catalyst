@@ -96,7 +96,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
 
             var protocolMessage = GenerateProtocolMessage(correlationId);
 
-            protocolMessage.SendToHandler(_fakeContext, _addFileToDfsRequestObserver);
+            protocolMessage.SendToHandler(_addFileToDfsRequestObserver);
 
             _nodeFileTransferFactory.RegisterTransfer(
                 Arg.Is<IDownloadFileInformation>(
@@ -111,10 +111,10 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
 
             var protocolMessage = GenerateProtocolMessage();
 
-            protocolMessage.SendToHandler(_fakeContext, _addFileToDfsRequestObserver);
+            protocolMessage.SendToHandler(_addFileToDfsRequestObserver);
 
-            _peerClient.Received(1).SendMessageAsync(Arg.Is<IMessageDto<ProtocolMessage>>(
-                    t => t.Content.FromProtocolMessage<AddFileToDfsResponse>().ResponseCode[0] == FileTransferResponseCodeTypes.Successful.Id));
+            _peerClient.Received(1).SendMessageAsync(Arg.Is<ProtocolMessage>(
+                    t => t.FromProtocolMessage<AddFileToDfsResponse>().ResponseCode[0] == FileTransferResponseCodeTypes.Successful.Id), Arg.Any<MultiAddress>());
         }
 
         [Test]
@@ -124,10 +124,10 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
 
             var protocolMessage = GenerateProtocolMessage();
 
-            protocolMessage.SendToHandler(_fakeContext, _addFileToDfsRequestObserver);
+            protocolMessage.SendToHandler(_addFileToDfsRequestObserver);
 
-            _peerClient.Received(1).SendMessageAsync(Arg.Is<IMessageDto<ProtocolMessage>>(
-               t => t.Content.FromProtocolMessage<AddFileToDfsResponse>().ResponseCode[0] == FileTransferResponseCodeTypes.Error.Id));
+            _peerClient.Received(1).SendMessageAsync(Arg.Is<ProtocolMessage>(
+               t => t.FromProtocolMessage<AddFileToDfsResponse>().ResponseCode[0] == FileTransferResponseCodeTypes.Error.Id), Arg.Any<MultiAddress>());
         }
 
         [Test]
@@ -159,7 +159,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
 
             _nodeFileTransferFactory.RegisterTransfer(Arg.Do<IDownloadFileInformation>(UseArgument));
 
-            protocolMessage.SendToHandler(_fakeContext, _addFileToDfsRequestObserver);
+            protocolMessage.SendToHandler(_addFileToDfsRequestObserver);
             _manualResetEvent.WaitOne();
 
             addFileToDfsResponse.ResponseCode[0].Should().Be((byte) FileTransferResponseCodeTypes.Finished.Id);
@@ -192,7 +192,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
 
             _nodeFileTransferFactory.RegisterTransfer(Arg.Do<IDownloadFileInformation>(UseArgument));
 
-            protocolMessage.SendToHandler(_fakeContext, _addFileToDfsRequestObserver);
+            protocolMessage.SendToHandler(_addFileToDfsRequestObserver);
             _manualResetEvent.WaitOne();
 
             addFileToDfsResponse.ResponseCode[0].Should().Be((byte) FileTransferResponseCodeTypes.Failed.Id);

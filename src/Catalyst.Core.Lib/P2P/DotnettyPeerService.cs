@@ -44,7 +44,7 @@ namespace Catalyst.Core.Lib.P2P
         private readonly IPeerSettings _peerSettings;
         private readonly IHealthChecker _healthChecker;
         public IPeerDiscovery Discovery { get; }
-        public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; private set; }
+        public IObservable<ProtocolMessage> MessageStream { get; private set; }
 
         public DotnettyPeerService(IUdpServerEventLoopGroupFactory udpServerEventLoopGroupFactory,
             IUdpServerChannelFactory serverChannelFactory,

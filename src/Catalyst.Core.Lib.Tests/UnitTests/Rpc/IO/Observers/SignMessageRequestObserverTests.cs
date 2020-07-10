@@ -34,7 +34,6 @@ using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using Catalyst.TestUtils.Fakes;
-using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
@@ -49,7 +48,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
     {
         private ILogger _logger;
         private IKeySigner _keySigner;
-        private IChannelHandlerContext _fakeContext;
         private IPeerClient _peerClient;
         private ISignature _signature;
 
@@ -82,7 +80,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var protocolMessage =
                 signMessageRequest.ToProtocolMessage(MultiAddressHelper.GetAddress("sender"));
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(testScheduler, protocolMessage);
 
             var peerSettings = MultiAddressHelper.GetAddress("sender").ToSubstitutedPeerSettings();
             var handler =
@@ -95,8 +93,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var receivedCalls = _peerClient.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
-            var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
-            var signResponseMessage = sentResponseDto.Content.FromProtocolMessage<SignMessageResponse>();
+            var sentResponse = (ProtocolMessage) receivedCalls.Single().GetArguments().First();
+            var signResponseMessage = sentResponse.FromProtocolMessage<SignMessageResponse>();
 
             signResponseMessage.OriginalMessage.Should().Equal(ByteString.CopyFromUtf8(message));
             signResponseMessage.Signature.ToByteArray().Should().Equal(_signature.SignatureBytes);

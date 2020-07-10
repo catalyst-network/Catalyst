@@ -88,7 +88,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var protocolMessage = new GetMempoolRequest().ToProtocolMessage(MultiAddressHelper.GetAddress("sender_key"));
 
             var messageStream =
-                MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
+                MessageStreamHelper.CreateStreamWithMessage(testScheduler, protocolMessage);
 
             var peerSettings = MultiAddressHelper.GetAddress("sender").ToSubstitutedPeerSettings();
             var handler = new GetMempoolRequestObserver(peerSettings, _peerClient, mempool, _mapperProvider, _logger);
@@ -100,9 +100,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var receivedCalls = _peerClient.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
-            var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
+            var sentResponse = (ProtocolMessage) receivedCalls.Single().GetArguments().First();
 
-            var responseContent = sentResponseDto.Content.FromProtocolMessage<GetMempoolResponse>();
+            var responseContent = sentResponse.FromProtocolMessage<GetMempoolResponse>();
 
             responseContent.Transactions.Select(x => x.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider)).Should()
                .BeEquivalentTo(mempoolTransactions);

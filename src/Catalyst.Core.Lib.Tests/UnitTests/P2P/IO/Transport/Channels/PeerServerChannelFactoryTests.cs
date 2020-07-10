@@ -152,7 +152,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
                 _testScheduler.Start();
 
                 observer.Received.Count.Should().Be(1);
-                observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(signedMessage.CorrelationId.ToCorrelationId().Id);
+                observer.Received.Single().CorrelationId.ToCorrelationId().Id.Should().Be(signedMessage.CorrelationId.ToCorrelationId().Id);
             }
         }
 

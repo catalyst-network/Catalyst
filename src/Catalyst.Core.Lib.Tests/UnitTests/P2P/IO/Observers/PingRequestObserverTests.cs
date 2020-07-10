@@ -37,6 +37,7 @@ using NSubstitute;
 using Serilog;
 using NUnit.Framework;
 using Catalyst.Abstractions.P2P;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 {
@@ -53,7 +54,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             _testScheduler = new TestScheduler();
             _subbedLogger = Substitute.For<ILogger>();
             var peerSettings = MultiAddressHelper.GetAddress("sender").ToSubstitutedPeerSettings();
-            _pingRequestObserver = new PingRequestObserver(peerSettings, Substitute.For<IPeerRepository>(), _peerClient, _subbedLogger);
+            _pingRequestObserver = new PingRequestObserver(peerSettings, _peerClient, _subbedLogger);
         }
 
         [Test]
@@ -61,19 +62,16 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         {
             var pingRequestMessage = new PingRequest();
             
-            var fakeContext = Substitute.For<IChannelHandlerContext>();
-            var channeledAny = new ObserverDto(fakeContext, pingRequestMessage.ToProtocolMessage(MultiAddressHelper.GetAddress(), CorrelationId.GenerateCorrelationId()));
+            var channeledAny = pingRequestMessage.ToProtocolMessage(MultiAddressHelper.GetAddress(), CorrelationId.GenerateCorrelationId());
             var observableStream = new[] {channeledAny}.ToObservable(_testScheduler);
             
             _pingRequestObserver.StartObserving(observableStream);
 
             _testScheduler.Start();
 
-            var responder = MultiAddressHelper.GetAddress();
-            var dtoResponse = new MessageDto(new PingResponse().ToProtocolMessage(MultiAddressHelper.GetAddress(), CorrelationId.GenerateCorrelationId()),
-            responder);
+            var response = new PingResponse().ToProtocolMessage(MultiAddressHelper.GetAddress(), CorrelationId.GenerateCorrelationId());
 
-            await _peerClient.ReceivedWithAnyArgs(1).SendMessageAsync(dtoResponse).ConfigureAwait(false);
+            await _peerClient.ReceivedWithAnyArgs(1).SendMessageAsync(response, Arg.Any<MultiAddress>()).ConfigureAwait(false);
 
             _subbedLogger.ReceivedWithAnyArgs(1);
         }

@@ -62,7 +62,6 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
         /// <param name="senderentifier"></param>
         /// <param name="correlationId"></param>
         protected override void HandleResponse(AddFileToDfsResponse addFileToDfsResponse,
-            IChannelHandlerContext channelHandlerContext,
             MultiAddress senderentifier,
             ICorrelationId correlationId)
         {

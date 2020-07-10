@@ -115,7 +115,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels
             var messageStream = _observableServiceHandler.MessageStream;
 
             return new ObservableChannel(messageStream
-             ?? Observable.Never<IObserverDto<ProtocolMessage>>(), channel);
+             ?? Observable.Never<ProtocolMessage>(), channel);
         }
     }
 }

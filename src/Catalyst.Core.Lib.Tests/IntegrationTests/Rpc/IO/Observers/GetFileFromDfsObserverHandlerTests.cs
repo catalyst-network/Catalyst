@@ -108,7 +108,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
                     ResponseCode = ByteString.CopyFrom((byte) FileTransferResponseCodeTypes.Successful.Id)
                 }.ToProtocolMessage(nodePeer, correlationId);
 
-                getFileResponse.SendToHandler(_fakeContext, getFileFromDfsResponseHandler);
+                getFileResponse.SendToHandler(getFileFromDfsResponseHandler);
 
                 fileStream = await _dfsService.UnixFsApi.ReadFileAsync(addedIpfsHash.ToString());
                 IUploadFileInformation fileUploadInformation = new UploadFileTransferInformation(
@@ -122,7 +122,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
                 {
                     var transferMessage = fileUploadInformation
                        .GetUploadMessageDto(i);
-                    transferMessage.Content.SendToHandler(_fakeContext, transferBytesHandler);
+                    transferMessage.Content.SendToHandler(transferBytesHandler);
                 }
 
                 await TaskHelper.WaitForAsync(() => fileDownloadInformation.IsCompleted, TimeSpan.FromSeconds(10));

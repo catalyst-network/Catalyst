@@ -47,6 +47,8 @@ using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.KeySigner;
 using Catalyst.Core.Modules.Keystore;
+using Catalyst.Modules.Network.Dotnetty;
+using Catalyst.Modules.Network.LibP2P;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Lib.P2P;
@@ -81,6 +83,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             ContainerProvider.ContainerBuilder.RegisterModule(new HashingModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new BulletProofsModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new DfsModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new DotnettyNetworkModule());
 
             ContainerProvider.ContainerBuilder.RegisterType<ConsoleUserOutput>().As<IUserOutput>();
             ContainerProvider.ContainerBuilder.RegisterType<ConsoleUserInput>().As<IUserInput>();

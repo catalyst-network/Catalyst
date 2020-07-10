@@ -116,9 +116,9 @@ namespace Catalyst.Core.Modules.Sync.Manager
         public void Start()
         {
             _isRunning = true;
-            _deltaHistorySubscription = _peerService.MessageStream.Where(x => x?.Payload.TypeUrl != null &&
-                    x.Payload.TypeUrl.EndsWith(typeof(DeltaHistoryResponse).ShortenedProtoFullName()))
-               .Select(x => x.Payload.FromProtocolMessage<DeltaHistoryResponse>()).Subscribe(DeltaHistoryOnNext);
+            _deltaHistorySubscription = _peerService.MessageStream.Where(x => x?.TypeUrl != null &&
+                    x.TypeUrl.EndsWith(typeof(DeltaHistoryResponse).ShortenedProtoFullName()))
+               .Select(x => x.FromProtocolMessage<DeltaHistoryResponse>()).Subscribe(DeltaHistoryOnNext);
 
             Task.Factory.StartNew(SyncDeltaIndexes);
         }

@@ -40,6 +40,7 @@ using Catalyst.TestUtils.Fakes;
 using NUnit.Framework;
 using MultiFormats;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 {
@@ -126,11 +127,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
         private void AssertVerifyResponse(bool valid)
         {
-            _verifyMessageRequestObserver.OnNext(new ObserverDto(_fakeContext, _verifyMessageRequest.ToProtocolMessage(_testPeerId)));
+            _verifyMessageRequestObserver.OnNext(_verifyMessageRequest.ToProtocolMessage(_testPeerId));
 
             var responseList = _peerClient.ReceivedCalls().ToList();
-            var response = ((MessageDto) responseList[0].GetArguments()[0]).Content
-               .FromProtocolMessage<VerifyMessageResponse>();
+            var response = ((ProtocolMessage) responseList[0].GetArguments()[0]).FromProtocolMessage<VerifyMessageResponse>();
             response.IsSignedByKey.Should().Be(valid);
         }
     }

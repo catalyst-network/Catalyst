@@ -23,13 +23,10 @@
 
 using System;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
-using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using MultiFormats;
 using NSubstitute;
@@ -52,19 +49,18 @@ namespace Catalyst.TestUtils
 
         public override void OnError(Exception exception) { SubstituteObserver.OnError(exception); }
         
-        public void HandleResponse(IObserverDto<ProtocolMessage> messageDto)
+        public void HandleResponse(ProtocolMessage message)
         {
-            SubstituteObserver.OnNext(messageDto.Payload.FromProtocolMessage<TProto>());
+            SubstituteObserver.OnNext(message.FromProtocolMessage<TProto>());
         }
 
-        public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
+        public override void OnNext(ProtocolMessage message)
         {
-            SubstituteObserver.OnNext(messageDto.Payload.FromProtocolMessage<TProto>());
+            SubstituteObserver.OnNext(message.FromProtocolMessage<TProto>());
         }
 
-        public void HandleResponseObserver(IMessage messageDto,
-            IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderentifier,
+        public void HandleResponseObserver(IMessage message,
+            MultiAddress address,
             ICorrelationId correlationId)
         {
             throw new NotImplementedException();

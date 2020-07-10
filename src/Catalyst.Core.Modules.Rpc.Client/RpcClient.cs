@@ -29,7 +29,6 @@ using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.EventLoop;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.Rpc;
@@ -53,7 +52,7 @@ namespace Catalyst.Core.Modules.Rpc.Client
         private readonly X509Certificate2 _certificate;
         private readonly IRpcClientConfig _clientConfig;
         private Dictionary<string, IRpcResponseObserver> _handlers;
-        private IObservable<IObserverDto<ProtocolMessage>> _socketMessageStream;
+        private IObservable<ProtocolMessage> _socketMessageStream;
 
         /// <summary>
         ///     Initialize a new instance of RPClient
@@ -79,22 +78,21 @@ namespace Catalyst.Core.Modules.Rpc.Client
 
         public IDisposable SubscribeToResponse<T>(Action<T> onNext) where T : IMessage<T>
         {
-            return _socketMessageStream.Where(x => x.Payload.TypeUrl == typeof(T).ShortenedProtoFullName())
+            return _socketMessageStream.Where(x => x.TypeUrl == typeof(T).ShortenedProtoFullName())
                .Select(SubscriptionOutPipeline<T>).Subscribe(onNext);
         }
 
-        private T SubscriptionOutPipeline<T>(IObserverDto<ProtocolMessage> observer) where T : IMessage<T>
+        private T SubscriptionOutPipeline<T>(ProtocolMessage observer) where T : IMessage<T>
         {
-            var message = observer.Payload.FromProtocolMessage<T>();
-            if (!_handlers.ContainsKey(observer.Payload.TypeUrl))
+            var message = observer.FromProtocolMessage<T>();
+            if (!_handlers.ContainsKey(observer.TypeUrl))
             {
                 throw new ResponseHandlerDoesNotExistException(
-                    $"Response Handler does not exist for message type {observer.Payload.TypeUrl}");
+                    $"Response Handler does not exist for message type {observer.TypeUrl}");
             }
 
-            var handler = _handlers[observer.Payload.TypeUrl];
-            handler.HandleResponseObserver(message, observer.Context, observer.Payload.Address,
-                observer.Payload.CorrelationId.ToCorrelationId());
+            var handler = _handlers[observer.TypeUrl];
+            handler.HandleResponseObserver(message, observer.Address, observer.CorrelationId.ToCorrelationId());
 
             return message;
         }

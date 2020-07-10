@@ -21,7 +21,6 @@
 
 #endregion
 
-using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.EventLoop;

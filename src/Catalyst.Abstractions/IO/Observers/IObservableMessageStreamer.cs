@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Google.Protobuf;
 
 namespace Catalyst.Abstractions.IO.Observers
@@ -32,6 +31,6 @@ namespace Catalyst.Abstractions.IO.Observers
         /// <summary>
         ///     Message stream
         /// </summary>
-        IObservable<IObserverDto<T>> MessageStream { get; }
+        IObservable<T> MessageStream { get; }
     }
 }

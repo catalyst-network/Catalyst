@@ -94,10 +94,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 
             var peerNeighbourRequestMessage = new PeerNeighborsRequest();
 
-            var fakeContext = Substitute.For<IChannelHandlerContext>();
-            var channeledAny = new ObserverDto(fakeContext,
-                peerNeighbourRequestMessage.ToProtocolMessage(MultiAddressHelper.GetAddress(),
-                    CorrelationId.GenerateCorrelationId()));
+            var channeledAny = peerNeighbourRequestMessage.ToProtocolMessage(MultiAddressHelper.GetAddress(),
+                    CorrelationId.GenerateCorrelationId());
             var observableStream = new[] {channeledAny}.ToObservable(_testScheduler);
 
             neighbourRequestHandler.StartObserving(observableStream);
@@ -111,10 +109,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 
             _testScheduler.Start();
 
-            var dtoResponse = new MessageDto(peerNeighborsResponseMessage.ToProtocolMessage(_peerId, CorrelationId.GenerateCorrelationId()),
-            _peerId);
-
-            await _peerClient.ReceivedWithAnyArgs(1).SendMessageAsync(dtoResponse).ConfigureAwait(false);
+            await _peerClient.ReceivedWithAnyArgs(1).SendMessageAsync(peerNeighborsResponseMessage.ToProtocolMessage(_peerId, CorrelationId.GenerateCorrelationId()),
+            _peerId).ConfigureAwait(false);
         }
 
         public void Dispose() { _subbedPeerRepository?.Dispose(); }

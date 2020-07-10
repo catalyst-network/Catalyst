@@ -29,7 +29,6 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.EventLoop;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.Rpc;
@@ -46,7 +45,7 @@ namespace Catalyst.Core.Modules.Rpc.Server
         private readonly X509Certificate2 _certificate;
 
         public IRpcServerSettings Settings { get; }
-        public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; private set; }
+        public IObservable<ProtocolMessage> MessageStream { get; private set; }
 
         public RpcServer(IRpcServerSettings settings,
             ILogger logger,

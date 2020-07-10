@@ -161,7 +161,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Transport.Channels
                 _testScheduler.Start();
 
                 observer.Received.Count.Should().Be(1);
-                observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);
+                observer.Received.Single().CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);
             }
 
             await _serverChannel.DisconnectAsync();

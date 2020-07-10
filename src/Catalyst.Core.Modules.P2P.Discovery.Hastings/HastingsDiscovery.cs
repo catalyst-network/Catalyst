@@ -274,11 +274,8 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
 
             StepProposal.RestoreMemento(new HastingsMemento(newCandidate, new Neighbours()));
 
-            var peerNeighbourRequestDto = new MessageDto(new PeerNeighborsRequest().ToProtocolMessage(_ownNode),
-                StepProposal.Peer
-            );
-
-            PeerClient.SendMessageAsync(peerNeighbourRequestDto);
+            var peerNeighbourRequest = new PeerNeighborsRequest().ToProtocolMessage(_ownNode);
+            PeerClient.SendMessageAsync(peerNeighbourRequest, StepProposal.Peer);
         }
 
         /// <summary>
@@ -314,12 +311,8 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
 
             StepProposal.RestoreMemento(new HastingsMemento(newCandidate, new Neighbours()));
 
-            var peerNeighbourRequestDto = new MessageDto(
-                new PeerNeighborsRequest().ToProtocolMessage(_ownNode, StepProposal.PnrCorrelationId),
-                StepProposal.Peer
-            );
-
-            PeerClient.SendMessageAsync(peerNeighbourRequestDto);
+            var peerNeighbourRequest = new PeerNeighborsRequest().ToProtocolMessage(_ownNode, StepProposal.PnrCorrelationId);
+            PeerClient.SendMessageAsync(peerNeighbourRequest, StepProposal.Peer);
         }
 
         /// <summary>
@@ -417,11 +410,8 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
                 {
                     try
                     {
-                        var pingRequestDto = new MessageDto(
-                            new PingRequest().ToProtocolMessage(_ownNode, n.DiscoveryPingCorrelationId),
-                            n.Address);
-
-                        PeerClient.SendMessageAsync(pingRequestDto);
+                        var pingRequest = new PingRequest().ToProtocolMessage(_ownNode, n.DiscoveryPingCorrelationId);
+                        PeerClient.SendMessageAsync(pingRequest, n.Address);
 
                         // our total expected responses should be same as number of pings sent out,
                         // potential neighbours, can either send response, or we will see them evicted from cache.

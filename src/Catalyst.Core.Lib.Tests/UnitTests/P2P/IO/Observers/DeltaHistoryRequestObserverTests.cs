@@ -74,14 +74,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         [Test]
         public async Task Can_Process_DeltaHeightRequest_Correctly()
         {
-            var fakeContext = Substitute.For<IChannelHandlerContext>();
             var deltaHistoryRequestMessage = new DeltaHistoryRequest();
 
-            var channeledAny = new ObserverDto(fakeContext,
-                deltaHistoryRequestMessage.ToProtocolMessage(MultiAddressHelper.GetAddress(),
+            var channeledAny = deltaHistoryRequestMessage.ToProtocolMessage(MultiAddressHelper.GetAddress(),
                     CorrelationId.GenerateCorrelationId()
-                )
-            );
+                );
 
             var observableStream = new[] { channeledAny }.ToObservable(_testScheduler);
 
@@ -110,10 +107,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             }
 
             var responder = MultiAddressHelper.GetAddress();
-            var dtoResponse = new MessageDto(response.ToProtocolMessage(responder, CorrelationId.GenerateCorrelationId()),
-                responder);
+            var protocolMessageResponse = response.ToProtocolMessage(responder, CorrelationId.GenerateCorrelationId());
 
-            await _peerClient.ReceivedWithAnyArgs(1).SendMessageAsync(dtoResponse)
+            await _peerClient.ReceivedWithAnyArgs(1).SendMessageAsync(protocolMessageResponse, responder)
              .ConfigureAwait(false);
 
             _subbedLogger.ReceivedWithAnyArgs(1);

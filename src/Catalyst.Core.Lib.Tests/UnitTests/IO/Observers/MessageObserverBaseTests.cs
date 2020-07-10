@@ -50,7 +50,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
     {
         private TestScheduler _testScheduler;
         private VanillaMessageObserver _handler;
-        private IChannelHandlerContext _fakeContext;
         private ProtocolMessage[] _responseMessages;
 
         [SetUp]
@@ -58,7 +57,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
         {
             _testScheduler = new TestScheduler();
             _handler = new VanillaMessageObserver(Substitute.For<ILogger>());
-            _fakeContext = Substitute.For<IChannelHandlerContext>();
             _responseMessages = Enumerable.Range(0, 10).Select(i =>
             {
                 var message = new GetInfoResponse { Query = i.ToString() };
@@ -71,7 +69,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
         [Test]
         public void MessageHandler_should_subscribe_to_next_and_complete()
         {
-            var completingStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext, _testScheduler, _responseMessages);
+            var completingStream = MessageStreamHelper.CreateStreamWithMessages(_testScheduler, _responseMessages);
 
             _handler.StartObserving(completingStream);
 
@@ -85,7 +83,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
         [Test]
         public void MessageHandler_should_subscribe_to_next_and_error()
         {
-            var erroringStream = new ReplaySubject<IObserverDto<ProtocolMessage>>(10, _testScheduler);
+            var erroringStream = new ReplaySubject<ProtocolMessage>(10, _testScheduler);
 
             _handler.StartObserving(erroringStream);
 
@@ -96,7 +94,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
                     erroringStream.OnError(new DataMisalignedException("5 erred"));
                 }
 
-                erroringStream.OnNext(new ObserverDto(_fakeContext, payload));
+                erroringStream.OnNext(payload);
             }
 
             _testScheduler.Start();
@@ -117,7 +115,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
                 _responseMessages[7].Address,
                 _responseMessages[7].CorrelationId.ToCorrelationId());
 
-            var mixedTypesStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext, _testScheduler, _responseMessages);
+            var mixedTypesStream = MessageStreamHelper.CreateStreamWithMessages(_testScheduler, _responseMessages);
 
             _handler.StartObserving(mixedTypesStream);
 
@@ -135,7 +133,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
             _responseMessages[5] = NullObjects.ProtocolMessage;
             _responseMessages[9] = null;
 
-            var mixedTypesStream = MessageStreamHelper.CreateStreamWithMessages(_fakeContext, _testScheduler, _responseMessages);
+            var mixedTypesStream = MessageStreamHelper.CreateStreamWithMessages(_testScheduler, _responseMessages);
 
             _handler.StartObserving(mixedTypesStream);
 

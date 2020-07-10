@@ -31,7 +31,6 @@ using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
-using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Reactive.Testing;
@@ -40,6 +39,7 @@ using NSubstitute;
 using Serilog;
 using NUnit.Framework;
 using Catalyst.Abstractions.P2P;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 {
@@ -49,7 +49,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
     {
         private readonly TestScheduler _testScheduler;
         private readonly ILogger _logger;
-        private readonly IChannelHandlerContext _fakeContext;
         private readonly IConfigurationRoot _config;
         private readonly IPeerClient _peerClient;
 
@@ -76,7 +75,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
                .SerializeObject(_config.GetSection("CatalystNodeConfiguration").AsEnumerable(),
                     Formatting.Indented);
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler,
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_testScheduler,
                 protocolMessage
             );
 
@@ -88,14 +87,13 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 
             _testScheduler.Start();
 
-            await _peerClient.Received(1).SendMessageAsync(Arg.Any<IMessageDto<ProtocolMessage>>());
+            await _peerClient.Received(1).SendMessageAsync(Arg.Any<ProtocolMessage>(), Arg.Any<MultiAddress>());
 
             var receivedCalls = _peerClient.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1,
                 "the only call should be the one we checked above");
 
-            var response = ((IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments()[0])
-               .Content.FromProtocolMessage<GetInfoResponse>();
+            var response = ((ProtocolMessage) receivedCalls.Single().GetArguments()[0]).FromProtocolMessage<GetInfoResponse>();
             response.Query.Should().Match(expectedResponseContent,
                 "the expected response should contain config information");
         }

@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Protocol.Wire;
 using System;
 using System.Threading;
@@ -31,7 +30,7 @@ namespace Catalyst.Abstractions.P2P
 {
     public interface IPeerService : IDisposable
     {
-        IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
+        IObservable<ProtocolMessage> MessageStream { get; }
         Task StartAsync();
         Task StartAsync(CancellationToken cancellationToken);
     }

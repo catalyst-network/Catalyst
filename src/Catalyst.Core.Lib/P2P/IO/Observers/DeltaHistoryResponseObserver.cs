@@ -31,10 +31,7 @@ using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Dto;
-using Catalyst.Core.Lib.P2P.Protocols;
 using Catalyst.Protocol.IPPN;
-using Catalyst.Protocol.Peer;
-using DotNetty.Transport.Channels;
 using MultiFormats;
 using Serilog;
 
@@ -56,7 +53,6 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         }
         
         protected override void HandleResponse(DeltaHistoryResponse deltaHeightResponse,
-            IChannelHandlerContext channelHandlerContext,
             MultiAddress sender,
             ICorrelationId correlationId)
         {

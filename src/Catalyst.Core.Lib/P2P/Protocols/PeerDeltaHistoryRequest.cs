@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -33,9 +32,7 @@ using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Abstractions.Util;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.IPPN;
-using Catalyst.Protocol.Peer;
 using MultiFormats;
 using Serilog;
 
@@ -54,24 +51,24 @@ namespace Catalyst.Core.Lib.P2P.Protocols
             DeltaHistoryResponseMessageStreamer = new ReplaySubject<IPeerDeltaHistoryResponse>(1, observableScheduler ?? Scheduler.Default);
         }
 
-        public async Task<IPeerDeltaHistoryResponse> DeltaHistoryAsync(MultiAddress recipientPeerId, uint height, uint range)
+        public async Task<IPeerDeltaHistoryResponse> DeltaHistoryAsync(MultiAddress recipientAddress, uint height, uint range)
         {
             IPeerDeltaHistoryResponse history;
             try
             {
-                await PeerClient.SendMessageAsync(new MessageDto(
+                await PeerClient.SendMessageAsync(
                     new DeltaHistoryRequest
                     {
                         Range = range,
                         Height = height
                     }.ToProtocolMessage(Address, CorrelationId.GenerateCorrelationId()),
-                    recipientPeerId
-                ));
+                    recipientAddress
+                );
 
                 using (CancellationTokenProvider.CancellationTokenSource)
                 {
                     history = await DeltaHistoryResponseMessageStreamer
-                       .FirstAsync(a => a != null && a.Address == recipientPeerId)
+                       .FirstAsync(a => a != null && a.Address == recipientAddress)
                        .ToTask(CancellationTokenProvider.CancellationTokenSource.Token)
                        .ConfigureAwait(false);
                 }

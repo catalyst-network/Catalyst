@@ -42,12 +42,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 {
     public sealed class GetNeighbourResponseObserverTests : IDisposable
     {
-        private readonly IChannelHandlerContext _fakeContext;
         private readonly GetNeighbourResponseObserver _observer;
 
         public GetNeighbourResponseObserverTests()
         {
-            _fakeContext = Substitute.For<IChannelHandlerContext>();
             _observer = new GetNeighbourResponseObserver(Substitute.For<ILogger>());
         }
 
@@ -76,8 +74,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 
             var peerNeighborsResponseObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler,
-                protocolMessage);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(testScheduler, protocolMessage);
 
             _observer.StartObserving(messageStream);
 

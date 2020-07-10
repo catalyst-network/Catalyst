@@ -133,11 +133,11 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             //return response;
         }
 
-        public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
+        public override void OnNext(ProtocolMessage message)
         {
-            base.OnNext(messageDto);
+            base.OnNext(message);
 
-            var correlationId = messageDto.Payload.CorrelationId.ToCorrelationId();
+            var correlationId = message.CorrelationId.ToCorrelationId();
             if (_fileTransferFactory.GetFileTransferInformation(correlationId) != null)
             {
                 _fileTransferFactory.FileTransferAsync(correlationId, CancellationToken.None).ConfigureAwait(false);

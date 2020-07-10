@@ -23,20 +23,17 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Handlers;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc.Authentication;
 using Catalyst.Abstractions.Rpc.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Codecs;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Transport.Channels;
@@ -120,7 +117,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Transport.Channels
             var messageStream = _observableServiceHandler.MessageStream;
 
             return new ObservableChannel(messageStream
-             ?? Observable.Never<IObserverDto<ProtocolMessage>>(), channel);
+             ?? Observable.Never<ProtocolMessage>(), channel);
         }
     }
 }

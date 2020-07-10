@@ -144,7 +144,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Transport.Channels
                 _testScheduler.Start();
 
                 observer.Received.Count.Should().Be(1);
-                observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);
+                observer.Received.Single().CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);
             }
         }
 

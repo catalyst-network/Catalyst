@@ -80,7 +80,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var getFileFromDfsResponseHandler =
                 new GetFileFromDfsResponseObserver(_logger, _fileDownloadFactory);
             var getFileResponse = GetResponseMessage(correlationId, responseCode);
-            getFileResponse.SendToHandler(_fakeContext, getFileFromDfsResponseHandler);
+            getFileResponse.SendToHandler(getFileFromDfsResponseHandler);
 
             _fileDownloadFactory.DidNotReceiveWithAnyArgs()?.FileTransferAsync(default, default);
             _fakeContext.Channel.DidNotReceiveWithAnyArgs()?.WriteAndFlushAsync(default);
@@ -92,7 +92,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var getFileFromDfsResponseHandler =
                 new GetFileFromDfsResponseObserver(_logger, _fileDownloadFactory);
             var getFileResponse = GetResponseMessage(correlationId, responseCodeType);
-            getFileResponse.SendToHandler(_fakeContext, getFileFromDfsResponseHandler);
+            getFileResponse.SendToHandler(getFileFromDfsResponseHandler);
             return correlationId;
         }
 

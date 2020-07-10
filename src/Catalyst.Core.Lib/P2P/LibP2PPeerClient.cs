@@ -100,17 +100,17 @@ namespace Catalyst.Core.Lib.P2P
             var protocolMessage = message.ToProtocolMessage(_peerSettings.Address);
             foreach (var peer in peers)
             {
-                await SendMessageAsync(peer, protocolMessage).ConfigureAwait(false);
+                await SendMessageAsync(protocolMessage, peer).ConfigureAwait(false);
             }
         }
 
         public async Task SendMessageAsync<T>(IMessageDto<T> message) where T : IMessage<T>
         {
             var protocolMessage = ProtocolMessage.Parser.ParseFrom(message.Content.ToByteArray());
-            await SendMessageAsync(message.RecipientAddress, protocolMessage).ConfigureAwait(false);
+            await SendMessageAsync(protocolMessage, message.RecipientAddress).ConfigureAwait(false);
         }
 
-        private async Task SendMessageAsync(MultiAddress receiver, ProtocolMessage message)
+        public async Task SendMessageAsync(ProtocolMessage message, MultiAddress receiver)
         {
             if (!await ProcessHandlersAsync(_catalystProtocolHandlers, message).ConfigureAwait(false))
             {

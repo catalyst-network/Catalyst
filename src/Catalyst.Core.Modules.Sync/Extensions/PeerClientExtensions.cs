@@ -23,8 +23,6 @@
 
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Protocol.Peer;
 using Google.Protobuf;
 using MultiFormats;
 using System.Collections.Generic;
@@ -38,9 +36,7 @@ namespace Catalyst.Core.Modules.Sync.Extensions
             var protocolMessage = message.ToProtocolMessage(peerSettings.Address);
             foreach (var peer in peers)
             {
-                peerClient.SendMessageAsync(new MessageDto(
-                    protocolMessage,
-                    peer));
+                peerClient.SendMessageAsync(protocolMessage, peer);
             }
         }
     }

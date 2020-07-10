@@ -26,7 +26,6 @@ using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Modules.Rpc.Client.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
-using DotNetty.Transport.Channels;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
@@ -38,16 +37,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         [Test]
         public void Null_Version_Throws_Exception()
         {
-            var channelHandlerContext = Substitute.For<IChannelHandlerContext>();
-            var senderentifier = MultiAddressHelper.GetAddress();
+            var senderAddress = MultiAddressHelper.GetAddress();
             var correlationId = CorrelationId.GenerateCorrelationId();
 
             var logger = Substitute.For<ILogger>();
             var getVersionResponseObserver = new GetVersionResponseObserver(logger);
 
             Assert.Throws<ArgumentNullException>(() => getVersionResponseObserver
-               .HandleResponseObserver(new VersionResponse {Version = null}, channelHandlerContext,
-                    senderentifier, correlationId));
+               .HandleResponseObserver(new VersionResponse {Version = null}, senderAddress, correlationId));
         }
     }
 }

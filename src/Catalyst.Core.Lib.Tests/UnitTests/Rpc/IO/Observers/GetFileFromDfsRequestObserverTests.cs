@@ -28,18 +28,15 @@ using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
-using DotNetty.Transport.Channels;
 using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
@@ -96,7 +93,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             return fakeStream;
         }
 
-        private IObserverDto<ProtocolMessage> GetFileFromDfsRequestMessage()
+        private ProtocolMessage GetFileFromDfsRequestMessage()
         {
             var getFileFromDfsRequestMessage = new GetFileFromDfsRequest
             {
@@ -104,7 +101,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             };
             var protocolMessage = getFileFromDfsRequestMessage
                .ToProtocolMessage(MultiAddressHelper.GetAddress("TestMan"), CorrelationId.GenerateCorrelationId());
-            return new ObserverDto(Substitute.For<IChannelHandlerContext>(), protocolMessage);
+            return protocolMessage;
         }
 
         public void Dispose() { _observer?.Dispose(); }

@@ -24,16 +24,13 @@
 using System.Linq;
 using System.Text;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Modules.Consensus.IO.Observers;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
-using DotNetty.Transport.Channels;
 using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
@@ -48,7 +45,6 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
     public sealed class CandidateDeltaObserverTests
     {
         private IDeltaVoter _deltaVoter;
-        private IChannelHandlerContext _fakeChannelContext;
         private Cid _newHash;
         private Cid _prevHash;
         private MultiAddress _producer;
@@ -59,7 +55,6 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
         {
             var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _deltaVoter = Substitute.For<IDeltaVoter>();
-            _fakeChannelContext = Substitute.For<IChannelHandlerContext>();
             var logger = Substitute.For<ILogger>();
             _newHash = hashProvider.ComputeUtf8MultiHash("newHash").ToCid();
             _prevHash = hashProvider.ComputeUtf8MultiHash("prevHash").ToCid();
@@ -106,7 +101,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _deltaVoter.DidNotReceiveWithAnyArgs().OnNext(default);
         }
 
-        private IObserverDto<ProtocolMessage> PrepareReceivedMessage(byte[] newHash,
+        private ProtocolMessage PrepareReceivedMessage(byte[] newHash,
             byte[] prevHash,
             MultiAddress producer)
         {
@@ -117,9 +112,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
                 Producer = producer.ToString()
             };
 
-            var receivedMessage = new ObserverDto(_fakeChannelContext,
-                message.ToProtocolMessage(MultiAddressHelper.GetAddress()));
-            return receivedMessage;
+            return message.ToProtocolMessage(MultiAddressHelper.GetAddress());
         }
     }
 }

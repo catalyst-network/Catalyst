@@ -24,41 +24,39 @@
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Wire;
 using Serilog;
 
 namespace Catalyst.TestUtils
 {
-    public sealed class ProtocolMessageObserver : IObserver<IObserverDto<ProtocolMessage>>
+    public sealed class ProtocolMessageObserver : IObserver<ProtocolMessage>
     {
         private readonly ILogger _logger;
-        private readonly ConcurrentStack<IObserverDto<ProtocolMessage>> _received;
+        private readonly ConcurrentStack<ProtocolMessage> _received;
 
         public ProtocolMessageObserver(int index, ILogger logger)
         {
             _logger = logger;
             Index = index;
-            _received = new ConcurrentStack<IObserverDto<ProtocolMessage>>();
+            _received = new ConcurrentStack<ProtocolMessage>();
         }
 
-        public IReadOnlyCollection<IObserverDto<ProtocolMessage>> Received =>
-            Array.AsReadOnly(_received.ToArray());
+        public IReadOnlyCollection<ProtocolMessage> Received => Array.AsReadOnly(_received.ToArray());
 
         public int Index { get; }
 
         public void OnCompleted() { _logger.Debug($"observer {Index} done"); }
         public void OnError(Exception error) { _logger.Debug($"observer {Index} received error : {error.Message}"); }
 
-        public void OnNext(IObserverDto<ProtocolMessage> value)
+        public void OnNext(ProtocolMessage value)
         {
-            if (value == NullObjects.ObserverDto)
+            if (value == NullObjects.ProtocolMessage)
             {
                 return;
             }
 
-            _logger.Debug($"observer {Index} received message of type {value?.Payload?.TypeUrl ?? "(null)"}");
+            _logger.Debug($"observer {Index} received message of type {value?.TypeUrl ?? "(null)"}");
             _received.Push(value);
         }
     }

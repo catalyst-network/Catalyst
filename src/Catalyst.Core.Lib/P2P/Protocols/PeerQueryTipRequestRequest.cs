@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -33,9 +32,7 @@ using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Abstractions.Util;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.IPPN;
-using Catalyst.Protocol.Peer;
 using MultiFormats;
 using Serilog;
 
@@ -66,10 +63,10 @@ namespace Catalyst.Core.Lib.P2P.Protocols
         {
             try
             {
-                await PeerClient.SendMessageAsync(new MessageDto(
+                await PeerClient.SendMessageAsync(
                     new LatestDeltaHashRequest().ToProtocolMessage(Address, CorrelationId.GenerateCorrelationId()),
                     recipientPeerId
-                ));
+                );
 
                 using (CancellationTokenProvider.CancellationTokenSource)
                 {

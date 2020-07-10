@@ -45,6 +45,7 @@ using Catalyst.Core.Modules.Ledger;
 using Catalyst.Core.Modules.Mempool;
 using Catalyst.Core.Modules.Rpc.Server;
 using Catalyst.Core.Modules.Sync;
+using Catalyst.Modules.Network.LibP2P;
 using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
 using NSubstitute;
@@ -103,6 +104,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.Config
             containerBuilder.RegisterModule(new BulletProofsModule());
             containerBuilder.RegisterModule(new AuthenticationModule());
             containerBuilder.RegisterModule(new SynchroniserModule());
+            containerBuilder.RegisterModule(new LibP2PNetworkModule());
             containerBuilder.RegisterType<InMemoryRepository<DeltaIndexDao, string>>().As<IRepository<DeltaIndexDao, string>>().SingleInstance();
 
             containerBuilder.RegisterAssemblyTypes(typeof(CoreLibProvider).Assembly)

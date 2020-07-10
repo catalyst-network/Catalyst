@@ -23,21 +23,17 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.EventLoop;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
@@ -59,8 +55,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
             _testScheduler = new TestScheduler();
             _rpcServerSettings = Substitute.For<IRpcServerSettings>();
             _peerId = MultiAddressHelper.GetAddress(nameof(RpcServerTests));
-            _channelHandlerContext = Substitute.For<IChannelHandlerContext>();
-            _mockSocketReplySubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1, _testScheduler);
+            _mockSocketReplySubject = new ReplaySubject<ProtocolMessage>(1, _testScheduler);
 
             var tcpServerEventLoopGroupFactory = Substitute.For<ITcpServerEventLoopGroupFactory>();
             var tcpServerChannelFactory = Substitute.For<ITcpServerChannelFactory>();
@@ -76,7 +71,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
                 requestHandlers, tcpServerEventLoopGroupFactory);
         }
 
-        private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _mockSocketReplySubject;
+        private readonly ReplaySubject<ProtocolMessage> _mockSocketReplySubject;
         private readonly TestScheduler _testScheduler;
         private readonly MultiAddress _peerId;
         private readonly RpcServer _rpcServer;
@@ -100,14 +95,12 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
             var protocolMessage =
                 targetVersionRequest.ToProtocolMessage(_peerId, CorrelationId.GenerateCorrelationId());
 
-            var observerDto = new ObserverDto(_channelHandlerContext, protocolMessage);
-
             _rpcServer.MessageStream
-               .Where(x => x.Payload != null && x.Payload.TypeUrl == typeof(VersionRequest).ShortenedProtoFullName())
+               .Where(x => x != null && x.TypeUrl == typeof(VersionRequest).ShortenedProtoFullName())
                .SubscribeOn(_testScheduler)
-               .Subscribe(request => returnedVersionRequest = request.Payload.FromProtocolMessage<VersionRequest>());
+               .Subscribe(request => returnedVersionRequest = request.FromProtocolMessage<VersionRequest>());
 
-            _mockSocketReplySubject.OnNext(observerDto);
+            _mockSocketReplySubject.OnNext(protocolMessage);
 
             _testScheduler.Start();
 

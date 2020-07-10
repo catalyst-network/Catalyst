@@ -24,9 +24,7 @@
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Protocol.Peer;
 using Dawn;
-using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using MultiFormats;
 using Serilog;
@@ -39,17 +37,16 @@ namespace Catalyst.Core.Lib.Rpc.IO
         protected RpcResponseObserver(ILogger logger, bool assertMessageNameCheck = true) : base(logger,
             assertMessageNameCheck) { }
 
-        protected abstract override void HandleResponse(TProto messageDto, IChannelHandlerContext channelHandlerContext, MultiAddress sender, ICorrelationId correlationId);
+        protected abstract override void HandleResponse(TProto message, MultiAddress sender, ICorrelationId correlationId);
 
         public void HandleResponseObserver(IMessage message,
-            IChannelHandlerContext channelHandlerContext,
             MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(sender, nameof(sender)).NotNull();
             Guard.Argument(message, nameof(message)).NotNull("The message cannot be null");
 
-            HandleResponse((TProto) message, channelHandlerContext, sender, correlationId);
+            HandleResponse((TProto) message, sender, correlationId);
         }
     }
 }

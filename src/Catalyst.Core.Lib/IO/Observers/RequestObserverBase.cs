@@ -28,13 +28,9 @@ using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Core.Lib.P2P;
 using Catalyst.Protocol.Wire;
 using Dawn;
-using DotNetty.Transport.Channels;
 using Google.Protobuf;
-using Lib.P2P.Protocols;
 using MultiFormats;
 using Serilog;
 
@@ -56,26 +52,22 @@ namespace Catalyst.Core.Lib.IO.Observers
             logger.Verbose("{interface} instantiated", nameof(IRequestMessageObserver));
         }
 
-        protected abstract TProtoRes HandleRequest(TProtoReq messageDto, MultiAddress sender, ICorrelationId correlationId);
+        protected abstract TProtoRes HandleRequest(TProtoReq message, MultiAddress sender, ICorrelationId correlationId);
 
-        public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
+        public override void OnNext(ProtocolMessage message)
         {
             Logger.Verbose("Pre Handle Message Called");
 
             try
             {
-                var correlationId = messageDto.Payload.CorrelationId.ToCorrelationId();
-                var recipientPeerId = new MultiAddress(messageDto.Payload.Address);
+                var correlationId = message.CorrelationId.ToCorrelationId();
+                var recipientAddress = new MultiAddress(message.Address);
 
-                var response = HandleRequest(messageDto.Payload.FromProtocolMessage<TProtoReq>(),
-                    recipientPeerId,
+                var response = HandleRequest(message.FromProtocolMessage<TProtoReq>(),
+                    recipientAddress,
                     correlationId);
 
-                var responseDto = new MessageDto(
-                    response.ToProtocolMessage(PeerSettings.Address, correlationId),
-                    recipientPeerId);
-
-                _peerClient.SendMessageAsync(responseDto);
+                _peerClient.SendMessageAsync(response.ToProtocolMessage(PeerSettings.Address, correlationId), recipientAddress);
             }
             catch (Exception exception)
             {

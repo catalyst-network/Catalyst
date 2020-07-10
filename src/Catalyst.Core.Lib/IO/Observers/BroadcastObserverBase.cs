@@ -41,13 +41,13 @@ namespace Catalyst.Core.Lib.IO.Observers
                 t => $"{nameof(TProto)} is not of type {MessageTypes.Broadcast.Name}");
         }
 
-        public abstract void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto);
+        public abstract void HandleBroadcast(ProtocolMessage message);
 
-        public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
+        public override void OnNext(ProtocolMessage message)
         {
             try
             {
-                HandleBroadcast(messageDto);
+                HandleBroadcast(message);
             }
             catch (Exception exception)
             {

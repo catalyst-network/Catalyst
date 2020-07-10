@@ -22,31 +22,16 @@
 #endregion
 
 using Catalyst.Abstractions.Hashing;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Abstractions.P2P.Repository;
-using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
-using Catalyst.Core.Modules.Sync.Watcher;
-using Catalyst.Protocol.Deltas;
-using Catalyst.Protocol.IPPN;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
-using Catalyst.TestUtils;
-using DotNetty.Transport.Channels;
-using FluentAssertions;
-using Google.Protobuf;
 using MultiFormats.Registry;
 using NSubstitute;
 using SharpRepository.InMemoryRepository;
-using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
-using System.Threading.Tasks;
 using Catalyst.Core.Lib.P2P.Repository;
 
 namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
@@ -57,7 +42,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
         private IHashProvider _hashProvider;
         private IPeerService _peerService;
         private IPeerRepository _peerRepository;
-        private ReplaySubject<IObserverDto<ProtocolMessage>> _deltaHeightReplaySubject;
+        private ReplaySubject<ProtocolMessage> _deltaHeightReplaySubject;
 
         //todo add unit tests
         public PeerSyncManagerUnitTests()
@@ -66,7 +51,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
             _peerService = Substitute.For<IPeerService>();
             _peerClient = Substitute.For<IPeerClient>();
             _peerRepository = new PeerRepository(new InMemoryRepository<Peer, string>());
-            _deltaHeightReplaySubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1);
+            _deltaHeightReplaySubject = new ReplaySubject<ProtocolMessage>(1);
             _peerService.MessageStream.Returns(_deltaHeightReplaySubject.AsObservable());
         }
     }

@@ -23,7 +23,6 @@
 
 using System;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Protocol.Wire;
 using Dawn;
@@ -33,7 +32,7 @@ namespace Catalyst.Core.Lib.IO.Transport.Channels
 {
     public sealed class ObservableChannel : IObservableChannel
     {
-        public ObservableChannel(IObservable<IObserverDto<ProtocolMessage>> messageStream, IChannel channel)
+        public ObservableChannel(IObservable<ProtocolMessage> messageStream, IChannel channel)
         {
             Guard.Argument(messageStream, nameof(messageStream)).NotNull();
 
@@ -43,6 +42,6 @@ namespace Catalyst.Core.Lib.IO.Transport.Channels
 
         public IChannel Channel { get; }
         public Task StartAsync() { return Task.CompletedTask; }
-        public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
+        public IObservable<ProtocolMessage> MessageStream { get; }
     }
 }

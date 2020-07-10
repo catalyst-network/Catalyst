@@ -24,65 +24,43 @@
 using System;
 using System.Linq;
 using System.Reactive.Linq;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Protocol.Wire;
-using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Microsoft.Reactive.Testing;
-using NSubstitute;
 
 namespace Catalyst.TestUtils
 {
     public static class MessageStreamHelper
     {
-        public static void SendToHandler(this ProtocolMessage messages,
-            IChannelHandlerContext fakeContext,
+        public static void SendToHandler(this ProtocolMessage message,
             MessageObserverBase handler)
         {
-            handler.OnNext(CreateChanneledMessage(fakeContext, messages));
+            handler.OnNext(message);
         }
 
         //Force test scheduler for testing streams
-        public static IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithMessage(IChannelHandlerContext fakeContext,
-            TestScheduler testScheduler,
+        public static IObservable<ProtocolMessage> CreateStreamWithMessage(TestScheduler testScheduler,
             ProtocolMessage response)
         {
-            var channeledAny = new ObserverDto(fakeContext, response);
-            var messageStream = new[] {channeledAny}.ToObservable(testScheduler);
-            return messageStream;
+            return new[] { response }.ToObservable(testScheduler);
         }
 
-        public static IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithMessages<T>(TestScheduler testScheduler,
+        public static IObservable<ProtocolMessage> CreateStreamWithMessages<T>(TestScheduler testScheduler,
             params T[] messages)
             where T : IMessage<T>, IMessage
         {
-            var protoMessages = messages.Select(m =>
-                m.ToProtocolMessage(MultiAddressHelper.GetAddress(), CorrelationId.GenerateCorrelationId()));
+            var protoMessages = messages.Select(m => m.ToProtocolMessage(MultiAddressHelper.GetAddress(), CorrelationId.GenerateCorrelationId()));
 
-            var context = Substitute.For<IChannelHandlerContext>();
-
-            return CreateStreamWithMessages(context, testScheduler, protoMessages.ToArray());
+            return CreateStreamWithMessages(testScheduler, protoMessages.ToArray());
         }
 
-        public static IObservable<IObserverDto<ProtocolMessage>> CreateStreamWithMessages(IChannelHandlerContext fakeContext,
-            TestScheduler testScheduler,
+        public static IObservable<ProtocolMessage> CreateStreamWithMessages(TestScheduler testScheduler,
             params ProtocolMessage[] responseMessages)
         {
-            var stream = responseMessages
-               .Select(message => new ObserverDto(fakeContext, message));
-
-            var messageStream = stream.ToObservable(testScheduler);
-            return messageStream;
-        }
-
-        private static ObserverDto CreateChanneledMessage(IChannelHandlerContext fakeContext,
-            ProtocolMessage responseMessage)
-        {
-            return new ObserverDto(fakeContext, responseMessage);
+            return responseMessages.ToObservable(testScheduler);;
         }
     }
 }

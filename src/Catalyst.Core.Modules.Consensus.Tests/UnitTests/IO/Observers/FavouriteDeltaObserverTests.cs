@@ -24,10 +24,8 @@
 using System.Linq;
 using System.Text;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Modules.Consensus.IO.Observers;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
@@ -110,7 +108,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _deltaElector.DidNotReceiveWithAnyArgs().OnNext(default);
         }
 
-        private IObserverDto<ProtocolMessage> PrepareReceivedMessage(byte[] newHash,
+        private ProtocolMessage PrepareReceivedMessage(byte[] newHash,
             byte[] prevHash,
             MultiAddress producerId,
             MultiAddress voterId)
@@ -128,9 +126,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
                 Voter = voterId.ToString()
             };
 
-            var receivedMessage = new ObserverDto(_fakeChannelContext,
-                favouriteDeltaBroadcast.ToProtocolMessage(MultiAddressHelper.GetAddress()));
-            return receivedMessage;
+            return favouriteDeltaBroadcast.ToProtocolMessage(MultiAddressHelper.GetAddress());
         }
     }
 }

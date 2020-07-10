@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Protocol.Wire;
@@ -67,6 +66,6 @@ namespace Catalyst.TestUtils
         }
 
         public IChannel Channel => _channel;
-        public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
+        public IObservable<ProtocolMessage> MessageStream { get; }
     }
 }

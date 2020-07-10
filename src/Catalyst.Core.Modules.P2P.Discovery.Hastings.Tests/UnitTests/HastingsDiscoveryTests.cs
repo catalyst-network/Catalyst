@@ -574,7 +574,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
 
                     walker.PeerClient
                        .Received(Constants.NumberOfRandomPeers)
-                       .SendMessageAsync(Arg.Any<IMessageDto<ProtocolMessage>>());
+                       .SendMessageAsync(Arg.Any<ProtocolMessage>(), Arg.Any<MultiAddress>());
 
                     walker.StepProposal.Neighbours
                        .Where(n => n.StateTypes == NeighbourStateTypes.Contacted)

@@ -26,7 +26,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
@@ -53,9 +52,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         /// <summary>The logger</summary>
         private ILogger _logger;
 
-        /// <summary>The fake channel context</summary>
-        private IChannelHandlerContext _fakeContext;
-
         private IPeerClient _peerClient;
 
         /// <summary>
@@ -70,10 +66,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         {
             _testScheduler = new TestScheduler();
             _logger = Substitute.For<ILogger>();
-            _fakeContext = Substitute.For<IChannelHandlerContext>();
             _peerClient = Substitute.For<IPeerClient>();
-            var fakeChannel = Substitute.For<IChannel>();
-            _fakeContext.Channel.Returns(fakeChannel);
         }
 
         /// <summary>
@@ -103,8 +96,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
 
             var protocolMessage =
                 new GetPeerCountRequest().ToProtocolMessage(MultiAddressHelper.GetAddress("sender"));
-            var messageStream =
-                MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_testScheduler, protocolMessage);
 
             var peerSettings = sendPeerId.ToSubstitutedPeerSettings();
             var handler = new PeerCountRequestObserver(peerSettings, _peerClient, peerService, _logger);
@@ -115,9 +107,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var receivedCalls = _peerClient.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
-            var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls[0].GetArguments().Single();
+            var sentResponse = (ProtocolMessage) receivedCalls[0].GetArguments().First();
 
-            var responseContent = sentResponseDto.Content.FromProtocolMessage<GetPeerCountResponse>();
+            var responseContent = sentResponse.FromProtocolMessage<GetPeerCountResponse>();
 
             responseContent.PeerCount.Should().Be(fakePeers);
         }

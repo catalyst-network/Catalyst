@@ -54,8 +54,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
         public void Init()
         {
             _peerClient = Substitute.For<IPeerClient>();
-            _context = Substitute.For<IChannelHandlerContext>();
-            _context.Channel.Returns(Substitute.For<IChannel>());
             _downloadFileTransferFactory = Substitute.For<IDownloadFileTransferFactory>();
             var peerSettings = MultiAddressHelper.GetAddress("Test").ToSubstitutedPeerSettings();
             _observer = new TransferFileBytesRequestObserver(_downloadFileTransferFactory,
@@ -78,7 +76,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
             _downloadFileTransferFactory.DownloadChunk(Arg.Any<TransferFileBytesRequest>())
                .Returns(FileTransferResponseCodeTypes.Successful);
 
-            request.SendToHandler(_context, _observer);
+            request.SendToHandler(_observer);
             _downloadFileTransferFactory.Received(1).DownloadChunk(Arg.Any<TransferFileBytesRequest>());
         }
 
@@ -90,10 +88,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
             _downloadFileTransferFactory.DownloadChunk(Arg.Any<TransferFileBytesRequest>()).Returns(FileTransferResponseCodeTypes.Error);
 
             var sender = MultiAddressHelper.GetAddress("sender");
-            var requestDto = new MessageDto(new TransferFileBytesRequest().ToProtocolMessage(sender)
-              , MultiAddressHelper.GetAddress("recipient"));
+            var request = new TransferFileBytesRequest().ToProtocolMessage(sender);
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_context, testScheduler, requestDto.Content);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(testScheduler, request);
 
             _observer.StartObserving(messageStream);
 
@@ -101,8 +98,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
 
             var receivedCalls = _peerClient.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
-            var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
-            var transferFileBytesResponse = sentResponseDto.Content.FromProtocolMessage<TransferFileBytesResponse>();
+            var sentResponse = (ProtocolMessage) receivedCalls.Single().GetArguments().First();
+            var transferFileBytesResponse = sentResponse.FromProtocolMessage<TransferFileBytesResponse>();
             transferFileBytesResponse.ResponseCode.Should().Equal((byte) FileTransferResponseCodeTypes.Error);
         }
     }

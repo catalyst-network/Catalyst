@@ -29,7 +29,6 @@ using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Modules.Rpc.Client.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
-using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using NSubstitute;
 using Serilog;
@@ -49,7 +48,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         [Test]
         public void HandlerRemovesFileTransferOnError()
         {
-            var channelHandlerContext = Substitute.For<IChannelHandlerContext>();
             var senderentifier = MultiAddressHelper.GetAddress();
             var correlationId = CorrelationId.GenerateCorrelationId();
 
@@ -63,15 +61,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 Substitute.For<ILogger>(),
                 _uploadFileTransferFactory
             );
-            addFileToDfsResponseObserver.HandleResponseObserver(addFileResponse, channelHandlerContext,
-                senderentifier, correlationId);
+            addFileToDfsResponseObserver.HandleResponseObserver(addFileResponse, senderentifier, correlationId);
             _uploadFileTransferFactory.Received(1).Remove(Arg.Any<IUploadFileInformation>(), true);
         }
 
         [Test]
         public void InitializesFileTransferOnSuccessResponse()
         {
-            var channelHandlerContext = Substitute.For<IChannelHandlerContext>();
             var sender = MultiAddressHelper.GetAddress();
             var correlationId = CorrelationId.GenerateCorrelationId();
 
@@ -86,10 +82,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
                 _uploadFileTransferFactory
             );
 
-            addFileToDfsResponseObserver.HandleResponseObserver(addFileResponse, channelHandlerContext,
-                sender, correlationId);
-            _uploadFileTransferFactory.Received(1)
-              ?.FileTransferAsync(Arg.Any<ICorrelationId>(), Arg.Any<CancellationToken>());
+            addFileToDfsResponseObserver.HandleResponseObserver(addFileResponse, sender, correlationId);
+            _uploadFileTransferFactory.Received(1)?.FileTransferAsync(Arg.Any<ICorrelationId>(), Arg.Any<CancellationToken>());
         }
     }
 }

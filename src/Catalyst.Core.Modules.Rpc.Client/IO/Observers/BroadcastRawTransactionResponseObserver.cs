@@ -35,8 +35,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
     {
         public BroadcastRawTransactionResponseObserver(ILogger logger) : base(logger) { }
 
-        protected override void HandleResponse(BroadcastRawTransactionResponse messageDto,
-            IChannelHandlerContext channelHandlerContext,
+        protected override void HandleResponse(BroadcastRawTransactionResponse message,
             MultiAddress senderentifier,
             ICorrelationId correlationId) { }
     }

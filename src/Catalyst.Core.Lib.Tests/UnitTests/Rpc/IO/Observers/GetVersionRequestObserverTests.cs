@@ -22,8 +22,6 @@
 #endregion
 
 using System.Linq;
-using System.Net;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
@@ -43,13 +41,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
     public sealed class GetVersionRequestObserverTests
     {
         private readonly ILogger _logger;
-        private readonly IChannelHandlerContext _fakeContext;
         private readonly IPeerClient _peerClient;
 
         public GetVersionRequestObserverTests()
         {
             _logger = Substitute.For<ILogger>();
-            _fakeContext = Substitute.For<IChannelHandlerContext>();
             _peerClient = Substitute.For<IPeerClient>();
         }
 
@@ -59,10 +55,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var testScheduler = new TestScheduler();
 
             var versionRequest = new VersionRequest();
-            var protocolMessage =
-                versionRequest.ToProtocolMessage(MultiAddressHelper.GetAddress("sender"));
+            var protocolMessage = versionRequest.ToProtocolMessage(MultiAddressHelper.GetAddress("sender"));
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler,
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(testScheduler,
                 protocolMessage
             );
 
@@ -76,8 +71,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var receivedCalls = _peerClient.ReceivedCalls().ToList();
             receivedCalls.Count.Should().Be(1);
 
-            var sentResponseDto = (IMessageDto<ProtocolMessage>) receivedCalls.Single().GetArguments().Single();
-            var versionResponseMessage = sentResponseDto.Content.FromProtocolMessage<VersionResponse>();
+            var sentResponse = (ProtocolMessage) receivedCalls.Single().GetArguments().First();
+            var versionResponseMessage = sentResponse.FromProtocolMessage<VersionResponse>();
             versionResponseMessage.Version.Should().Be(NodeUtil.GetVersion());
         }
     }

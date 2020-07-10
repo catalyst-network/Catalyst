@@ -38,7 +38,6 @@ using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Network;
-using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using Catalyst.TestUtils.Fakes;
 using DotNetty.Transport.Channels;
@@ -143,7 +142,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
                 _testScheduler.Start();
 
                 observer.Received.Count.Should().Be(1);
-                observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);
+                observer.Received.Single().CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);
             }
         }
     }

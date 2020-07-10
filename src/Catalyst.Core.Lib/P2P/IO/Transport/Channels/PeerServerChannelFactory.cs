@@ -121,7 +121,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Transport.Channels
             var messageStream = channel.Pipeline.Get<IObservableServiceHandler>()?.MessageStream;
 
             return new ObservableChannel(messageStream
-             ?? Observable.Never<IObserverDto<ProtocolMessage>>(), channel);
+             ?? Observable.Never<ProtocolMessage>(), channel);
         }
     }
 }

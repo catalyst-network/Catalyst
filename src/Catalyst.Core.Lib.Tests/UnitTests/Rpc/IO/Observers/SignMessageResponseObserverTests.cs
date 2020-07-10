@@ -29,7 +29,6 @@ using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Modules.Rpc.Client.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
-using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Microsoft.Reactive.Testing;
 using MultiFormats;
@@ -42,7 +41,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
     public sealed class SignMessageResponseHandlerTests : IDisposable
     {
         private ILogger _logger;
-        private IChannelHandlerContext _fakeContext;
         public static readonly List<object[]> QueryContents = InitialiseQueryData();
 
         private IUserOutput _output;
@@ -114,7 +112,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
             var protocolMessage =
                 signMessageResponse.ToProtocolMessage(MultiAddressHelper.GetAddress("sender"), correlationId);
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler,
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(testScheduler,
                 protocolMessage
             );
 

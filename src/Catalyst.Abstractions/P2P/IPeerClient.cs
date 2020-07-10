@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using MultiFormats;
@@ -35,7 +34,7 @@ namespace Catalyst.Abstractions.P2P
     public interface IPeerClient : IDisposable
     {
         Task SendMessageToPeersAsync(IMessage message, IEnumerable<MultiAddress> peers);
-        Task SendMessageAsync<T>(IMessageDto<T> message) where T : IMessage<T>;
+        Task SendMessageAsync(ProtocolMessage message, MultiAddress recipient);
         Task BroadcastAsync(ProtocolMessage message);
         Task StartAsync();
         Task StartAsync(CancellationToken cancellationToken);

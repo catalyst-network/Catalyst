@@ -45,11 +45,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc
             var logger = Substitute.For<ILogger>();
             var responseObserver = new TestRpcResponseObserver(logger);
 
-            Assert.Throws<ArgumentNullException>(() => responseObserver
-               .HandleResponseObserver(null, channelHandlerContext,
-                    sender, correlationId));
+            Assert.Throws<ArgumentNullException>(() => responseObserver.HandleResponseObserver(null,sender, correlationId));
         }
-
+        //todo
         //[Test]
         //public void Null_ChannelHandlerContext_Throws_Exception()
         //{
@@ -74,8 +72,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc
             var responseObserver = new TestRpcResponseObserver(logger);
 
             Assert.Throws<ArgumentNullException>(() => responseObserver
-               .HandleResponseObserver(new VersionResponse(), channelHandlerContext,
-                    null, correlationId));
+               .HandleResponseObserver(new VersionResponse(), null, correlationId));
         }
     }
 }

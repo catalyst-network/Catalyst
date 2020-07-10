@@ -22,15 +22,13 @@
 #endregion
 
 using Catalyst.Abstractions.IO.Events;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
-using DotNetty.Transport.Channels;
+using MultiFormats;
 using NSubstitute;
 using NUnit.Framework;
 using Serilog;
@@ -66,20 +64,15 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc.IO.Observers
         [TestCase(ResponseCode.Finished)]
         public void Can_Respond_With_Correct_Response(ResponseCode expectedResponse)
         {
-            var channelContext = Substitute.For<IChannelHandlerContext>();
-            var channel = Substitute.For<IChannel>();
-            channelContext.Channel.Returns(channel);
-
             _transactionReceivedEvent.OnTransactionReceived(Arg.Any<ProtocolMessage>())
                .Returns(expectedResponse);
             _broadcastRawTransactionRequestObserver
-               .OnNext(new ObserverDto(channelContext,
-                    new BroadcastRawTransactionRequest { Transaction = new TransactionBroadcast() }.ToProtocolMessage(
-                        MultiAddressHelper.GetAddress("FakeSender"))));
-            _peerClient.Received(1).SendMessageAsync(Arg.Is<IMessageDto<ProtocolMessage>>(transactionObj =>
-                    ((MessageDto) transactionObj)
-                   .Content.FromProtocolMessage<BroadcastRawTransactionResponse>()
-                   .ResponseCode == expectedResponse));
+               .OnNext(new BroadcastRawTransactionRequest { Transaction = new TransactionBroadcast() }.ToProtocolMessage(
+                        MultiAddressHelper.GetAddress("FakeSender")));
+            _peerClient.Received(1).SendMessageAsync(Arg.Is<ProtocolMessage>(transactionObj =>
+                    ((ProtocolMessage) transactionObj)
+                   .FromProtocolMessage<BroadcastRawTransactionResponse>()
+                   .ResponseCode == expectedResponse), Arg.Any<MultiAddress>());
         }
     }
 }

@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -33,10 +32,8 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.IPPN;
-using Catalyst.Protocol.Peer;
 using MultiFormats;
 using Serilog;
 
@@ -69,25 +66,21 @@ namespace Catalyst.Core.Lib.P2P.Protocols
             _ttl = ttl;
         }
 
-        public async Task<bool> ChallengePeerAsync(MultiAddress recipientPeerId)
+        public async Task<bool> ChallengePeerAsync(MultiAddress recipientAddress)
         {
             try
             {
                 var correlationId = CorrelationId.GenerateCorrelationId();
                 var protocolMessage = new PingRequest().ToProtocolMessage(_senderIdentifier, correlationId);
-                var messageDto = new MessageDto(
-                    protocolMessage,
-                    recipientPeerId
-                );
 
-                _logger.Verbose($"Sending peer challenge request to IP: {recipientPeerId}");
-                await _peerClient.SendMessageAsync(messageDto).ConfigureAwait(false);
+                _logger.Verbose($"Sending peer challenge request to IP: {recipientAddress}");
+                await _peerClient.SendMessageAsync(protocolMessage, recipientAddress).ConfigureAwait(false);
 
                 using (var cancellationTokenSource =
                     new CancellationTokenSource(TimeSpan.FromSeconds(_ttl)))
                 {
                     await ChallengeResponseMessageStreamer
-                       .FirstAsync(a => a != null && a.Address == recipientPeerId)
+                       .FirstAsync(a => a != null && a.Address == recipientAddress)
                        .ToTask(cancellationTokenSource.Token)
                        .ConfigureAwait(false);
                 }

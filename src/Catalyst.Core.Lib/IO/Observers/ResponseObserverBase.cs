@@ -23,14 +23,11 @@
 
 using System;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Dawn;
-using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using MultiFormats;
 using Serilog;
@@ -48,15 +45,14 @@ namespace Catalyst.Core.Lib.IO.Observers
             }
         }
 
-        protected abstract void HandleResponse(TProto messageDto, IChannelHandlerContext channelHandlerContext, MultiAddress sender, ICorrelationId correlationId);
+        protected abstract void HandleResponse(TProto message, MultiAddress sender, ICorrelationId correlationId);
 
-        public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
+        public override void OnNext(ProtocolMessage message)
         {
             Logger.Verbose("Pre Handle Message Called");
             try
             {
-                HandleResponse(messageDto.Payload.FromProtocolMessage<TProto>(), messageDto.Context,
-                    messageDto.Payload.Address, messageDto.Payload.CorrelationId.ToCorrelationId());
+                HandleResponse(message.FromProtocolMessage<TProto>(), message.Address, message.CorrelationId.ToCorrelationId());
             }
             catch (Exception exception)
             {

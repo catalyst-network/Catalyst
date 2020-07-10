@@ -23,7 +23,6 @@
 
 using System;
 using System.Reactive.Linq;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Core.Lib.IO.Transport.Channels;
 using Catalyst.Protocol.Wire;
@@ -34,7 +33,7 @@ namespace Catalyst.TestUtils
 {
     public static class ObservableHelpers
     {
-        public static IObservableChannel MockObservableChannel(IObservable<IObserverDto<ProtocolMessage>> replaySubject)
+        public static IObservableChannel MockObservableChannel(IObservable<ProtocolMessage> replaySubject)
         {
             var mockChannel = Substitute.For<IChannel>();
             var mockEventStream = replaySubject.AsObservable();

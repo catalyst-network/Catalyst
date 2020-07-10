@@ -22,8 +22,6 @@
 #endregion
 
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Protocol.Peer;
-using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using MultiFormats;
 
@@ -31,6 +29,6 @@ namespace Catalyst.Abstractions.IO.Observers
 {
     public interface IRpcResponseObserver : IResponseMessageObserver
     {
-        void HandleResponseObserver(IMessage messageDto, IChannelHandlerContext channelHandlerContext, MultiAddress senderentifier, ICorrelationId correlationId);
+        void HandleResponseObserver(IMessage message, MultiAddress senderentifier, ICorrelationId correlationId);
     }
 }

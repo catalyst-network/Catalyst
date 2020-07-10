@@ -40,13 +40,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport.Channels
         public ObservableChannelTests()
         {
             _channel = Substitute.For<IChannel>();
-            var messageSubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1);
+            var messageSubject = new ReplaySubject<ProtocolMessage>(1);
             _messageStream = messageSubject.AsObservable();
             _observableChannel = new ObservableChannel(_messageStream, _channel);
         }
 
         private readonly IChannel _channel;
-        private readonly IObservable<IObserverDto<ProtocolMessage>> _messageStream;
+        private readonly IObservable<ProtocolMessage> _messageStream;
         private readonly ObservableChannel _observableChannel;
 
         [Test]

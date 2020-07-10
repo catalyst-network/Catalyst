@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 
@@ -31,7 +30,7 @@ namespace Catalyst.Abstractions.IO.Transport.Channels
     public interface IObservableChannel
     {
         IChannel Channel { get; }
-        IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
+        IObservable<ProtocolMessage> MessageStream { get; }
     }
 }
 
