@@ -44,10 +44,8 @@ to get console options
 
 You can also use ```Catalyst.Benchmark.exe``` tool to run benchmarks.
 
-
 ## Reports
 
 Reports can be found in the BenchmarkDotNet.Artifacts/results folder.
 
 [Report 4/1/19](BenchmarkDotNet.Artifacts/results/BenchmarkRun-joined-2019-01-04-01-35-42-report-github.md)
-

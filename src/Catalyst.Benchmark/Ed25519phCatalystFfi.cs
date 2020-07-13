@@ -11,18 +11,23 @@ namespace Catalyst.Benchmark
     [BenchmarkCategory("ed25519", "ed25519ph")]
     public class Ed25519phCatalystFfi
     {
-        ICryptoContext _cryptoContext = new FfiWrapper();
+        private readonly ICryptoContext _cryptoContext = new FfiWrapper();
         private static readonly Random Random = new Random();
-        IPrivateKey _privateKey;
-        private IPublicKey _publicKey;
-        byte[] _message;
-        byte[] _context;
-        ISignature _signature;
-        IList<ISignature> _signatures;
+        private IPrivateKey _privateKey;
+        private byte[] _message;
+        private byte[] _context;
+        private ISignature _signature;
+        private IList<ISignature> _signatures;
         private List<byte[]> _messages;
 
         [Params(1, 10, 100, 1000, 10000, 100000)]
-        public int N;
+        private readonly int _n;
+
+        public Ed25519phCatalystFfi(int n)
+        {
+            _n = n;
+        }
+
 
         [GlobalSetup(Target = nameof(GetPublicKey))]
         public void SetupGetPublicKey()
@@ -44,13 +49,14 @@ namespace Catalyst.Benchmark
             SetupSign();
             _signature = _cryptoContext.Sign(_privateKey, _message, _context);
         }
+        
         [GlobalSetup(Target = nameof(BatchVerify))]
         public void SetupBatchVerify()
         {
             _messages = new List<byte[]>();
             _signatures = new List<ISignature>();
             _context = Encoding.UTF8.GetBytes("context");
-            for (int i = 0; i < N; i++)
+            for (int i = 0; i < _n; i++)
             {
                 var bytes = new byte[255];
                 Random.NextBytes(bytes);
@@ -74,7 +80,7 @@ namespace Catalyst.Benchmark
         [BenchmarkCategory("getpublickey")]
         public void GetPublicKey()
         {
-            _publicKey = _cryptoContext.GetPublicKeyFromPrivateKey(_privateKey);
+            _cryptoContext.GetPublicKeyFromPrivateKey(_privateKey);
         }
 
   
