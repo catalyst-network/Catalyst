@@ -27,16 +27,11 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
-using System.Reflection;
 using Catalyst.Abstractions.Config;
-using Catalyst.Abstractions.Dfs;
-using Catalyst.Abstractions.Dfs.CoreApi;
-using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Protocol.Network;
-using Catalyst.Protocol.Peer;
 using Dawn;
 using Lib.P2P;
 using Microsoft.Extensions.Configuration;
@@ -130,6 +125,9 @@ namespace Catalyst.Core.Lib.P2P
             var publicIpAddress = IPAddress.Parse(section.GetSection("PublicIpAddress").Value);
 
             var json = dfsConfigApi.GetAsync("Addresses.Swarm").ConfigureAwait(false).GetAwaiter().GetResult();
+
+            //new NetworkConfigApi(fileSystem, _networkType).SetAsync("CatalystNodeConfiguration.Peer.BindAddress", "oranges and lemons").ConfigureAwait(false).GetAwaiter().GetResult();
+            
             List<MultiAddress> addresses = new List<MultiAddress>();
             foreach (string a in json)
             {

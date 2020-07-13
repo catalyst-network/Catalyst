@@ -101,7 +101,6 @@ namespace Catalyst.Core.Lib.Kernel
         {
             _overwrite = overwrite;
             _configCopier.RunConfigStartUp(_targetConfigFolder, NetworkType.Devnet, null, _overwrite, overrideNetworkFile);
-            _configEditor.RunConfigEditor(_targetConfigFolder);
 
             var config = _configurationBuilder.Build();
             var configurationModule = new ConfigurationModule(config);

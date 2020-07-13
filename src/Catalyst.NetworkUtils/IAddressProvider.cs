@@ -22,13 +22,14 @@
 #endregion
 
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace Catalyst.NetworkUtils
 {
     public interface IAddressProvider
     {
-        Task<IPAddress> GetPublicIpAsync();
-        Task<IPAddress> GetLocalIpAsync();
+        Task<IPAddress> GetPublicIpAsync(CancellationToken token = default);
+        Task<IPAddress> GetLocalIpAsync(CancellationToken cancel = default);
     }
 }

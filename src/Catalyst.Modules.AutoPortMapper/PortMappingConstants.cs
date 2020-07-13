@@ -27,5 +27,7 @@ namespace Catalyst.Modules.AutoPortMapper
     {
         public const string DefaultUdpProperty = "CatalystNodeConfiguration.Rpc.Port";
         public const string DefaultTcpProperty = "CatalystNodeConfiguration.Peer.Port";
+        
+        public const int DefaultTimeout = 10;
     }
 }

@@ -22,6 +22,7 @@
 #endregion
 
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.TestUtils;
 using Catalyst.UPnP.Tests.Utils;
@@ -33,7 +34,7 @@ using Serilog;
 
 namespace Catalyst.Modules.UPnP.Tests.UnitTests
 {
-    public class PortMapperTests
+    public class UPnPTests
     {
         private const int SecondsTimeout = 5;
         private readonly ILogger _logger = Substitute.For<ILogger>();
@@ -54,9 +55,14 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
         [Test]
         public async Task PortMapper_Stops_Searching_After_Timeout()
         {
+            
             var natUtilityProvider = Substitute.For<INatUtilityProvider>();
             var uPnPUtility = new UPnPUtility(natUtilityProvider, _logger);
-            var outcome = await uPnPUtility.MapPorts(new Mapping[]{}, SecondsTimeout).ConfigureAwait(false);
+            
+            var cts = new CancellationTokenSource();
+            cts.CancelAfter(SecondsTimeout);
+            
+            var outcome = await uPnPUtility.MapPorts(new Mapping[]{}, cts.Token).ConfigureAwait(false);
             outcome.Should().Be(UPnPConstants.Result.Timeout);
             natUtilityProvider.Received(1).StartDiscovery();
             natUtilityProvider.Received(1).StopDiscovery();
@@ -68,7 +74,11 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             var device = Substitute.For<INatDevice>();
             var natUtilityProvider = new TestNatUtilityProvider(device);
             var uPnPUtility = new UPnPUtility(natUtilityProvider, _logger);
-            var outcome = await uPnPUtility.MapPorts(new Mapping[]{}, SecondsTimeout).ConfigureAwait(false);
+            
+            var cts = new CancellationTokenSource();
+            cts.CancelAfter(SecondsTimeout);
+            
+            var outcome = await uPnPUtility.MapPorts(new Mapping[]{}, cts.Token).ConfigureAwait(false);
             outcome.Should().Be(UPnPConstants.Result.TaskFinished);
         }
 
@@ -82,7 +92,10 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             
             var uPnPUtility = new UPnPUtility(new TestNatUtilityProvider(device), _logger);
             
-            await uPnPUtility.MapPorts(attemptedMappings, SecondsTimeout).ConfigureAwait(false);
+            var cts = new CancellationTokenSource();
+            cts.CancelAfter(SecondsTimeout);
+            
+            await uPnPUtility.MapPorts(attemptedMappings, cts.Token).ConfigureAwait(false);
             await device.Received(1).CreatePortMapAsync(Arg.Is(attemptedMappings[0])).ConfigureAwait(false);
         }
         
@@ -96,7 +109,10 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
 
             var uPnPUtility = new UPnPUtility(new TestNatUtilityProvider(device), _logger);
             
-            await uPnPUtility.MapPorts(attemptedMappings, SecondsTimeout);
+            var cts = new CancellationTokenSource();
+            cts.CancelAfter(SecondsTimeout);
+            
+            await uPnPUtility.MapPorts(attemptedMappings, cts.Token);
             await device.Received(1).CreatePortMapAsync(_mappingA).ConfigureAwait(false);
             await device.Received(1).CreatePortMapAsync(_mappingB).ConfigureAwait(false);
         }
@@ -111,7 +127,11 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             var device = Utils.GetTestDeviceWithExistingMappings(existingMappings);
             
             var uPnPUtility = new UPnPUtility(new TestNatUtilityProvider(device), _logger);
-            await uPnPUtility.MapPorts(attemptedMappings, SecondsTimeout).ConfigureAwait(false);
+            
+            var cts = new CancellationTokenSource();
+            cts.CancelAfter(SecondsTimeout);
+            
+            await uPnPUtility.MapPorts(attemptedMappings, cts.Token).ConfigureAwait(false);
 
             await device.Received(0).CreatePortMapAsync(Arg.Is(attemptedMappings[0])).ConfigureAwait(false);
         }
@@ -125,7 +145,11 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             var device = Utils.GetTestDeviceWithExistingMappings(existingMappings);
             
             var uPnPUtility = new UPnPUtility(new TestNatUtilityProvider(device), _logger);
-            await uPnPUtility.MapPorts(attemptedMappings, SecondsTimeout).ConfigureAwait(false);
+            
+            var cts = new CancellationTokenSource();
+            cts.CancelAfter(SecondsTimeout);
+            
+            await uPnPUtility.MapPorts(attemptedMappings, cts.Token).ConfigureAwait(false);
 
             await device.Received(0).CreatePortMapAsync(Arg.Is(attemptedMappings[0])).ConfigureAwait(false);
         }
@@ -142,7 +166,10 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
 
             var uPnPUtility = new UPnPUtility(new TestNatUtilityProvider(device), _logger);
             
-            await uPnPUtility.MapPorts(attemptedMappings, SecondsTimeout).ConfigureAwait(false);
+            var cts = new CancellationTokenSource();
+            cts.CancelAfter(SecondsTimeout);
+            
+            await uPnPUtility.MapPorts(attemptedMappings, cts.Token).ConfigureAwait(false);
             await device.Received(1).DeletePortMapAsync(_mappingB).ConfigureAwait(false);
         }
         
@@ -156,7 +183,10 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             
             var uPnPUtility = new UPnPUtility(new TestNatUtilityProvider(device), _logger);
             
-            await uPnPUtility.MapPorts(mappingsToDelete, SecondsTimeout, true).ConfigureAwait(false);
+            var cts = new CancellationTokenSource();
+            cts.CancelAfter(SecondsTimeout);
+            
+            await uPnPUtility.MapPorts(mappingsToDelete, cts.Token, true).ConfigureAwait(false);
             await device.Received(1).DeletePortMapAsync(Arg.Is(_mappingA)).ConfigureAwait(false);
         }
         
@@ -170,7 +200,10 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             
             var uPnPUtility = new UPnPUtility(new TestNatUtilityProvider(device), _logger);
             
-            await uPnPUtility.MapPorts(mappingsToDelete, SecondsTimeout, true).ConfigureAwait(false);
+            var cts = new CancellationTokenSource();
+            cts.CancelAfter(SecondsTimeout);
+            
+            await uPnPUtility.MapPorts(mappingsToDelete, cts.Token, true).ConfigureAwait(false);
             await device.Received(0).DeletePortMapAsync(Arg.Is(_mappingB)).ConfigureAwait(false);
         }
         
@@ -181,7 +214,10 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             
             var uPnPUtility = new UPnPUtility(new TestNatUtilityProvider(device), _logger);
             
-            await uPnPUtility.GetPublicIpAddress(SecondsTimeout).ConfigureAwait(false);
+            var cts = new CancellationTokenSource();
+            cts.CancelAfter(SecondsTimeout);
+            
+            await uPnPUtility.GetPublicIpAddress(cts.Token).ConfigureAwait(false);
             await device.Received(1).GetExternalIPAsync().ConfigureAwait(false);
         }
         
@@ -192,7 +228,10 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             
             var uPnPUtility = new UPnPUtility(new TestNatUtilityProvider(device), _logger);
             
-            var outcome = await uPnPUtility.GetPublicIpAddress(SecondsTimeout).ConfigureAwait(false);
+            var cts = new CancellationTokenSource();
+            cts.CancelAfter(SecondsTimeout);
+            
+            var outcome = await uPnPUtility.GetPublicIpAddress(cts.Token).ConfigureAwait(false);
 
             outcome.Should().Be(null);
         }
@@ -206,7 +245,10 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             
             var uPnPUtility = new UPnPUtility(new TestNatUtilityProvider(device), _logger);
             
-            var outcome = await uPnPUtility.GetPublicIpAddress(SecondsTimeout).ConfigureAwait(false);
+            var cts = new CancellationTokenSource();
+            cts.CancelAfter(SecondsTimeout);
+            
+            var outcome = await uPnPUtility.GetPublicIpAddress(cts.Token).ConfigureAwait(false);
 
             outcome.Should().Be(ipAddress);
         }

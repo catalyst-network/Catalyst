@@ -25,6 +25,7 @@ using CommandLine;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 using Mono.Nat;
 using Serilog;
@@ -82,10 +83,13 @@ namespace Catalyst.Modules.AutoPortMapper
             if (!(mappings?.Count > 0)) return 0;
             
             var portMapper = new UPnPUtility(provider, logger);
-            
-            var timeout = options.Timeout > 0 ? options.Timeout : UPnPConstants.DefaultTimeout;
 
-            await portMapper.MapPorts(mappings.ToArray(), timeout, options.IsMappingDeletion).ConfigureAwait(false);
+            var cts = new CancellationTokenSource();
+            
+            var timeout = options.Timeout > 0 ? options.Timeout : PortMappingConstants.DefaultTimeout; 
+            cts.CancelAfter(timeout);                                                                                
+
+            await portMapper.MapPorts(mappings.ToArray(), cts.Token, options.IsMappingDeletion).ConfigureAwait(false);
             return 0;
         }
 

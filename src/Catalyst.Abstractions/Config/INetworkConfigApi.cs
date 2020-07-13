@@ -21,22 +21,7 @@
 
 #endregion
 
-using System;
-using System.IO;
-using System.Threading.Tasks;
-using Catalyst.Abstractions.Config;
-using Catalyst.Abstractions.FileSystem;
-using Catalyst.Protocol.Network;
-
-namespace Catalyst.Core.Lib.Config
+namespace Catalyst.Abstractions.Config
 {
-    public class NetworkConfigApi : ConfigApiBase, INetworkConfigApi
-    {
-        public NetworkConfigApi(IFileSystem fileSystem, NetworkType networkType) : base(Path.Combine(fileSystem.GetCatalystDataDir().FullName, Constants.NetworkConfigFile(networkType))) {}
-        
-        protected override Task OnFileNotExisting()
-        {
-           throw new FileNotFoundException($"Could not find the network configuration file at {FilePath}.");
-        }
-    }
+    public interface INetworkConfigApi : IConfigApi {}
 }

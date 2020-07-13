@@ -209,7 +209,8 @@ namespace Catalyst.TestUtils
             _localPeer = _scope.Resolve<Lib.P2P.Peer>();
             var synchronizer = _scope.Resolve<ISynchroniser>();
             var peerSettings = _scope.Resolve<IPeerSettings>();
-            var config = _scope.Resolve<IDfsConfigApi>();
+            var dfsConfig = _scope.Resolve<IDfsConfigApi>();
+            var networkConfig = _scope.Resolve<INetworkConfigApi>();
             _dfsService = _scope.Resolve<IDfsService>();
 
             await _dfsService.StartAsync().ConfigureAwait(false);
@@ -285,10 +286,12 @@ namespace Catalyst.TestUtils
                .WithParameter("rootPath", _nodeDirectory.FullName);
             _containerProvider.ContainerBuilder.RegisterInstance(Substitute.For<IPeerDiscovery>()).As<IPeerDiscovery>();
 
-            var config = Substitute.For<IConfigApi>();
+            var dfsConfigApi = Substitute.For<IDfsConfigApi>();
+            var networkConfigApi = Substitute.For<INetworkConfigApi>();
             var swarm = JToken.FromObject(new List<string> { $"/ip4/0.0.0.0/tcp/410{NodeNumber}" });
-            config.GetAsync("Addresses.Swarm").Returns(swarm);
-            _containerProvider.ContainerBuilder.RegisterInstance(config).As<IConfigApi>();
+            dfsConfigApi.GetAsync("Addresses.Swarm").Returns(swarm);
+            _containerProvider.ContainerBuilder.RegisterInstance(dfsConfigApi).As<IDfsConfigApi>();
+            _containerProvider.ContainerBuilder.RegisterInstance(networkConfigApi).As<IDfsConfigApi>();
         }
 
         private void Dispose(bool disposing)

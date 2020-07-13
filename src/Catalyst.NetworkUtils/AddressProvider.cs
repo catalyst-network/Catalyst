@@ -20,10 +20,14 @@
 */
 
 #endregion
+
+using System;
 using System.Net;
 using System.Net.Sockets;
+using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Modules.UPnP;
+using Nito.AsyncEx;
 
 namespace Catalyst.NetworkUtils
 {
@@ -40,29 +44,33 @@ namespace Catalyst.NetworkUtils
             _socketFactory = socketFactory;
         }
         
-        public async Task<IPAddress> GetPublicIpAsync()
+        public async Task<IPAddress> GetPublicIpAsync(CancellationToken cancel = default)
         {
-            var ipAddress = await _uPnPUtility.GetPublicIpAddress(2).ConfigureAwait(false);
+            var ipAddress = await _uPnPUtility.GetPublicIpAddress(cancel).ConfigureAwait(false);
 
             if(ipAddress!=null)
             {
                 return ipAddress;
             }
 
-            return await GetPublicIpFromWebAsync();
+            return await GetPublicIpFromWebAsync(cancel);
         }
         
         //Doesn't matter if specified host is reachable, as no real connection needs to be established
-        public async Task<IPAddress> GetLocalIpAsync()
+        public async Task<IPAddress> GetLocalIpAsync(CancellationToken cancel = default)
         {
+            if (cancel.IsCancellationRequested) return null;
             using var socket = _socketFactory.Create(AddressFamily.InterNetwork, SocketType.Dgram, 0);
+            
             await socket.ConnectAsync("8.8.8.8", 65530).ConfigureAwait(false);
             var endPoint = socket.LocalEndPoint as IPEndPoint;
             return endPoint?.Address;
+
         }
 
-        private async Task<IPAddress> GetPublicIpFromWebAsync()
+        private async Task<IPAddress> GetPublicIpFromWebAsync(CancellationToken cancel)
         {
+            if (cancel.IsCancellationRequested) return null;
             var urls = new[] {"https://ip.catalyst.workers.dev", "http://icanhazip.com"};
 
             foreach(var url in urls)
