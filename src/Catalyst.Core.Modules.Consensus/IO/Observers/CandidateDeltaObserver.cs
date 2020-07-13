@@ -28,10 +28,8 @@ using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P.Repository;
-using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Core.Lib.Service;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Wire;
 using MultiFormats;
@@ -46,28 +44,19 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
     public sealed class CandidateDeltaObserver : BroadcastObserverBase<CandidateDeltaBroadcast>, IP2PMessageObserver
     {
         private readonly IDeltaVoter _deltaVoter;
-        private readonly IDeltaIndexService _deltaIndexService;
         private readonly IHashProvider _hashProvider;
-        private readonly SyncState _syncState;
         private readonly IPeerRepository _peerRepository;
 
-        public CandidateDeltaObserver(IDeltaVoter deltaVoter, IDeltaIndexService deltaIndexService, SyncState syncState, IPeerRepository peerRepository, IHashProvider provider, ILogger logger)
+        public CandidateDeltaObserver(IDeltaVoter deltaVoter, IPeerRepository peerRepository, IHashProvider provider, ILogger logger)
             : base(logger)
         {
             _deltaVoter = deltaVoter;
-            _deltaIndexService = deltaIndexService;
-            _syncState = syncState;
             _peerRepository = peerRepository;
             _hashProvider = provider;
         }
 
         public override void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto)
         {
-            if (!_syncState.IsSynchronized)
-            {
-                return;
-            }
-
             try
             {
                 var multiAddress = new MultiAddress(messageDto.Payload.Address);

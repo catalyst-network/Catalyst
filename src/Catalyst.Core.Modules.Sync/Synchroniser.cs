@@ -188,6 +188,7 @@ namespace Catalyst.Core.Modules.Sync
 
         private async void ProcessDeltaIndexRange(IEnumerable<DeltaIndex> deltaIndexRange)
         {
+            _logger.Information($"Sync - Processing delta index range.");
             var deltaIndexRangeDao = deltaIndexRange.Select(x =>
                 DeltaIndexDao.ToDao<DeltaIndex>(x, _mapperProvider)).ToList();
 
@@ -200,9 +201,13 @@ namespace Catalyst.Core.Modules.Sync
 
             deltaIndexRangeDao.Remove(firstDeltaIndex);
 
+            _logger.Information($"Sync - Downloading deltas.");
             DownloadDeltas(deltaIndexRangeDao);
+
+            _logger.Information($"Sync - Updating state.");
             UpdateState(deltaIndexRangeDao);
 
+            _logger.Information($"Sync - Checking progress");
             await CheckSyncProgressAsync().ConfigureAwait(false);
 
             Progress(CurrentHighestDeltaIndexStored, _rangeSize);
@@ -210,22 +215,7 @@ namespace Catalyst.Core.Modules.Sync
 
         private void DownloadDeltas(IList<DeltaIndexDao> deltaIndexes)
         {
-            Parallel.ForEach(deltaIndexes, async deltaIndex =>
-            {
-                while (true)
-                {
-                    try
-                    {
-                        if (DeltaCache.TryGetOrAddConfirmedDelta(deltaIndex.Cid, out Delta _))
-                        {
-                            break;
-                        }
-                    }
-                    catch (Exception exc) { }
-
-                    await Task.Delay(100).ConfigureAwait(false);
-                }
-            });
+            //Upgrade the DFS to batch download files using the wantlist rather then a task or thread for each file request.
         }
 
         private async Task<int> GetSyncProgressPercentageAsync()

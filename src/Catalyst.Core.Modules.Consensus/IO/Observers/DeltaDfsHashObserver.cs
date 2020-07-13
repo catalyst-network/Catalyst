@@ -27,7 +27,6 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P.Repository;
-using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
@@ -42,12 +41,12 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
     public class DeltaDfsHashObserver : BroadcastObserverBase<DeltaDfsHashBroadcast>, IP2PMessageObserver
     {
         private readonly IDeltaHashProvider _deltaHashProvider;
-        private readonly IDeltaHeightWatcher _deltaHeightWatcher;
-
+        private readonly IDeltaElector _deltaElector;
         private readonly SyncState _syncState;
         private readonly IPeerRepository _peerRepository;
 
         public DeltaDfsHashObserver(IDeltaHashProvider deltaHashProvider,
+            IDeltaElector deltaElector,
             SyncState syncState,
             IPeerRepository peerRepository,
             ILogger logger)
@@ -57,6 +56,7 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
 
             _syncState = syncState;
             _deltaHashProvider = deltaHashProvider;
+            _deltaElector = deltaElector;
             _peerRepository = peerRepository;
         }
 
@@ -70,7 +70,6 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
             try
             {
                 var deserialised = messageDto.Payload.FromProtocolMessage<DeltaDfsHashBroadcast>();
-
                 var previousHash = deserialised.PreviousDeltaDfsHash.ToByteArray().ToCid();
                 if (previousHash == null)
                 {
@@ -90,6 +89,15 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
                 if (messagePoaNode == null)
                 {
                     Logger.Error($"Message from IP address '{multiAddress.GetIpAddress()}' with public key '{multiAddress.GetPublicKey()}' is not found in producer node list.");
+                    return;
+                }
+
+                //Add functionality to check Candidate MerkleRoot against transactions in delta
+                var mostPopularDelta = _deltaElector.GetMostPopularCandidateDelta(previousHash);
+                var mostPopularDeltaProducer = new MultiAddress(mostPopularDelta.Producer).GetPublicKey();
+                if (mostPopularDelta == null || multiAddress.GetPublicKey() != mostPopularDeltaProducer)
+                {
+                    Logger.Error("Delta is null or not the most popular.");
                     return;
                 }
 

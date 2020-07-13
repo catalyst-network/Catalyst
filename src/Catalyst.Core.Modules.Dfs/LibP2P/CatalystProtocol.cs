@@ -76,13 +76,15 @@ namespace Lib.P2P.Protocols
             Stream stream,
             CancellationToken cancel = default)
         {
-            await connection.IdentityEstablished.Task.ConfigureAwait(false);
-
-            while (true)
+            try
             {
                 var request = await ProtoBufHelper.ReadMessageAsync<CatalystByteMessage>(stream, cancel).ConfigureAwait(false);
                 var protocolMessage = ProtocolMessage.Parser.ParseFrom(request.Message);
                 ResponseMessageSubject.OnNext(protocolMessage);
+            }
+            catch (Exception e)
+            {
+                _log.Warn("Receiving CatalystProtocol", e);
             }
         }
 

@@ -247,15 +247,15 @@ namespace Catalyst.TestUtils
 
         public async Task RegisterPeerAddressAsync(MultiAddress multiAddress)
         {
+            _peerRepository.Add(new Peer
+            {
+                Address = multiAddress,
+                IsPoaNode = true,
+                LastSeen = DateTime.UtcNow
+            });
+
             if (_localPeer.Id != multiAddress.PeerId)
             {
-                _peerRepository.Add(new Peer
-                {
-                    Address = multiAddress,
-                    IsPoaNode = true,
-                    LastSeen = DateTime.UtcNow
-                });
-
                 await _dfsService.SwarmService.ConnectAsync(multiAddress).ConfigureAwait(false);
             }
         }

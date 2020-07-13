@@ -298,6 +298,12 @@ namespace Lib.P2P
         /// </exception>
         public Peer RegisterPeer(Peer peer)
         {
+            return RegisterPeer(peer, false);
+        }
+
+        /// <inheritdoc/>
+        public Peer RegisterPeer(Peer peer, bool ignoreRestrictionLists)
+        {
             if (peer.Id == null)
             {
                 throw new ArgumentNullException(nameof(peer));
@@ -308,7 +314,7 @@ namespace Lib.P2P
                 throw new ArgumentException("Cannot register self.");
             }
 
-            if (!IsAllowed(peer))
+            if (!IsAllowed(peer) && !ignoreRestrictionLists)
             {
                 throw new Exception($"Communication with '{peer}' is not allowed.");
             }
@@ -1010,10 +1016,8 @@ namespace Lib.P2P
                 connection.RemotePeer = await identify.GetRemotePeerAsync(connection, default)
                    .ConfigureAwait(false);
 
-                var remoteMultiAddress = new MultiAddress($"{remote}/ipfs/{connection.RemotePeer.Id}");
-                BlackList.Remove(remoteMultiAddress);
-                connection.RemotePeer = RegisterPeer(connection.RemotePeer);
-                connection.RemoteAddress = remoteMultiAddress;
+                connection.RemotePeer = RegisterPeer(connection.RemotePeer, true);
+                connection.RemoteAddress = new MultiAddress($"{remote}/ipfs/{connection.RemotePeer.Id}");
                 var actual = Manager.Add(connection);
                 if (actual == connection)
                 {
