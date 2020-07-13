@@ -22,9 +22,9 @@
         <PackageReference Include="Secp256k1.Net" Version="0.1.52"/>
         <PackageReference Include="NSec.Cryptography" Version="18.6.0"/>
     </ItemGroup>
-      <ItemGroup>
-          <ProjectReference Include="..\Catalyst.Core.Modules.Cryptography.BulletProofs\Catalyst.Core.Modules.Cryptography.BulletProofs.csproj"/>
-          <ProjectReference Include="..\Catalyst.Core.Modules.Hashing\Catalyst.Core.Modules.Hashing.csproj" />
-      </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\Catalyst.Core.Modules.Cryptography.BulletProofs\Catalyst.Core.Modules.Cryptography.BulletProofs.csproj"/>
+        <ProjectReference Include="..\Catalyst.Core.Modules.Hashing\Catalyst.Core.Modules.Hashing.csproj" />
+    </ItemGroup>
 
 </Project>

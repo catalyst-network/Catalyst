@@ -5,7 +5,7 @@ using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using System.Collections.Generic;
 using System.Text;
 
-namespace CryptoBenchmarks
+namespace Catalyst.Benchmark
 {
     [CategoriesColumn]
     [BenchmarkCategory("ed25519", "ed25519ph")]

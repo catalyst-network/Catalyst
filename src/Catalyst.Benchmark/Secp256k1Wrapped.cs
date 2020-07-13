@@ -4,7 +4,7 @@ using BenchmarkDotNet.Attributes;
 using Org.BouncyCastle.Security;
 using Secp256k1Net;
 
-namespace CryptoBenchmarks
+namespace Catalyst.Benchmark 
 {
     [CategoriesColumn]
     [BenchmarkCategory("secp256k1")]
