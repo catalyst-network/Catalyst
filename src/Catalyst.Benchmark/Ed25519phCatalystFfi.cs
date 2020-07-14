@@ -44,13 +44,7 @@ namespace Catalyst.Benchmark
         private List<byte[]> _messages;
 
         [Params(1, 10, 100, 1000, 10000, 100000)]
-        private readonly int _n;
-
-        public Ed25519phCatalystFfi(int n)
-        {
-            _n = n;
-        }
-
+        public int N;
 
         [GlobalSetup(Target = nameof(GetPublicKey))]
         public void SetupGetPublicKey()
@@ -79,7 +73,7 @@ namespace Catalyst.Benchmark
             _messages = new List<byte[]>();
             _signatures = new List<ISignature>();
             _context = Encoding.UTF8.GetBytes("context");
-            for (int i = 0; i < _n; i++)
+            for (var i = 0; i < N; i++)
             {
                 var bytes = new byte[255];
                 Random.NextBytes(bytes);
