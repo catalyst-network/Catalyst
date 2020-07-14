@@ -24,14 +24,14 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using Catalyst.Abstractions.Cli;
-using Catalyst.Abstractions.Cli.Commands;
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.IO.Transport;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Rpc.Client;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.Cli.Commands;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport;
+using Catalyst.Modules.Network.Dotnetty.Rpc;
 using Dawn;
 using Microsoft.Extensions.Configuration;
 using MultiFormats;

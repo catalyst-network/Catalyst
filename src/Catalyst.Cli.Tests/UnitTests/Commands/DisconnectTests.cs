@@ -22,7 +22,6 @@
 #endregion
 
 using System.Collections.Generic;
-using Catalyst.Abstractions.Cli.CommandTypes;
 using Catalyst.Cli.Commands;
 using Catalyst.Cli.Tests.UnitTests.Helpers;
 using FluentAssertions;
@@ -31,6 +30,7 @@ using NSubstitute;
 using Serilog;
 using NUnit.Framework;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.Cli.CommandTypes;
 
 namespace Catalyst.Cli.Tests.UnitTests.Commands
 {

@@ -53,7 +53,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
     public sealed class GetFileFromDfsObserverHandlerTests : FileSystemBasedTest
     {
         private ILogger _logger;
-        private IChannelHandlerContext _fakeContext;
         private IDownloadFileTransferFactory _fileDownloadFactory;
         private IDfsService _dfsService;
         private IHashProvider _hashProvider;
@@ -66,7 +65,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
 
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _logger = Substitute.For<ILogger>();
-            _fakeContext = Substitute.For<IChannelHandlerContext>();
             _fileDownloadFactory = new DownloadFileTransferFactory(_logger);
             _logger = Substitute.For<ILogger>();
             _dfsService = Substitute.For<IDfsService>();
@@ -93,8 +91,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
                 var correlationId = CorrelationId.GenerateCorrelationId();
                 var fakeFileOutputPath = Path.GetTempFileName();
                 IDownloadFileInformation fileDownloadInformation = new DownloadFileTransferInformation(rpcPeer,
-                    nodePeer,
-                    _fakeContext.Channel, correlationId, fakeFileOutputPath, 0);
+                    nodePeer, _peerClient, correlationId, fakeFileOutputPath, 0);
                 var getFileFromDfsResponseHandler =
                     new GetFileFromDfsResponseObserver(_logger, _fileDownloadFactory);
                 var transferBytesHandler =
@@ -115,14 +112,13 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Rpc.IO.Observers
                     fileStream,
                     rpcPeer,
                     nodePeer,
-                    _fakeContext.Channel,
+                    _peerClient,
                     correlationId);
 
                 for (uint i = 0; i < fileUploadInformation.MaxChunk; i++)
                 {
-                    var transferMessage = fileUploadInformation
-                       .GetUploadMessageDto(i);
-                    transferMessage.Content.SendToHandler(transferBytesHandler);
+                    var transferMessage = fileUploadInformation.GetUploadMessage(i);
+                    transferMessage.SendToHandler(transferBytesHandler);
                 }
 
                 await TaskHelper.WaitForAsync(() => fileDownloadInformation.IsCompleted, TimeSpan.FromSeconds(10));

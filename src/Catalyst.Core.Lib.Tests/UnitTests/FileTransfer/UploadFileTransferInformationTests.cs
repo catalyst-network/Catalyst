@@ -58,8 +58,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.FileTransfer
                     var startIdx = (int) chunkToTest * Constants.FileTransferChunkSize;
                     var expectedChunk = expectedBytes.Skip(startIdx).Take(Constants.FileTransferChunkSize);
 
-                    var uploadDto = uploadFileInformation.GetUploadMessageDto(chunkToTest);
-                    var transferRequest = uploadDto.Content.FromProtocolMessage<TransferFileBytesRequest>();
+                    var upload = uploadFileInformation.GetUploadMessage(chunkToTest);
+                    var transferRequest = upload.FromProtocolMessage<TransferFileBytesRequest>();
                     transferRequest.ChunkBytes.ToArray()
                        .SequenceEqual(expectedChunk).Should().BeTrue();
                 }

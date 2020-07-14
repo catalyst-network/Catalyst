@@ -23,9 +23,10 @@
 
 using System;
 using Autofac;
-using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Modules.Rpc.Server.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.Rpc;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server

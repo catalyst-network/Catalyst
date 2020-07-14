@@ -26,13 +26,9 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Abstractions.P2P.Repository;
-using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using Catalyst.TestUtils.Fakes;
 using FluentAssertions;
@@ -43,6 +39,10 @@ using SharpRepository.InMemoryRepository;
 using NUnit.Framework;
 using Catalyst.Core.Lib.P2P.Repository;
 using MultiFormats;
+using Catalyst.Modules.Network.Dotnetty.P2P.IO.Messaging.Broadcast;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.P2P.IO.Messaging.Broadcast;
+using Catalyst.Modules.Network.Dotnetty.P2P;
+using Catalyst.Modules.Network.Dotnetty.IO.Messaging.Dto;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
 {
@@ -116,7 +116,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
                 _peers,
                 _peerSettings,
                 _cache,
-                Substitute.For<IPeerClient>(),
+                Substitute.For<IDotnettyUdpClient>(),
                 _keySigner,
                 Substitute.For<ILogger>());
 
@@ -149,7 +149,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
                     _peers,
                     _peerSettings,
                     _cache,
-                    Substitute.For<IPeerClient>(),
+                    Substitute.For<IDotnettyUdpClient>(),
                     _keySigner,
                     Substitute.For<ILogger>());
 

@@ -24,7 +24,6 @@
 using System;
 using System.Linq;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Abstractions.Sync;

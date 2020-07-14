@@ -23,8 +23,6 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.DAO;

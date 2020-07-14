@@ -45,6 +45,7 @@ using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
 using Serilog;
 using MultiFormats;
+using Catalyst.Core.Lib.Abstractions.P2P.IO;
 
 namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
 {

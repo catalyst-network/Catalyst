@@ -86,13 +86,7 @@ namespace Catalyst.Core.Modules.Dfs
 
             builder.RegisterType<BitSwapService>()
                .As<IBitswapService>()
-               .SingleInstance();
-
-            builder.RegisterBuildCallback(x =>
-            {
-                var bitSwapService = x.Resolve<IBitswapService>();
-                bitSwapService.BlockService = x.Resolve<IBlockApi>();
-            });
+               .SingleInstance().OnActivated(e => e.Instance.BlockService = e.Context.Resolve<IBlockApi>());
 
             builder.RegisterType<LoopbackRouter>()
                .As<IMessageRouter>();
@@ -117,8 +111,6 @@ namespace Catalyst.Core.Modules.Dfs
 
             builder.RegisterType<Ping1>()
                .As<Ping1>();
-
-            builder.RegisterType<CatalystProtocol>().AsImplementedInterfaces().SingleInstance();
 
             builder.RegisterType<InMemoryRepository<Lib.P2P.Models.Peer, string>>().As<IRepository<Lib.P2P.Models.Peer, string>>().SingleInstance();
             builder.RegisterType<PeerRepository>().As<IPeerRepository>().SingleInstance();

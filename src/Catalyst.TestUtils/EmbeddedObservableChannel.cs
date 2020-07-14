@@ -22,8 +22,8 @@
 #endregion
 
 using System;
-using Catalyst.Abstractions.IO.Transport.Channels;
-using Catalyst.Core.Lib.IO.Handlers;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.IO.Handlers;
 using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Embedded;

@@ -24,7 +24,6 @@
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;

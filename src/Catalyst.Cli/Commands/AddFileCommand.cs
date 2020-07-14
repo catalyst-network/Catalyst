@@ -23,14 +23,14 @@
 
 using System.IO;
 using System.Threading;
-using Catalyst.Abstractions.Cli.Commands;
 using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.Types;
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.FileTransfer;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.Cli.Commands;
+using Catalyst.Modules.Network.Dotnetty.IO.Messaging.Dto;
 using Catalyst.Protocol.Rpc.Node;
 using Serilog;
 
@@ -70,15 +70,17 @@ namespace Catalyst.Cli.Commands
             var protocolMessage = request.ToProtocolMessage(sender);
             var requestMessage = new MessageDto(
                 protocolMessage,
-                RecipientPeerId
+                RecipientAddress
             );
 
+            //todo
             IUploadFileInformation fileTransfer = new UploadFileTransferInformation(
                 File.Open(options.File, FileMode.Open),
                 sender,
-                RecipientPeerId,
-                Target.Channel,
-                requestMessage.CorrelationId);
+                RecipientAddress,
+                //Target.Channel,
+                null,
+                protocolMessage.CorrelationId.ToCorrelationId());
 
             _uploadFileTransferFactory.RegisterTransfer(fileTransfer);
 

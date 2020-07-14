@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Core.Lib.Util
@@ -29,6 +28,7 @@ namespace Catalyst.Core.Lib.Util
     public static class NullObjects
     {
         public static readonly ProtocolMessage ProtocolMessage = new ProtocolMessage();
-        public static readonly ObserverDto ObserverDto = new ObserverDto(null, new ProtocolMessage());
+        //todo
+        //public static readonly ObserverDto ObserverDto = new ObserverDto(null, new ProtocolMessage());
     }
 }

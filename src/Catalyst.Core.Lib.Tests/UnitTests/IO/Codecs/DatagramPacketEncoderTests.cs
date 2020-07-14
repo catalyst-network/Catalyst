@@ -22,10 +22,8 @@
 #endregion
 
 using System.Net;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
-using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using DotNetty.Buffers;
 using DotNetty.Codecs;
@@ -36,6 +34,7 @@ using Google.Protobuf;
 using NUnit.Framework;
 using MultiFormats;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Modules.Network.Dotnetty.IO.Messaging.Dto;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
 {

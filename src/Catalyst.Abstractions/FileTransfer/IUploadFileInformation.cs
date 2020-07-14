@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Abstractions.FileTransfer
@@ -42,6 +41,6 @@ namespace Catalyst.Abstractions.FileTransfer
         /// <summary>Gets the upload message.</summary>
         /// <param name="chunkId">The chunk identifier.</param>
         /// <returns></returns>
-        IMessageDto<ProtocolMessage> GetUploadMessageDto(uint chunkId);
+        ProtocolMessage GetUploadMessage(uint chunkId);
     }
 }

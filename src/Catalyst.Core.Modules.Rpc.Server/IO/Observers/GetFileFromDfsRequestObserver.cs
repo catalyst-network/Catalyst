@@ -28,21 +28,17 @@ using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Enumerator;
 using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.FileTransfer;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Wire;
 using Dawn;
-using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Lib.P2P;
-using Lib.P2P.Protocols;
 using MultiFormats;
 using Serilog;
 
@@ -62,6 +58,8 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <summary>The DFS</summary>
         private readonly IDfsService _dfsService;
 
+        private readonly IPeerClient _peerClient;
+
         /// <summary>Initializes a new instance of the <see cref="AddFileToDfsRequestObserver" /> class.</summary>
         /// <param name="dfsService">The DFS.</param>
         /// <param name="peerSettings"></param>
@@ -75,6 +73,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         {
             _fileTransferFactory = fileTransferFactory;
             _dfsService = dfsService;
+            _peerClient = peerClient;
         }
 
         /// <summary>
@@ -88,49 +87,46 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             MultiAddress sender,
             ICorrelationId correlationId)
         {
-            return null;
+            Guard.Argument(getFileFromDfsRequest, nameof(getFileFromDfsRequest)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
 
-            //todo
-            //Guard.Argument(getFileFromDfsRequest, nameof(getFileFromDfsRequest)).NotNull();
-            //Guard.Argument(sender, nameof(sender)).NotNull();
+            long fileLen = 0;
 
-            //long fileLen = 0;
+            FileTransferResponseCodeTypes responseCodeType;
 
-            //FileTransferResponseCodeTypes responseCodeType;
+            var response = Task.Run(async () =>
+            {
+                try
+                {
+                    responseCodeType = await Task.Run(async () =>
+                    {
+                        var stream = await _dfsService.UnixFsApi.ReadFileAsync(Cid.Decode(getFileFromDfsRequest.DfsHash))
+                           .ConfigureAwait(false);
+                        fileLen = stream.Length;
+                        using (var fileTransferInformation = new UploadFileTransferInformation(
+                            stream,
+                            sender,
+                            PeerSettings.Address,
+                            _peerClient,
+                            correlationId
+                        ))
+                        {
+                            return _fileTransferFactory.RegisterTransfer(fileTransferInformation);
+                        }
+                    }).ConfigureAwait(false);
+                }
+                catch (Exception e)
+                {
+                    Logger.Error(e,
+                        "Failed to handle GetFileFromDfsRequestHandler after receiving message {0}",
+                        getFileFromDfsRequest);
+                    responseCodeType = FileTransferResponseCodeTypes.Error;
+                }
 
-            //var response = Task.Run(async () =>
-            //{
-            //    try
-            //    {
-            //        responseCodeType = await Task.Run(async () =>
-            //        {
-            //            var stream = await _dfsService.UnixFsApi.ReadFileAsync(Cid.Decode(getFileFromDfsRequest.DfsHash))
-            //               .ConfigureAwait(false);
-            //            fileLen = stream.Length;
-            //            using (var fileTransferInformation = new UploadFileTransferInformation(
-            //                stream,
-            //                sender,
-            //                PeerSettings.Address,
-            //                channelHandlerContext.Channel,
-            //                correlationId
-            //            ))
-            //            {
-            //                return _fileTransferFactory.RegisterTransfer(fileTransferInformation);
-            //            }
-            //        }).ConfigureAwait(false);
-            //    }
-            //    catch (Exception e)
-            //    {
-            //        Logger.Error(e,
-            //            "Failed to handle GetFileFromDfsRequestHandler after receiving message {0}",
-            //            getFileFromDfsRequest);
-            //        responseCodeType = FileTransferResponseCodeTypes.Error;
-            //    }
+                return ReturnResponse(responseCodeType, fileLen);
+            }).ConfigureAwait(false).GetAwaiter().GetResult();
 
-            //    return ReturnResponse(responseCodeType, fileLen);
-            //}).ConfigureAwait(false).GetAwaiter().GetResult();
-
-            //return response;
+            return response;
         }
 
         public override void OnNext(ProtocolMessage message)

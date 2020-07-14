@@ -27,9 +27,8 @@ using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Config;
-using Catalyst.Protocol.Peer;
-using DotNetty.Transport.Channels;
 using MultiFormats;
 
 namespace Catalyst.Core.Lib.FileTransfer
@@ -52,7 +51,7 @@ namespace Catalyst.Core.Lib.FileTransfer
         public uint MaxChunk { get; set; }
 
         /// <inheritdoc />
-        public IChannel RecipientChannel { get; set; }
+        public IPeerClient PeerClient { get; set; }
 
         /// <inheritdoc />
         public MultiAddress Recipient { get; set; }
@@ -88,14 +87,14 @@ namespace Catalyst.Core.Lib.FileTransfer
         /// <param name="fileSize">Size of the file.</param>
         protected BaseFileTransferInformation(MultiAddress address,
             MultiAddress recipient,
-            IChannel recipientChannel,
+            IPeerClient peerClient,
             ICorrelationId correlationId,
             string fileName,
             ulong fileSize)
         {
             TempPath = Path.GetTempPath() + correlationId.Id + ".tmp";
             MaxChunk = (uint) Math.Max(1, (int) Math.Ceiling((double) fileSize / Constants.FileTransferChunkSize));
-            RecipientChannel = recipientChannel;
+            PeerClient = peerClient;
             Recipient = recipient;
             Address = address;
             CorrelationId = correlationId;

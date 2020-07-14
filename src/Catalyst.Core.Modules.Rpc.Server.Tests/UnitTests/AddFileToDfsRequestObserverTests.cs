@@ -32,11 +32,9 @@ using Catalyst.Abstractions.Options;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
@@ -49,7 +47,6 @@ using Serilog;
 using NUnit.Framework;
 using MultiFormats;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 
 //@TODO should be in rpc module test
 
@@ -147,14 +144,14 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
 
             async void UseArgument(IDownloadFileInformation information)
             {
-                information.RecipientChannel = Substitute.For<IChannel>();
+                information.PeerClient = Substitute.For<IPeerClient>();
                 information.UpdateChunkIndicator(0, true);
                 information.Dispose();
-                await information.RecipientChannel.WriteAndFlushAsync(Arg.Do<MessageDto>(x =>
+                await information.PeerClient.SendMessageAsync(Arg.Do<ProtocolMessage>(x =>
                 {
-                    addFileToDfsResponse = x.Content.FromProtocolMessage<AddFileToDfsResponse>();
+                    addFileToDfsResponse = x.FromProtocolMessage<AddFileToDfsResponse>();
                     _manualResetEvent.Set();
-                }));
+                }), Arg.Any<MultiAddress>());
             }
 
             _nodeFileTransferFactory.RegisterTransfer(Arg.Do<IDownloadFileInformation>(UseArgument));
@@ -180,14 +177,14 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
 
             async void UseArgument(IDownloadFileInformation information)
             {
-                information.RecipientChannel = Substitute.For<IChannel>();
+                information.PeerClient = Substitute.For<IPeerClient>();
                 information.UpdateChunkIndicator(0, true);
                 information.Dispose();
-                await information.RecipientChannel.WriteAndFlushAsync(Arg.Do<MessageDto>(x =>
+                await information.PeerClient.SendMessageAsync(Arg.Do<ProtocolMessage>(x =>
                 {
-                    addFileToDfsResponse = x.Content.FromProtocolMessage<AddFileToDfsResponse>();
+                    addFileToDfsResponse = x.FromProtocolMessage<AddFileToDfsResponse>();
                     _manualResetEvent.Set();
-                }));
+                }), Arg.Any<MultiAddress>());
             }
 
             _nodeFileTransferFactory.RegisterTransfer(Arg.Do<IDownloadFileInformation>(UseArgument));

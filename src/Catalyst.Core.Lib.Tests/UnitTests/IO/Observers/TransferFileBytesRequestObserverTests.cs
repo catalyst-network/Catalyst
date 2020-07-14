@@ -23,11 +23,9 @@
 
 using System.Linq;
 using Catalyst.Abstractions.FileTransfer;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;

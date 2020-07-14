@@ -21,11 +21,11 @@
 
 #endregion
 
+using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
 using System;
 using System.Reactive.Subjects;
-using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
 
-namespace Catalyst.Abstractions.P2P.IO
+namespace Catalyst.Core.Lib.Abstractions.P2P.IO
 {
     public interface IPeerClientObservable
     {

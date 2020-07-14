@@ -58,11 +58,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.FileTransfer
 
             for (uint i = 0; i < numberOfChunks; i++)
             {
-                uploadFileInformation.Received(1).GetUploadMessageDto(i);
+                uploadFileInformation.Received(1).GetUploadMessage(i);
                 uploadFileInformation.Received(1).UpdateChunkIndicator(i, true);
             }
 
-            await uploadFileInformation.RecipientChannel.ReceivedWithAnyArgs((int) numberOfChunks).WriteAndFlushAsync(default);
+            await uploadFileInformation.PeerClient.ReceivedWithAnyArgs((int) numberOfChunks).SendMessageAsync(default, default);
         }
     }
 }

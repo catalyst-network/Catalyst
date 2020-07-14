@@ -24,6 +24,7 @@
 using System;
 using System.Threading;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Protocol.Peer;
 using DotNetty.Transport.Channels;
 using MultiFormats;
@@ -78,7 +79,7 @@ namespace Catalyst.Abstractions.FileTransfer
 
         /// <summary>Gets or sets the recipient channel.</summary>
         /// <value>The recipient channel.</value>
-        IChannel RecipientChannel { get; set; }
+        IPeerClient PeerClient { get; set; }
 
         /// <summary>Gets or sets the recipient identifier.</summary>
         /// <value>The recipient identifier.</value>

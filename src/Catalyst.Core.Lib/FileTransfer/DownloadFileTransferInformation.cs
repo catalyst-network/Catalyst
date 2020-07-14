@@ -25,6 +25,7 @@ using System;
 using System.IO;
 using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
+using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Protocol.Peer;
 using DotNetty.Transport.Channels;
@@ -51,11 +52,11 @@ namespace Catalyst.Core.Lib.FileTransfer
         /// <param name="fileSize">Size of the file.</param>
         public DownloadFileTransferInformation(MultiAddress address,
             MultiAddress recipient,
-            IChannel recipientChannel,
+            IPeerClient peerClient,
             ICorrelationId correlationGuid,
             string fileOutputPath,
             ulong fileSize) :
-            base(address, recipient, recipientChannel,
+            base(address, recipient, peerClient,
                 correlationGuid, fileOutputPath, fileSize)
         {
             _fileLock = new object();

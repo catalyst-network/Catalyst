@@ -23,11 +23,11 @@
 
 using System;
 using Catalyst.Abstractions.Cli;
-using Catalyst.Abstractions.Cli.Commands;
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.Rpc;
 using Catalyst.Cli.Commands;
-using Catalyst.Core.Lib.IO.Transport;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.Cli.Commands;
+using Catalyst.Modules.Network.Dotnetty.IO.Transport;
+using Catalyst.Modules.Network.Dotnetty.Rpc;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;

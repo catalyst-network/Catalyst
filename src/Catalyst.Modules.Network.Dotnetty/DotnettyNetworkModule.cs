@@ -22,14 +22,14 @@
 #endregion
 
 using Autofac;
-using Catalyst.Abstractions.IO.EventLoop;
-using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
-using Catalyst.Core.Lib.IO.EventLoop;
-using Catalyst.Core.Lib.P2P;
-using Catalyst.Core.Lib.P2P.IO.Messaging.Broadcast;
-using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.EventLoop;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.P2P.IO.Messaging.Broadcast;
+using Catalyst.Modules.Network.Dotnetty.IO.EventLoop;
+using Catalyst.Modules.Network.Dotnetty.P2P;
+using Catalyst.Modules.Network.Dotnetty.P2P.IO.Messaging.Broadcast;
+using Catalyst.Modules.Network.Dotnetty.P2P.IO.Transport.Channels;
 
 namespace Catalyst.Modules.Network.Dotnetty
 {
@@ -55,6 +55,7 @@ namespace Catalyst.Modules.Network.Dotnetty
             builder.RegisterType<PeerServerChannelFactory>().As<IUdpServerChannelFactory>();
             builder.RegisterType<PeerClientChannelFactory>().As<IUdpClientChannelFactory>();
 
+            builder.RegisterType<DotnettyUdpClient>().As<IDotnettyUdpClient>().SingleInstance();
             builder.RegisterType<DotnettyPeerClient>().As<IPeerClient>().SingleInstance();
             builder.RegisterType<DotnettyPeerService>().As<IPeerService>().SingleInstance();
 

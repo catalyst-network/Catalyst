@@ -95,9 +95,9 @@ namespace Catalyst.Core.Lib.FileTransfer
                 retryContext[StartChunkRetryKey] = chunkId;
                 cancellationRequested = fileTransferInformation.IsExpired();
 
-                var transferMessage = fileTransferInformation.GetUploadMessageDto(chunkId);
+                var transferMessage = fileTransferInformation.GetUploadMessage(chunkId);
 
-                await fileTransferInformation.RecipientChannel.WriteAndFlushAsync(transferMessage);
+                await fileTransferInformation.PeerClient.SendMessageAsync(transferMessage, fileTransferInformation.Recipient);
                 fileTransferInformation.UpdateChunkIndicator(chunkId, true);
             }
         }

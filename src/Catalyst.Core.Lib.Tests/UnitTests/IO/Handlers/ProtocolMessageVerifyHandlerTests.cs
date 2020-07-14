@@ -22,9 +22,9 @@
 #endregion
 
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Modules.Network.Dotnetty.IO.Handlers;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Wire;

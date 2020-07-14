@@ -24,16 +24,13 @@
 using System.IO;
 using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
-using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using MultiFormats;
+using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Core.Lib.FileTransfer
 {
@@ -48,9 +45,9 @@ namespace Catalyst.Core.Lib.FileTransfer
         public UploadFileTransferInformation(Stream stream,
             MultiAddress address,
             MultiAddress recipient,
-            IChannel recipientChannel,
+            IPeerClient peerClient,
             ICorrelationId correlationGuid) :
-            base(address, recipient, recipientChannel,
+            base(address, recipient, peerClient,
                 correlationGuid, string.Empty, (ulong) stream.Length)
         {
             RandomAccessStream = stream;
@@ -58,7 +55,7 @@ namespace Catalyst.Core.Lib.FileTransfer
         }
 
         /// <inheritdoc />
-        public IMessageDto<ProtocolMessage> GetUploadMessageDto(uint index)
+        public ProtocolMessage GetUploadMessage(uint index)
         {
             var chunkId = index + 1;
             var startPos = index * Constants.FileTransferChunkSize;
@@ -93,7 +90,7 @@ namespace Catalyst.Core.Lib.FileTransfer
                 CorrelationFileName = CorrelationId.Id.ToByteString()
             }.ToProtocolMessage(Address);
 
-            return new MessageDto(transferMessage, Recipient);
+            return transferMessage;
         }
 
         public int RetryCount { get; set; }

@@ -22,8 +22,8 @@
 #endregion
 
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Codecs;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.IO.Codecs;
+using Catalyst.Modules.Network.Dotnetty.IO.Messaging.Dto;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;

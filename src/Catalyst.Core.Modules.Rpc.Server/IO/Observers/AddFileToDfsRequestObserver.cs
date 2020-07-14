@@ -35,16 +35,9 @@ using Catalyst.Abstractions.Options;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.FileTransfer;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
-using Dawn;
-using DotNetty.Transport.Channels;
 using Google.Protobuf;
-using Lib.P2P.Protocols;
-using Microsoft.Reactive.Testing;
 using MultiFormats;
 using Serilog;
 
@@ -182,16 +175,9 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             var addFileResponseCode = AddFileToDfsAsync(fileTransferInformation).ConfigureAwait(false);
 
             var message = GetResponse(fileTransferInformation, await addFileResponseCode);
-            var protocolMessage =
-                message.ToProtocolMessage(PeerSettings.Address, fileTransferInformation.CorrelationId);
+            var protocolMessage = message.ToProtocolMessage(PeerSettings.Address, fileTransferInformation.CorrelationId);
 
-            // Send Response
-            var responseMessage = new MessageDto(
-                protocolMessage,
-                fileTransferInformation.Recipient
-            );
-
-            await fileTransferInformation.RecipientChannel.WriteAndFlushAsync(responseMessage).ConfigureAwait(false);
+            await fileTransferInformation.PeerClient.SendMessageAsync(protocolMessage, fileTransferInformation.Recipient).ConfigureAwait(false);
         }
 
         /// <param name="fileTransferInformation">The file transfer information.</param>

@@ -24,6 +24,7 @@
 using Autofac;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.P2P;
+using Lib.P2P.Protocols;
 
 namespace Catalyst.Modules.Network.LibP2P
 {
@@ -31,6 +32,8 @@ namespace Catalyst.Modules.Network.LibP2P
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<CatalystProtocol>().AsImplementedInterfaces().SingleInstance();
+
             // Register P2P
             builder.RegisterType<LibP2PPeerService>().As<IPeerService>().SingleInstance();
             builder.RegisterType<LibP2PPeerClient>().As<IPeerClient>().SingleInstance();

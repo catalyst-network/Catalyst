@@ -23,8 +23,8 @@
 
 using System;
 using System.Reactive.Linq;
-using Catalyst.Abstractions.IO.Transport.Channels;
-using Catalyst.Core.Lib.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.IO.Transport.Channels;
 using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 using NSubstitute;

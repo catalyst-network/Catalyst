@@ -22,9 +22,10 @@
 #endregion
 
 using Autofac;
-using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.Rpc;
 
 namespace Catalyst.Core.Modules.Rpc.Client
 {
