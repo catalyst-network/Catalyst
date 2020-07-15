@@ -39,13 +39,17 @@ using Catalyst.Core.Modules.Dfs.BlockExchange;
 using Catalyst.Core.Modules.Dfs.CoreApi;
 using Catalyst.Core.Modules.Dfs.Migration;
 using Catalyst.Core.Modules.Keystore;
+using Catalyst.Modules.UPnP;
+using Catalyst.NetworkUtils;
 using Lib.P2P;
 using Lib.P2P.Protocols;
 using Lib.P2P.PubSub;
 using Lib.P2P.Routing;
 using Makaretu.Dns;
+using Serilog.Core;
 using SharpRepository.InMemoryRepository;
 using SharpRepository.Repository;
+using Constants = Catalyst.Core.Lib.Config.Constants;
 
 namespace Catalyst.Core.Modules.Dfs
 {
@@ -75,6 +79,13 @@ namespace Catalyst.Core.Modules.Dfs
             builder.RegisterType<DhtApi>().As<IDhtApi>().SingleInstance();
             builder.RegisterType<MigrationManager>().As<IMigrationManager>().SingleInstance();
             builder.RegisterType<DeltaDfsReader>().As<IDeltaDfsReader>().SingleInstance();
+            
+            builder.RegisterType<UPnPUtility>().As<IUPnPUtility>().SingleInstance()
+                .WithParameter("natUtilityProvider", new NatUtilityProvider())
+                .WithParameter( "logger", Logger.None);
+            builder.RegisterType<WebClientWrapperFactory>().As<IWebClientFactory>().SingleInstance();
+            builder.RegisterType<SocketWrapperFactory>().As<ISocketFactory>().SingleInstance();
+            builder.RegisterType<AddressProvider>().As<IAddressProvider>().SingleInstance();
 
             builder.RegisterType<DfsState>().As<DfsState>().SingleInstance();
         }

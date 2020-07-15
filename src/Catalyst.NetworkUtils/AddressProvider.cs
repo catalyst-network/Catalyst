@@ -44,7 +44,7 @@ namespace Catalyst.NetworkUtils
         
         public async Task<IPAddress> GetPublicIpAsync(CancellationToken cancel = default)
         {
-            var ipAddress = await _uPnPUtility.GetPublicIpAddress(cancel).ConfigureAwait(false);
+            var ipAddress = await _uPnPUtility.GetPublicIpAddress().ConfigureAwait(false);
 
             if(ipAddress!=null)
             {

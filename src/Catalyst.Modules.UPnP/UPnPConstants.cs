@@ -45,5 +45,7 @@ namespace Catalyst.Modules.UPnP
             Timeout,
             TaskFinished,
         }
+
+        public const int DefaultTimeout = 5;
     }
 }

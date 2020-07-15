@@ -42,22 +42,22 @@ namespace Catalyst.Modules.UPnP
             _logger = logger;
         }
         
-        public async Task<UPnPConstants.Result> MapPorts(Mapping[] ports, CancellationToken token = default, bool delete = false)
+        public async Task<UPnPConstants.Result> MapPorts(Mapping[] ports, int timeoutInSeconds = UPnPConstants.DefaultTimeout, bool delete = false)
         {
             var tcs = new TaskCompletionSource<bool>();
             var remappingLogic = delete ? (Func<Mapping[], Mapping[], INatDevice, Task>)DeletePortMappingsIfExisting : AddMappingsIfNotPreExisting;
-            await PerformEventOnDeviceFound(device => ReMapPorts(device, ports, remappingLogic, tcs), tcs, token).ConfigureAwait(false);
+            await PerformEventOnDeviceFound(device => ReMapPorts(device, ports, remappingLogic, tcs), tcs, timeoutInSeconds).ConfigureAwait(false);
             return tcs.Task.IsCompletedSuccessfully ? UPnPConstants.Result.TaskFinished : UPnPConstants.Result.Timeout;
         }
         
-        public async Task<IPAddress> GetPublicIpAddress(CancellationToken token = default)
+        public async Task<IPAddress> GetPublicIpAddress(int timeoutInSeconds = UPnPConstants.DefaultTimeout)
         {
             var tcs = new TaskCompletionSource<IPAddress>(); 
-            await PerformEventOnDeviceFound(device => GetExternalIpAddress(device, tcs), tcs, token).ConfigureAwait(false);
+            await PerformEventOnDeviceFound(device => GetExternalIpAddress(device, tcs), tcs, timeoutInSeconds).ConfigureAwait(false);
             return tcs.Task.IsCompletedSuccessfully ? tcs.Task.Result : null;
         }
 
-        private async Task PerformEventOnDeviceFound<T>(Action<INatDevice> onDeviceFound, TaskCompletionSource<T> tcs, CancellationToken token = default)
+        private async Task PerformEventOnDeviceFound<T>(Action<INatDevice> onDeviceFound, TaskCompletionSource<T> tcs, int timeoutInSeconds)
         {
             void DeviceFoundFunc(object o, DeviceEventArgs args) => onDeviceFound(args.Device);
             _natUtilityProvider.DeviceFound += DeviceFoundFunc;
@@ -65,10 +65,8 @@ namespace Catalyst.Modules.UPnP
             _natUtilityProvider.StartDiscovery();
             _logger.Information(UPnPConstants.StartedSearching);
 
-            while (!token.IsCancellationRequested)
-            {
-                await tcs.Task.ConfigureAwait(false);
-            }
+            await Task.WhenAny(tcs.Task, Task.Delay(TimeSpan.FromSeconds(timeoutInSeconds))).ConfigureAwait(false);
+
 
             _natUtilityProvider.DeviceFound -= DeviceFoundFunc;
 

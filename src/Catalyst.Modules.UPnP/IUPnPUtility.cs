@@ -31,8 +31,8 @@ namespace Catalyst.Modules.UPnP
     public interface IUPnPUtility
     {
         public Task<UPnPConstants.Result> MapPorts(Mapping[] ports,
-            CancellationToken cancel = default, bool delete = false);
+            int timeoutInSeconds = UPnPConstants.DefaultTimeout, bool delete = false);
 
-        public Task<IPAddress> GetPublicIpAddress(CancellationToken cancel = default);
+        public Task<IPAddress> GetPublicIpAddress(int timeoutInSeconds = UPnPConstants.DefaultTimeout);
     }
 }

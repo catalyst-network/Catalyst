@@ -21,18 +21,22 @@
 
 #endregion
 
-using System;
 using System.IO;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Config;
-using Catalyst.Abstractions.FileSystem;
 using Catalyst.Protocol.Network;
 
 namespace Catalyst.Core.Lib.Config
 {
     public class NetworkConfigApi : ConfigApiBase, INetworkConfigApi
     {
-        public NetworkConfigApi(IFileSystem fileSystem, NetworkType networkType) : base(Path.Combine(fileSystem.GetCatalystDataDir().FullName, Constants.NetworkConfigFile(networkType))) {}
+        public NetworkConfigApi(NetworkType networkType) 
+            : base(
+                Path.Combine(
+                    new FileSystem.FileSystem().GetCatalystDataDir().FullName, 
+                    Constants.NetworkConfigFile(networkType)
+                    )
+                ){}
         
         protected override Task OnFileNotExisting()
         {

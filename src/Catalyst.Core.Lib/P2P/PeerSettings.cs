@@ -27,10 +27,13 @@ using System.Linq;
 using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
+using System.Threading.Tasks;
 using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
+using Catalyst.NetworkUtils;
 using Catalyst.Protocol.Network;
 using Dawn;
 using Lib.P2P;
@@ -49,10 +52,14 @@ namespace Catalyst.Core.Lib.P2P
         public string PublicKey { get; }
         public int Port { get; }
         public string PayoutAddress { get; }
-        public IPAddress BindAddress { get; }
+        public IPAddress BindAddress { get; private set; }
         public IList<string> SeedServers { get; }
         public IPEndPoint[] DnsServers { get; }
         public MultiAddress Address { set; get; }
+        
+        public IPAddress PublicIpAddress { private set; get; }
+
+        private readonly IAddressProvider _addressProvider;
 
         public IEnumerable<MultiAddress> GetAddresses(MultiAddress address, Peer localPeer)
         {
@@ -104,29 +111,32 @@ namespace Catalyst.Core.Lib.P2P
         ///     Set attributes
         /// </summary>
         /// <param name="rootSection"></param>
-        public PeerSettings(IConfigurationRoot rootSection, Peer localPeer, IDfsConfigApi dfsConfigApi)
+        public PeerSettings(IConfigurationRoot rootSection, Peer localPeer, IDfsConfigApi dfsConfigApi, IAddressProvider addressProvider)
         {
             Guard.Argument(rootSection, nameof(rootSection)).NotNull();
+            _addressProvider = addressProvider;
 
             var section = rootSection.GetSection("CatalystNodeConfiguration").GetSection("Peer");
             Enum.TryParse(section.GetSection("Network").Value, out _networkType);
+            BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value);
+            var publicIpAddress = IPAddress.Parse(section.GetSection("PublicIpAddress").Value);
+
+            UpdateNetworkConfig(_networkType).GetAwaiter().GetResult();
 
             var pksi = Convert.FromBase64String(localPeer.PublicKey);
             PublicKey = pksi.GetPublicKeyBytesFromPeerId().ToBase58();
 
             Port = int.Parse(section.GetSection("Port").Value);
             PayoutAddress = section.GetSection("PayoutAddress").Value;
-            BindAddress = IPAddress.Parse(section.GetSection("BindAddress").Value);
+            
             SeedServers = section.GetSection("SeedServers").GetChildren().Select(p => p.Value).ToList();
             DnsServers = section.GetSection("DnsServers")
                .GetChildren()
                .Select(p => EndpointBuilder.BuildNewEndPoint(p.Value)).ToArray();
 
-            var publicIpAddress = IPAddress.Parse(section.GetSection("PublicIpAddress").Value);
+            
 
             var json = dfsConfigApi.GetAsync("Addresses.Swarm").ConfigureAwait(false).GetAwaiter().GetResult();
-
-            //new NetworkConfigApi(fileSystem, _networkType).SetAsync("CatalystNodeConfiguration.Peer.BindAddress", "oranges and lemons").ConfigureAwait(false).GetAwaiter().GetResult();
             
             List<MultiAddress> addresses = new List<MultiAddress>();
             foreach (string a in json)
@@ -135,6 +145,28 @@ namespace Catalyst.Core.Lib.P2P
             }
 
             Address = addresses.First();
+        }
+
+        private async Task UpdateNetworkConfig(NetworkType networkType)
+        {
+            var publicIp = _addressProvider.GetPublicIpAsync();
+            var localIp = _addressProvider.GetLocalIpAsync();
+
+            await Task.WhenAll(new[]{publicIp, localIp});
+            var configApi = new NetworkConfigApi(networkType);
+
+            if (localIp.IsCompletedSuccessfully && localIp.Result!=null && !localIp.Result.Equals(BindAddress))
+            {
+                BindAddress = localIp.Result;
+                await configApi.SetAsync("CatalystNodeConfiguration.Peer.BindAddress", BindAddress.ToString());
+                await configApi.SetAsync("CatalystNodeConfiguration.Rpc.BindAddress", BindAddress.ToString());
+            }
+            
+            if (publicIp.IsCompletedSuccessfully && publicIp.Result!=null && !publicIp.Result.Equals(BindAddress))
+            {
+                PublicIpAddress = publicIp.Result;
+                await configApi.SetAsync("CatalystNodeConfiguration.Peer.PublicIpAddress", PublicIpAddress.ToString());
+            }
         }
     }
 }

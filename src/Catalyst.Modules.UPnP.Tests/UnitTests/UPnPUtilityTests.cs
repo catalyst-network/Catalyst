@@ -58,11 +58,8 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             
             var natUtilityProvider = Substitute.For<INatUtilityProvider>();
             var uPnPUtility = new UPnPUtility(natUtilityProvider, _logger);
-            
-            var cts = new CancellationTokenSource();
-            cts.CancelAfter(SecondsTimeout);
-            
-            var outcome = await uPnPUtility.MapPorts(new Mapping[]{}, cts.Token).ConfigureAwait(false);
+
+            var outcome = await uPnPUtility.MapPorts(new Mapping[]{}).ConfigureAwait(false);
             outcome.Should().Be(UPnPConstants.Result.Timeout);
             natUtilityProvider.Received(1).StartDiscovery();
             natUtilityProvider.Received(1).StopDiscovery();
@@ -74,11 +71,8 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             var device = Substitute.For<INatDevice>();
             var natUtilityProvider = new TestNatUtilityProvider(device);
             var uPnPUtility = new UPnPUtility(natUtilityProvider, _logger);
-            
-            var cts = new CancellationTokenSource();
-            cts.CancelAfter(SecondsTimeout);
-            
-            var outcome = await uPnPUtility.MapPorts(new Mapping[]{}, cts.Token).ConfigureAwait(false);
+
+            var outcome = await uPnPUtility.MapPorts(new Mapping[]{}).ConfigureAwait(false);
             outcome.Should().Be(UPnPConstants.Result.TaskFinished);
         }
 
@@ -91,11 +85,8 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             var device = Utils.GetTestDeviceWithExistingMappings(existingMappings);
             
             var uPnPUtility = new UPnPUtility(new TestNatUtilityProvider(device), _logger);
-            
-            var cts = new CancellationTokenSource();
-            cts.CancelAfter(SecondsTimeout);
-            
-            await uPnPUtility.MapPorts(attemptedMappings, cts.Token).ConfigureAwait(false);
+
+            await uPnPUtility.MapPorts(attemptedMappings).ConfigureAwait(false);
             await device.Received(1).CreatePortMapAsync(Arg.Is(attemptedMappings[0])).ConfigureAwait(false);
         }
         
@@ -108,11 +99,8 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             var device = Utils.GetTestDeviceWithExistingMappings(existingMappings);
 
             var uPnPUtility = new UPnPUtility(new TestNatUtilityProvider(device), _logger);
-            
-            var cts = new CancellationTokenSource();
-            cts.CancelAfter(SecondsTimeout);
-            
-            await uPnPUtility.MapPorts(attemptedMappings, cts.Token);
+
+            await uPnPUtility.MapPorts(attemptedMappings);
             await device.Received(1).CreatePortMapAsync(_mappingA).ConfigureAwait(false);
             await device.Received(1).CreatePortMapAsync(_mappingB).ConfigureAwait(false);
         }
@@ -127,11 +115,8 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             var device = Utils.GetTestDeviceWithExistingMappings(existingMappings);
             
             var uPnPUtility = new UPnPUtility(new TestNatUtilityProvider(device), _logger);
-            
-            var cts = new CancellationTokenSource();
-            cts.CancelAfter(SecondsTimeout);
-            
-            await uPnPUtility.MapPorts(attemptedMappings, cts.Token).ConfigureAwait(false);
+
+            await uPnPUtility.MapPorts(attemptedMappings).ConfigureAwait(false);
 
             await device.Received(0).CreatePortMapAsync(Arg.Is(attemptedMappings[0])).ConfigureAwait(false);
         }
@@ -145,11 +130,8 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             var device = Utils.GetTestDeviceWithExistingMappings(existingMappings);
             
             var uPnPUtility = new UPnPUtility(new TestNatUtilityProvider(device), _logger);
-            
-            var cts = new CancellationTokenSource();
-            cts.CancelAfter(SecondsTimeout);
-            
-            await uPnPUtility.MapPorts(attemptedMappings, cts.Token).ConfigureAwait(false);
+
+            await uPnPUtility.MapPorts(attemptedMappings).ConfigureAwait(false);
 
             await device.Received(0).CreatePortMapAsync(Arg.Is(attemptedMappings[0])).ConfigureAwait(false);
         }
@@ -165,11 +147,8 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
                 .Returns(Task.FromResult(_mappingB));
 
             var uPnPUtility = new UPnPUtility(new TestNatUtilityProvider(device), _logger);
-            
-            var cts = new CancellationTokenSource();
-            cts.CancelAfter(SecondsTimeout);
-            
-            await uPnPUtility.MapPorts(attemptedMappings, cts.Token).ConfigureAwait(false);
+
+            await uPnPUtility.MapPorts(attemptedMappings, SecondsTimeout).ConfigureAwait(false);
             await device.Received(1).DeletePortMapAsync(_mappingB).ConfigureAwait(false);
         }
         
@@ -182,11 +161,8 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             var device = Utils.GetTestDeviceWithExistingMappings(existingMappings);
             
             var uPnPUtility = new UPnPUtility(new TestNatUtilityProvider(device), _logger);
-            
-            var cts = new CancellationTokenSource();
-            cts.CancelAfter(SecondsTimeout);
-            
-            await uPnPUtility.MapPorts(mappingsToDelete, cts.Token, true).ConfigureAwait(false);
+
+            await uPnPUtility.MapPorts(mappingsToDelete, SecondsTimeout, true).ConfigureAwait(false);
             await device.Received(1).DeletePortMapAsync(Arg.Is(_mappingA)).ConfigureAwait(false);
         }
         
@@ -199,11 +175,8 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             var device = Utils.GetTestDeviceWithExistingMappings(existingMappings);
             
             var uPnPUtility = new UPnPUtility(new TestNatUtilityProvider(device), _logger);
-            
-            var cts = new CancellationTokenSource();
-            cts.CancelAfter(SecondsTimeout);
-            
-            await uPnPUtility.MapPorts(mappingsToDelete, cts.Token, true).ConfigureAwait(false);
+
+            await uPnPUtility.MapPorts(mappingsToDelete, SecondsTimeout, true).ConfigureAwait(false);
             await device.Received(0).DeletePortMapAsync(Arg.Is(_mappingB)).ConfigureAwait(false);
         }
         
@@ -213,11 +186,8 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             var device = Substitute.For<INatDevice>();
             
             var uPnPUtility = new UPnPUtility(new TestNatUtilityProvider(device), _logger);
-            
-            var cts = new CancellationTokenSource();
-            cts.CancelAfter(SecondsTimeout);
-            
-            await uPnPUtility.GetPublicIpAddress(cts.Token).ConfigureAwait(false);
+
+            await uPnPUtility.GetPublicIpAddress().ConfigureAwait(false);
             await device.Received(1).GetExternalIPAsync().ConfigureAwait(false);
         }
         
@@ -227,11 +197,8 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             var device = Substitute.For<INatDevice>();
             
             var uPnPUtility = new UPnPUtility(new TestNatUtilityProvider(device), _logger);
-            
-            var cts = new CancellationTokenSource();
-            cts.CancelAfter(SecondsTimeout);
-            
-            var outcome = await uPnPUtility.GetPublicIpAddress(cts.Token).ConfigureAwait(false);
+
+            var outcome = await uPnPUtility.GetPublicIpAddress().ConfigureAwait(false);
 
             outcome.Should().Be(null);
         }
@@ -244,11 +211,8 @@ namespace Catalyst.Modules.UPnP.Tests.UnitTests
             device.GetExternalIPAsync().Returns(ipAddress);
             
             var uPnPUtility = new UPnPUtility(new TestNatUtilityProvider(device), _logger);
-            
-            var cts = new CancellationTokenSource();
-            cts.CancelAfter(SecondsTimeout);
-            
-            var outcome = await uPnPUtility.GetPublicIpAddress(cts.Token).ConfigureAwait(false);
+
+            var outcome = await uPnPUtility.GetPublicIpAddress().ConfigureAwait(false);
 
             outcome.Should().Be(ipAddress);
         }

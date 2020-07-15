@@ -86,10 +86,9 @@ namespace Catalyst.Modules.AutoPortMapper
 
             var cts = new CancellationTokenSource();
             
-            var timeout = options.Timeout > 0 ? options.Timeout : PortMappingConstants.DefaultTimeout; 
-            cts.CancelAfter(timeout);                                                                                
+            var timeout = options.Timeout > 0 ? options.Timeout : PortMappingConstants.DefaultTimeout;
 
-            await portMapper.MapPorts(mappings.ToArray(), cts.Token, options.IsMappingDeletion).ConfigureAwait(false);
+            await portMapper.MapPorts(mappings.ToArray(), timeout, options.IsMappingDeletion).ConfigureAwait(false);
             return 0;
         }
 

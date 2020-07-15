@@ -74,7 +74,7 @@ namespace Catalyst.Core.Lib
             builder.RegisterType<LibP2PPeerService>().As<ILibP2PPeerService>().SingleInstance();
             builder.RegisterType<LibP2PPeerClient>().As<ILibP2PPeerClient>().SingleInstance();
 
-            builder.RegisterType<PeerSettings>().As<IPeerSettings>();
+            builder.RegisterType<PeerSettings>().As<IPeerSettings>().SingleInstance();
             builder.RegisterType<Peer>().As<IPeer>();
 
             builder.RegisterType<PeerIdValidator>().As<IPeerIdValidator>();
