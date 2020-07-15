@@ -109,9 +109,6 @@ namespace Catalyst.Modules.Network.Dotnetty.Tests.UnitTests.Rpc.IO.Observers
 
             peerRepository.Add(fakePeerList);
 
-            // Build a fake remote endpoint
-            _fakeContext.Channel.RemoteAddress.Returns(EndpointBuilder.BuildNewEndPoint("192.0.0.1", 42042));
-
             var peerId = MultiAddressHelper.GetAddress("sender");
 
             var removePeerRequest = new RemovePeerRequest
@@ -137,7 +134,7 @@ namespace Catalyst.Modules.Network.Dotnetty.Tests.UnitTests.Rpc.IO.Observers
 
             var signResponseMessage = sentResponseDto.Content.FromProtocolMessage<RemovePeerResponse>();
 
-            signResponseMessage.DeletedCount.Should().Be(withPublicKey ? 1 : (uint) fakePeers.Count);
+            signResponseMessage.DeletedCount.Should().Be(1);
         }
     }
 }
