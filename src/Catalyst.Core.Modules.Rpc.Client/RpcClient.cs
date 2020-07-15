@@ -28,12 +28,13 @@ using System.Reactive.Linq;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Rpc.IO.Exceptions;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.EventLoop;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Messaging.Dto;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
 using Catalyst.Modules.Network.Dotnetty.IO.Transport;
 using Catalyst.Modules.Network.Dotnetty.Rpc;
 using Catalyst.Protocol.Wire;
@@ -46,14 +47,14 @@ namespace Catalyst.Core.Modules.Rpc.Client
     ///     This class provides a command line interface (CLI) application to connect to Catalyst Node.
     ///     Through the CLI the node operator will be able to connect to any number of running nodes and run commands.
     /// </summary>
-    public sealed class RpcClient : TcpClient, IRpcClient
+    public sealed class RpcClient : TcpClient<IObserverDto<ProtocolMessage>>, IRpcClient
     {
-        private readonly ITcpClientChannelFactory _channelFactory;
+        private readonly ITcpClientChannelFactory<IObserverDto<ProtocolMessage>> _channelFactory;
         private readonly IEnumerable<IRpcResponseObserver> _rpcResponseObservers;
         private readonly X509Certificate2 _certificate;
         private readonly IRpcClientConfig _clientConfig;
         private Dictionary<string, IRpcResponseObserver> _handlers;
-        private IObservable<ProtocolMessage> _socketMessageStream;
+        private IObservable<IObserverDto<ProtocolMessage>> _socketMessageStream;
 
         /// <summary>
         ///     Initialize a new instance of RPClient
@@ -63,7 +64,7 @@ namespace Catalyst.Core.Modules.Rpc.Client
         /// <param name="clientConfig">rpc node config</param>
         /// <param name="handlers"></param>
         /// <param name="clientEventLoopGroupFactory"></param>
-        public RpcClient(ITcpClientChannelFactory channelFactory,
+        public RpcClient(ITcpClientChannelFactory<IObserverDto<ProtocolMessage>> channelFactory,
             X509Certificate2 certificate,
             IRpcClientConfig clientConfig,
             IEnumerable<IRpcResponseObserver> handlers,
@@ -79,21 +80,21 @@ namespace Catalyst.Core.Modules.Rpc.Client
 
         public IDisposable SubscribeToResponse<T>(Action<T> onNext) where T : IMessage<T>
         {
-            return _socketMessageStream.Where(x => x.TypeUrl == typeof(T).ShortenedProtoFullName())
+            return _socketMessageStream.Where(x => x.Payload.TypeUrl == typeof(T).ShortenedProtoFullName())
                .Select(SubscriptionOutPipeline<T>).Subscribe(onNext);
         }
 
-        private T SubscriptionOutPipeline<T>(ProtocolMessage observer) where T : IMessage<T>
+        private T SubscriptionOutPipeline<T>(IObserverDto<ProtocolMessage> observer) where T : IMessage<T>
         {
-            var message = observer.FromProtocolMessage<T>();
-            if (!_handlers.ContainsKey(observer.TypeUrl))
+            var message = observer.Payload.FromProtocolMessage<T>();
+            if (!_handlers.ContainsKey(observer.Payload.TypeUrl))
             {
                 throw new ResponseHandlerDoesNotExistException(
-                    $"Response Handler does not exist for message type {observer.TypeUrl}");
+                    $"Response Handler does not exist for message type {observer.Payload.TypeUrl}");
             }
 
-            var handler = _handlers[observer.TypeUrl];
-            handler.HandleResponseObserver(message, observer.Address, observer.CorrelationId.ToCorrelationId());
+            var handler = _handlers[observer.Payload.TypeUrl];
+            handler.HandleResponseObserver(message, observer.Context, observer.Payload.Address, observer.Payload.CorrelationId.ToCorrelationId());
 
             return message;
         }

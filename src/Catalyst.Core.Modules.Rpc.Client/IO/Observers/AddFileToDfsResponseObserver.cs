@@ -22,13 +22,13 @@
 #endregion
 
 using System.Threading;
-using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Rpc.IO;
-using Catalyst.Protocol.Peer;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.FileTransfer;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Messaging.Dto;
 using Catalyst.Protocol.Rpc.Node;
+using Catalyst.Protocol.Wire;
 using Dawn;
 using DotNetty.Transport.Channels;
 using MultiFormats;
@@ -62,11 +62,13 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
         /// <param name="senderentifier"></param>
         /// <param name="correlationId"></param>
         protected override void HandleResponse(AddFileToDfsResponse addFileToDfsResponse,
-            MultiAddress senderentifier,
+            IChannelHandlerContext channelHandlerContext,
+            MultiAddress senderAddress,
             ICorrelationId correlationId)
         {
             Guard.Argument(addFileToDfsResponse, nameof(addFileToDfsResponse)).NotNull();
-            Guard.Argument(senderentifier, nameof(senderentifier)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderAddress, nameof(senderAddress)).NotNull();
 
             // @TODO return int not byte
             // var responseCode = Enumeration.Parse<FileTransferResponseCodes>(deserialised.ResponseCode[0].ToString());

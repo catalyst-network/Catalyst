@@ -37,7 +37,7 @@ using Serilog;
 
 namespace Catalyst.Modules.Network.Dotnetty.P2P
 {
-    public sealed class DotnettyPeerService : UdpServer, IPeerService
+    public sealed class DotnettyPeerService : UdpServer<ProtocolMessage>, IPeerService
     {
         private readonly IEnumerable<IP2PMessageObserver> _messageHandlers;
         private readonly IPeerSettings _peerSettings;
@@ -46,7 +46,7 @@ namespace Catalyst.Modules.Network.Dotnetty.P2P
         public IObservable<ProtocolMessage> MessageStream { get; private set; }
 
         public DotnettyPeerService(IUdpServerEventLoopGroupFactory udpServerEventLoopGroupFactory,
-            IUdpServerChannelFactory serverChannelFactory,
+            IUdpServerChannelFactory<ProtocolMessage> serverChannelFactory,
             IPeerDiscovery peerDiscovery,
             IEnumerable<IP2PMessageObserver> messageHandlers,
             IPeerSettings peerSettings,

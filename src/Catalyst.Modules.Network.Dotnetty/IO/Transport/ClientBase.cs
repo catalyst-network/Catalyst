@@ -31,11 +31,11 @@ using Serilog;
 
 namespace Catalyst.Modules.Network.Dotnetty.IO.Transport
 {
-    public abstract class ClientBase : SocketBase, ISocketClient
+    public abstract class ClientBase<T> : SocketBase<T>, ISocketClient
     {
         private ILogger _logger;
 
-        protected ClientBase(IChannelFactory channelFactory,
+        protected ClientBase(IChannelFactory<T> channelFactory,
             ILogger logger,
             IEventLoopGroupFactory handlerEventEventLoopGroupFactory)
             : base(channelFactory, logger, handlerEventEventLoopGroupFactory)

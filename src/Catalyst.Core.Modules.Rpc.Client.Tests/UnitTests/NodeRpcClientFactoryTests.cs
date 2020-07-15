@@ -23,11 +23,13 @@
 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.EventLoop;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Messaging.Dto;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
 using Catalyst.Modules.Network.Dotnetty.Rpc;
+using Catalyst.Protocol.Wire;
 using FluentAssertions;
 using NSubstitute;
 using NUnit.Framework;
@@ -38,7 +40,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
     {
         public RpcClientFactoryTests()
         {
-            var channelFactory = Substitute.For<ITcpClientChannelFactory>();
+            var channelFactory = Substitute.For<ITcpClientChannelFactory<IObserverDto<ProtocolMessage>>>();
             var clientEventLoopGroupFactory = Substitute.For<ITcpClientEventLoopGroupFactory>();
             _rpcClientFactory = new RpcClientFactory(channelFactory, clientEventLoopGroupFactory,
                 new List<IRpcResponseObserver>());

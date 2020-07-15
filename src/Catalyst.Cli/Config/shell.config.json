@@ -1,5 +1,7 @@
 {
-    "CatalystCliConfig": {
-        "Address": "/ip4/127.0.0.1/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdwu2yu3QMzKa2BDkb5C5pcuhtrH1G9HHbztbbxA8tGmf4"
-    }
+  "CatalystCliConfig": {
+    "BindAddress": "127.0.0.1",
+    "Port": 5266,
+    "PublicKey": "hv6vvbt2u567syz5labuqnfabsc3zobfwekl4cy3c574n6vkj7sq"
+  }
 }

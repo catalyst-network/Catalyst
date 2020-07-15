@@ -22,12 +22,11 @@
 #endregion
 
 using System;
-using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Abstractions.IO.Observers
 {
-    public interface IMessageObserver : IObserver<ProtocolMessage>
+    public interface IMessageObserver<T> : IObserver<T>
     {
-        void StartObserving(IObservable<ProtocolMessage> messageStream);
+        void StartObserving(IObservable<T> messageStream);
     }
 }

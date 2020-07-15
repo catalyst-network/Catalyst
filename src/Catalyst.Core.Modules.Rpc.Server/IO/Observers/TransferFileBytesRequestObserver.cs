@@ -21,14 +21,15 @@
 
 #endregion
 
-using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
-using Catalyst.Core.Lib.IO.Observers;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.FileTransfer;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
+using Catalyst.Modules.Network.Dotnetty.Rpc.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
+using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using MultiFormats;
 using Serilog;
@@ -36,7 +37,7 @@ using Serilog;
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
     public sealed class TransferFileBytesRequestObserver
-        : RequestObserverBase<TransferFileBytesRequest, TransferFileBytesResponse>,
+        : RpcRequestObserverBase<TransferFileBytesRequest, TransferFileBytesResponse>,
             IRpcRequestObserver
     {
         /// <summary>The download file transfer factory</summary>
@@ -48,9 +49,8 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <param name="logger">The logger.</param>
         public TransferFileBytesRequestObserver(IDownloadFileTransferFactory fileTransferFactory,
             IPeerSettings peerSettings,
-            IPeerClient peerClient,
             ILogger logger)
-            : base(logger, peerSettings, peerClient)
+            : base(logger, peerSettings)
         {
             _fileTransferFactory = fileTransferFactory;
         }
@@ -64,10 +64,12 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override TransferFileBytesResponse HandleRequest(TransferFileBytesRequest transferFileBytesRequest,
+            IChannelHandlerContext channelHandlerContext,
             MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(transferFileBytesRequest, nameof(transferFileBytesRequest)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(sender, nameof(sender)).NotNull();
             Logger.Debug("received message of type TransferFileBytesRequest");
 

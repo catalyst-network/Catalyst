@@ -31,6 +31,9 @@ using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using Serilog;
 using MultiFormats;
+using Catalyst.Modules.Network.Dotnetty.Rpc.IO.Observers;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
+using DotNetty.Transport.Channels;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
@@ -39,7 +42,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
     /// </summary>
     /// <seealso cref="IRpcRequestObserver" />
     public sealed class PeerListRequestObserver
-        : RequestObserverBase<GetPeerListRequest, GetPeerListResponse>,
+        : RpcRequestObserverBase<GetPeerListRequest, GetPeerListResponse>,
             IRpcRequestObserver
     {
         /// <summary>
@@ -54,10 +57,9 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <param name="logger">The logger.</param>
         /// <param name="peerRepository"></param>
         public PeerListRequestObserver(IPeerSettings peerSettings,
-            IPeerClient peerClient,
             ILogger logger,
             IPeerRepository peerRepository)
-            : base(logger, peerSettings, peerClient)
+            : base(logger, peerSettings)
         {
             _peerRepository = peerRepository;
         }
@@ -70,10 +72,12 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override GetPeerListResponse HandleRequest(GetPeerListRequest getPeerListRequest,
+            IChannelHandlerContext channelHandlerContext,
             MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(getPeerListRequest, nameof(getPeerListRequest)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(sender, nameof(sender)).NotNull();
             Logger.Debug("received message of type PeerListRequest");
 

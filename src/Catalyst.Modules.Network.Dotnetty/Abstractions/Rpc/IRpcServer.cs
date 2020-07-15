@@ -23,12 +23,13 @@
 
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.Rpc;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Messaging.Dto;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport;
 using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Modules.Network.Dotnetty.Rpc
 {
-    public interface IRpcServer : IObservableMessageStreamer<ProtocolMessage>, ISocket
+    public interface IRpcServer : IObservableMessageStreamer<IObserverDto<ProtocolMessage>>, ISocket
     {
         IRpcServerSettings Settings { get; }
     }

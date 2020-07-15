@@ -36,7 +36,7 @@ using MultiFormats;
 
 namespace Catalyst.Modules.Network.Dotnetty.IO.Transport.Channels
 {
-    public abstract class TcpServerChannelFactory : ITcpServerChannelFactory
+    public abstract class TcpServerChannelFactory<T> : ITcpServerChannelFactory<T>
     {
         private readonly int _backLogValue;
 
@@ -47,7 +47,7 @@ namespace Catalyst.Modules.Network.Dotnetty.IO.Transport.Channels
             _backLogValue = backLogValue;
         }
         
-        public abstract Task<IObservableChannel> BuildChannelAsync(IEventLoopGroupFactory eventLoopGroupFactory,
+        public abstract Task<IObservableChannel<T>> BuildChannelAsync(IEventLoopGroupFactory eventLoopGroupFactory,
             MultiAddress address,
             X509Certificate2 certificate = null);
 

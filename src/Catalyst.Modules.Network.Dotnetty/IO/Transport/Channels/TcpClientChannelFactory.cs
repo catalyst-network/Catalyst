@@ -36,14 +36,14 @@ using MultiFormats;
 
 namespace Catalyst.Modules.Network.Dotnetty.IO.Transport.Channels
 {
-    public abstract class TcpClientChannelFactory : ITcpClientChannelFactory
+    public abstract class TcpClientChannelFactory<T> : ITcpClientChannelFactory<T>
     {
         private readonly int _backLogValue;
 
         protected abstract Func<List<IChannelHandler>> HandlerGenerationFunction { get; }
         protected TcpClientChannelFactory(int backLogValue = 100) { _backLogValue = backLogValue; }
         
-        public abstract Task<IObservableChannel> BuildChannelAsync(IEventLoopGroupFactory eventLoopGroupFactory,
+        public abstract Task<IObservableChannel<T>> BuildChannelAsync(IEventLoopGroupFactory eventLoopGroupFactory,
             MultiAddress address,
             X509Certificate2 certificate = null);
 

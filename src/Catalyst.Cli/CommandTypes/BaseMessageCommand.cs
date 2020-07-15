@@ -69,7 +69,7 @@ namespace Catalyst.Cli.CommandTypes
             }
         }
 
-        protected MultiAddress sender => CommandContext.Address;
+        protected MultiAddress SenderAddress => CommandContext.Address;
 
         public void Dispose() { Dispose(true); }
 
@@ -82,8 +82,8 @@ namespace Catalyst.Cli.CommandTypes
             if (message == null) return;
 
             var messageDto = new MessageDto(
-                message.ToProtocolMessage(sender),
-                _recipientAddress);
+                message.ToProtocolMessage(SenderAddress),
+                RecipientAddress);
             Target.SendMessage(messageDto);
         }
 

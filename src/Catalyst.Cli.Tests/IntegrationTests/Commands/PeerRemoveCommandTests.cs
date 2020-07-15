@@ -41,10 +41,8 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
         [Test]
         public void Cli_Can_Send_Remove_Peer_Request()
         {
-            var address = "/ip4/127.0.0.1/tcp/42066/ipfs/18n3naE9kBZoVvgYMV6saMZdwu2yu3QMzKa2BDkb5C5pcuhtrH1G9HHbztbbxA8tGmf4";
-
             var result = Shell.ParseCommand(
-                "removepeer", NodeArgumentPrefix, ServerNodeName, "-a", address);
+                "removepeer", NodeArgumentPrefix, ServerNodeName, "-p", "fake_public_key", "-i", "127.0.0.1");
             result.Should().BeTrue();
 
             AssertSentMessageAndGetMessageContent<RemovePeerRequest>();

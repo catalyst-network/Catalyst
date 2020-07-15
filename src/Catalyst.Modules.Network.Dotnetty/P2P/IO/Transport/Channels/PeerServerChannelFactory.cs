@@ -34,7 +34,6 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.EventLoop;
-using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Messaging.Dto;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Modules.Network.Dotnetty.IO.Handlers;
@@ -49,7 +48,7 @@ using MultiFormats;
 
 namespace Catalyst.Modules.Network.Dotnetty.P2P.IO.Transport.Channels
 {
-    public class PeerServerChannelFactory : UdpServerChannelFactory
+    public class PeerServerChannelFactory : UdpServerChannelFactory<ProtocolMessage>
     {
         private readonly IScheduler _scheduler;
         private readonly IPeerMessageCorrelationManager _messageCorrelationManager;
@@ -57,7 +56,7 @@ namespace Catalyst.Modules.Network.Dotnetty.P2P.IO.Transport.Channels
         private readonly IKeySigner _keySigner;
         private readonly IPeerIdValidator _peerIdValidator;
         private readonly SigningContext _signingContext;
-        public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
+        public IObservable<ProtocolMessage> MessageStream { get; }
 
         public PeerServerChannelFactory(IPeerMessageCorrelationManager messageCorrelationManager,
             IBroadcastManager broadcastManager,
@@ -73,7 +72,7 @@ namespace Catalyst.Modules.Network.Dotnetty.P2P.IO.Transport.Channels
             _peerIdValidator = peerIdValidator;
             _signingContext = new SigningContext {NetworkType = peerSettings.NetworkType, SignatureType = SignatureType.ProtocolPeer};
             
-            var messageSubject = new ReplaySubject<IObserverDto<ProtocolMessage>>();
+            var messageSubject = new ReplaySubject<ProtocolMessage>();
             MessageStream = messageSubject.AsObservable();
         }
 
@@ -99,7 +98,7 @@ namespace Catalyst.Modules.Network.Dotnetty.P2P.IO.Transport.Channels
                             new CorrelatableHandler<IPeerMessageCorrelationManager>(_messageCorrelationManager)
                         ),
                         new BroadcastHandler(_broadcastManager),
-                        new ObservableServiceHandler(_scheduler),
+                        new ObservableServiceHandler<ProtocolMessage>(_scheduler),
                         new BroadcastCleanupHandler(_broadcastManager)
                     };
                 };
@@ -111,16 +110,15 @@ namespace Catalyst.Modules.Network.Dotnetty.P2P.IO.Transport.Channels
         /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Ignored</param>
         /// <returns></returns>
-        public override async Task<IObservableChannel> BuildChannelAsync(IEventLoopGroupFactory handlerEventLoopGroupFactory,
+        public override async Task<IObservableChannel<ProtocolMessage>> BuildChannelAsync(IEventLoopGroupFactory handlerEventLoopGroupFactory,
             MultiAddress address,
             X509Certificate2 certificate = null)
         {
             var channel = await BootStrapChannelAsync(handlerEventLoopGroupFactory, address.GetIpAddress(), address.GetPort()).ConfigureAwait(false);
 
-            var messageStream = channel.Pipeline.Get<IObservableServiceHandler>()?.MessageStream;
+            var messageStream = channel.Pipeline.Get<IObservableServiceHandler<ProtocolMessage>>()?.MessageStream;
 
-            return new ObservableChannel(messageStream
-             ?? Observable.Never<ProtocolMessage>(), channel);
+            return new ObservableChannel<ProtocolMessage>(messageStream ?? Observable.Never<ProtocolMessage>(), channel);
         }
     }
 }

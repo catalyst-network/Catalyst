@@ -1,18 +1,22 @@
 {
     "CatalystCliRpcNodes": {
         "nodes": [
-            {
-                "nodeId": "node1",
-                "Address": "/ip4/127.0.0.1/tcp/42066/ipfs/18n3naE9kBZoVvgYMV6saMZdwu2yu3QMzKa2BDkb5C5pcuhtrH1G9HHbztbbxA8tGmf4",
-                "PfxFileName": "mycert.pfx",
-                "SslCertPassword": "test"
-            },
-            {
-                "nodeId": "node2",
-                "Address": "/ip4/127.0.0.2/tcp/42066/ipfs/18n3naE9kBZoVvgYMV6saMZdwu2yu3QMzKa2BDkb5C5pcuhtrH1G9HHbztbbxA8tGmf4",
-                "PfxFileName": "mycert.pfx",
-                "SslCertPassword": "test",
-            }
+          {
+            "nodeId": "node1",
+            "host": "127.0.0.1",
+            "Port": 42066,
+            "PfxFileName": "mycert.pfx",
+            "SslCertPassword": "test",
+            "PublicKey": "hv6vvbt2u567syz5labuqnfabsc3zobfwekl4cy3c574n6vkj7sq"
+          },
+          {
+            "nodeId": "node2",
+            "host": "127.0.0.2",
+            "Port": 42066,
+            "PfxFileName": "mycert.pfx",
+            "SslCertPassword": "test",
+            "PublicKey": "hv6vvbt2u567syz5labuqnfabsc3zobfwekl4cy3c574n6vkj7sq"
+          }
         ]
     }
 }

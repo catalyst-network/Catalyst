@@ -49,6 +49,7 @@ using MultiFormats;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Modules.Network.Dotnetty.P2P.IO.Transport.Channels;
 using Catalyst.Modules.Network.Dotnetty.IO.Handlers;
+using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
 {
@@ -108,7 +109,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
             handlers[2].Should().BeOfType<PeerIdValidationHandler>();
             handlers[3].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
             handlers[4].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
-            handlers[5].Should().BeOfType<ObservableServiceHandler>();
+            handlers[5].Should().BeOfType<ObservableServiceHandler<ProtocolMessage>>();
         }
 
         // [Fact(Skip = "true")]
@@ -128,9 +129,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
                     default)
                .ReturnsForAnyArgs(true);
 
-            var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
+            var observer = new ProtocolMessageObserver<ProtocolMessage>(0, Substitute.For<ILogger>());
 
-            var messageStream = ((ObservableServiceHandler) _factory.InheritedHandlers.Last()).MessageStream;
+            var messageStream = ((ObservableServiceHandler<ProtocolMessage>) _factory.InheritedHandlers.Last()).MessageStream;
 
             using (messageStream.Subscribe(observer))
             {

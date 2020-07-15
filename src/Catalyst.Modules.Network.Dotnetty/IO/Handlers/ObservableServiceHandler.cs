@@ -27,7 +27,6 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reflection;
 using Catalyst.Abstractions.IO.Handlers;
-using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 using Serilog;
 
@@ -37,21 +36,21 @@ namespace Catalyst.Modules.Network.Dotnetty.IO.Handlers
     ///     This handler terminates DotNetty involvement and passes repository messages into rx land,
     ///     by this point all messages should be treated as genuine and sanitised.
     /// </summary>
-    public sealed class ObservableServiceHandler : InboundChannelHandlerBase<ProtocolMessage>, IObservableServiceHandler
+    public sealed class ObservableServiceHandler<T> : InboundChannelHandlerBase<T>, IObservableServiceHandler<T>
     {
-        private readonly ReplaySubject<ProtocolMessage> _messageSubject;
+        private readonly ReplaySubject<T> _messageSubject;
 
         public ObservableServiceHandler(IScheduler scheduler = null)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             var observableScheduler = scheduler ?? Scheduler.Default;
-            _messageSubject = new ReplaySubject<ProtocolMessage>(1, observableScheduler);
+            _messageSubject = new ReplaySubject<T>(1, observableScheduler);
             MessageStream = _messageSubject.AsObservable();
         }
 
         public override bool IsSharable => true;
 
-        public IObservable<ProtocolMessage> MessageStream { get; }
+        public IObservable<T> MessageStream { get; }
 
         public override void ExceptionCaught(IChannelHandlerContext context, Exception e)
         {
@@ -76,7 +75,7 @@ namespace Catalyst.Modules.Network.Dotnetty.IO.Handlers
         /// </summary>
         /// <param name="ctx"></param>
         /// <param name="message"></param>
-        protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage message)
+        protected override void ChannelRead0(IChannelHandlerContext ctx, T message)
         {
             Logger.Verbose("Received {message}", message);
             _messageSubject.OnNext(message);

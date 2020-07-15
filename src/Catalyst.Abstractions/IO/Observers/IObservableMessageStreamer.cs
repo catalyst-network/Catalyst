@@ -22,11 +22,10 @@
 #endregion
 
 using System;
-using Google.Protobuf;
 
 namespace Catalyst.Abstractions.IO.Observers
 {
-    public interface IObservableMessageStreamer<out T> where T : IMessage<T>
+    public interface IObservableMessageStreamer<T>
     {
         /// <summary>
         ///     Message stream

@@ -28,6 +28,7 @@ using NSubstitute;
 using Serilog;
 using NUnit.Framework;
 using Catalyst.Modules.Network.Dotnetty.IO.Handlers;
+using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
 {
@@ -38,12 +39,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
             Log.Logger = Substitute.For<ILogger>();
             Log.Logger.ForContext(Arg.Any<Type>()).Returns(Log.Logger);
             _testScheduler = new TestScheduler();
-            _observableServiceHandler = new ObservableServiceHandler(_testScheduler);
+            _observableServiceHandler = new ObservableServiceHandler<ProtocolMessage>(_testScheduler);
         }
 
         private readonly TestScheduler _testScheduler;
 
-        private readonly ObservableServiceHandler _observableServiceHandler;
+        private readonly ObservableServiceHandler<ProtocolMessage> _observableServiceHandler;
 
         [Test]
         public void Dispose_Should_Dispose_ObservableServiceHandler() { _observableServiceHandler.Dispose(); }

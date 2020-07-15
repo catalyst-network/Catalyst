@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.EventLoop;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
@@ -29,9 +28,9 @@ using Serilog;
 
 namespace Catalyst.Modules.Network.Dotnetty.IO.Transport
 {
-    public abstract class TcpClient : ClientBase, ITcpClient
+    public abstract class TcpClient<T> : ClientBase<T>, ITcpClient
     {
-        protected TcpClient(ITcpClientChannelFactory channelFactory, ILogger logger, ITcpClientEventLoopGroupFactory loopGroupFactory)
+        protected TcpClient(ITcpClientChannelFactory<T> channelFactory, ILogger logger, ITcpClientEventLoopGroupFactory loopGroupFactory)
             : base(channelFactory, logger, loopGroupFactory) { }
     }
 }

@@ -26,6 +26,7 @@ using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using MultiFormats;
@@ -34,14 +35,16 @@ using Serilog;
 
 namespace Catalyst.TestUtils
 {
-    public class TestMessageObserver<TProto> : MessageObserverBase,
-        IP2PMessageObserver, IRpcResponseObserver, IRpcRequestObserver
+    public class TestMessageObserver<TProto> : MessageObserverBase<ProtocolMessage>,
+        IP2PMessageObserver
         where TProto : IMessage, IMessage<TProto>
     {
+        private static Func<ProtocolMessage, bool> FilterExpression = m => m?.TypeUrl != null && m.TypeUrl == typeof(TProto).ShortenedProtoFullName();
+
         public IObserver<TProto> SubstituteObserver { get; }
         public MultiAddress Address { get; }
         
-        public TestMessageObserver(ILogger logger) : base(logger, typeof(TProto).ShortenedProtoFullName())
+        public TestMessageObserver(ILogger logger) : base(logger, FilterExpression)
         {
             SubstituteObserver = Substitute.For<IObserver<TProto>>();
             Address = MultiAddressHelper.GetAddress();

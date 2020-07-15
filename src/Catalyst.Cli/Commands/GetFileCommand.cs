@@ -22,12 +22,12 @@
 #endregion
 
 using System.Threading;
-using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.FileTransfer;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.Cli.Commands;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.FileTransfer;
+using Catalyst.Modules.Network.Dotnetty.FileTransfer;
 using Catalyst.Modules.Network.Dotnetty.IO.Messaging.Dto;
 using Catalyst.Protocol.Rpc.Node;
 using Serilog;
@@ -57,19 +57,17 @@ namespace Catalyst.Cli.Commands
         public override void SendMessage(GetFileOptions opts)
         {
             var message = GetMessage(opts);
-            var protocolMessage = message.ToProtocolMessage(sender);
+            var protocolMessage = message.ToProtocolMessage(SenderAddress);
             var correlationId = protocolMessage.CorrelationId.ToCorrelationId();
 
             var messageDto = new MessageDto(
                 protocolMessage,
                 RecipientAddress);
 
-            //todo
             var fileTransfer = new DownloadFileTransferInformation(
-                sender,
+                SenderAddress,
                 RecipientAddress,
-                //Target.Channel,
-                null,
+                Target.Channel,
                 correlationId,
                 opts.FileOutput,
                 0

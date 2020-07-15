@@ -25,6 +25,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
 using Catalyst.Modules.Network.Dotnetty.IO.EventLoop;
 using Catalyst.Modules.Network.Dotnetty.IO.Transport.Channels;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
@@ -69,7 +70,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport.Channels
             var observableChannel =
                 await _testTcServerChannelFactory.BuildChannelAsync(_eventLoopGroupFactory, _address).ConfigureAwait(false);
 
-            observableChannel.Should().BeOfType<ObservableChannel>();
+            observableChannel.Should().BeOfType<ObservableChannel<ProtocolMessage>>();
         }
     }
 }

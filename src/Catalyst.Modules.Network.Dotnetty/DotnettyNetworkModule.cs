@@ -23,13 +23,16 @@
 
 using Autofac;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.FileTransfer;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.EventLoop;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.P2P.IO.Messaging.Broadcast;
+using Catalyst.Modules.Network.Dotnetty.FileTransfer;
 using Catalyst.Modules.Network.Dotnetty.IO.EventLoop;
 using Catalyst.Modules.Network.Dotnetty.P2P;
 using Catalyst.Modules.Network.Dotnetty.P2P.IO.Messaging.Broadcast;
 using Catalyst.Modules.Network.Dotnetty.P2P.IO.Transport.Channels;
+using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Modules.Network.Dotnetty
 {
@@ -52,8 +55,8 @@ namespace Catalyst.Modules.Network.Dotnetty
                .WithProperty("UdpClientHandlerWorkerThreads", 2);
 
             // Register P2P.IO.Transport.Channels
-            builder.RegisterType<PeerServerChannelFactory>().As<IUdpServerChannelFactory>();
-            builder.RegisterType<PeerClientChannelFactory>().As<IUdpClientChannelFactory>();
+            builder.RegisterType<PeerServerChannelFactory>().As<IUdpServerChannelFactory<ProtocolMessage>>();
+            builder.RegisterType<PeerClientChannelFactory>().As<IUdpClientChannelFactory<ProtocolMessage>>();
 
             builder.RegisterType<DotnettyUdpClient>().As<IDotnettyUdpClient>().SingleInstance();
             builder.RegisterType<DotnettyPeerClient>().As<IPeerClient>().SingleInstance();
@@ -61,6 +64,10 @@ namespace Catalyst.Modules.Network.Dotnetty
 
             //  Register P2P.Messaging.Broadcast
             builder.RegisterType<BroadcastManager>().As<IBroadcastManager>().SingleInstance();
+
+            // Register file transfer
+            builder.RegisterType<DownloadFileTransferFactory>().As<IDownloadFileTransferFactory>().SingleInstance();
+            builder.RegisterType<UploadFileTransferFactory>().As<IUploadFileTransferFactory>().SingleInstance();
         }
     }
 }

@@ -26,17 +26,19 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Enumerator;
-using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.FileTransfer;
-using Catalyst.Core.Lib.IO.Observers;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.FileTransfer;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.FileTransfer;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
+using Catalyst.Modules.Network.Dotnetty.Rpc.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Wire;
 using Dawn;
+using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Lib.P2P;
 using MultiFormats;
@@ -49,7 +51,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
     /// </summary>
     /// <seealso cref="IRpcRequestObserver" />
     public sealed class GetFileFromDfsRequestObserver
-        : RequestObserverBase<GetFileFromDfsRequest, GetFileFromDfsResponse>,
+        : RpcRequestObserverBase<GetFileFromDfsRequest, GetFileFromDfsResponse>,
             IRpcRequestObserver
     {
         /// <summary>The upload file transfer factory</summary>
@@ -58,8 +60,6 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <summary>The DFS</summary>
         private readonly IDfsService _dfsService;
 
-        private readonly IPeerClient _peerClient;
-
         /// <summary>Initializes a new instance of the <see cref="AddFileToDfsRequestObserver" /> class.</summary>
         /// <param name="dfsService">The DFS.</param>
         /// <param name="peerSettings"></param>
@@ -67,28 +67,28 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <param name="logger">The logger.</param>
         public GetFileFromDfsRequestObserver(IDfsService dfsService,
             IPeerSettings peerSettings,
-            IPeerClient peerClient,
             IUploadFileTransferFactory fileTransferFactory,
-            ILogger logger) : base(logger, peerSettings, peerClient)
+            ILogger logger) : base(logger, peerSettings)
         {
             _fileTransferFactory = fileTransferFactory;
             _dfsService = dfsService;
-            _peerClient = peerClient;
         }
 
         /// <summary>
         /// </summary>
         /// <param name="getFileFromDfsRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="sender"></param>
+        /// <param name="senderPeerId"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override GetFileFromDfsResponse HandleRequest(GetFileFromDfsRequest getFileFromDfsRequest,
-            MultiAddress sender,
+            IChannelHandlerContext channelHandlerContext,
+            MultiAddress senderAddress,
             ICorrelationId correlationId)
         {
             Guard.Argument(getFileFromDfsRequest, nameof(getFileFromDfsRequest)).NotNull();
-            Guard.Argument(sender, nameof(sender)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderAddress, nameof(senderAddress)).NotNull();
 
             long fileLen = 0;
 
@@ -105,9 +105,9 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
                         fileLen = stream.Length;
                         using (var fileTransferInformation = new UploadFileTransferInformation(
                             stream,
-                            sender,
+                            senderAddress,
                             PeerSettings.Address,
-                            _peerClient,
+                            channelHandlerContext.Channel,
                             correlationId
                         ))
                         {
@@ -129,11 +129,11 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             return response;
         }
 
-        public override void OnNext(ProtocolMessage message)
+        public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
         {
-            base.OnNext(message);
+            base.OnNext(messageDto);
 
-            var correlationId = message.CorrelationId.ToCorrelationId();
+            var correlationId = messageDto.Payload.CorrelationId.ToCorrelationId();
             if (_fileTransferFactory.GetFileTransferInformation(correlationId) != null)
             {
                 _fileTransferFactory.FileTransferAsync(correlationId, CancellationToken.None).ConfigureAwait(false);

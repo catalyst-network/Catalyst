@@ -22,11 +22,12 @@
 #endregion
 
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Core.Lib.IO.Observers;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
+using Catalyst.Modules.Network.Dotnetty.Rpc.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
+using DotNetty.Transport.Channels;
 using Microsoft.Extensions.Configuration;
 using MultiFormats;
 using Newtonsoft.Json;
@@ -35,24 +36,25 @@ using Serilog;
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
     public sealed class GetInfoRequestObserver
-        : RequestObserverBase<GetInfoRequest, GetInfoResponse>,
+        : RpcRequestObserverBase<GetInfoRequest, GetInfoResponse>,
             IRpcRequestObserver
     {
         private readonly IConfigurationRoot _config;
 
         public GetInfoRequestObserver(IPeerSettings peerSettings,
-            IPeerClient peerClient,
             IConfigurationRoot config,
-            ILogger logger) : base(logger, peerSettings, peerClient)
+            ILogger logger) : base(logger, peerSettings)
         {
             _config = config;
         }
 
         protected override GetInfoResponse HandleRequest(GetInfoRequest getInfoRequest,
+            IChannelHandlerContext channelHandlerContext,
             MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(getInfoRequest, nameof(getInfoRequest)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(sender, nameof(sender)).NotNull();
             Logger.Debug("received message of type GetInfoRequest");
 

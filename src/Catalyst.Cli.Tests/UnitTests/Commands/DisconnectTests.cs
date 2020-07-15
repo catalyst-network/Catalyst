@@ -24,13 +24,14 @@
 using System.Collections.Generic;
 using Catalyst.Cli.Commands;
 using Catalyst.Cli.Tests.UnitTests.Helpers;
+using Catalyst.Core.Lib.Network;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
-using Catalyst.Core.Lib.Extensions;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.Cli.CommandTypes;
+using Catalyst.Core.Lib.Extensions;
 
 namespace Catalyst.Cli.Tests.UnitTests.Commands
 {
@@ -49,7 +50,8 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands
             var rpcNodeConfig = TestCommandHelpers.MockRpcNodeConfig(commandContext);
             var socketClientRegistry = TestCommandHelpers.AddClientSocketRegistry(commandContext, _testScheduler);
 
-            var clientHashCode = socketClientRegistry.GenerateClientHashCode(rpcNodeConfig.Address.GetIPEndPoint());
+            var clientHashCode =
+                socketClientRegistry.GenerateClientHashCode(rpcNodeConfig.Address.GetIPEndPoint());
             socketClientRegistry.AddClientToRegistry(clientHashCode, nodeRpcClient);
 
             var commands = new List<ICommand> {new DisconnectCommand(commandContext, Substitute.For<ILogger>())};

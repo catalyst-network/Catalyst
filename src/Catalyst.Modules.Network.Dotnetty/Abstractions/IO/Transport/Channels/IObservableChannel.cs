@@ -22,15 +22,14 @@
 #endregion
 
 using System;
-using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels
 {
-    public interface IObservableChannel
+    public interface IObservableChannel<T>
     {
         IChannel Channel { get; }
-        IObservable<ProtocolMessage> MessageStream { get; }
+        IObservable<T> MessageStream { get; }
     }
 }
 

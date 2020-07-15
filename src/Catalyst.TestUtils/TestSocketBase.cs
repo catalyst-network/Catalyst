@@ -26,15 +26,16 @@ using System.Threading.Tasks;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.EventLoop;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
 using Catalyst.Modules.Network.Dotnetty.IO.Transport;
+using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 using NSubstitute;
 using Serilog;
 
 namespace Catalyst.TestUtils
 {
-    public sealed class TestSocketBase : SocketBase
+    public sealed class TestSocketBase : SocketBase<ProtocolMessage>
     {
-        public TestSocketBase(IChannelFactory channelFactory,
+        public TestSocketBase(IChannelFactory<ProtocolMessage> channelFactory,
             ILogger logger,
             IEventLoopGroupFactory eventLoopGroupFactory) : base(channelFactory, logger, eventLoopGroupFactory)
         {

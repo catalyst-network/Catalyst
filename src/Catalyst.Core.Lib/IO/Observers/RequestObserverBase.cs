@@ -35,20 +35,22 @@ using Serilog;
 
 namespace Catalyst.Core.Lib.IO.Observers
 {
-    public abstract class RequestObserverBase<TProtoReq, TProtoRes> : MessageObserverBase, IRequestMessageObserver
+    public abstract class RequestObserverBase<TProtoReq, TProtoRes> : MessageObserverBase<ProtocolMessage>, IRequestMessageObserver<ProtocolMessage>
         where TProtoReq : IMessage<TProtoReq> where TProtoRes : IMessage<TProtoRes>
     {
+        private static Func<ProtocolMessage, bool> FilterExpression = m => m?.TypeUrl != null && m.TypeUrl == typeof(TProtoReq).ShortenedProtoFullName();
+
         public IPeerSettings PeerSettings { get; }
 
         private readonly IPeerClient _peerClient;
 
-        protected RequestObserverBase(ILogger logger, IPeerSettings peerSettings, IPeerClient peerClient) : base(logger, typeof(TProtoReq).ShortenedProtoFullName())
+        protected RequestObserverBase(ILogger logger, IPeerSettings peerSettings, IPeerClient peerClient) : base(logger, FilterExpression)
         {
             Guard.Argument(typeof(TProtoReq), nameof(TProtoReq)).Require(t => t.IsRequestType(),
                 t => $"{nameof(TProtoReq)} is not of type {MessageTypes.Request.Name}");
             PeerSettings = peerSettings;
             _peerClient = peerClient;
-            logger.Verbose("{interface} instantiated", nameof(IRequestMessageObserver));
+            logger.Verbose("{interface} instantiated", nameof(IRequestMessageObserver<TProtoReq>));
         }
 
         protected abstract TProtoRes HandleRequest(TProtoReq message, MultiAddress sender, ICorrelationId correlationId);

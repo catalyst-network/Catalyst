@@ -82,6 +82,7 @@ using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Abstractions.Sync.Interfaces;
 using System.Net;
 using Catalyst.Core.Modules.Web3.Options;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
 
 namespace Catalyst.TestUtils
 {

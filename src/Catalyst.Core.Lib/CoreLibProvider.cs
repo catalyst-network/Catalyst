@@ -24,7 +24,6 @@
 using Autofac;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.FileSystem;
-using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Events;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Network;
@@ -37,7 +36,6 @@ using Catalyst.Abstractions.Rpc.IO.Messaging.Correlation;
 using Catalyst.Abstractions.Util;
 using Catalyst.Abstractions.Validators;
 using Catalyst.Core.Lib.Cryptography;
-using Catalyst.Core.Lib.FileTransfer;
 using Catalyst.Core.Lib.IO.Events;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.P2P.Discovery;
@@ -119,10 +117,6 @@ namespace Catalyst.Core.Lib
             // Register Cache
             builder.RegisterType<MemoryCache>().As<IMemoryCache>().SingleInstance();
             builder.RegisterType<MemoryCacheOptions>().As<IOptions<MemoryCacheOptions>>();
-
-            // Register file transfer
-            builder.RegisterType<DownloadFileTransferFactory>().As<IDownloadFileTransferFactory>().SingleInstance();
-            builder.RegisterType<UploadFileTransferFactory>().As<IUploadFileTransferFactory>().SingleInstance();
 
             // Transaction validators
             builder.RegisterType<TransactionValidator>().As<ITransactionValidator>().SingleInstance();

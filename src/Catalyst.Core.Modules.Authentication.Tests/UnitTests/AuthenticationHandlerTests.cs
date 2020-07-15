@@ -40,20 +40,20 @@ namespace Catalyst.Core.Modules.Authentication.Tests.UnitTests
     {
         private IAuthenticationStrategy _authenticationStrategy;
         private EmbeddedChannel _serverChannel;
-        private IObservableServiceHandler _testObservableServiceHandler;
+        private IObservableServiceHandler<ProtocolMessage> _testObservableServiceHandler;
         private ProtocolMessage _signedMessage;
 
         [SetUp]
         public void Init()
         {
-            _testObservableServiceHandler = Substitute.For<IObservableServiceHandler>();
+            _testObservableServiceHandler = Substitute.For<IObservableServiceHandler<ProtocolMessage>>();
             _authenticationStrategy = Substitute.For<IAuthenticationStrategy>();
             _serverChannel = new EmbeddedChannel(new AuthenticationHandler(_authenticationStrategy), _testObservableServiceHandler);
 
-            var senderId = MultiAddressHelper.GetAddress("Test");
+            var senderAddress = MultiAddressHelper.GetAddress("Test");
             _signedMessage = new GetPeerListRequest()
-               .ToProtocolMessage(senderId)
-               .ToSignedProtocolMessage(senderId, new byte[new FfiWrapper().SignatureLength]);
+               .ToProtocolMessage(senderAddress)
+               .ToSignedProtocolMessage(senderAddress, new byte[new FfiWrapper().SignatureLength]);
         }
 
         [Test]

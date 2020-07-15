@@ -23,5 +23,5 @@
 
 namespace Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels
 {
-    public interface IUdpServerChannelFactory : IChannelFactory { }
+    public interface IUdpServerChannelFactory<T> : IChannelFactory<T> { }
 }

@@ -23,6 +23,7 @@
 
 using System;
 using System.Reactive.Linq;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Messaging.Dto;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
 using Catalyst.Modules.Network.Dotnetty.IO.Transport.Channels;
 using Catalyst.Protocol.Wire;
@@ -33,11 +34,19 @@ namespace Catalyst.TestUtils
 {
     public static class ObservableHelpers
     {
-        public static IObservableChannel MockObservableChannel(IObservable<ProtocolMessage> replaySubject)
+        public static IRpcObservableChannel MockRpcObservableChannel(IObservable<IObserverDto<ProtocolMessage>> replaySubject)
         {
             var mockChannel = Substitute.For<IChannel>();
             var mockEventStream = replaySubject.AsObservable();
-            var observableChannel = new ObservableChannel(mockEventStream, mockChannel);
+            var observableChannel = new RpcObservableChannel(mockEventStream, mockChannel);
+            return observableChannel;
+        }
+
+        public static IP2PObservableChannel MockP2PObservableChannel(IObservable<ProtocolMessage> replaySubject)
+        {
+            var mockChannel = Substitute.For<IChannel>();
+            var mockEventStream = replaySubject.AsObservable();
+            var observableChannel = new P2PObservableChannel(mockEventStream, mockChannel);
             return observableChannel;
         }
     }

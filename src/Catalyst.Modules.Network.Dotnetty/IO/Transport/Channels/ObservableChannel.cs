@@ -24,15 +24,14 @@
 using System;
 using System.Threading.Tasks;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
-using Catalyst.Protocol.Wire;
 using Dawn;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Modules.Network.Dotnetty.IO.Transport.Channels
 {
-    public sealed class ObservableChannel : IObservableChannel
+    public class ObservableChannel<T> : IObservableChannel<T>
     {
-        public ObservableChannel(IObservable<ProtocolMessage> messageStream, IChannel channel)
+        public ObservableChannel(IObservable<T> messageStream, IChannel channel)
         {
             Guard.Argument(messageStream, nameof(messageStream)).NotNull();
 
@@ -42,6 +41,6 @@ namespace Catalyst.Modules.Network.Dotnetty.IO.Transport.Channels
 
         public IChannel Channel { get; }
         public Task StartAsync() { return Task.CompletedTask; }
-        public IObservable<ProtocolMessage> MessageStream { get; }
+        public IObservable<T> MessageStream { get; }
     }
 }

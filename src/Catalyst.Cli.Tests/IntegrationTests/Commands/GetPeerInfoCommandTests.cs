@@ -41,9 +41,11 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
         [Test]
         public void Cli_Can_Send_Get_Peer_Info_Request()
         {
-            var address = "/ip4/127.0.0.1/tcp/42066/ipfs/18n3naE9kBZoVvgYMV6saMZdwu2yu3QMzKa2BDkb5C5pcuhtrH1G9HHbztbbxA8tGmf4";
+            var publicKey = "fake_public_key";
+            var ipAddress = "127.0.0.1";
 
-            var result = Shell.ParseCommand("getpeerinfo", NodeArgumentPrefix, ServerNodeName, "-a", address);
+            var result = Shell.ParseCommand("getpeerinfo", NodeArgumentPrefix, ServerNodeName, "-i", ipAddress, "-p",
+                publicKey);
             result.Should().BeTrue();
 
             AssertSentMessageAndGetMessageContent<GetPeerInfoRequest>();

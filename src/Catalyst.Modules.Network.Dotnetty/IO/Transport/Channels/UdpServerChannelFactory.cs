@@ -29,9 +29,9 @@ using MultiFormats;
 
 namespace Catalyst.Modules.Network.Dotnetty.IO.Transport.Channels
 {
-    public abstract class UdpServerChannelFactory : UdpChannelFactoryBase, IUdpServerChannelFactory
+    public abstract class UdpServerChannelFactory<T> : UdpChannelFactoryBase, IUdpServerChannelFactory<T>
     {
-        public abstract Task<IObservableChannel> BuildChannelAsync(IEventLoopGroupFactory eventLoopGroupFactory,
+        public abstract Task<IObservableChannel<T>> BuildChannelAsync(IEventLoopGroupFactory eventLoopGroupFactory,
             MultiAddress address,
             X509Certificate2 certificate = null);
     }

@@ -28,7 +28,6 @@ using System.Text.RegularExpressions;
 using System.Threading;
 using Autofac;
 using Catalyst.Abstractions.Cli;
-using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Cli.Commands;
 using Catalyst.Core.Lib;
 using Catalyst.Core.Lib.Cli;
@@ -36,9 +35,11 @@ using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.KeySigner;
 using Catalyst.Core.Modules.Keystore;
 using Catalyst.Core.Modules.Rpc.Client;
+using Catalyst.Modules.Network.Dotnetty;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.Cli.Commands;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.Cli.CommandTypes;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
 using Catalyst.Modules.Network.Dotnetty.IO.Transport;
 using Catalyst.Modules.Network.Dotnetty.Rpc;
 
@@ -112,6 +113,8 @@ namespace Catalyst.Cli
             containerBuilder.RegisterAssemblyTypes(typeof(RpcClientModule).Assembly)
                .AssignableTo<IRpcResponseObserver>().As<IRpcResponseObserver>()
                .PublicOnly();
+
+            containerBuilder.RegisterModule(new DotnettyNetworkModule());
         }
 
         public static void RegisterCoreModules(ContainerBuilder containerBuilder)

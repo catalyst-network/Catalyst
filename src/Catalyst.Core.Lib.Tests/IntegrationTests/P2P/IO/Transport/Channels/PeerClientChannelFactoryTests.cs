@@ -44,6 +44,7 @@ using MultiFormats;
 using Catalyst.Modules.Network.Dotnetty.IO.Handlers;
 using Catalyst.Modules.Network.Dotnetty.IO.Messaging.Dto;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.P2P.IO.Messaging.Broadcast;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Messaging.Dto;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
 {
@@ -136,9 +137,9 @@ public async Task
                 )
                .ReturnsForAnyArgs(true);
 
-            var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
+            var observer = new ProtocolMessageObserver<ProtocolMessage>(0, Substitute.For<ILogger>());
 
-            var messageStream = _clientFactory.InheritedHandlers.OfType<ObservableServiceHandler>().Single().MessageStream;
+            var messageStream = _clientFactory.InheritedHandlers.OfType<ObservableServiceHandler<ProtocolMessage>>().Single().MessageStream;
 
             using (messageStream.Subscribe(observer))
             {

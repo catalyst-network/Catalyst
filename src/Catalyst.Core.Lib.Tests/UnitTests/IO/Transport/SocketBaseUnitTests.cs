@@ -29,6 +29,7 @@ using Serilog;
 using NUnit.Framework;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.EventLoop;
+using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport
 {
@@ -38,7 +39,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport
         public void Init()
         {
             _logger = Substitute.For<ILogger>();
-            var channelFactory = Substitute.For<ITcpClientChannelFactory>();
+            var channelFactory = Substitute.For<ITcpClientChannelFactory<ProtocolMessage>>();
             var eventLoopGroupFactory = Substitute.For<IEventLoopGroupFactory>();
             _testSocketBase = new TestSocketBase(channelFactory, _logger, eventLoopGroupFactory);
         }

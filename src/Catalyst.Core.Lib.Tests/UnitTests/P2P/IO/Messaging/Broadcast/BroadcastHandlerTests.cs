@@ -75,7 +75,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
             EmbeddedChannel channel = new EmbeddedChannel(
                 new ProtocolMessageVerifyHandler(_keySigner),
                 _broadcastHandler,
-                new ObservableServiceHandler()
+                new ObservableServiceHandler<ProtocolMessage>()
             );
 
             channel.WriteInbound(_broadcastMessageSigned);
@@ -90,7 +90,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
             var testScheduler = new TestScheduler();
             var handler = new TestMessageObserver<TransactionBroadcast>(Substitute.For<ILogger>());
 
-            var protoDatagramChannelHandler = new ObservableServiceHandler(testScheduler);
+            var protoDatagramChannelHandler = new ObservableServiceHandler<ProtocolMessage>(testScheduler);
             handler.StartObserving(protoDatagramChannelHandler.MessageStream);
 
             var channel = new EmbeddedChannel(new ProtocolMessageVerifyHandler(_keySigner), _broadcastHandler, protoDatagramChannelHandler);

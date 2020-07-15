@@ -28,9 +28,9 @@ using Serilog;
 
 namespace Catalyst.Modules.Network.Dotnetty.IO.Transport
 {
-    public abstract class UdpClient : ClientBase, IUdpClient
+    public abstract class UdpClient<T> : ClientBase<T>, IUdpClient
     {
-        protected UdpClient(IUdpClientChannelFactory clientChannelFactory, ILogger logger, IUdpClientEventLoopGroupFactory eventLoopGroupFactory)
+        protected UdpClient(IUdpClientChannelFactory<T> clientChannelFactory, ILogger logger, IUdpClientEventLoopGroupFactory eventLoopGroupFactory)
             : base(clientChannelFactory, logger, eventLoopGroupFactory) { }
     }
 }

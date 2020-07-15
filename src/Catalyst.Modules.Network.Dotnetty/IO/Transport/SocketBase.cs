@@ -32,9 +32,9 @@ using Serilog;
 
 namespace Catalyst.Modules.Network.Dotnetty.IO.Transport
 {
-    public abstract class SocketBase : ISocket
+    public abstract class SocketBase<T> : ISocket
     {
-        protected readonly IChannelFactory ChannelFactory;
+        protected readonly IChannelFactory<T> ChannelFactory;
         private readonly ILogger _logger;
         private int _disposeCounter;
         protected readonly IEventLoopGroupFactory EventLoopGroupFactory;
@@ -42,7 +42,7 @@ namespace Catalyst.Modules.Network.Dotnetty.IO.Transport
 
         public IChannel Channel { get; protected set; }
 
-        protected SocketBase(IChannelFactory channelFactory, ILogger logger, IEventLoopGroupFactory eventLoopGroupFactory)
+        protected SocketBase(IChannelFactory<T> channelFactory, ILogger logger, IEventLoopGroupFactory eventLoopGroupFactory)
         {
             ChannelFactory = channelFactory;
             _logger = logger;

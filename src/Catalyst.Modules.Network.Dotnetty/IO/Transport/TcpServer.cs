@@ -28,9 +28,9 @@ using Serilog;
 
 namespace Catalyst.Modules.Network.Dotnetty.IO.Transport
 {
-    public abstract class TcpServer : SocketBase, ITcpServer
+    public abstract class TcpServer<T> : SocketBase<T>, ITcpServer
     {
-        protected TcpServer(ITcpServerChannelFactory tcpChannelFactory,
+        protected TcpServer(ITcpServerChannelFactory<T> tcpChannelFactory,
             ILogger logger,
             IEventLoopGroupFactory eventLoopGroupFactory)
             : base(tcpChannelFactory, logger, eventLoopGroupFactory) { }

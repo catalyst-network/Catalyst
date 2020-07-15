@@ -25,6 +25,7 @@ using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Rpc.IO;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
+using DotNetty.Transport.Channels;
 using MultiFormats;
 using Serilog;
 
@@ -52,10 +53,12 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
         /// <param name="senderentifier"></param>
         /// <param name="correlationId"></param>
         protected override void HandleResponse(VerifyMessageResponse verifyMessageResponse,
+            IChannelHandlerContext channelHandlerContext,
             MultiAddress senderentifier,
             ICorrelationId correlationId)
         {   
             Guard.Argument(verifyMessageResponse, nameof(verifyMessageResponse)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderentifier, nameof(senderentifier)).NotNull();
         }
     }

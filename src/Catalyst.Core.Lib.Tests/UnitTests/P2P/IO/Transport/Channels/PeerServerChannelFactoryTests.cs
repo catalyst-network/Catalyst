@@ -122,7 +122,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
             handlers[2].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
             handlers[3].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
             handlers[4].Should().BeOfType<BroadcastHandler>();
-            handlers[5].Should().BeOfType<ObservableServiceHandler>();
+            handlers[5].Should().BeOfType<ObservableServiceHandler<ProtocolMessage>>();
             handlers[6].Should().BeOfType<BroadcastCleanupHandler>();
         }
 
@@ -136,7 +136,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
 
             var signedMessage = protocolMessage.ToSignedProtocolMessage(signature: _signature);
 
-            var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
+            var observer = new ProtocolMessageObserver<ProtocolMessage>(0, Substitute.For<ILogger>());
 
             var messageStream = GetObservableServiceHandler().MessageStream;
 
@@ -185,10 +185,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
             return signedMessage;
         }
 
-        private ObservableServiceHandler GetObservableServiceHandler()
+        private ObservableServiceHandler<ProtocolMessage> GetObservableServiceHandler()
         {
             return _factory.InheritedHandlers
-               .OfType<ObservableServiceHandler>().FirstOrDefault();
+               .OfType<ObservableServiceHandler<ProtocolMessage>>().FirstOrDefault();
         }
     }
 }

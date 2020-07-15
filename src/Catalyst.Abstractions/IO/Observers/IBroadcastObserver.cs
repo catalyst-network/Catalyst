@@ -25,7 +25,7 @@ using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Abstractions.IO.Observers
 {
-    public interface IBroadcastObserver : IMessageObserver
+    public interface IBroadcastObserver : IMessageObserver<ProtocolMessage>
     { 
         void HandleBroadcast(ProtocolMessage message);
     }

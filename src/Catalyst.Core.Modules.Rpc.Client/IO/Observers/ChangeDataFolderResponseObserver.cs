@@ -22,9 +22,9 @@
 #endregion
 
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Core.Lib.Rpc.IO;
 using Catalyst.Protocol.Rpc.Node;
+using DotNetty.Transport.Channels;
 using MultiFormats;
 using Serilog;
 
@@ -41,7 +41,8 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
             : base(logger) { }
 
         protected override void HandleResponse(SetPeerDataFolderResponse setPeerDataFolderResponse,
-            MultiAddress senderentifier,
+            IChannelHandlerContext channelHandlerContext,
+            MultiAddress senderAddress,
             ICorrelationId correlationId)
         {
             //Overriden code

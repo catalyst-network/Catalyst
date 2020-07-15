@@ -47,11 +47,11 @@ namespace Catalyst.Modules.Network.Dotnetty.P2P
         Task SendMessageAsync(ProtocolMessage message, MultiAddress recipient);
     }
 
-    public class DotnettyUdpClient : UdpClient, IDotnettyUdpClient
+    public class DotnettyUdpClient : UdpClient<ProtocolMessage>, IDotnettyUdpClient
     {
         private readonly IPeerSettings _peerSettings;
 
-        public DotnettyUdpClient(IUdpClientChannelFactory clientChannelFactory,
+        public DotnettyUdpClient(IUdpClientChannelFactory<ProtocolMessage> clientChannelFactory,
             IUdpClientEventLoopGroupFactory eventLoopGroupFactory,
             IPeerSettings peerSettings)
             : base(clientChannelFactory,

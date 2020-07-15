@@ -22,29 +22,29 @@
 #endregion
 
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Observers;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
+using Catalyst.Modules.Network.Dotnetty.Rpc.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
+using DotNetty.Transport.Channels;
 using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
     public sealed class SignMessageRequestObserver
-        : RequestObserverBase<SignMessageRequest, SignMessageResponse>,
+        : RpcRequestObserverBase<SignMessageRequest, SignMessageResponse>,
             IRpcRequestObserver
     {
         private readonly IKeySigner _keySigner;
 
         public SignMessageRequestObserver(IPeerSettings peerSettings,
-            IPeerClient peerClient,
             ILogger logger,
             IKeySigner keySigner)
-            : base(logger, peerSettings, peerClient)
+            : base(logger, peerSettings)
         {
             _keySigner = keySigner;
         }
@@ -58,10 +58,12 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override SignMessageResponse HandleRequest(SignMessageRequest signMessageRequest,
+            IChannelHandlerContext channelHandlerContext,
             MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(signMessageRequest, nameof(signMessageRequest)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(sender, nameof(sender)).NotNull();
             Logger.Debug("received message of type SignMessageRequest");
 

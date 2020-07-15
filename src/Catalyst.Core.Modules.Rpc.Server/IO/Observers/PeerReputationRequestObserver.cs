@@ -23,19 +23,20 @@
 
 using System.Linq;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using Serilog;
 using MultiFormats;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
+using Catalyst.Modules.Network.Dotnetty.Rpc.IO.Observers;
+using DotNetty.Transport.Channels;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
     public sealed class PeerReputationRequestObserver
-        : RequestObserverBase<GetPeerReputationRequest, GetPeerReputationResponse>,
+        : RpcRequestObserverBase<GetPeerReputationRequest, GetPeerReputationResponse>,
             IRpcRequestObserver
     {
         /// <summary>
@@ -44,10 +45,9 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         private readonly IPeerRepository _peerRepository;
 
         public PeerReputationRequestObserver(IPeerSettings peerSettings,
-            IPeerClient peerClient,
             ILogger logger,
             IPeerRepository peerRepository)
-            : base(logger, peerSettings, peerClient)
+            : base(logger, peerSettings)
         {
             _peerRepository = peerRepository;
         }
@@ -60,10 +60,12 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override GetPeerReputationResponse HandleRequest(GetPeerReputationRequest getPeerReputationRequest,
+            IChannelHandlerContext channelHandlerContext,
             MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(getPeerReputationRequest, nameof(getPeerReputationRequest)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(sender, nameof(sender)).NotNull();
             Logger.Debug("received message of type PeerReputationRequest");
 

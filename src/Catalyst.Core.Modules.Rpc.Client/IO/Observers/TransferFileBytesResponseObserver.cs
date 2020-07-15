@@ -21,10 +21,11 @@
 
 #endregion
 
-using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Rpc.IO;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.FileTransfer;
 using Catalyst.Protocol.Rpc.Node;
+using DotNetty.Transport.Channels;
 using MultiFormats;
 using Serilog;
 
@@ -46,7 +47,8 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
             _fileTransferFactory = fileTransferFactory;
         }
 
-        protected override void HandleResponse(TransferFileBytesRequest message, 
+        protected override void HandleResponse(TransferFileBytesRequest message,
+            IChannelHandlerContext channelHandlerContext,
             MultiAddress senderentifier, 
             ICorrelationId correlationId)
         {

@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.28902.138
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.TestUtils", "Catalyst.TestUtils\Catalyst.TestUtils.csproj", "{B276137D-FB34-48DB-80CF-ADA34A2D2F96}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Simulator", "Catalyst.Simulator\Catalyst.Simulator.csproj", "{EC74EF99-CF2A-4F19-9BE1-0D0639F76C36}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Abstractions", "Catalyst.Abstractions\Catalyst.Abstractions.csproj", "{91A5F73C-5FE6-4BF3-B437-10FA9DF785E9}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nethermind", "nethermind", "{6074E807-FBBC-41D0-9205-C7B79513D683}"
@@ -126,8 +124,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Hashi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Documentation", "..\docs\Catalyst.Documentation.csproj", "{9B99940D-EBFA-40CC-9522-6776C687EAB3}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Tools.KeyGenerator", "Catalyst.Tools.KeyGenerator\Catalyst.Tools.KeyGenerator.csproj", "{2FEC7DC6-A6C1-4692-B5C3-1415B86DE761}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Benchmark", "Catalyst.Benchmark\Catalyst.Benchmark.csproj", "{EC7C0AAF-8EC0-491C-B98E-0EC9EBBA21CE}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Cli", "Catalyst.Cli\Catalyst.Cli.csproj", "{8B9E2D74-AD77-4B43-B7A5-5557428CC8C8}"
@@ -196,6 +192,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Rpc.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Rpc.Server.Tests", "Catalyst.Core.Modules.Rpc.Server.Tests\Catalyst.Core.Modules.Rpc.Server.Tests.csproj", "{AB5D17CE-D813-4DE3-A77A-CDB2FA1CA4A2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Modules.Network.Dotnetty.Tests", "Catalyst.Modules.Network.Dotnetty.Tests\Catalyst.Modules.Network.Dotnetty.Tests.csproj", "{71FB9310-5741-4E99-B817-FA24C0BCA31E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -206,10 +204,6 @@ Global
 		{B276137D-FB34-48DB-80CF-ADA34A2D2F96}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{B276137D-FB34-48DB-80CF-ADA34A2D2F96}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{B276137D-FB34-48DB-80CF-ADA34A2D2F96}.Release|Any CPU.Build.0 = Release|Any CPU
-		{EC74EF99-CF2A-4F19-9BE1-0D0639F76C36}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{EC74EF99-CF2A-4F19-9BE1-0D0639F76C36}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{EC74EF99-CF2A-4F19-9BE1-0D0639F76C36}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{EC74EF99-CF2A-4F19-9BE1-0D0639F76C36}.Release|Any CPU.Build.0 = Release|Any CPU
 		{91A5F73C-5FE6-4BF3-B437-10FA9DF785E9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{91A5F73C-5FE6-4BF3-B437-10FA9DF785E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{91A5F73C-5FE6-4BF3-B437-10FA9DF785E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -378,10 +372,6 @@ Global
 		{9B99940D-EBFA-40CC-9522-6776C687EAB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9B99940D-EBFA-40CC-9522-6776C687EAB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9B99940D-EBFA-40CC-9522-6776C687EAB3}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2FEC7DC6-A6C1-4692-B5C3-1415B86DE761}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2FEC7DC6-A6C1-4692-B5C3-1415B86DE761}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2FEC7DC6-A6C1-4692-B5C3-1415B86DE761}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2FEC7DC6-A6C1-4692-B5C3-1415B86DE761}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EC7C0AAF-8EC0-491C-B98E-0EC9EBBA21CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{EC7C0AAF-8EC0-491C-B98E-0EC9EBBA21CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EC7C0AAF-8EC0-491C-B98E-0EC9EBBA21CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -518,6 +508,10 @@ Global
 		{AB5D17CE-D813-4DE3-A77A-CDB2FA1CA4A2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AB5D17CE-D813-4DE3-A77A-CDB2FA1CA4A2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AB5D17CE-D813-4DE3-A77A-CDB2FA1CA4A2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{71FB9310-5741-4E99-B817-FA24C0BCA31E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{71FB9310-5741-4E99-B817-FA24C0BCA31E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{71FB9310-5741-4E99-B817-FA24C0BCA31E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{71FB9310-5741-4E99-B817-FA24C0BCA31E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

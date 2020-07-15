@@ -46,7 +46,7 @@ using MultiFormats;
 
 namespace Catalyst.Modules.Network.Dotnetty.P2P.IO.Transport.Channels
 {
-    public class PeerClientChannelFactory : UdpClientChannelFactory
+    public class PeerClientChannelFactory : UdpClientChannelFactory<ProtocolMessage>
     {
         private readonly IScheduler _scheduler;
         private readonly IKeySigner _keySigner;
@@ -74,7 +74,7 @@ namespace Catalyst.Modules.Network.Dotnetty.P2P.IO.Transport.Channels
                         new CorrelationHandler<IPeerMessageCorrelationManager>(_correlationManager),
                         new CorrelatableHandler<IPeerMessageCorrelationManager>(_correlationManager)
                     ),
-                    new ObservableServiceHandler(_scheduler)
+                    new ObservableServiceHandler<ProtocolMessage>(_scheduler)
                 };
             }
         }
@@ -96,12 +96,12 @@ namespace Catalyst.Modules.Network.Dotnetty.P2P.IO.Transport.Channels
         /// <param name="targetAddress">Ignored</param>
         /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Local TLS certificate</param>
-        public override async Task<IObservableChannel> BuildChannelAsync(IEventLoopGroupFactory handlerEventLoopGroupFactory,
+        public override async Task<IObservableChannel<ProtocolMessage>> BuildChannelAsync(IEventLoopGroupFactory handlerEventLoopGroupFactory,
             MultiAddress address,
             X509Certificate2 certificate = null)
         {
             var channel = await BootStrapChannelAsync(handlerEventLoopGroupFactory, address.GetIpAddress(), address.GetPort()).ConfigureAwait(false);
-            return new ObservableChannel(Observable.Never<ProtocolMessage>(), channel);
+            return new ObservableChannel<ProtocolMessage>(Observable.Never<ProtocolMessage>(), channel);
         }
     }
 }

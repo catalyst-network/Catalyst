@@ -52,7 +52,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
         private ICorrelationId _guid;
         private ILogger _logger;
         private MultiAddress _pid;
-        private IUdpServerChannelFactory _udpServerServerChannelFactory;
+        private IUdpServerChannelFactory<ProtocolMessage> _udpServerServerChannelFactory;
         private IPeerDiscovery _peerDiscovery;
         private List<IP2PMessageObserver> _p2PMessageHandlers;
         private EmbeddedObservableChannel _serverChannel;
@@ -69,7 +69,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
             _logger = Substitute.For<ILogger>();
 
             _serverChannel = new EmbeddedObservableChannel($"Server:{CurrentTestName}");
-            _udpServerServerChannelFactory = Substitute.For<IUdpServerChannelFactory>();
+            _udpServerServerChannelFactory = Substitute.For<IUdpServerChannelFactory<ProtocolMessage>>();
 
             _peerSettings = Substitute.For<IPeerSettings>();
             _peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));

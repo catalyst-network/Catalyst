@@ -32,6 +32,7 @@ using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc.IO.Messaging.Correlation;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.EventLoop;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Messaging.Dto;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
 using Catalyst.Modules.Network.Dotnetty.IO.Codecs;
 using Catalyst.Modules.Network.Dotnetty.IO.Handlers;
@@ -45,12 +46,12 @@ using MultiFormats;
 
 namespace Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels
 {
-    public class RpcClientChannelFactory : TcpClientChannelFactory
+    public class RpcClientChannelFactory : TcpClientChannelFactory<IObserverDto<ProtocolMessage>>
     {
         private readonly IKeySigner _keySigner;
         private readonly IRpcMessageCorrelationManager _messageCorrelationCache;
         private readonly IPeerIdValidator _peerIdValidator;
-        private readonly IObservableServiceHandler _observableServiceHandler;
+        private readonly IObservableServiceHandler<IObserverDto<ProtocolMessage>> _observableServiceHandler;
         private readonly SigningContext _signingContext;
 
         /// <summary>
@@ -73,7 +74,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels
             _messageCorrelationCache = messageCorrelationCache;
             _peerIdValidator = peerIdValidator;
             _signingContext = new SigningContext {NetworkType = peerSettings.NetworkType, SignatureType = SignatureType.ProtocolRpc};
-            _observableServiceHandler = new ObservableServiceHandler(observableScheduler);
+            _observableServiceHandler = new ObservableServiceHandler<IObserverDto<ProtocolMessage>>(observableScheduler);
         }
 
         protected override Func<List<IChannelHandler>> HandlerGenerationFunction
@@ -104,7 +105,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels
         /// <param name="targetAddress">Ignored</param>
         /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Local TLS certificate</param>
-        public override async Task<IObservableChannel> BuildChannelAsync(IEventLoopGroupFactory eventLoopGroupFactory,
+        public override async Task<IObservableChannel<IObserverDto<ProtocolMessage>>> BuildChannelAsync(IEventLoopGroupFactory eventLoopGroupFactory,
             MultiAddress address,
             X509Certificate2 certificate = null)
         {
@@ -112,8 +113,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels
 
             var messageStream = _observableServiceHandler.MessageStream;
 
-            return new ObservableChannel(messageStream
-             ?? Observable.Never<ProtocolMessage>(), channel);
+            return new ObservableChannel<IObserverDto<ProtocolMessage>>(messageStream ?? Observable.Never<IObserverDto<ProtocolMessage>>(), channel);
         }
     }
 }

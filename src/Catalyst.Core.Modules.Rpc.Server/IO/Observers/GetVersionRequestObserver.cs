@@ -22,25 +22,25 @@
 #endregion
 
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Lib.Util;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
+using Catalyst.Modules.Network.Dotnetty.Rpc.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
+using DotNetty.Transport.Channels;
 using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
     public sealed class GetVersionRequestObserver
-        : RequestObserverBase<VersionRequest, VersionResponse>,
+        : RpcRequestObserverBase<VersionRequest, VersionResponse>,
             IRpcRequestObserver
     {
         public GetVersionRequestObserver(IPeerSettings peerSettings,
-            IPeerClient peerClient,
             ILogger logger)
-            : base(logger, peerSettings, peerClient) { }
+            : base(logger, peerSettings) { }
 
         /// <summary>
         /// 
@@ -51,10 +51,12 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override VersionResponse HandleRequest(VersionRequest versionRequest,
+            IChannelHandlerContext channelHandlerContext,
             MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(versionRequest, nameof(versionRequest)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(sender, nameof(sender)).NotNull();
 
             Logger.Debug("received message of type VersionRequest");

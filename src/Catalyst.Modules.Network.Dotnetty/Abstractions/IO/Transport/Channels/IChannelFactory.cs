@@ -28,9 +28,9 @@ using MultiFormats;
 
 namespace Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels
 {
-    public interface IChannelFactory
+    public interface IChannelFactory<T>
     {
-        Task<IObservableChannel> BuildChannelAsync(IEventLoopGroupFactory eventLoopGroupFactory,
+        Task<IObservableChannel<T>> BuildChannelAsync(IEventLoopGroupFactory eventLoopGroupFactory,
             MultiAddress address,
             X509Certificate2 certificate = null);
     }

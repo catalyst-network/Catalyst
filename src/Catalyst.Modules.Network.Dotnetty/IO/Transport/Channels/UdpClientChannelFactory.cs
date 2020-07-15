@@ -29,14 +29,14 @@ using MultiFormats;
 
 namespace Catalyst.Modules.Network.Dotnetty.IO.Transport.Channels
 {
-    public abstract class UdpClientChannelFactory : UdpChannelFactoryBase, IUdpClientChannelFactory
+    public abstract class UdpClientChannelFactory<T> : UdpChannelFactoryBase, IUdpClientChannelFactory<T>
     {
         /// <param name="handlerEventLoopGroupFactory"></param>
         /// <param name="targetAddress"></param>
         /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Ignored</param>
         /// <returns></returns>
-        public abstract Task<IObservableChannel> BuildChannelAsync(IEventLoopGroupFactory handlerEventLoopGroupFactory,
+        public abstract Task<IObservableChannel<T>> BuildChannelAsync(IEventLoopGroupFactory handlerEventLoopGroupFactory,
             MultiAddress address,
             X509Certificate2 certificate = null);
     }

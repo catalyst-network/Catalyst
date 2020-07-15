@@ -43,7 +43,7 @@ namespace Catalyst.TestUtils
         }
     }
 
-    public sealed class EmbeddedObservableChannel : IObservableChannel
+    public sealed class EmbeddedObservableChannel : IObservableChannel<ProtocolMessage>
     {
         private readonly TestScheduler _testScheduler;
         private readonly EmbeddedChannel _channel;
@@ -53,7 +53,7 @@ namespace Catalyst.TestUtils
             _testScheduler = new TestScheduler();
             var channelId = channelName.ToChannelId();
 
-            var observableServiceHandler = new ObservableServiceHandler(_testScheduler);
+            var observableServiceHandler = new ObservableServiceHandler<ProtocolMessage>(_testScheduler);
             var embeddedChannel = new EmbeddedChannel(channelId, false, true, observableServiceHandler);
             _channel = embeddedChannel;
             MessageStream = observableServiceHandler.MessageStream;
