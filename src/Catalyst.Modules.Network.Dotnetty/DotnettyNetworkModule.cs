@@ -23,6 +23,7 @@
 
 using Autofac;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Modules.Network.Dotnetty.Abstractions;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.FileTransfer;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.EventLoop;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;

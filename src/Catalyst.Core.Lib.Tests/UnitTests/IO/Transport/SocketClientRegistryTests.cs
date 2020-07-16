@@ -27,7 +27,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reactive.Linq;
-using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Events;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport;
 using Catalyst.Modules.Network.Dotnetty.IO.Transport;

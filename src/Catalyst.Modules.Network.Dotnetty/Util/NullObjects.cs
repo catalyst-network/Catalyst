@@ -24,7 +24,7 @@
 using Catalyst.Modules.Network.Dotnetty.IO.Messaging.Dto;
 using Catalyst.Protocol.Wire;
 
-namespace Catalyst.Core.Lib.Util
+namespace Catalyst.Modules.Network.Dotnetty.Util
 {
     public static partial class NullObjects
     {

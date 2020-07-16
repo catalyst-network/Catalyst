@@ -43,6 +43,7 @@ using Catalyst.Modules.Network.Dotnetty.P2P.IO.Messaging.Broadcast;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Modules.Network.Dotnetty.P2P;
 using Catalyst.Modules.Network.Dotnetty.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.Abstractions;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
 {
