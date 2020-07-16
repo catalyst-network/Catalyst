@@ -39,9 +39,4 @@ namespace Catalyst.Abstractions.P2P
         Task StartAsync();
         Task StartAsync(CancellationToken cancellationToken);
     }
-
-    //public interface IPeerClient : ISocketClient
-    //{
-    //    void SendMessageToPeers(IMessage message, IEnumerable<MultiAddress> peers);
-    //}
 }

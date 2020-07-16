@@ -34,12 +34,4 @@ namespace Catalyst.Abstractions.P2P
         Task StartAsync();
         Task StartAsync(CancellationToken cancellationToken);
     }
-
-    //public interface IPeerService : IObservableMessageStreamer<ProtocolMessage>, ISocket
-    //{
-    //    /// <summary>
-    //    ///     The discovery mechanism for the peer network.
-    //    /// </summary>
-    //    IPeerDiscovery Discovery { get; }
-    //}
 }

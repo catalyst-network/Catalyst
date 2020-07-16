@@ -25,7 +25,7 @@ using System;
 
 namespace Catalyst.Abstractions.IO.Observers
 {
-    public interface IMessageObserver<T> : IObserver<T>
+    public interface IMessageObserver<in T> : IObserver<T>
     {
         void StartObserving(IObservable<T> messageStream);
     }
