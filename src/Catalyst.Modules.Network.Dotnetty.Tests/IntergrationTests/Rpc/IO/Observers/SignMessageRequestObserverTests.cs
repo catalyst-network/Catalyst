@@ -32,10 +32,6 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Core.Modules.Hashing;
-using Catalyst.Core.Modules.KeySigner;
-using Catalyst.Core.Modules.Keystore;
 using Catalyst.Core.Modules.Rpc.Server.IO.Observers;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
@@ -50,8 +46,6 @@ using NUnit.Framework;
 using Google.Protobuf;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Modules.Dfs;
-using System.Security;
-using Catalyst.Core.Lib.Cryptography;
 
 namespace Catalyst.Modules.Network.Dotnetty.Tests.IntegrationTests.Rpc.IO.Observers
 {

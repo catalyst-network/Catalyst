@@ -46,6 +46,7 @@ using Catalyst.Core.Modules.Rpc.Client.IO.Observers;
 using Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels;
 using Catalyst.Modules.Network.Dotnetty.IO.EventLoop;
 using Catalyst.Modules.Network.Dotnetty.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Simulator.Interfaces;
 using Google.Protobuf;
@@ -119,17 +120,16 @@ namespace Catalyst.Simulator.RpcClients
             //_sender = publicKey.BuildPeerIdFromPublicKey(IPAddress.Any, 1026);
         }
 
-        public async Task<bool> ConnectRetryAsync(MultiAddress Addressentifier, int retryAttempts = 5)
+        public async Task<bool> ConnectRetryAsync(MultiAddress address, int retryAttempts = 5)
         {
             var retryCountDown = retryAttempts;
             while (retryCountDown > 0)
             {
-                //todo
-                //var isConnectionSuccessful = await ConnectAsync(peerIdentifier).ConfigureAwait(false);
-                //if (isConnectionSuccessful)
-                //{
-                //    return true;
-                //}
+                var isConnectionSuccessful = await ConnectAsync(address).ConfigureAwait(false);
+                if (isConnectionSuccessful)
+                {
+                    return true;
+                }
 
                 _logger.Error("Connection failed retrying...");
                 if (retryAttempts != 0)

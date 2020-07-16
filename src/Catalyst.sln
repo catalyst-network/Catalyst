@@ -192,7 +192,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Rpc.C
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Rpc.Server.Tests", "Catalyst.Core.Modules.Rpc.Server.Tests\Catalyst.Core.Modules.Rpc.Server.Tests.csproj", "{AB5D17CE-D813-4DE3-A77A-CDB2FA1CA4A2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Modules.Network.Dotnetty.Tests", "Catalyst.Modules.Network.Dotnetty.Tests\Catalyst.Modules.Network.Dotnetty.Tests.csproj", "{71FB9310-5741-4E99-B817-FA24C0BCA31E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Modules.Network.Dotnetty.Tests", "Catalyst.Modules.Network.Dotnetty.Tests\Catalyst.Modules.Network.Dotnetty.Tests.csproj", "{71FB9310-5741-4E99-B817-FA24C0BCA31E}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Simulator", "Catalyst.Simulator\Catalyst.Simulator.csproj", "{1875EC62-3ECD-451E-9215-96BEB6C38D15}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -512,6 +514,10 @@ Global
 		{71FB9310-5741-4E99-B817-FA24C0BCA31E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71FB9310-5741-4E99-B817-FA24C0BCA31E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{71FB9310-5741-4E99-B817-FA24C0BCA31E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1875EC62-3ECD-451E-9215-96BEB6C38D15}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1875EC62-3ECD-451E-9215-96BEB6C38D15}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1875EC62-3ECD-451E-9215-96BEB6C38D15}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1875EC62-3ECD-451E-9215-96BEB6C38D15}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
