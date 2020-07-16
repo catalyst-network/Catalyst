@@ -141,7 +141,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
 
             var observer = new ProtocolMessageObserver<ProtocolMessage>(0, Substitute.For<ILogger>());
 
-            var messageStream = _clientFactory.InheritedHandlers.OfType<ObservableServiceHandler<ProtocolMessage>>().Single()
+            var messageStream = _clientFactory.InheritedHandlers.OfType<ObservableServiceHandler>().Single()
                .MessageStream;
 
             using (messageStream.Subscribe(observer))

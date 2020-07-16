@@ -47,6 +47,7 @@ namespace Catalyst.TestUtils
             var keyRegistry = Substitute.For<IKeyRegistry>();
             var cryptoContext = new FfiWrapper();
             var fakePrivateKey = cryptoContext.GetPrivateKeyFromBytes(TestPrivateKey.FromBase32());
+            keyRegistry.RegistryContainsKey(Arg.Any<KeyRegistryTypes>()).Returns(true);
             keyRegistry.GetItemFromRegistry(KeyRegistryTypes.DefaultKey).Returns(fakePrivateKey);
             keyRegistry.Contains(Arg.Any<byte[]>()).Returns(true);
             return keyRegistry;

@@ -27,6 +27,8 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Reflection;
 using Catalyst.Abstractions.IO.Handlers;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.IO.Messaging.Dto;
 using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 using Serilog;
@@ -37,21 +39,21 @@ namespace Catalyst.Modules.Network.Dotnetty.IO.Handlers
     ///     This handler terminates DotNetty involvement and passes repository messages into rx land,
     ///     by this point all messages should be treated as genuine and sanitised.
     /// </summary>
-    public sealed class ObservableServiceHandler : InboundChannelHandlerBase<ProtocolMessage>, IObservableServiceHandler<ProtocolMessage>
+    public sealed class RpcObservableServiceHandler : InboundChannelHandlerBase<ProtocolMessage>, IObservableServiceHandler<IObserverDto<ProtocolMessage>>
     {
-        private readonly ReplaySubject<ProtocolMessage> _messageSubject;
+        private readonly ReplaySubject<IObserverDto<ProtocolMessage>> _messageSubject;
 
-        public ObservableServiceHandler(IScheduler scheduler = null)
+        public RpcObservableServiceHandler(IScheduler scheduler = null)
             : base(Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType))
         {
             var observableScheduler = scheduler ?? Scheduler.Default;
-            _messageSubject = new ReplaySubject<ProtocolMessage>(1, observableScheduler);
+            _messageSubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1, observableScheduler);
             MessageStream = _messageSubject.AsObservable();
         }
 
         public override bool IsSharable => true;
 
-        public IObservable<ProtocolMessage> MessageStream { get; }
+        public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
 
         public override void ExceptionCaught(IChannelHandlerContext context, Exception e)
         {
@@ -79,7 +81,8 @@ namespace Catalyst.Modules.Network.Dotnetty.IO.Handlers
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage message)
         {
             Logger.Verbose("Received {message}", message);
-            _messageSubject.OnNext(message);
+            var contextAny = new ObserverDto(ctx, message);
+            _messageSubject.OnNext(contextAny);
             ctx.FireChannelRead(message);
         }
     }

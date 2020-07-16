@@ -43,7 +43,7 @@ namespace Catalyst.TestUtils
 
         public TestTcpServerChannelFactory(int backLogValue = 100) : base(backLogValue)
         {
-            _observableServiceHandler = new ObservableServiceHandler<ProtocolMessage>();
+            _observableServiceHandler = new ObservableServiceHandler();
         }
 
         protected override Func<List<IChannelHandler>> HandlerGenerationFunction

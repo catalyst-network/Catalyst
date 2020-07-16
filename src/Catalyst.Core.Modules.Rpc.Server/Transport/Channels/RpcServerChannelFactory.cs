@@ -102,7 +102,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Transport.Channels
             _keySigner = keySigner;
             _peerIdValidator = peerIdValidator;
             _signingContext = new SigningContext {NetworkType = peerSettings.NetworkType, SignatureType = SignatureType.ProtocolRpc};
-            _observableServiceHandler = new ObservableServiceHandler<IObserverDto<ProtocolMessage>>(observableScheduler);
+            _observableServiceHandler = new RpcObservableServiceHandler(observableScheduler);
         }
 
         /// <param name="handlerEventLoopGroupFactory"></param>

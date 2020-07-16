@@ -139,7 +139,7 @@ public async Task
 
             var observer = new ProtocolMessageObserver<ProtocolMessage>(0, Substitute.For<ILogger>());
 
-            var messageStream = _clientFactory.InheritedHandlers.OfType<ObservableServiceHandler<ProtocolMessage>>().Single().MessageStream;
+            var messageStream = _clientFactory.InheritedHandlers.OfType<ObservableServiceHandler>().Single().MessageStream;
 
             using (messageStream.Subscribe(observer))
             {

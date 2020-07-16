@@ -74,7 +74,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels
             _messageCorrelationCache = messageCorrelationCache;
             _peerIdValidator = peerIdValidator;
             _signingContext = new SigningContext {NetworkType = peerSettings.NetworkType, SignatureType = SignatureType.ProtocolRpc};
-            _observableServiceHandler = new ObservableServiceHandler<IObserverDto<ProtocolMessage>>(observableScheduler);
+            _observableServiceHandler = new RpcObservableServiceHandler(observableScheduler);
         }
 
         protected override Func<List<IChannelHandler>> HandlerGenerationFunction

@@ -50,6 +50,8 @@ using NUnit.Framework;
 using Google.Protobuf;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Modules.Dfs;
+using System.Security;
+using Catalyst.Core.Lib.Cryptography;
 
 namespace Catalyst.Modules.Network.Dotnetty.Tests.IntegrationTests.Rpc.IO.Observers
 {
@@ -77,16 +79,17 @@ namespace Catalyst.Modules.Network.Dotnetty.Tests.IntegrationTests.Rpc.IO.Observ
         {
             Setup(TestContext.CurrentContext);
             _testScheduler = new TestScheduler();
-            ContainerProvider.ContainerBuilder.RegisterInstance(TestKeyRegistry.MockKeyRegistry()).As<IKeyRegistry>();
-            ContainerProvider.ContainerBuilder.RegisterModule(new KeystoreModule());
-            ContainerProvider.ContainerBuilder.RegisterModule(new KeySignerModule());
-            ContainerProvider.ContainerBuilder.RegisterModule(new BulletProofsModule());
-            ContainerProvider.ContainerBuilder.RegisterModule(new HashingModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new DfsModule());
             ContainerProvider.ConfigureContainerBuilder();
 
             _scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName);
             _keySigner = ContainerProvider.Container.Resolve<IKeySigner>();
+            var keyService = ContainerProvider.Container.Resolve<IKeyStoreService>();
+
+            keyService.SetPassphraseAsync(TestPasswordReader.BuildSecureStringPassword("test")).ConfigureAwait(false).GetAwaiter().GetResult();
+            keyService.CreateAsync("self", "ed25519", 0).ConfigureAwait(false).GetAwaiter().GetResult();
+
+
             _logger = Substitute.For<ILogger>();
             _fakeContext = Substitute.For<IChannelHandlerContext>();
             var fakeChannel = Substitute.For<IChannel>();

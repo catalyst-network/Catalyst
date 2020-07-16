@@ -98,7 +98,7 @@ namespace Catalyst.Modules.Network.Dotnetty.P2P.IO.Transport.Channels
                             new CorrelatableHandler<IPeerMessageCorrelationManager>(_messageCorrelationManager)
                         ),
                         new BroadcastHandler(_broadcastManager),
-                        new ObservableServiceHandler<ProtocolMessage>(_scheduler),
+                        new ObservableServiceHandler(_scheduler),
                         new BroadcastCleanupHandler(_broadcastManager)
                     };
                 };

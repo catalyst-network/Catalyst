@@ -109,7 +109,7 @@ namespace Catalyst.Modules.Network.Dotnetty.Tests.UnitTests.Rpc.IO.Transport.Cha
             handlers[6].Should().BeOfType<AddressedEnvelopeToIMessageEncoder>();
             handlers[7].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
             handlers[8].Should().BeOfType<CombinedChannelDuplexHandler<IChannelHandler, IChannelHandler>>();
-            handlers[9].Should().BeOfType<ObservableServiceHandler<IObserverDto<ProtocolMessage>>>();
+            handlers[9].Should().BeOfType<RpcObservableServiceHandler>();
         }
 
         [Test]
@@ -132,7 +132,7 @@ namespace Catalyst.Modules.Network.Dotnetty.Tests.UnitTests.Rpc.IO.Transport.Cha
 
             var observer = new ProtocolMessageObserver<IObserverDto<ProtocolMessage>>(0, Substitute.For<ILogger>());
 
-            var messageStream = _factory.InheritedHandlers.OfType<ObservableServiceHandler<IObserverDto<ProtocolMessage>>>().Single().MessageStream;
+            var messageStream = _factory.InheritedHandlers.OfType<RpcObservableServiceHandler>().Single().MessageStream;
 
             using (messageStream.Subscribe(observer))
             {

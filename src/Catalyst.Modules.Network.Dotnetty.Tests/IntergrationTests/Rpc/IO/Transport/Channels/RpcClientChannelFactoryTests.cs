@@ -148,7 +148,7 @@ namespace Catalyst.Modules.Network.Dotnetty.Tests.IntegrationTests.Rpc.IO.Transp
 
             var observer = new ProtocolMessageObserver<IObserverDto<ProtocolMessage>>(0, Substitute.For<ILogger>());
 
-            var messageStream = _serverFactory.InheritedHandlers.OfType<ObservableServiceHandler<IObserverDto<ProtocolMessage>>>().Single().MessageStream;
+            var messageStream = _serverFactory.InheritedHandlers.OfType<RpcObservableServiceHandler>().Single().MessageStream;
 
             using (messageStream.Subscribe(observer))
             {
