@@ -41,6 +41,7 @@ using Microsoft.Extensions.Primitives;
 using Serilog;
 using MultiFormats;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.P2P.IO.Messaging.Broadcast;
+using Catalyst.Modules.Network.Dotnetty.Abstractions;
 
 namespace Catalyst.Modules.Network.Dotnetty.P2P.IO.Messaging.Broadcast
 {
