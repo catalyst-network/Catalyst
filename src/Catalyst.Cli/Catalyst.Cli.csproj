@@ -28,6 +28,5 @@
         <ProjectReference Include="..\Catalyst.Core.Modules.Dfs\Catalyst.Core.Modules.Dfs.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Modules.KeySigner\Catalyst.Core.Modules.KeySigner.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Modules.Keystore\Catalyst.Core.Modules.Keystore.csproj" />
-        <ProjectReference Include="..\Catalyst.Core.Modules.Rpc.Client\Catalyst.Core.Modules.Rpc.Client.csproj" />
     </ItemGroup>
 </Project>

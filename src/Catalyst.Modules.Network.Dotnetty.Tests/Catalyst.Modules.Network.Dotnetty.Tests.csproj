@@ -17,7 +17,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Catalyst.Core.Lib.Tests\Catalyst.Core.Lib.Tests.csproj" />
-    <ProjectReference Include="..\Catalyst.Core.Modules.Rpc.Client\Catalyst.Core.Modules.Rpc.Client.csproj" />
     <ProjectReference Include="..\Catalyst.Modules.Network.Dotnetty\Catalyst.Modules.Network.Dotnetty.csproj" />
     <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
   </ItemGroup>
