@@ -21,12 +21,17 @@
 
 #endregion
 
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport;
 using Catalyst.Protocol.Wire;
+using MultiFormats;
+using System.Threading;
+using System.Threading.Tasks;
 
-namespace Catalyst.Core.Lib.Util
+namespace Catalyst.Modules.Network.Dotnetty.Abstractions
 {
-    public static partial class NullObjects
+    public interface IDotnettyUdpClient : ISocketClient
     {
-        public static readonly ProtocolMessage ProtocolMessage = new ProtocolMessage();
+        Task StartAsync(CancellationToken cancellationToken);
+        Task SendMessageAsync(ProtocolMessage message, MultiAddress recipient);
     }
 }

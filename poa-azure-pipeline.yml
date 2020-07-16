@@ -68,7 +68,7 @@ steps:
   - task: DotNetCoreCLI@2
     displayName: 'Build solution'
     inputs:
-      projects: 'src/**/*.csproj'
+      projects: 'src/Catalyst.sln'
       arguments: '--configuration $(BuildConfiguration)'
       failOnStandardError: 'true'
 
@@ -80,7 +80,7 @@ steps:
     displayName: 'Run unit tests'
     inputs:
       command: test
-      projects: 'src/*[Tt]ests/*.csproj'
+      projects: 'src/Catalyst.sln'
       arguments: '--filter TestType!=IntegrationTest --configuration $(BuildConfiguration)'
       failOnStandardError: 'true'
     timeoutInMinutes: 20
@@ -90,7 +90,7 @@ steps:
     displayName: 'Run unit tests with coverage'
     inputs:
       command: test
-      projects: 'src/*[Tt]ests/*.csproj'
+      projects: 'src/Catalyst.sln'
       arguments: '--filter TestType!=IntegrationTest --configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:UseSourceLink=true /p:Include="\"[Catalyst.Core.Lib*]Catalyst.Core.Lib*\"" /p:Threshold=0 /p:ThresholdType=line /p:ThresholdStat=total'
       failOnStandardError: 'true'
     timeoutInMinutes: 20
@@ -100,7 +100,7 @@ steps:
     displayName: 'Run integration tests'
     inputs:
       command: test
-      projects: 'src/*[Tt]ests/*.csproj'
+      projects: 'src/Catalyst.sln'
       arguments: '--filter TestType=IntegrationTest --configuration $(BuildConfiguration)'
       failOnStandardError: 'true'
     timeoutInMinutes: 20

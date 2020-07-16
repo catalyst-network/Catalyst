@@ -23,62 +23,18 @@
 
 using System;
 using System.Collections.Generic;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.EventLoop;
-using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport;
-using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.Abstractions;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.P2P.IO.Messaging.Broadcast;
-using Catalyst.Modules.Network.Dotnetty.IO.Messaging.Dto;
-using Catalyst.Modules.Network.Dotnetty.IO.Transport;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using MultiFormats;
-using Serilog;
 
 namespace Catalyst.Modules.Network.Dotnetty.P2P
 {
-    public interface IDotnettyUdpClient : ISocketClient
-    {
-        Task StartAsync(CancellationToken cancellationToken);
-        Task SendMessageAsync(ProtocolMessage message, MultiAddress recipient);
-    }
-
-    public class DotnettyUdpClient : UdpClient<ProtocolMessage>, IDotnettyUdpClient
-    {
-        private readonly IPeerSettings _peerSettings;
-
-        public DotnettyUdpClient(IUdpClientChannelFactory<ProtocolMessage> clientChannelFactory,
-            IUdpClientEventLoopGroupFactory eventLoopGroupFactory,
-            IPeerSettings peerSettings)
-            : base(clientChannelFactory,
-                Log.Logger.ForContext(MethodBase.GetCurrentMethod().DeclaringType),
-                eventLoopGroupFactory)
-        {
-            _peerSettings = peerSettings;
-        }
-
-        public override async Task StartAsync()
-        {
-            await StartAsync(CancellationToken.None).ConfigureAwait(false);
-        }
-
-        public async Task StartAsync(CancellationToken cancellationToken)
-        {
-            var observableChannel = await ChannelFactory.BuildChannelAsync(EventLoopGroupFactory, _peerSettings.Address).ConfigureAwait(false);
-            Channel = observableChannel.Channel;
-        }
-
-        public Task SendMessageAsync(ProtocolMessage message, MultiAddress recipient)
-        {
-            SendMessage(new MessageDto(message, recipient));
-            return Task.CompletedTask;
-        }
-    }
-
     public sealed class DotnettyPeerClient : IPeerClient
     {
         private bool _disposed;
@@ -101,12 +57,12 @@ namespace Catalyst.Modules.Network.Dotnetty.P2P
 
         public async Task StartAsync()
         {
-            await StartAsync(CancellationToken.None);
+            await StartAsync(CancellationToken.None).ConfigureAwait(false);
         }
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
-            await _dotnettyUdpClient.StartAsync(cancellationToken);
+            await _dotnettyUdpClient.StartAsync(cancellationToken).ConfigureAwait(false);
         }
 
         public async Task SendMessageToPeersAsync(IMessage message, IEnumerable<MultiAddress> peers)
@@ -114,7 +70,7 @@ namespace Catalyst.Modules.Network.Dotnetty.P2P
             var protocolMessage = message.ToProtocolMessage(_peerSettings.Address);
             foreach (var peer in peers)
             {
-                await SendMessageAsync(protocolMessage, peer);
+                await SendMessageAsync(protocolMessage, peer).ConfigureAwait(false);
             }
         }
 
@@ -143,7 +99,6 @@ namespace Catalyst.Modules.Network.Dotnetty.P2P
         public void Dispose()
         {
             Dispose(true);
-            GC.SuppressFinalize(this);
         }
     }
 }

@@ -21,12 +21,13 @@
 
 #endregion
 
+using Catalyst.Modules.Network.Dotnetty.IO.Messaging.Dto;
 using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Core.Lib.Util
 {
     public static partial class NullObjects
     {
-        public static readonly ProtocolMessage ProtocolMessage = new ProtocolMessage();
+        public static readonly ObserverDto ObserverDto = new ObserverDto(null, new ProtocolMessage());
     }
 }

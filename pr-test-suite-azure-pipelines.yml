@@ -53,7 +53,7 @@ steps:
   - task: DotNetCoreCLI@2
     displayName: 'Build solution'
     inputs:
-      projects: 'src/**/*.csproj'
+      projects: 'src/Catalyst.sln'
       arguments: '--configuration $(BuildConfiguration)'
       failOnStandardError: 'true'
 
@@ -65,7 +65,7 @@ steps:
     displayName: 'Run unit tests'
     inputs:
       command: test
-      projects: 'src/*[Tt]ests/*.csproj'
+      projects: 'src/Catalyst.sln'
       arguments: '--filter TestCategory!=IntegrationTest --configuration $(BuildConfiguration)'
       failOnStandardError: 'true'
     timeoutInMinutes: 20
@@ -75,7 +75,7 @@ steps:
     displayName: 'Run unit tests with coverage'
     inputs:
       command: test
-      projects: 'src/*[Tt]ests/*.csproj'
+      projects: 'src/Catalyst.sln'
       arguments: '--filter TestCategory!=IntegrationTest --configuration $(BuildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:UseSourceLink=true /p:Exclude="\"[Catalyst.Tools*]Catalyst.Tools*[Catalyst.Protocol*]Catalyst.Protocol*,[Catalyst.Simulator*]Catalyst.Simulator*,[Catalyst.TestUtils*]Catalyst.TestUtils*\"" /p:Include="\"[Catalyst.Core.*]Catalyst.Core.*,[Catalyst.Modules.*]Catalyst.Modules.*\"" /p:Threshold=0 /p:ThresholdType=line /p:ThresholdStat=total'
       failOnStandardError: 'true'
     timeoutInMinutes: 20
@@ -85,7 +85,7 @@ steps:
     displayName: 'Run integration tests'
     inputs:
       command: test
-      projects: 'src/*[Tt]ests/*.csproj'
+      projects: 'src/Catalyst.sln'
       arguments: '--filter TestCategory=IntegrationTest --configuration $(BuildConfiguration)'
       failOnStandardError: 'true'
     timeoutInMinutes: 20

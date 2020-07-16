@@ -62,7 +62,11 @@ namespace Catalyst.Cli.CommandTypes
         {
             get
             {
-                if (_recipientAddress != null) return _recipientAddress;
+                if (_recipientAddress != null)
+                {
+                    return _recipientAddress;
+                }
+
                 var rpcClientConfig = CommandContext.GetNodeConfig(Options.Node);
                 _recipientAddress = rpcClientConfig.Address;
                 return _recipientAddress;
