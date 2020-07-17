@@ -7,8 +7,11 @@
 
 The following interfaces will be tested or used for testing:
  - Catalyst Node
+ 
  - Catalyst Dashboard
+ 
  - Truffle - HDWalletProvider
+ 
  > The tests should be conducted on both local and remote computers.
 
 
