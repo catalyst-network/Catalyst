@@ -1,9 +1,9 @@
 # Catalyst Test Plan
 > This Test Plan describes the integration and system tests that will be conducted on Catalyst following integration of the subsystems and components identified.
 
->It is assumed that unit testing already provided thorough black box testing, extensive coverage of source code, and testing of all module interfaces.
+> It is assumed that unit testing already provided thorough black box testing, extensive coverage of source code, and testing of all module interfaces.
 
->The testing will revolve around Catalyst features in a live network, performance tests are currently excluded from this test plan.
+> The testing will revolve around Catalyst features in a live network, performance tests are currently excluded from this test plan.
 
 The following interfaces will be tested or used for testing:
  - Catalyst Node
