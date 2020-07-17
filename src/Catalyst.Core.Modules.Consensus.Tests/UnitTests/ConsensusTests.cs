@@ -51,8 +51,6 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
         private IDeltaHub _deltaHub;
         private TestCycleEventProvider _cycleEventProvider;
         private Consensus _consensus;
-        private SyncState _syncState;
-        private ILedger _ledger;
 
         [SetUp]
         public void Init()
@@ -66,8 +64,6 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
             _deltaHub = Substitute.For<IDeltaHub>();
             var deltaHashProvider = Substitute.For<IDeltaHashProvider>();
             var logger = Substitute.For<ILogger>();
-            _syncState = new SyncState { IsSynchronized = true };
-            _ledger = Substitute.For<ILedger>();
             _consensus = new Consensus(
                 _deltaBuilder,
                 _deltaVoter,

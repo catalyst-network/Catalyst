@@ -428,8 +428,8 @@ namespace Lib.P2P.Routing
                .Select(p => p.TryToPeer(out var peer) ? peer : (Peer)null)
                .Where(p => p != null)
                .Where(p => p == remotePeer)
-               .Where(p => p.Addresses.Any());
-               //.Where(p => SwarmService.IsAllowed(p));
+               .Where(p => p.Addresses.Any())
+               .Where(p => SwarmService.IsAllowed(p));
             
             foreach (var provider in providers)
             {

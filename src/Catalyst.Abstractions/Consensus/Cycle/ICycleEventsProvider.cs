@@ -30,7 +30,7 @@ namespace Catalyst.Abstractions.Consensus.Cycle
     /// Use this service to get notification about the different events happening during the
     /// delta production cycles.
     /// </summary>
-    public interface ICycleEventsProvider
+    public interface ICycleEventsProvider : IDisposable
     {
         /// <summary>
         /// Configuration object holding the duration of the different phases in the cycle.
