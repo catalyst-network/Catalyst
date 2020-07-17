@@ -6,14 +6,13 @@
 > The testing will revolve around Catalyst features in a live network, performance tests are currently excluded from this test plan.
 
 The following interfaces will be tested or used for testing:
-- Catalyst Node
+ - Catalyst Node
  
-- Catalyst Dashboard
+ - Catalyst Dashboard
  
-- Truffle - HDWalletProvider
+ - Truffle - HDWalletProvider
  
 > The tests should be conducted on both local and remote computers.
-
 
 ## Test Cases
 
@@ -40,8 +39,8 @@ You should eventually receive transactions that contain plain transactions as we
 
 ### Web3
 The Web3 controller has two main functions, an interface to both the DFS and EVM as well as custom controllers created by the node operator.
-To test the DFS and custom controllers this can be done through the swagger endpoint at: http://[IPAddress]:5005/swagger/index.html
+To test the DFS and custom controllers this can be done through the swagger endpoint at: `http://[IPAddress]:5005/swagger/index.html`
 
-> To test the EVM json rpc this can be tested at: http://[IPAddress]:5005/api/eth/request
+> To test the EVM json rpc this can be tested at: `http://[IPAddress]:5005/api/eth/request`
 
 > For a list of eth json rpc calls you can use the following site: https://infura.io/docs/ethereum/json-rpc/eth-call
