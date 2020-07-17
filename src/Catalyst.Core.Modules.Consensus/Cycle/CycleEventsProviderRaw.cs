@@ -38,7 +38,7 @@ using Serilog;
 namespace Catalyst.Core.Modules.Consensus
 {
     /// <inheritdoc />
-    public class CycleEventsProviderRaw : ICycleEventsProvider
+    public class CycleEventsProviderRaw : ICycleEventsProvider, IDisposable
     {
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly IDateTimeProvider _dateTimeProvider;
