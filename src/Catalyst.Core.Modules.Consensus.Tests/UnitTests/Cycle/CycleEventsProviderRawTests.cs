@@ -73,8 +73,6 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
                 (PhaseName.Synchronisation, PhaseStatus.Collecting)
             };
 
-            var dateTime = DateTime.MinValue.ToUniversalTime();
-
             //Start the event cycle.
             await _cycleEventsProvider.StartAsync();
 

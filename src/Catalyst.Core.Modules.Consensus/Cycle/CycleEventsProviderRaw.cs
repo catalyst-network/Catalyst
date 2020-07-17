@@ -234,6 +234,8 @@ namespace Catalyst.Core.Modules.Consensus
             {
                 Close();
             }
+
+            _cancellationTokenSource.Dispose();
         }
 
         /// <inheritdoc />
