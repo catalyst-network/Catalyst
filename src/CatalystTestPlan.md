@@ -6,11 +6,11 @@
 > The testing will revolve around Catalyst features in a live network, performance tests are currently excluded from this test plan.
 
 The following interfaces will be tested or used for testing:
- - Catalyst Node
+-  Catalyst Node
  
- - Catalyst Dashboard
+-  Catalyst Dashboard
  
- - Truffle - HDWalletProvider
+-  Truffle - HDWalletProvider
  
 > The tests should be conducted on both local and remote computers.
 
