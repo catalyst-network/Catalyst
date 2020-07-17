@@ -43,7 +43,6 @@ using Catalyst.Core.Modules.Keystore;
 using Catalyst.Core.Modules.Kvm;
 using Catalyst.Core.Modules.Ledger;
 using Catalyst.Core.Modules.Mempool;
-using Catalyst.Core.Modules.Rpc.Server;
 using Catalyst.Core.Modules.Sync;
 using Catalyst.Modules.Network.LibP2P;
 using Catalyst.Protocol.Network;
@@ -98,7 +97,6 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.Config
             containerBuilder.RegisterModule(new DfsModule());
             containerBuilder.RegisterModule(new KvmModule());
             containerBuilder.RegisterModule(new LedgerModule());
-            containerBuilder.RegisterModule(new RpcServerModule());
             containerBuilder.RegisterModule(new MempoolModule());
             containerBuilder.RegisterModule(new KeystoreModule());
             containerBuilder.RegisterModule(new BulletProofsModule());

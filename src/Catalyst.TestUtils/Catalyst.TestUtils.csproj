@@ -32,6 +32,7 @@
         <ProjectReference Include="..\Catalyst.Core.Modules.Ledger\Catalyst.Core.Modules.Ledger.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Modules.P2P.Discovery.Hastings\Catalyst.Core.Modules.P2P.Discovery.Hastings.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Modules.Web3\Catalyst.Core.Modules.Web3.csproj" />
+        <ProjectReference Include="..\Catalyst.Modules.Network.Dotnetty\Catalyst.Modules.Network.Dotnetty.csproj" />
         <ProjectReference Include="..\Catalyst.Modules.POA.Consensus\Catalyst.Modules.POA.Consensus.csproj" />
         <ProjectReference Include="..\Catalyst.Modules.POA.P2P.Discovery.Consortium\Catalyst.Modules.POA.P2P.Discovery.Consortium.csproj" />
         <ProjectReference Include="..\Catalyst.Node.POA.CE\Catalyst.Node.POA.CE.csproj" />

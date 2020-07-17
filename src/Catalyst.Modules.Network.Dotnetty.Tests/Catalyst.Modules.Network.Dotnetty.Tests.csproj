@@ -21,4 +21,9 @@
     <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="UnitTests\Rpc\IO\Observers\" />
+    <Folder Include="UnitTests\Rpc\IO\Transport\Channels\" />
+  </ItemGroup>
+
 </Project>

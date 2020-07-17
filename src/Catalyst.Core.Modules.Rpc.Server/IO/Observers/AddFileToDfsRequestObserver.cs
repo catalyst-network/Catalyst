@@ -29,7 +29,6 @@ using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Enumerator;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.Options;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;

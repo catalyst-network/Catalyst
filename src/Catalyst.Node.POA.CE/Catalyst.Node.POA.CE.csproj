@@ -1,9 +1,9 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>netcoreapp3.1</TargetFramework>
-        <Title>Catalyst CLI</Title>
+        <Title>Catalyst POA Node</Title>
         <Authors>James Kirby (nshcore@protonmail.com)</Authors>
-        <PackageDescription>CLI tool to interact with Catalyst Nodes via RPC</PackageDescription>
+        <PackageDescription>Catalyst POA Node</PackageDescription>
         <AssemblyCopyrightAttribute>Copyright © 2019 AtlasCity.io</AssemblyCopyrightAttribute>
         <OutputType>Exe</OutputType>
         <SignAssembly>true</SignAssembly>
