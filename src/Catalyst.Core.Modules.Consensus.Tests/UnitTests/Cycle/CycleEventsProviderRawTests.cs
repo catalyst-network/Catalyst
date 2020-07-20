@@ -21,12 +21,184 @@
 
 #endregion
 
+using Catalyst.Abstractions.Consensus.Cycle;
+using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Core.Modules.Consensus.Cycle;
+using FluentAssertions;
+using NSubstitute;
+using NUnit.Framework;
+using Serilog;
 using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
 {
+    [TestFixture]
     public sealed class CycleEventsProviderRawTests
     {
-        //Add unit tests for new CycleEventProvider.
+        private ICycleEventsProvider _cycleEventsProvider;
+        private ManualResetEventSlim _manualResetEventSlim;
+
+        [SetUp]
+        public void Init()
+        {
+            _cycleEventsProvider = new CycleEventsProviderRaw(CycleConfiguration.Default, new DateTimeProvider(), Substitute.For<IDeltaHashProvider>(), Substitute.For<ILogger>());
+
+            //Block until we receive a completed event from the PhaseChanges observable.
+            _manualResetEventSlim = new ManualResetEventSlim();
+        }
+
+        [TearDown]
+        public void TearDown()
+        {
+            _cycleEventsProvider.Dispose();
+            _manualResetEventSlim.Dispose();
+        }
+
+        [Test]
+        public async Task Should_Produce_Phases_In_Order()
+        {
+            //The cycle event phases in order.
+            var phasesInOrder = new List<(PhaseName, PhaseStatus)> {
+                (PhaseName.Construction, PhaseStatus.Producing),
+                (PhaseName.Construction, PhaseStatus.Collecting),
+                (PhaseName.Campaigning, PhaseStatus.Producing),
+                (PhaseName.Campaigning, PhaseStatus.Collecting),
+                (PhaseName.Voting, PhaseStatus.Producing),
+                (PhaseName.Voting, PhaseStatus.Collecting),
+                (PhaseName.Synchronisation, PhaseStatus.Producing),
+                (PhaseName.Synchronisation, PhaseStatus.Collecting)
+            };
+
+            //Start the event cycle.
+            await _cycleEventsProvider.StartAsync();
+
+            var fakeObserver = Substitute.For<IObserver<IPhase>>();
+
+            //Listen for new phase events.
+            var phaseChangesDisposable = _cycleEventsProvider.PhaseChanges.Subscribe(fakeObserver);
+
+            Task.Delay(_cycleEventsProvider.Configuration.CycleDuration * 2).Wait();
+
+            //Check the phase events are in the received and in correct order
+            Received.InOrder(() =>
+            {
+                var phases = fakeObserver.ReceivedCalls().Select(c => c.GetArguments()[0]).Cast<IPhase>().ToList();
+                for (var i = 0; i < phases.Count(); i++)
+                {
+                    var phaseOrderIndex = i % phasesInOrder.Count();
+                    phases[i].Name.Should().Be(phasesInOrder[phaseOrderIndex].Item1);
+                    phases[i].Status.Should().Be(phasesInOrder[phaseOrderIndex].Item2);
+                }
+            });
+
+            phaseChangesDisposable.Dispose();
+        }
+
+        [Test]
+        public async Task StartAsync_Should_Start_CycleEventsProvider()
+        {
+            //Should be populated to a construction phase with a producing status.
+            IPhase phase = null;
+
+            //Listen for new phase events.
+            var phaseChangesDisposable = _cycleEventsProvider.PhaseChanges.Subscribe(currentPhase =>
+            {
+                phase = currentPhase;
+                _manualResetEventSlim.Set();
+            });
+
+            //Start the event cycle.
+            await _cycleEventsProvider.StartAsync();
+
+
+            //Wait for PhaseChanges to complete else fail if it times out.
+            if (!_manualResetEventSlim.Wait(CycleConfiguration.Default.CycleDuration))
+            {
+                Assert.Fail();
+            }
+
+            //PhaseStatus should be a construction phase with a producing status.
+            phase.Name.Should().Be(PhaseName.Construction);
+            phase.Status.Should().Be(PhaseStatus.Producing);
+
+            phaseChangesDisposable.Dispose();
+        }
+
+        [Test]
+        public async Task Close_Should_Stop_CycleEventsProvider()
+        {
+            //Listen for completed event
+            var phaseChangesDisposable = _cycleEventsProvider.PhaseChanges.Subscribe(currentPhase => { }, () =>
+            {
+                _manualResetEventSlim.Set();
+            });
+
+            //Start the event cycle.
+            await _cycleEventsProvider.StartAsync();
+
+            //Stop the event cycle provider.
+            _cycleEventsProvider.Close();
+
+            //Wait for PhaseChanges to complete else fail if it times out.
+            if (!_manualResetEventSlim.Wait(CycleConfiguration.Default.CycleDuration))
+            {
+                Assert.Fail();
+            }
+
+            phaseChangesDisposable.Dispose();
+        }
+
+        [Test]
+        public void PhaseChanges_Should_Be_Synchronised_Across_Instances()
+        {
+            //Offset to start the second event cycle provider at.
+            var secondProviderStartOffset = CycleConfiguration.Default.CycleDuration.Divide(3);
+
+            //Create a second event cycle provider
+            using var cycleEventsProvider2 = new CycleEventsProviderRaw(CycleConfiguration.Default, new DateTimeProvider(), Substitute.For<IDeltaHashProvider>(), Substitute.For<ILogger>());
+
+            //Create event observers for the cycle event providers
+            var fakeObserver1 = Substitute.For<IObserver<IPhase>>();
+            var fakeObserver2 = Substitute.For<IObserver<IPhase>>();
+
+            //Listen for new phase events.
+            var phaseChangesDisposable1 = _cycleEventsProvider.PhaseChanges.Subscribe(fakeObserver1);
+            var phaseChangesDisposable2 = cycleEventsProvider2.PhaseChanges.Subscribe(fakeObserver2);
+
+            //Start first event provider.
+            _cycleEventsProvider.StartAsync();
+
+            //Delay the second event provider.
+            Task.Delay(secondProviderStartOffset).Wait();
+
+            //Start second event provider.
+            cycleEventsProvider2.StartAsync();
+
+            //Order all the received phases and only compare the same phases.
+            Received.InOrder(() =>
+            {
+                var cycleEventsProviderPhases1 = fakeObserver1.ReceivedCalls().Select(c => c.GetArguments()[0]).Cast<IPhase>().ToList();
+                var cycleEventsProviderPhases2 = fakeObserver2.ReceivedCalls().Select(c => c.GetArguments()[0]).Cast<IPhase>().ToList();
+
+                var callsOffset = cycleEventsProviderPhases1.Count() - cycleEventsProviderPhases2.Count();
+
+                for (var i = 0; i < cycleEventsProviderPhases2.Count(); i++)
+                {
+                    var phase1 = cycleEventsProviderPhases1[i + callsOffset];
+                    var phase2 = cycleEventsProviderPhases2[i];
+
+                    phase1.Name.Should().Be(phase2.Name);
+                    phase1.Status.Should().Be(phase2.Status);
+                    (phase1.UtcStartTime - phase2.UtcStartTime).TotalMilliseconds.Should().BeApproximately(0, 0.0001d, "phases should be in sync");
+                }
+            });
+
+            phaseChangesDisposable1.Dispose();
+            phaseChangesDisposable2.Dispose();
+        }
     }
 }
