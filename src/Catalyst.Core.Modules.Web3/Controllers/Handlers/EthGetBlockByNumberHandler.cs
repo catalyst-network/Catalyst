@@ -43,9 +43,9 @@ using Address = Nethermind.Core.Address;
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
     [EthWeb3RequestHandler("eth", "getBlockByNumber")]
-    public class EthGetBlockByNumberHandler : EthWeb3RequestHandler<BlockParameter, BlockForRpc>
+    public class EthGetBlockByNumberHandler : EthWeb3RequestHandler<BlockParameter, bool, BlockForRpc>
     {
-        protected override BlockForRpc Handle(BlockParameter block, IWeb3EthApi api)
+        protected override BlockForRpc Handle(BlockParameter block, bool includeTx, IWeb3EthApi api)
         {
             Cid deltaHash;
             long blockNumber;
@@ -80,10 +80,10 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
             }
 
             DeltaWithCid deltaWithCid = api.GetDeltaWithCid(deltaHash);
-            return BuildBlock(deltaWithCid, blockNumber, api.HashProvider);
+            return BuildBlock(deltaWithCid, blockNumber, api.HashProvider, includeTx);
         }
 
-        private static BlockForRpc BuildBlock(DeltaWithCid deltaWithCid, long blockNumber, IHashProvider hashProvider)
+        private static BlockForRpc BuildBlock(DeltaWithCid deltaWithCid, long blockNumber, IHashProvider hashProvider, bool includeTx)
         {
             var (delta, deltaHash) = deltaWithCid;
 
@@ -119,7 +119,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
                 MixHash = Keccak.Zero,
                 Nonce = nonce,
                 Uncles = new Keccak[0],
-                Transactions = delta.PublicEntries.Select(x => x.GetHash(hashProvider))
+                Transactions = includeTx? delta.PublicEntries.Select(x => x.GetHash(hashProvider)) : new Keccak[0] 
             };
             blockForRpc.TotalDifficulty = (UInt256) ((long) blockForRpc.Difficulty * (blockNumber + 1));
             blockForRpc.Sha3Uncles = Keccak.OfAnEmptySequenceRlp;
