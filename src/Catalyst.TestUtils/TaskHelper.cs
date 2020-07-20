@@ -83,26 +83,26 @@ namespace Catalyst.TestUtils
     {
         public TaskHelperTests() { }
 
-        //[Test]
-        //public async Task WaitFor_Should_Throw_Descriptive_Message_After_Timeout()
-        //{
-        //    var attempts = 0;
+        [Test]
+        public async Task WaitFor_Should_Throw_Descriptive_Message_After_Timeout()
+        {
+            var attempts = 0;
 
-        //    var waitDelay = TimeSpan.FromMilliseconds(100);
-        //    var timeout = TimeSpan.FromMilliseconds(500);
+            var waitDelay = TimeSpan.FromMilliseconds(100);
+            var timeout = TimeSpan.FromMilliseconds(500);
 
-        //    var watch = new Stopwatch();
-        //    watch.Start();
-        //    var success = await TaskHelper.WaitForAsync(
-        //            () => IncreaseAndCheckIfAboveLimit(ref attempts,
-        //                (int) (timeout.TotalMilliseconds / waitDelay.TotalMilliseconds) + 1), timeout)
-        //       .ConfigureAwait(false);
-        //    watch.Stop();
+            var watch = new Stopwatch();
+            watch.Start();
+            var success = await TaskHelper.WaitForAsync(
+                    () => IncreaseAndCheckIfAboveLimit(ref attempts,
+                        (int) (timeout.TotalMilliseconds / waitDelay.TotalMilliseconds) + 1), timeout)
+               .ConfigureAwait(false);
+            watch.Stop();
 
-        //    success.Should().BeFalse();
-        //    attempts.Should().BeGreaterOrEqualTo(5);
-        //    watch.Elapsed.Should().BeGreaterOrEqualTo(timeout);
-        //}
+            success.Should().BeFalse();
+            attempts.Should().BeGreaterOrEqualTo(5);
+            watch.Elapsed.Should().BeGreaterOrEqualTo(timeout);
+        }
 
         private bool IncreaseAndCheckIfAboveLimit(ref int count, int limit)
         {
@@ -129,26 +129,26 @@ namespace Catalyst.TestUtils
             watch.Elapsed.Should().BeLessOrEqualTo(timeout.Multiply(2));
         }
 
-        //[Test]
-        //public void WaitForAsyncOrThrow_Should_Throw_Descriptive_Message_After_Timeout()
-        //{
-        //    var attempts = 0;
+        [Test]
+        public void WaitForAsyncOrThrow_Should_Throw_Descriptive_Message_After_Timeout()
+        {
+            var attempts = 0;
 
-        //    var waitDelay = TimeSpan.FromMilliseconds(50);
-        //    var timeout = TimeSpan.FromMilliseconds(500);
+            var waitDelay = TimeSpan.FromMilliseconds(50);
+            var timeout = TimeSpan.FromMilliseconds(500);
 
-        //    var watch = new Stopwatch();
-        //    watch.Start();
-        //    new Func<Task>(async () => await TaskHelper.WaitForAsyncOrThrowAsync(
-        //                () => IncreaseAndCheckIfAboveLimit(ref attempts,
-        //                    (int) (timeout.TotalMilliseconds / waitDelay.TotalMilliseconds) + 1), timeout, waitDelay)
-        //           .ConfigureAwait(false)).Should().Throw<Exception>()
-        //       .And.Message.Should().Contain(nameof(IncreaseAndCheckIfAboveLimit));
-        //    watch.Stop();
+            var watch = new Stopwatch();
+            watch.Start();
+            new Func<Task>(async () => await TaskHelper.WaitForAsyncOrThrowAsync(
+                        () => IncreaseAndCheckIfAboveLimit(ref attempts,
+                            (int) (timeout.TotalMilliseconds / waitDelay.TotalMilliseconds) + 1), timeout, waitDelay)
+                   .ConfigureAwait(false)).Should().Throw<Exception>()
+               .And.Message.Should().Contain(nameof(IncreaseAndCheckIfAboveLimit));
+            watch.Stop();
 
-        //    attempts.Should().BeGreaterOrEqualTo(9);
-        //    watch.Elapsed.Should().BeGreaterOrEqualTo(timeout);
-        //}
+            attempts.Should().BeGreaterOrEqualTo(9);
+            watch.Elapsed.Should().BeGreaterOrEqualTo(timeout);
+        }
 
         [Test]
         public async Task WaitForAsyncOrThrow_Should_Return_As_Soon_As_Possible()

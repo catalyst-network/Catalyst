@@ -182,6 +182,18 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Abi", "..\submod
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Modules.Network.Dotnetty.Tests", "Catalyst.Modules.Network.Dotnetty.Tests\Catalyst.Modules.Network.Dotnetty.Tests.csproj", "{71FB9310-5741-4E99-B817-FA24C0BCA31E}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Rpc.Server", "Catalyst.Core.Modules.Rpc.Server\Catalyst.Core.Modules.Rpc.Server.csproj", "{4D932C0A-1EA5-419E-9DB5-60290BFB1D8B}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Rpc.Client", "Catalyst.Core.Modules.Rpc.Client\Catalyst.Core.Modules.Rpc.Client.csproj", "{C7F99ED7-9784-490C-9188-6D2E8D46E4DA}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Rpc.Server.Tests", "Catalyst.Core.Modules.Rpc.Server.Tests\Catalyst.Core.Modules.Rpc.Server.Tests.csproj", "{C7E3BE5B-87A4-433C-BBE5-E8D11A5C500D}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Rpc.Client.Tests", "Catalyst.Core.Modules.Rpc.Client.Tests\Catalyst.Core.Modules.Rpc.Client.Tests.csproj", "{5FD08C1B-C3FF-4E48-AF96-852ED9F9B5BC}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Cli", "Catalyst.Cli\Catalyst.Cli.csproj", "{230B01FD-3231-4D38-8F3D-410CA84B3B90}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Cli.Tests", "Catalyst.Cli.Tests\Catalyst.Cli.Tests.csproj", "{EF217648-56B7-4E96-B8DB-1C2C543B291D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -476,6 +488,30 @@ Global
 		{71FB9310-5741-4E99-B817-FA24C0BCA31E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{71FB9310-5741-4E99-B817-FA24C0BCA31E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{71FB9310-5741-4E99-B817-FA24C0BCA31E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4D932C0A-1EA5-419E-9DB5-60290BFB1D8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4D932C0A-1EA5-419E-9DB5-60290BFB1D8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4D932C0A-1EA5-419E-9DB5-60290BFB1D8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4D932C0A-1EA5-419E-9DB5-60290BFB1D8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7F99ED7-9784-490C-9188-6D2E8D46E4DA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7F99ED7-9784-490C-9188-6D2E8D46E4DA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7F99ED7-9784-490C-9188-6D2E8D46E4DA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7F99ED7-9784-490C-9188-6D2E8D46E4DA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C7E3BE5B-87A4-433C-BBE5-E8D11A5C500D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C7E3BE5B-87A4-433C-BBE5-E8D11A5C500D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C7E3BE5B-87A4-433C-BBE5-E8D11A5C500D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C7E3BE5B-87A4-433C-BBE5-E8D11A5C500D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5FD08C1B-C3FF-4E48-AF96-852ED9F9B5BC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5FD08C1B-C3FF-4E48-AF96-852ED9F9B5BC}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5FD08C1B-C3FF-4E48-AF96-852ED9F9B5BC}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5FD08C1B-C3FF-4E48-AF96-852ED9F9B5BC}.Release|Any CPU.Build.0 = Release|Any CPU
+		{230B01FD-3231-4D38-8F3D-410CA84B3B90}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{230B01FD-3231-4D38-8F3D-410CA84B3B90}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{230B01FD-3231-4D38-8F3D-410CA84B3B90}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{230B01FD-3231-4D38-8F3D-410CA84B3B90}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EF217648-56B7-4E96-B8DB-1C2C543B291D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EF217648-56B7-4E96-B8DB-1C2C543B291D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EF217648-56B7-4E96-B8DB-1C2C543B291D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EF217648-56B7-4E96-B8DB-1C2C543B291D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
