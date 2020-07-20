@@ -23,6 +23,7 @@
 
 using System;
 using System.Buffers.Binary;
+using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
@@ -83,7 +84,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
             return BuildBlock(deltaWithCid, blockNumber, api.HashProvider, includeTx);
         }
 
-        private static BlockForRpc BuildBlock(DeltaWithCid deltaWithCid, long blockNumber, IHashProvider hashProvider, bool includeTx)
+        private static BlockForRpc BuildBlock(DeltaWithCid deltaWithCid, long blockNumber, IHashProvider hashProvider, bool includeFullTxs)
         {
             var (delta, deltaHash) = deltaWithCid;
 
@@ -119,7 +120,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
                 MixHash = Keccak.Zero,
                 Nonce = nonce,
                 Uncles = new Keccak[0],
-                Transactions = includeTx? delta.PublicEntries.Select(x => x.GetHash(hashProvider)) : new Keccak[0] 
+                Transactions = includeFullTxs? (IEnumerable<object>) delta.PublicEntries : delta.PublicEntries.Select(x => x.GetHash(hashProvider))
             };
             blockForRpc.TotalDifficulty = (UInt256) ((long) blockForRpc.Difficulty * (blockNumber + 1));
             blockForRpc.Sha3Uncles = Keccak.OfAnEmptySequenceRlp;
