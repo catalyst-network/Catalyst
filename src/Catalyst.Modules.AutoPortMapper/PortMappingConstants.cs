@@ -23,11 +23,11 @@
 
 namespace Catalyst.Modules.AutoPortMapper
 {
-    public class PortMappingConstants
+    public static class PortMappingConstants
     {
-        public const string DefaultUdpProperty = "CatalystNodeConfiguration.Rpc.Port";
-        public const string DefaultTcpProperty = "CatalystNodeConfiguration.Peer.Port";
+        public static readonly string DefaultUdpProperty = "CatalystNodeConfiguration.Rpc.Port";
+        public static readonly string DefaultTcpProperty = "CatalystNodeConfiguration.Peer.Port";
         
-        public const int DefaultTimeout = 10;
+        public static readonly int DefaultTimeout = 10;
     }
 }

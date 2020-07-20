@@ -84,8 +84,6 @@ namespace Catalyst.Modules.AutoPortMapper
             
             var portMapper = new UPnPUtility(provider, logger);
 
-            var cts = new CancellationTokenSource();
-            
             var timeout = options.Timeout > 0 ? options.Timeout : PortMappingConstants.DefaultTimeout;
 
             await portMapper.MapPorts(mappings.ToArray(), timeout, options.IsMappingDeletion).ConfigureAwait(false);

@@ -68,7 +68,7 @@ namespace Catalyst.NetworkUtils
 
         private async Task<IPAddress> GetPublicIpFromWebAsync(CancellationToken cancel)
         {
-            if (cancel.IsCancellationRequested) return null;
+            if (cancel.IsCancellationRequested) {return null;}
             var urls = new[] {"https://ip.catalyst.workers.dev", "http://icanhazip.com"};
 
             foreach(var url in urls)

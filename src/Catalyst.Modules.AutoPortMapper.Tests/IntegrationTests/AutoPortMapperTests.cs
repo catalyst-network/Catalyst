@@ -64,11 +64,11 @@ namespace Catalyst.Modules.AutoPortMapper.IntegrationTests
             
             device.GetAllMappingsAsync().Result.Should().HaveCount(0);
             
-            await Program.Start(new string[] {"--filepath", "./Config/devnet.json"}, _logger, new TestNatUtilityProvider(device)).ConfigureAwait(false);
+            await Program.Start(new [] {"--filepath", "./Config/devnet.json"}, _logger, new TestNatUtilityProvider(device)).ConfigureAwait(false);
            
             device.GetAllMappingsAsync().Result.Should().HaveCount(2);
            
-           await Program.Start(new string[] {"--filepath", "./Config/devnet.json", "--delete"}, _logger, new TestNatUtilityProvider(device)).ConfigureAwait(false);
+           await Program.Start(new [] {"--filepath", "./Config/devnet.json", "--delete"}, _logger, new TestNatUtilityProvider(device)).ConfigureAwait(false);
            
            device.GetAllMappingsAsync().Result.Should().HaveCount(0);
         }

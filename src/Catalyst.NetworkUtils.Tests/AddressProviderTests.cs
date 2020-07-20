@@ -41,8 +41,8 @@ namespace Catalyst.Modules.NetworkUtils.Tests
         private readonly ISocketFactory _socketFactory = Substitute.For<ISocketFactory>();
         private readonly ISocket _socket = Substitute.For<ISocket>();
         private IAddressProvider _addressProvider;
-        private readonly string localAddress = "192.168.0.12";
-        private readonly string publicAddress = "86.13.186.26";
+        private readonly string _localAddress = "192.168.0.10";
+        private readonly string _publicAddress = "55.55.555.55";
         
 
 
@@ -57,9 +57,9 @@ namespace Catalyst.Modules.NetworkUtils.Tests
         [Test]
         public void Does_Not_Use_Web_If_UPnP_Returns_Public_IpAddress()
         {
-            _uPnPUtility.GetPublicIpAddress().ReturnsForAnyArgs(IPAddress.Parse(publicAddress));
+            _uPnPUtility.GetPublicIpAddress().ReturnsForAnyArgs(IPAddress.Parse(_publicAddress));
             
-            _addressProvider.GetPublicIpAsync().Result.Should().Be(IPAddress.Parse(publicAddress));
+            _addressProvider.GetPublicIpAsync().Result.Should().Be(IPAddress.Parse(_publicAddress));
             _webClient1.Received(0).DownloadStringTaskAsync(default);
             _webClient2.Received(0).DownloadStringTaskAsync(default);
         }
@@ -67,10 +67,10 @@ namespace Catalyst.Modules.NetworkUtils.Tests
         public void Can_Return_Public_IpAddress_From_WebClient_On_UPnP_Timeout()
         {
             _uPnPUtility.GetPublicIpAddress().ReturnsForAnyArgs((IPAddress)null);
-            _webClient1.DownloadStringTaskAsync(default).ReturnsForAnyArgs(publicAddress);
-            _webClient2.DownloadStringTaskAsync(default).ReturnsForAnyArgs(publicAddress);
+            _webClient1.DownloadStringTaskAsync(default).ReturnsForAnyArgs(_publicAddress);
+            _webClient2.DownloadStringTaskAsync(default).ReturnsForAnyArgs(_publicAddress);
 
-            _addressProvider.GetPublicIpAsync().Result.Should().Be(IPAddress.Parse(publicAddress));
+            _addressProvider.GetPublicIpAsync().Result.Should().Be(IPAddress.Parse(_publicAddress));
             _webClient1.ReceivedWithAnyArgs().DownloadStringTaskAsync(default);
         }
         
@@ -78,10 +78,10 @@ namespace Catalyst.Modules.NetworkUtils.Tests
         public void Can_Return_Public_IpAddress_Where_Not_All_WebClients_Return_Address()
         {
             _uPnPUtility.GetPublicIpAddress().ReturnsForAnyArgs((IPAddress)null);
-            _webClient2.DownloadStringTaskAsync(default).ReturnsForAnyArgs(publicAddress);
+            _webClient2.DownloadStringTaskAsync(default).ReturnsForAnyArgs(_publicAddress);
             _webClient1.ClearSubstitute();
 
-            _addressProvider.GetPublicIpAsync().Result.Should().Be(IPAddress.Parse(publicAddress));
+            _addressProvider.GetPublicIpAsync().Result.Should().Be(IPAddress.Parse(_publicAddress));
             _webClient2.ReceivedWithAnyArgs().DownloadStringTaskAsync(default);
         }
 
@@ -89,9 +89,9 @@ namespace Catalyst.Modules.NetworkUtils.Tests
         public void Can_Return_LocalIp_Address()
         {
             _socket.ConnectAsync(default, default).ReturnsForAnyArgs(Task.CompletedTask);
-            _socket.LocalEndPoint.Returns(IPEndPoint.Parse(localAddress));
+            _socket.LocalEndPoint.Returns(IPEndPoint.Parse(_localAddress));
 
-            _addressProvider.GetLocalIpAsync().Result.Should().Be(IPAddress.Parse(localAddress));
+            _addressProvider.GetLocalIpAsync().Result.Should().Be(IPAddress.Parse(_localAddress));
         }
 
     }

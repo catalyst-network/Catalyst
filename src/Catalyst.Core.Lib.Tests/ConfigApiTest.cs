@@ -62,22 +62,22 @@ namespace Catalyst.Core.Lib.Tests
         public async Task Get_Scalar_Key_Value()
         {
             var api = await _configApi.GetAsync("Addresses.API");
-            Assert.That((bool) api.Value<string>().StartsWith(ApiAddress));
+            Assert.That(api.Value<string>().StartsWith(ApiAddress));
         }
 
         [Test]
         public async Task Get_Object_Key_Value()
         {
             var addresses = await _configApi.GetAsync("Addresses");
-            Assert.That((bool) addresses["API"].Value<string>().StartsWith(ApiAddress));
-            Assert.That((bool) addresses["Gateway"].Value<string>().StartsWith(GatewayAddress));
+            Assert.That(addresses["API"].Value<string>().StartsWith(ApiAddress));
+            Assert.That(addresses["Gateway"].Value<string>().StartsWith(GatewayAddress));
         }
 
         [Test]
         public void Keys_are_Case_Sensitive()
         {
             var api = _configApi.GetAsync("Addresses.API").Result;
-            Assert.That((bool) api.Value<string>().StartsWith(ApiAddress));
+            Assert.That(api.Value<string>().StartsWith(ApiAddress));
 
             ExceptionAssert.Throws<Exception>(() =>
             {

@@ -30,7 +30,7 @@ using Serilog;
 
 namespace Catalyst.Modules.UPnP
 {
-    public sealed class UPnPUtility : IUPnPUtility
+    public sealed class UPnPUtility : IUPnPUtility, IDisposable
     {
         private readonly SemaphoreSlim _locker = new SemaphoreSlim(1, 1);
         private readonly INatUtilityProvider _natUtilityProvider;
@@ -75,7 +75,7 @@ namespace Catalyst.Modules.UPnP
         }
         
 
-        private async void ReMapPorts(INatDevice device, Mapping[] newMappings, Func<Mapping[], Mapping[], INatDevice, Task> remappingLogic, TaskCompletionSource<bool> tcs)
+        private async Task ReMapPorts(INatDevice device, Mapping[] newMappings, Func<Mapping[], Mapping[], INatDevice, Task> remappingLogic, TaskCompletionSource<bool> tcs)
         {
             await _locker.WaitAsync().ConfigureAwait(false);
             try
@@ -142,7 +142,7 @@ namespace Catalyst.Modules.UPnP
             }
         }
         
-        private async void GetExternalIpAddress(INatDevice device, TaskCompletionSource<IPAddress> tcs)
+        private async Task GetExternalIpAddress(INatDevice device, TaskCompletionSource<IPAddress> tcs)
         {
             await _locker.WaitAsync().ConfigureAwait(false);
             try
@@ -161,6 +161,11 @@ namespace Catalyst.Modules.UPnP
             {
                 _locker.Release();
             }
+        }
+
+        public void Dispose()
+        {
+            _locker.Dispose();
         }
     }
     

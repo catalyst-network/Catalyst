@@ -54,7 +54,6 @@ namespace Catalyst.Core.Lib.Kernel
         private readonly string _fileName;
         private string _targetConfigFolder;
         private IConfigCopier _configCopier;
-        private IConfigEditor _configEditor;
         private readonly ConfigurationBuilder _configurationBuilder;
         public ILifetimeScope Instance;
 

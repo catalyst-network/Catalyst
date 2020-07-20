@@ -93,7 +93,6 @@ namespace Catalyst.Node.POA.CE.Tests.UnitTests.Config
             var addressProvider = Substitute.For<IAddressProvider>();
             addressProvider.GetLocalIpAsync().Returns((IPAddress)null);
             addressProvider.GetPublicIpAsync().Returns((IPAddress)null);
-            var filesystem = Substitute.For<IFileSystem>();
             var swarm = JToken.FromObject(new List<string> { $"/ip4/0.0.0.0/tcp/4100" });
             dfsConfigApi.GetAsync("Addresses.Swarm").Returns(swarm);
             var peerSettings = new PeerSettings(configRoot, peer, dfsConfigApi, addressProvider);

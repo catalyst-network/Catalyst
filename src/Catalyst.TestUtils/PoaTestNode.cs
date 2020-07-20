@@ -209,8 +209,6 @@ namespace Catalyst.TestUtils
             _localPeer = _scope.Resolve<Lib.P2P.Peer>();
             var synchronizer = _scope.Resolve<ISynchroniser>();
             var peerSettings = _scope.Resolve<IPeerSettings>();
-            var dfsConfig = _scope.Resolve<IDfsConfigApi>();
-            var networkConfig = _scope.Resolve<INetworkConfigApi>();
             _dfsService = _scope.Resolve<IDfsService>();
 
             await _dfsService.StartAsync().ConfigureAwait(false);
@@ -291,7 +289,7 @@ namespace Catalyst.TestUtils
             var swarm = JToken.FromObject(new List<string> { $"/ip4/0.0.0.0/tcp/410{NodeNumber}" });
             dfsConfigApi.GetAsync("Addresses.Swarm").Returns(swarm);
             _containerProvider.ContainerBuilder.RegisterInstance(dfsConfigApi).As<IDfsConfigApi>();
-            _containerProvider.ContainerBuilder.RegisterInstance(networkConfigApi).As<IDfsConfigApi>();
+            _containerProvider.ContainerBuilder.RegisterInstance(networkConfigApi).As<INetworkConfigApi>();
         }
 
         private void Dispose(bool disposing)
