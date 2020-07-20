@@ -21,21 +21,15 @@
 
 #endregion
 
-using System;
 using System.Buffers.Binary;
 using System.Collections.Generic;
 using System.Linq;
-using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
-using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Repository;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Modules.Hashing;
-using Google.Protobuf;
 using Lib.P2P;
-using MultiFormats.Registry;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
 using Nethermind.Dirichlet.Numerics;
