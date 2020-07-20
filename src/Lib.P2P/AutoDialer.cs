@@ -162,7 +162,7 @@ namespace Lib.P2P
             var peers = _swarmService.KnownPeers
                .Where(p => p.ConnectedAddress == null)
                .Where(p => p != disconnectedPeer)
-               //.Where(p => _swarmService.IsAllowed(p))
+               .Where(p => _swarmService.IsAllowed(p))
                .Where(p => !_swarmService.HasPendingConnection(p))
                .ToArray();
             
