@@ -28,10 +28,12 @@ using System.Linq;
 using Autofac;
 using Autofac.Configuration;
 using AutofacSerilogIntegration;
+using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Core.Lib;
+using Catalyst.Core.Lib.Cli;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.FileSystem;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
@@ -41,6 +43,7 @@ using Catalyst.Core.Modules.Keystore;
 using DotNetty.Common.Internal.Logging;
 using Microsoft.Extensions.Configuration;
 using Nethermind.Db;
+using NSubstitute;
 using NUnit.Framework;
 using Serilog;
 using Serilog.Core;
@@ -104,6 +107,7 @@ namespace Catalyst.TestUtils
             ContainerBuilder.RegisterModule(configurationModule);
             ContainerBuilder.RegisterModule(new CoreLibProvider());
             ContainerBuilder.RegisterInstance(ConfigurationRoot).As<IConfigurationRoot>();
+            ContainerBuilder.RegisterType<ConsoleUserOutput>().As<IUserOutput>();
 
             var repoFactory =
                 RepositoryFactory.BuildSharpRepositoryConfiguation(
