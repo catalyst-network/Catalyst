@@ -23,10 +23,8 @@
 
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
-using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
-using Catalyst.Abstractions.Types;
 using System.Reflection;
 using LibP2P = Lib.P2P;
 
@@ -34,10 +32,9 @@ namespace Catalyst.Core.Lib.P2P
 {
     public class LocalPeer : LibP2P.Peer
     {
-        public LocalPeer(IKeyApi keyApi, KeyChainOptions keyChainOptions, IPasswordManager passwordManager)
+        public LocalPeer(IPasswordRepeater passwordRepeater, IKeyApi keyApi, KeyChainOptions keyChainOptions)
         {
-            var passphrase = passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.DefaultNodePassword, "Please provide your node password");
-            keyApi.SetPassphraseAsync(passphrase).ConfigureAwait(false).GetAwaiter().GetResult();
+            passwordRepeater.PromptAndAddPasswordToRegistryAsync().ConfigureAwait(false).GetAwaiter().GetResult();
 
             var self = keyApi.GetKeyAsync("self").ConfigureAwait(false).GetAwaiter().GetResult() ??
                      keyApi.CreateAsync("self", keyChainOptions.DefaultKeyType, 0).ConfigureAwait(false).GetAwaiter().GetResult();

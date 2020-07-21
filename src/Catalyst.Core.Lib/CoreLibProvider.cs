@@ -112,6 +112,7 @@ namespace Catalyst.Core.Lib
             builder.RegisterType<ConsolePasswordReader>().As<IPasswordReader>().SingleInstance();
             builder.RegisterType<CertificateStore>().As<ICertificateStore>().SingleInstance();
             builder.RegisterType<PasswordManager>().As<IPasswordManager>().SingleInstance();
+            builder.RegisterType<NodePasswordRepeater>().As<IPasswordRepeater>().SingleInstance();
 
             // Register FileSystem
             builder.RegisterType<FileSystem.FileSystem>().As<IFileSystem>().SingleInstance();

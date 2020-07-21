@@ -40,6 +40,12 @@ namespace Catalyst.Core.Lib.Cryptography
         }
 
         /// <inheritdoc />
+        public SecureString PromptPassword(PasswordRegistryTypes passwordType, string promptMessage = null)
+        {
+            return _passwordReader.ReadSecurePassword(promptMessage ?? $"Please enter your {passwordType.Name}");
+        }
+
+        /// <inheritdoc />
         public SecureString RetrieveOrPromptPassword(PasswordRegistryTypes passwordType, string promptMessage = null)
         {
             var password = _passwordRegistry.GetItemFromRegistry(passwordType) ??

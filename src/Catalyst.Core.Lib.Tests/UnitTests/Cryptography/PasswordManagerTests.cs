@@ -51,6 +51,19 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
         }
 
         [Test]
+        public void PromptPassword_Should_Return_Password()
+        {
+            var registryType = PasswordRegistryTypes.CertificatePassword;
+            _passwordReader.ReadSecurePassword(Arg.Any<string>()).Returns(_secureString);
+
+            var retrievedPassword = _passwordManager.PromptPassword(registryType);
+
+            _passwordReader.Received(1).ReadSecurePassword(Arg.Is<string>(s => s.Contains(registryType.Name)));
+
+            retrievedPassword.Should().Be(_secureString);
+        }
+
+        [Test]
         public void ReadAndAddPasswordToRegistry_Should_Prompt_And_Add_Non_Null_Passwords()
         {
             _passwordReader.ReadSecurePassword().ReturnsForAnyArgs(_secureString);
