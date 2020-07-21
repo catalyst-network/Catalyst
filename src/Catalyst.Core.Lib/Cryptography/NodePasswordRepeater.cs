@@ -31,6 +31,10 @@ using System.Threading.Tasks;
 
 namespace Catalyst.Core.Lib.Cryptography
 {
+    /// <summary>
+    /// Node password repeater.
+    /// This class will continuously prompt the user to input their password until the password is correct.
+    /// </summary>
     public class NodePasswordRepeater : IPasswordRepeater
     {
         private readonly IKeyApi _keyApi;
@@ -44,6 +48,7 @@ namespace Catalyst.Core.Lib.Cryptography
             _userOutput = userOutput;
         }
 
+        /// <inheritdoc />
         public async Task<SecureString> PromptAndReceiveAsync()
         {
             while (true)
@@ -61,6 +66,7 @@ namespace Catalyst.Core.Lib.Cryptography
             }
         }
 
+        /// <inheritdoc />
         public async Task PromptAndAddPasswordToRegistryAsync()
         {
             var password = await PromptAndReceiveAsync().ConfigureAwait(false);
