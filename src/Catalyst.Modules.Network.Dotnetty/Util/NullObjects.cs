@@ -26,7 +26,7 @@ using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Modules.Network.Dotnetty.Util
 {
-    public static partial class NullObjects
+    public static class NullObjects
     {
         public static readonly ObserverDto ObserverDto = new ObserverDto(null, new ProtocolMessage());
     }

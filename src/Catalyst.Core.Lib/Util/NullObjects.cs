@@ -25,7 +25,7 @@ using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Core.Lib.Util
 {
-    public static partial class NullObjects
+    public static class NullObjects
     {
         public static readonly ProtocolMessage ProtocolMessage = new ProtocolMessage();
     }
