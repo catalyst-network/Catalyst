@@ -23,6 +23,7 @@
 
 using System;
 using Autofac;
+using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.Migration;
@@ -31,6 +32,7 @@ using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib;
+using Catalyst.Core.Lib.Cli;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.Dfs.Migration;
@@ -63,6 +65,7 @@ namespace Catalyst.TestUtils
 
             containerBuilder.RegisterModule<CoreLibProvider>();
             containerBuilder.RegisterModule<KeystoreModule>();
+            containerBuilder.RegisterType<ConsoleUserOutput>().As<IUserOutput>();
             containerBuilder.RegisterInstance(new PasswordManager(new TestPasswordReader(), new PasswordRegistry())).As<IPasswordManager>().SingleInstance();
             containerBuilder.RegisterInstance(fileSystem).As<IFileSystem>();
             containerBuilder.RegisterType<MigrationManager>().As<IMigrationManager>();
