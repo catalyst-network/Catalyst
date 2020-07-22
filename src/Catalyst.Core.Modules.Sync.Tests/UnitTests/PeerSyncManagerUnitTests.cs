@@ -33,6 +33,7 @@ using SharpRepository.InMemoryRepository;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Catalyst.Core.Lib.P2P.Repository;
+using NUnit.Framework;
 
 namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 {
@@ -45,7 +46,8 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
         private ReplaySubject<ProtocolMessage> _deltaHeightReplaySubject;
 
         //todo add unit tests
-        public PeerSyncManagerUnitTests()
+        [SetUp]
+        public void Init()
         {
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _peerService = Substitute.For<IPeerService>();
