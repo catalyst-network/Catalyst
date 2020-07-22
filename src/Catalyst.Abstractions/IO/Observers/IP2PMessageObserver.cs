@@ -21,7 +21,9 @@
 
 #endregion
 
+using Catalyst.Protocol.Wire;
+
 namespace Catalyst.Abstractions.IO.Observers
 {
-    public interface IP2PMessageObserver : IMessageObserver { }
+    public interface IP2PMessageObserver : IMessageObserver<ProtocolMessage> { }
 }

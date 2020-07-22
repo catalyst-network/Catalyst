@@ -29,7 +29,7 @@ using NUnit.Framework;
 namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
     [TestFixture]
-    [Category(Traits.IntegrationTest)] 
+    [Category(Traits.IntegrationTest)]
     public sealed class PeerRemoveCommandTests : CliCommandTestsBase
     {
         [SetUp]

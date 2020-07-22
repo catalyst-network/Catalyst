@@ -21,12 +21,13 @@
 
 #endregion
 
-using Catalyst.Abstractions.IO.EventLoop;
-using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.TestUtils;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.EventLoop;
+using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport
 {
@@ -35,12 +36,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport
         [SetUp]
         public void Init()
         {
-            _tcpServerChannelFactory = Substitute.For<ITcpServerChannelFactory>();
+            _tcpServerChannelFactory = Substitute.For<ITcpServerChannelFactory<ProtocolMessage>>();
             _logger = Substitute.For<ILogger>();
             _eventLoopGroupFactory = Substitute.For<IEventLoopGroupFactory>();
         }
 
-        private ITcpServerChannelFactory _tcpServerChannelFactory;
+        private ITcpServerChannelFactory<ProtocolMessage> _tcpServerChannelFactory;
         private ILogger _logger;
         private IEventLoopGroupFactory _eventLoopGroupFactory;
 

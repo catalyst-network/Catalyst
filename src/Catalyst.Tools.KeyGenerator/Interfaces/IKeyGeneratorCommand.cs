@@ -21,7 +21,7 @@
 
 #endregion
 
-using Catalyst.Abstractions.Cli.CommandTypes;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.Cli.CommandTypes;
 using Catalyst.Protocol.Network;
 
 namespace Catalyst.Tools.KeyGenerator.Interfaces

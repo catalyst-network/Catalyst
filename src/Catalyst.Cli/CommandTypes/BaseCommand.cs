@@ -23,9 +23,9 @@
 
 using System;
 using System.Reflection;
-using Catalyst.Abstractions.Cli.Commands;
-using Catalyst.Abstractions.Cli.CommandTypes;
 using Catalyst.Abstractions.Cli.Options;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.Cli.Commands;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.Cli.CommandTypes;
 using CommandLine;
 using Serilog;
 

@@ -27,11 +27,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reactive.Linq;
-using Catalyst.Abstractions.IO.Transport;
-using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Lib.IO.Events;
-using Catalyst.Core.Lib.IO.Transport;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport;
+using Catalyst.Modules.Network.Dotnetty.IO.Transport;
+using Catalyst.Modules.Network.Dotnetty.Rpc;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
@@ -129,13 +128,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport
                .Should().NotBeNull()
                .And
                .BeAssignableTo<ISocketClient>();
-        }
-
-        [Test]
-        public void Can_init_peer_client_registry()
-        {
-            var socketRegistry = new SocketClientRegistry<IPeerClient>();
-            Assert.AreEqual(socketRegistry.GetRegistryType(), typeof(IPeerClient).Name);
         }
 
         [Test]

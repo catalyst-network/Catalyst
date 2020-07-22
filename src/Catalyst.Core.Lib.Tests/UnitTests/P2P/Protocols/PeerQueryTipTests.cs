@@ -23,7 +23,6 @@
 
 using System;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Core.Lib.P2P.Protocols;
@@ -35,7 +34,6 @@ using MultiFormats;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
-using Catalyst.Protocol.Peer;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
 {
@@ -43,7 +41,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
     {
         private IPeerQueryTipRequest _peerQueryTipRequest;
         private IPeerSettings _testSettings;
-        private MultiAddress _recipientPeerId;
+        private MultiAddress _recipientAddress;
         private CancellationTokenProvider _cancellationProvider;
 
         [SetUp]
@@ -51,9 +49,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
         {
             this.Setup(TestContext.CurrentContext);
 
-            var subbedPeerClient = Substitute.For<ILibP2PPeerClient>();
+            var subbedPeerClient = Substitute.For<IPeerClient>();
             _testSettings = PeerSettingsHelper.TestPeerSettings();
-            _recipientPeerId = _testSettings.Address;
+            _recipientAddress = _testSettings.Address;
 
             _cancellationProvider = new CancellationTokenProvider(TimeSpan.FromSeconds(10));
 
@@ -68,22 +66,19 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
         [Test]
         public async Task Can_Query_Expected_Peer()
         {
-            await _peerQueryTipRequest.QueryPeerTipAsync(_recipientPeerId).ConfigureAwait(false);
-            var expectedDto = Substitute.For<IMessageDto<ProtocolMessage>>();
-            expectedDto.RecipientAddress.Returns(_recipientPeerId);
-            expectedDto.SenderAddress.Returns(_testSettings.Address);
-            await _peerQueryTipRequest.PeerClient.ReceivedWithAnyArgs(1).SendMessageAsync(Arg.Is(expectedDto));
+            await _peerQueryTipRequest.QueryPeerTipAsync(_recipientAddress).ConfigureAwait(false);
+            await _peerQueryTipRequest.PeerClient.ReceivedWithAnyArgs(1).SendMessageAsync(Arg.Is<ProtocolMessage>(x => x.Address == _testSettings.Address), Arg.Is(_recipientAddress));
         }
 
         [Test]
         public async Task Can_Receive_Query_Response_On_Observer()
         {
-            var tipQueryResponse = new PeerQueryTipResponse(_recipientPeerId,
+            var tipQueryResponse = new PeerQueryTipResponse(_recipientAddress,
                 MultiHash.ComputeHash(ByteUtil.GenerateRandomByteArray(32))
             );
 
             _peerQueryTipRequest.QueryTipResponseMessageStreamer.OnNext(tipQueryResponse);
-            var response = await _peerQueryTipRequest.QueryPeerTipAsync(_recipientPeerId).ConfigureAwait(false);
+            var response = await _peerQueryTipRequest.QueryPeerTipAsync(_recipientAddress).ConfigureAwait(false);
             response.Should().BeTrue();
         }
 

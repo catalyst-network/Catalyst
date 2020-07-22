@@ -68,7 +68,6 @@ using Catalyst.Core.Modules.Keystore;
 using Catalyst.Core.Modules.Kvm;
 using Catalyst.Core.Modules.Ledger;
 using Catalyst.Core.Modules.P2P.Discovery.Hastings;
-using Catalyst.Core.Modules.Rpc.Server;
 using Catalyst.Core.Modules.Sync;
 using Catalyst.Core.Modules.Web3;
 using Catalyst.Modules.POA.Consensus;
@@ -83,6 +82,7 @@ using Catalyst.Abstractions.Sync.Interfaces;
 using System.Net;
 using Catalyst.Abstractions.Config;
 using Catalyst.Core.Modules.Web3.Options;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
 
 namespace Catalyst.TestUtils
 {
@@ -130,8 +130,7 @@ namespace Catalyst.TestUtils
             RegisterNodeDependencies(_containerProvider.ContainerBuilder,
                 excludedModules: new List<Type>
                 {
-                    typeof(ApiModule),
-                    typeof(RpcServerModule)
+                    typeof(ApiModule)
                 }
             );
             _containerProvider.ConfigureContainerBuilder(true, true);
@@ -153,10 +152,6 @@ namespace Catalyst.TestUtils
             // message handlers
             containerBuilder.RegisterAssemblyTypes(typeof(CoreLibProvider).Assembly)
                 .AssignableTo<IP2PMessageObserver>().As<IP2PMessageObserver>();
-
-            containerBuilder.RegisterAssemblyTypes(typeof(RpcServerModule).Assembly)
-                .AssignableTo<IRpcRequestObserver>().As<IRpcRequestObserver>()
-                .PublicOnly();
 
             // DAO MapperInitialisers
             containerBuilder.RegisterAssemblyTypes(typeof(CoreLibProvider).Assembly)
@@ -186,7 +181,6 @@ namespace Catalyst.TestUtils
                 {typeof(LedgerModule), () => new LedgerModule()},
                 {typeof(HashingModule), () => new HashingModule()},
                 {typeof(DiscoveryHastingModule), () => new DiscoveryHastingModule()},
-                {typeof(RpcServerModule), () => new RpcServerModule()},
                 {typeof(BulletProofsModule), () => new BulletProofsModule()},
                 {typeof(KeystoreModule), () => new KeystoreModule()},
                 {typeof(KeySignerModule), () => new KeySignerModule()},

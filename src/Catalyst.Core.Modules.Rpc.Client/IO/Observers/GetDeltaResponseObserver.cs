@@ -22,10 +22,8 @@
 #endregion
 
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Lib.Rpc.IO;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using MultiFormats;
@@ -42,7 +40,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
         /// <inheritdoc />
         protected override void HandleResponse(GetDeltaResponse deltaResponse,
             IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderentifier,
+            MultiAddress senderAddress,
             ICorrelationId correlationId) { }
     }
 }

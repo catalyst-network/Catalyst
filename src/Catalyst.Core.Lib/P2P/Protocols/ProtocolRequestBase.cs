@@ -35,13 +35,13 @@ namespace Catalyst.Core.Lib.P2P.Protocols
         protected readonly ILogger Logger;
         protected readonly ICancellationTokenProvider CancellationTokenProvider;
 
-        public ILibP2PPeerClient PeerClient { get; }
+        public IPeerClient PeerClient { get; }
         public bool Disposing { get; protected set; }
         
         protected ProtocolRequestBase(ILogger logger,
             MultiAddress sender,
             ICancellationTokenProvider cancellationTokenProvider,
-            ILibP2PPeerClient peerClient) : base(sender)
+            IPeerClient peerClient) : base(sender)
         {
             Logger = logger;
             CancellationTokenProvider = cancellationTokenProvider;

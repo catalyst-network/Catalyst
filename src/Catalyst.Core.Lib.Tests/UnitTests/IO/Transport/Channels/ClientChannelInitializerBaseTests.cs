@@ -25,7 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Security.Cryptography.X509Certificates;
-using Catalyst.Core.Lib.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.IO.Transport.Channels;
 using DotNetty.Handlers.Tls;
 using DotNetty.Transport.Channels;
 using FluentAssertions;

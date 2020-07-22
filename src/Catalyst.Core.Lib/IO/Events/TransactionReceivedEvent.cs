@@ -44,12 +44,12 @@ namespace Catalyst.Core.Lib.IO.Events
         private readonly ITransactionValidator _validator;
         private readonly ILogger _logger;
         private readonly IMempool<PublicEntryDao> _mempool;
-        private readonly ILibP2PPeerClient _peerClient;
+        private readonly IPeerClient _peerClient;
         private readonly IMapperProvider _mapperProvider;
 
         public TransactionReceivedEvent(ITransactionValidator validator,
             IMempool<PublicEntryDao> mempool,
-            ILibP2PPeerClient peerClient,
+            IPeerClient peerClient,
             IMapperProvider mapperProvider,
             ILogger logger)
         {

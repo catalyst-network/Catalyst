@@ -32,7 +32,6 @@ using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Hashing;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Core.Abstractions.Sync;
@@ -40,7 +39,6 @@ using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Ledger;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Service;
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Core.Modules.Dfs.Extensions;
@@ -58,7 +56,6 @@ using Lib.P2P;
 using MultiFormats.Registry;
 using NSubstitute;
 using SharpRepository.InMemoryRepository;
-using Serilog;
 using NUnit.Framework;
 using MultiFormats;
 using Catalyst.Abstractions.Dfs.CoreApi;
@@ -72,12 +69,12 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
     {
         private IHashProvider _hashProvider;
         private IPeerSettings _peerSettings;
-        private ILibP2PPeerClient _peerClient;
+        private IPeerClient _peerClient;
         private IDeltaIndexService _deltaIndexService;
 
-        private ReplaySubject<IObserverDto<ProtocolMessage>> _deltaHeightReplaySubject;
+        private ReplaySubject<ProtocolMessage> _deltaHeightReplaySubject;
 
-        private ReplaySubject<IObserverDto<ProtocolMessage>> _deltaHistoryReplaySubject;
+        private ReplaySubject<ProtocolMessage> _deltaHistoryReplaySubject;
 
         private IMapperProvider _mapperProvider;
         private IUserOutput _userOutput;
@@ -98,7 +95,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
         [SetUp]
         public void Init()
         {
-            var peerService = Substitute.For<ILibP2PPeerService>();
+            var peerService = Substitute.For<IPeerService>();
 
             var peers = new List<LibP2P.Peer>();
             Enumerable.Range(0, 5).Select(x => MultiAddressHelper.GetAddress(x.ToString(), port: x)).Select(x => new LibP2P.Peer { Id = x.PeerId, ConnectedAddress = x }).ToList().ForEach(peers.Add);
@@ -123,7 +120,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
             _deltaIndexService = new DeltaIndexService(new InMemoryRepository<DeltaIndexDao, string>());
             _deltaIndexService.Add(new DeltaIndexDao { Cid = _hashProvider.ComputeUtf8MultiHash("0").ToCid(), Height = 0 });
 
-            _peerClient = Substitute.For<ILibP2PPeerClient>();
+            _peerClient = Substitute.For<IPeerClient>();
             ModifyPeerClient<LatestDeltaHashRequest>((request, senderentifier) =>
             {
                 var deltaHeightResponse = new LatestDeltaHashResponse
@@ -136,7 +133,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
                     }
                 };
 
-                _deltaHeightReplaySubject.OnNext(new ObserverDto(null, deltaHeightResponse.ToProtocolMessage(senderentifier, CorrelationId.GenerateCorrelationId())));
+                _deltaHeightReplaySubject.OnNext(deltaHeightResponse.ToProtocolMessage(senderentifier, CorrelationId.GenerateCorrelationId()));
             });
 
             ModifyPeerClient<DeltaHistoryRequest>((request, senderentifier) =>
@@ -144,11 +141,11 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
                 var data = GenerateSampleData((int) request.Height, (int) request.Range, (int) _syncTestHeight);
                 _deltaIndexService.Add(data.DeltaIndex.Select(x => DeltaIndexDao.ToDao<DeltaIndex>(x, _mapperProvider)));
 
-                _deltaHistoryReplaySubject.OnNext(new ObserverDto(null, data.ToProtocolMessage(senderentifier, CorrelationId.GenerateCorrelationId())));
+                _deltaHistoryReplaySubject.OnNext(data.ToProtocolMessage(senderentifier, CorrelationId.GenerateCorrelationId()));
             });
 
-            _deltaHeightReplaySubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1);
-            _deltaHistoryReplaySubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1);
+            _deltaHeightReplaySubject = new ReplaySubject<ProtocolMessage>(1);
+            _deltaHistoryReplaySubject = new ReplaySubject<ProtocolMessage>(1);
 
             var mergeMessageStreams = _deltaHeightReplaySubject.AsObservable()
                .Merge(_deltaHistoryReplaySubject.AsObservable());

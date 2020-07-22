@@ -28,18 +28,14 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Network;
-using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using Catalyst.TestUtils.Fakes;
 using DotNetty.Transport.Channels;
@@ -50,6 +46,9 @@ using NSubstitute;
 using Serilog;
 using NUnit.Framework;
 using MultiFormats;
+using Catalyst.Modules.Network.Dotnetty.P2P.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.P2P.IO.Messaging.Broadcast;
+using Catalyst.Modules.Network.Dotnetty.IO.Handlers;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
 {
@@ -75,7 +74,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
         }
 
         private TestScheduler _testScheduler;
-        private ILibP2PPeerClient _peerClient;
+        private IPeerClient _peerClient;
         private IPeerMessageCorrelationManager _correlationManager;
         private IBroadcastManager _gossipManager;
         private FakeKeySigner _keySigner;
@@ -88,7 +87,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
         public void Init()
         {
             _testScheduler = new TestScheduler();
-            _peerClient = Substitute.For<ILibP2PPeerClient>();
+            _peerClient = Substitute.For<IPeerClient>();
             _correlationManager = Substitute.For<IPeerMessageCorrelationManager>();
             _gossipManager = Substitute.For<IBroadcastManager>();
             _keySigner = Substitute.For<FakeKeySigner>();
@@ -137,7 +136,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
 
             var signedMessage = protocolMessage.ToSignedProtocolMessage(signature: _signature);
 
-            var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
+            var observer = new ProtocolMessageObserver<ProtocolMessage>(0, Substitute.For<ILogger>());
 
             var messageStream = GetObservableServiceHandler().MessageStream;
 
@@ -152,7 +151,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Transport.Channels
                 _testScheduler.Start();
 
                 observer.Received.Count.Should().Be(1);
-                observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(signedMessage.CorrelationId.ToCorrelationId().Id);
+                observer.Received.Single().CorrelationId.ToCorrelationId().Id.Should().Be(signedMessage.CorrelationId.ToCorrelationId().Id);
             }
         }
 

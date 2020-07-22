@@ -23,7 +23,6 @@
 
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Rpc.IO;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -59,6 +58,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
             ICorrelationId correlationId)
         {   
             Guard.Argument(verifyMessageResponse, nameof(verifyMessageResponse)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(senderentifier, nameof(senderentifier)).NotNull();
         }
     }

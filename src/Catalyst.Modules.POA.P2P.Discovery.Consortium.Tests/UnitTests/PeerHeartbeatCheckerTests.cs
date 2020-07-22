@@ -43,7 +43,7 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
         private const int PeerHeartbeatCheckSeconds = 3;
         private const int PeerChallengeTimeoutSeconds = 1;
         private IHealthChecker _peerHeartbeatChecker;
-        private ILibP2PPeerClient _peerClient;
+        private IPeerClient _peerClient;
         private IPeerRepository _peerRepository;
         private Peer _testPeer;
 
@@ -51,7 +51,7 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
         public void Init()
         {
             _peerRepository = Substitute.For<IPeerRepository>();
-            _peerClient = Substitute.For<ILibP2PPeerClient>();
+            _peerClient = Substitute.For<IPeerClient>();
             _testPeer = new Peer
             {
                 Address = MultiAddressHelper.GetAddress("TestPeer")

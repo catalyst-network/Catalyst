@@ -23,24 +23,23 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Handlers;
-using Catalyst.Abstractions.IO.Transport.Channels;
-using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Handlers;
-using Catalyst.Core.Lib.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.EventLoop;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.IO.Handlers;
+using Catalyst.Modules.Network.Dotnetty.IO.Transport.Channels;
+using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 using MultiFormats;
 using NSubstitute;
 
 namespace Catalyst.TestUtils
 {
-    public class TestTcpServerChannelFactory : TcpServerChannelFactory
+    public class TestTcpServerChannelFactory : TcpServerChannelFactory<ProtocolMessage>
     {
-        private readonly IObservableServiceHandler _observableServiceHandler;
+        private readonly IObservableServiceHandler<ProtocolMessage> _observableServiceHandler;
 
         public TestTcpServerChannelFactory(int backLogValue = 100) : base(backLogValue)
         {
@@ -62,7 +61,7 @@ namespace Catalyst.TestUtils
         /// <param name="targetAddress">Ignored</param>
         /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Local TLS certificate</param>
-        public override async Task<IObservableChannel> BuildChannelAsync(IEventLoopGroupFactory eventLoopGroupFactory,
+        public override async Task<IObservableChannel<ProtocolMessage>> BuildChannelAsync(IEventLoopGroupFactory eventLoopGroupFactory,
             MultiAddress address,
             X509Certificate2 certificate = null)
         {
@@ -70,7 +69,7 @@ namespace Catalyst.TestUtils
 
             var messageStream = _observableServiceHandler.MessageStream;
 
-            return await Task.FromResult(new ObservableChannel(messageStream, channel)).ConfigureAwait(false);
+            return await Task.FromResult(new ObservableChannel<ProtocolMessage>(messageStream, channel)).ConfigureAwait(false);
         }
 
         public new Task<IChannel> BootstrapAsync(IEventLoopGroupFactory handlerEventLoopGroupFactory,

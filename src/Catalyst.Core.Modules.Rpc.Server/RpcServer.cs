@@ -28,18 +28,19 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.IO.EventLoop;
-using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.Rpc;
-using Catalyst.Core.Lib.IO.Transport;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.EventLoop;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
+using Catalyst.Modules.Network.Dotnetty.IO.Transport;
+using Catalyst.Modules.Network.Dotnetty.Rpc;
 using Catalyst.Protocol.Wire;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server
 {
-    public sealed class RpcServer : TcpServer, IRpcServer
+    public sealed class RpcServer : TcpServer<IObserverDto<ProtocolMessage>>, IRpcServer
     {
         private readonly IEnumerable<IRpcRequestObserver> _requestHandlers;
         private readonly CancellationTokenSource _cancellationSource;
@@ -50,7 +51,7 @@ namespace Catalyst.Core.Modules.Rpc.Server
 
         public RpcServer(IRpcServerSettings settings,
             ILogger logger,
-            ITcpServerChannelFactory channelFactory,
+            ITcpServerChannelFactory<IObserverDto<ProtocolMessage>> channelFactory,
             ICertificateStore certificateStore,
             IEnumerable<IRpcRequestObserver> requestHandlers,
             ITcpServerEventLoopGroupFactory eventEventLoopGroupFactory) 

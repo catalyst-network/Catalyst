@@ -24,20 +24,23 @@
 using System.Collections.Generic;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.IO.EventLoop;
-using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.Rpc;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.EventLoop;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
+using Catalyst.Modules.Network.Dotnetty.Rpc;
+using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Core.Modules.Rpc.Client
 {
     public sealed class RpcClientFactory : IRpcClientFactory
     {
-        private readonly ITcpClientChannelFactory _channelFactory;
+        private readonly ITcpClientChannelFactory<IObserverDto<ProtocolMessage>> _channelFactory;
         private readonly IEnumerable<IRpcResponseObserver> _handlers;
         private readonly ITcpClientEventLoopGroupFactory _clientEventLoopGroupFactory;
 
-        public RpcClientFactory(ITcpClientChannelFactory channelFactory,
+        public RpcClientFactory(ITcpClientChannelFactory<IObserverDto<ProtocolMessage>> channelFactory,
             ITcpClientEventLoopGroupFactory clientEventLoopGroupFactory,
             IEnumerable<IRpcResponseObserver> handlers)
         {

@@ -27,13 +27,13 @@ using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Abstractions.P2P.Repository;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
-using DotNetty.Transport.Channels;
 using Serilog;
 using MultiFormats;
-using Lib.P2P.Protocols;
+using Catalyst.Modules.Network.Dotnetty.Rpc.IO.Observers;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
+using DotNetty.Transport.Channels;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
@@ -42,7 +42,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
     /// </summary>
     /// <seealso cref="IRpcRequestObserver" />
     public sealed class PeerCountRequestObserver
-        : RequestObserverBase<GetPeerCountRequest, GetPeerCountResponse>,
+        : RpcRequestObserverBase<GetPeerCountRequest, GetPeerCountResponse>,
             IRpcRequestObserver
     {
         /// <summary>The peer discovery</summary>
@@ -53,10 +53,9 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <param name="peerRepository">The peer discovery.</param>
         /// <param name="logger">The logger.</param>
         public PeerCountRequestObserver(IPeerSettings peerSettings,
-            ILibP2PPeerClient peerClient,
             IPeerRepository peerRepository,
             ILogger logger) :
-            base(logger, peerSettings, peerClient)
+            base(logger, peerSettings)
         {
             _peerRepository = peerRepository;
         }
@@ -74,6 +73,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             ICorrelationId correlationId)
         {
             Guard.Argument(getPeerCountRequest, nameof(getPeerCountRequest)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(sender, nameof(sender)).NotNull();
             var peerCount = _peerRepository.GetAll().Count();
 

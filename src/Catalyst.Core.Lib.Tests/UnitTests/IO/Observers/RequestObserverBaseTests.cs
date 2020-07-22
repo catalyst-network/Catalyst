@@ -39,7 +39,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
         public void OnNext_Should_Still_Get_Called_After_HandleBroadcast_Failure()
         {
             var testScheduler = new TestScheduler(); 
-            var peerClient  = Substitute.For<ILibP2PPeerClient>();
+            var peerClient  = Substitute.For<IPeerClient>();
             var candidateDeltaMessages = Enumerable.Repeat(new PeerNeighborsRequest(), 10).ToArray();
             var peerSettings = MultiAddressHelper.GetAddress("server").ToSubstitutedPeerSettings();
             var messageStream = MessageStreamHelper.CreateStreamWithMessages(testScheduler, candidateDeltaMessages);

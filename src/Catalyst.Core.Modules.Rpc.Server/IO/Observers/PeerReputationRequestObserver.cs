@@ -23,23 +23,20 @@
 
 using System.Linq;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Abstractions.P2P.Repository;
-using Catalyst.Core.Lib.Util;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
-using DotNetty.Transport.Channels;
 using Serilog;
 using MultiFormats;
-using Lib.P2P.Protocols;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
+using Catalyst.Modules.Network.Dotnetty.Rpc.IO.Observers;
+using DotNetty.Transport.Channels;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
     public sealed class PeerReputationRequestObserver
-        : RequestObserverBase<GetPeerReputationRequest, GetPeerReputationResponse>,
+        : RpcRequestObserverBase<GetPeerReputationRequest, GetPeerReputationResponse>,
             IRpcRequestObserver
     {
         /// <summary>
@@ -48,10 +45,9 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         private readonly IPeerRepository _peerRepository;
 
         public PeerReputationRequestObserver(IPeerSettings peerSettings,
-            ILibP2PPeerClient peerClient,
             ILogger logger,
             IPeerRepository peerRepository)
-            : base(logger, peerSettings, peerClient)
+            : base(logger, peerSettings)
         {
             _peerRepository = peerRepository;
         }
@@ -69,6 +65,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             ICorrelationId correlationId)
         {
             Guard.Argument(getPeerReputationRequest, nameof(getPeerReputationRequest)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(sender, nameof(sender)).NotNull();
             Logger.Debug("received message of type PeerReputationRequest");
 

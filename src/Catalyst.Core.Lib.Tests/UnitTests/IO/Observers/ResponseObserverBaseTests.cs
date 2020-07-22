@@ -49,7 +49,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
             public FailingResponseObserver(ILogger logger) : base(logger) { }
 
             protected override void HandleResponse(GetPeerCountResponse messageDto,
-                IChannelHandlerContext channelHandlerContext,
                 MultiAddress sender,
                 ICorrelationId correlationId)
             {

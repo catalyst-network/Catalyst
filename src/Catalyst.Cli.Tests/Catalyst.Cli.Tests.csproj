@@ -19,8 +19,11 @@
     <Import Project="../Common.TestProjects.props" />
     <ItemGroup>
         <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
-        <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
         <ProjectReference Include="..\Catalyst.Cli\Catalyst.Cli.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Modules.Rpc.Client\Catalyst.Core.Modules.Rpc.Client.csproj" />
+        <ProjectReference Include="..\Catalyst.Modules.Network.Dotnetty\Catalyst.Modules.Network.Dotnetty.csproj" />
+        <ProjectReference Include="..\Catalyst.Modules.Network.LibP2P\Catalyst.Modules.Network.LibP2P.csproj" />
+        <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
     </ItemGroup>
     <ItemGroup>
         <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />

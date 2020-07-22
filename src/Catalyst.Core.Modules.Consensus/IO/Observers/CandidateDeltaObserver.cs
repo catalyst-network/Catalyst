@@ -25,7 +25,6 @@ using System;
 using System.Linq;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Lib.Extensions;
@@ -55,17 +54,17 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
             _hashProvider = provider;
         }
 
-        public override void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto)
+        public override void HandleBroadcast(ProtocolMessage message)
         {
             try
             {
-                var multiAddress = new MultiAddress(messageDto.Payload.Address);
-                Logger.Verbose("received {message} from {port}", messageDto.Payload.CorrelationId.ToCorrelationId(),
+                var multiAddress = new MultiAddress(message.Address);
+                Logger.Verbose("received {message} from {port}", message.CorrelationId.ToCorrelationId(),
                     multiAddress.GetPort());
 
                 // @TODO here we use the protobuff message to parse rather than using the CandidateDeltaBroadcastDao
                 /////////////////////////////////////////////////////////////////////////////////////////////////
-                var deserialized = messageDto.Payload.FromProtocolMessage<CandidateDeltaBroadcast>();
+                var deserialized = message.FromProtocolMessage<CandidateDeltaBroadcast>();
                 var previousDeltaDfsHashCid = deserialized.PreviousDeltaDfsHash.ToByteArray().ToCid();
                 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -100,7 +99,7 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
             catch (Exception exception)
             {
                 Logger.Error(exception,
-                    $"Failed to process candidate delta broadcast {messageDto.Payload.ToJsonString()}.");
+                    $"Failed to process candidate delta broadcast {message.ToJsonString()}.");
             }
         }
     }

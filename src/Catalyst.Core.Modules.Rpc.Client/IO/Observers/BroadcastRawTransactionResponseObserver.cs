@@ -23,7 +23,6 @@
 
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Rpc.IO;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
 using MultiFormats;
@@ -35,9 +34,9 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
     {
         public BroadcastRawTransactionResponseObserver(ILogger logger) : base(logger) { }
 
-        protected override void HandleResponse(BroadcastRawTransactionResponse messageDto,
+        protected override void HandleResponse(BroadcastRawTransactionResponse message,
             IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderentifier,
+            MultiAddress senderAddress,
             ICorrelationId correlationId) { }
     }
 }

@@ -25,7 +25,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Abstractions.Cli;
-using Catalyst.Abstractions.Cli.CommandTypes;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.Cli.CommandTypes;
 using CommandLine;
 
 namespace Catalyst.Cli

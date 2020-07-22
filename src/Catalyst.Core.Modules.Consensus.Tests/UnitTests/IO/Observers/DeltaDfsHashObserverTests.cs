@@ -25,11 +25,9 @@ using System.Collections.Generic;
 using System.Text;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Modules.Consensus.IO.Observers;
 using Catalyst.Core.Modules.Dfs.Extensions;
@@ -42,7 +40,6 @@ using NSubstitute;
 using Serilog;
 using NUnit.Framework;
 using MultiFormats;
-using Catalyst.Core.Modules.Consensus.Deltas;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
 {
@@ -50,7 +47,6 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
     {
         private IHashProvider _hashProvider;
         private IDeltaHashProvider _deltaHashProvider;
-        private IChannelHandlerContext _fakeChannelContext;
         private SyncState _syncState;
         private ILogger _logger;
         private IPeerRepository _peerRepository;
@@ -60,7 +56,6 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
         {
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _deltaHashProvider = Substitute.For<IDeltaHashProvider>();
-            _fakeChannelContext = Substitute.For<IChannelHandlerContext>();
             _syncState = new SyncState { IsSynchronized = true };
             _logger = Substitute.For<ILogger>();
             _peerRepository = Substitute.For<IPeerRepository>();
@@ -73,7 +68,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             var prevHash = _hashProvider.ComputeUtf8MultiHash("prevHash").ToCid();
             var receivedMessage = PrepareReceivedMessage(newHash.ToArray(), prevHash.ToArray());
 
-            var multiAddress = new MultiAddress(receivedMessage.Payload.Address);
+            var multiAddress = new MultiAddress(receivedMessage.Address);
 
             var candidateDeltaBroadcast = new CandidateDeltaBroadcast
             {
@@ -99,7 +94,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             var prevHash = _hashProvider.ComputeUtf8MultiHash("prevHash").ToCid();
             var receivedMessage = PrepareReceivedMessage(invalidNewHash, prevHash.ToArray());
 
-            var multiAddress = new MultiAddress(receivedMessage.Payload.Address);
+            var multiAddress = new MultiAddress(receivedMessage.Address);
 
             var candidateDeltaBroadcast = new CandidateDeltaBroadcast
             {
@@ -124,7 +119,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             var prevHash = _hashProvider.ComputeUtf8MultiHash("prevHash").ToCid();
             var receivedMessage = PrepareReceivedMessage(newHash.ToArray(), prevHash.ToArray());
 
-            var multiAddress = new MultiAddress(receivedMessage.Payload.Address);
+            var multiAddress = new MultiAddress(receivedMessage.Address);
 
             var candidateDeltaBroadcast = new CandidateDeltaBroadcast
             {
@@ -144,7 +139,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _logger.Received(1).Error(Arg.Any<string>());
         }
 
-        private IObserverDto<ProtocolMessage> PrepareReceivedMessage(byte[] newHash, byte[] prevHash)
+        private ProtocolMessage PrepareReceivedMessage(byte[] newHash, byte[] prevHash)
         {
             var message = new DeltaDfsHashBroadcast
             {
@@ -152,9 +147,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
                 PreviousDeltaDfsHash = prevHash.ToByteString()
             };
 
-            var receivedMessage = new ObserverDto(_fakeChannelContext,
-                message.ToProtocolMessage(MultiAddressHelper.GetAddress()));
-            return receivedMessage;
+            return message.ToProtocolMessage(MultiAddressHelper.GetAddress());
         }
     }
 }
