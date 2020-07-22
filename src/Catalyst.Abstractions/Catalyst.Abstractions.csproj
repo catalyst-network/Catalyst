@@ -1,38 +1,40 @@
 <Project Sdk="Microsoft.NET.Sdk">
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <RootNamespace>Catalyst.Abstractions</RootNamespace>
-    <Authors>James Kirby (nshcore@protonmail.com)</Authors>
-    <SignAssembly>true</SignAssembly>
-    <AssemblyOriginatorKeyFile>Catalyst.Abstractions.snk</AssemblyOriginatorKeyFile>
-    <PublicSign>true</PublicSign>
-    <LangVersion>latest</LangVersion>
-    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-  </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-    <NoWarn>1701;1702;CS8002</NoWarn>
-  </PropertyGroup>
-  <Import Project="../Common.Packable.props" />
-  <Import Project="../Common.Projects.props" />
-  <ItemGroup>
-    <PackageReference Include="AutoMapper" Version="5.1.1" />
-    <PackageReference Include="DnsClient" Version="1.2.0" />
-    <PackageReference Include="DotNetty.Transport" Version="0.6.0" />
-    <PackageReference Include="Google.Protobuf" Version="3.9.1" />
-    <PackageReference Include="Makaretu.Dns.Unicast" Version="0.11.1" />
-    <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.0.0" />
-    <PackageReference Include="Serilog" Version="2.8.0" />
-    <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.4" />
-    <PackageReference Include="SharpRepository.MongoDbRepository" Version="2.1.0-prerelease" />
-    <PackageReference Include="SharpRepository.Repository" Version="2.1.1-prerelease" />
-    <PackageReference Include="System.IO.Abstractions" Version="6.0.3" />
-    <PackageReference Include="System.Reactive" Version="4.1.6" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\..\submodules\nethermind\src\Dirichlet\Nethermind.Dirichlet.Numerics\Nethermind.Dirichlet.Numerics.csproj" />
-    <ProjectReference Include="..\..\submodules\nethermind\src\Nethermind\Nethermind.Evm\Nethermind.Evm.csproj" />
-    <ProjectReference Include="..\Catalyst.Protocol\Catalyst.Protocol.csproj" />
-    <ProjectReference Include="..\Lib.P2P\Lib.P2P.csproj" />
-    <ProjectReference Include="..\MultiFormats\MultiFormats.csproj" />
-  </ItemGroup>
+    <PropertyGroup>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <RootNamespace>Catalyst.Abstractions</RootNamespace>
+        <Authors>James Kirby (nshcore@protonmail.com)</Authors>
+        <SignAssembly>true</SignAssembly>
+        <AssemblyOriginatorKeyFile>Catalyst.Abstractions.snk</AssemblyOriginatorKeyFile>
+        <PublicSign>true</PublicSign>
+        <LangVersion>latest</LangVersion>
+        <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    </PropertyGroup>
+    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+        <NoWarn>1701;1702;CS8002</NoWarn>
+    </PropertyGroup>
+    <Import Project="../Common.Packable.props" />
+    <Import Project="../Common.Projects.props" />
+    <ItemGroup>
+        <PackageReference Include="AutoMapper" Version="5.1.1" />
+        <PackageReference Include="DnsClient" Version="1.2.0" />
+        <PackageReference Include="DotNetty.Transport" Version="0.6.0" />
+        <PackageReference Include="Google.Protobuf" Version="3.9.1" />
+        <PackageReference Include="Makaretu.Dns.Unicast" Version="0.11.1" />
+        <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="3.0.0" />
+        <PackageReference Include="Serilog" Version="2.8.0" />
+        <PackageReference Include="Serilog.Extensions.Logging" Version="2.0.4" />
+        <PackageReference Include="SharpRepository.MongoDbRepository" Version="2.1.0-prerelease" />
+        <PackageReference Include="SharpRepository.Repository" Version="2.1.1-prerelease" />
+        <PackageReference Include="System.IO.Abstractions" Version="6.0.3" />
+        <PackageReference Include="System.Reactive" Version="4.1.6" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\..\submodules\nethermind\src\Dirichlet\Nethermind.Dirichlet.Numerics\Nethermind.Dirichlet.Numerics.csproj" />
+        <ProjectReference Include="..\..\submodules\nethermind\src\Nethermind\Nethermind.Evm\Nethermind.Evm.csproj" />
+        <ProjectReference Include="..\Catalyst.Protocol\Catalyst.Protocol.csproj" />
+        <ProjectReference Include="..\Lib.P2P\Lib.P2P.csproj" />
+        <ProjectReference Include="..\MultiFormats\MultiFormats.csproj" />
+        <PackageReference Include="DnsClient" Version="1.2.0" />
+      <PackageReference Include="DotNetty.Transport" Version="0.6.0" />
+</ItemGroup>
 </Project>
