@@ -29,7 +29,6 @@ using System.Reactive.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
@@ -43,7 +42,6 @@ using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
-using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
@@ -574,7 +572,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
 
                     walker.PeerClient
                        .Received(Constants.NumberOfRandomPeers)
-                       .SendMessage(Arg.Any<IMessageDto<ProtocolMessage>>());
+                       .SendMessageAsync(Arg.Any<ProtocolMessage>(), Arg.Any<MultiAddress>());
 
                     walker.StepProposal.Neighbours
                        .Where(n => n.StateTypes == NeighbourStateTypes.Contacted)

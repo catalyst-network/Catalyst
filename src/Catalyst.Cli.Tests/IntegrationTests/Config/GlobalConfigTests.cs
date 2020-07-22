@@ -26,16 +26,15 @@ using System.IO;
 using System.Linq;
 using Autofac;
 using Catalyst.Abstractions.Cli;
-using Catalyst.Abstractions.Cli.Commands;
 using Catalyst.Cli.Commands;
 using Catalyst.Core.Lib;
 using Catalyst.Core.Lib.Cli;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.KeySigner;
 using Catalyst.Core.Modules.Keystore;
 using Catalyst.Core.Modules.Rpc.Client;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.Cli.Commands;
 using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
 using NUnit.Framework;
@@ -76,7 +75,6 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Config
                 containerBuilder.RegisterModule(new KeySignerModule());
                 containerBuilder.RegisterModule(new BulletProofsModule());
                 containerBuilder.RegisterModule(new RpcClientModule());
-                containerBuilder.RegisterModule(new DfsModule());
 
                 containerBuilder.RegisterType<ConsoleUserOutput>().As<IUserOutput>();
                 containerBuilder.RegisterType<CatalystCli>().As<ICatalystCli>();

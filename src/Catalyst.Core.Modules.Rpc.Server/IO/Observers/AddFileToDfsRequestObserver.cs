@@ -27,24 +27,21 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Enumerator;
-using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.Options;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.FileTransfer;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Protocol.Peer;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.FileTransfer;
+using Catalyst.Modules.Network.Dotnetty.FileTransfer;
+using Catalyst.Modules.Network.Dotnetty.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
+using Catalyst.Modules.Network.Dotnetty.Rpc.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
-using Lib.P2P.Protocols;
-using Microsoft.Reactive.Testing;
 using MultiFormats;
 using Serilog;
 
@@ -55,7 +52,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
     /// </summary>
     /// <seealso cref="IRpcRequestObserver" />
     public sealed class AddFileToDfsRequestObserver
-        : RequestObserverBase<AddFileToDfsRequest, AddFileToDfsResponse>,
+        : RpcRequestObserverBase<AddFileToDfsRequest, AddFileToDfsResponse>,
             IRpcRequestObserver
     {
         /// <summary>The download file transfer factory</summary>
@@ -74,10 +71,9 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <param name="logger">The logger.</param>
         public AddFileToDfsRequestObserver(IDfsService dfsService,
             IPeerSettings peerSettings,
-            ILibP2PPeerClient peerClient,
             IDownloadFileTransferFactory fileTransferFactory,
             IHashProvider hashProvider,
-            ILogger logger) : base(logger, peerSettings, peerClient)
+            ILogger logger) : base(logger, peerSettings)
         {
             _fileTransferFactory = fileTransferFactory;
             _dfsService = dfsService;
@@ -88,19 +84,20 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// </summary>
         /// <param name="addFileToDfsRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="sender"></param>
+        /// <param name="senderPeerId"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override AddFileToDfsResponse HandleRequest(AddFileToDfsRequest addFileToDfsRequest,
             IChannelHandlerContext channelHandlerContext,
-            MultiAddress sender,
+            MultiAddress senderAddress,
             ICorrelationId correlationId)
         {
             Guard.Argument(addFileToDfsRequest, nameof(addFileToDfsRequest)).NotNull();
-            Guard.Argument(sender, nameof(sender)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderAddress, nameof(senderAddress)).NotNull();
 
             var fileTransferInformation = new DownloadFileTransferInformation(PeerSettings.Address,
-                sender, channelHandlerContext.Channel,
+                senderAddress, channelHandlerContext.Channel,
                 correlationId, addFileToDfsRequest.FileName, addFileToDfsRequest.FileSize);
 
             FileTransferResponseCodeTypes responseCodeType;
@@ -126,14 +123,14 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
             _fileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationId, CancellationToken.None)
                .ContinueWith(task =>
-                {
-                    if (fileTransferInformation.ChunkIndicatorsTrue())
-                    {
-                        OnSuccessAsync(fileTransferInformation).ConfigureAwait(false).GetAwaiter().GetResult();
-                    }
+               {
+                   if (fileTransferInformation.ChunkIndicatorsTrue())
+                   {
+                       OnSuccessAsync(fileTransferInformation).ConfigureAwait(false).GetAwaiter().GetResult();
+                   }
 
-                    fileTransferInformation.Dispose();
-                }, ctx.Token)
+                   fileTransferInformation.Dispose();
+               }, ctx.Token)
                .ConfigureAwait(false);
 
             return message;
@@ -152,7 +149,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
                 {
                     fileSystemNode = await _dfsService.UnixFsApi.AddAsync(fileStream,
                         fileTransferInformation.FileOutputPath,
-                        new AddFileOptions {Hash = _hashProvider.HashingAlgorithm.Name}).ConfigureAwait(false);
+                        new AddFileOptions { Hash = _hashProvider.HashingAlgorithm.Name }).ConfigureAwait(false);
                 }
 
                 fileTransferInformation.DfsHash = fileSystemNode.Id.Encode();

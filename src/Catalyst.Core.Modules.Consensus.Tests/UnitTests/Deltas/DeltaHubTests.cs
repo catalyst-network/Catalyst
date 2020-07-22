@@ -29,7 +29,6 @@ using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Options;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Core.Modules.Dfs.Extensions;
@@ -45,6 +44,7 @@ using Polly.Retry;
 using Serilog;
 using NUnit.Framework;
 using MultiFormats;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.P2P.IO.Messaging.Broadcast;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
@@ -55,16 +55,16 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         private MultiAddress _address;
         private DeltaHub _hub;
         private IDfsService _dfsService;
-        private ILibP2PPeerClient _peerClient;
+        private IPeerClient _peerClient;
 
         private sealed class DeltaHubWithFastRetryPolicy : DeltaHub
         {
             public DeltaHubWithFastRetryPolicy(IBroadcastManager broadcastManager,
-                ILibP2PPeerClient peerClient,
+                IPeerClient peerClient,
                 IPeerSettings peerSettings,
                 IDfsService dfsService,
                 IHashProvider hashProvider,
-                ILogger logger) : base(broadcastManager, peerClient, peerSettings, dfsService, hashProvider, logger) { }
+                ILogger logger) : base(peerClient, peerSettings, dfsService, hashProvider, logger) { }
 
             protected override AsyncRetryPolicy<IFileSystemNode> DfsRetryPolicy =>
                 Policy<IFileSystemNode>.Handle<Exception>()
@@ -76,7 +76,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         public void Init()
         {
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
-            _peerClient = Substitute.For<ILibP2PPeerClient>();
+            _peerClient = Substitute.For<IPeerClient>();
             _broadcastManager = Substitute.For<IBroadcastManager>();
             var logger = Substitute.For<ILogger>();
             _address = MultiAddressHelper.GetAddress("me");

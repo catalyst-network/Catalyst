@@ -24,12 +24,10 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Rpc.IO;
-using Catalyst.Protocol.Peer;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.FileTransfer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -66,11 +64,12 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
         /// <param name="correlationId"></param>
         protected override void HandleResponse(GetFileFromDfsResponse getFileFromDfsResponse,
             IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderentifier,
+            MultiAddress senderAddress,
             ICorrelationId correlationId)
         {
             Guard.Argument(getFileFromDfsResponse, nameof(getFileFromDfsResponse)).NotNull();
-            Guard.Argument(senderentifier, nameof(senderentifier)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
+            Guard.Argument(senderAddress, nameof(senderAddress)).NotNull();
             
             var responseCode = (FileTransferResponseCodeTypes) getFileFromDfsResponse.ResponseCode[0];
 

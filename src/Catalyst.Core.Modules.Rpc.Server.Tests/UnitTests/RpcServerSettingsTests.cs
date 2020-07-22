@@ -21,7 +21,6 @@
 
 #endregion
 
-using System.Net;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;

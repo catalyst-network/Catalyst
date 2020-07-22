@@ -25,7 +25,7 @@ using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Abstractions.IO.Observers
 {
-    public interface IRequestMessageObserver : IMessageObserver
+    public interface IRequestMessageObserver<T> : IMessageObserver<T>
     {
         IPeerSettings PeerSettings { get; }
     }

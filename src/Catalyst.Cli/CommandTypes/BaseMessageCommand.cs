@@ -24,14 +24,13 @@
 using System;
 using System.Collections.Concurrent;
 using System.Reactive.Linq;
-using Catalyst.Abstractions.Cli.Commands;
-using Catalyst.Abstractions.Cli.CommandTypes;
 using Catalyst.Abstractions.Cli.Options;
-using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Events;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Protocol.Peer;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.Cli.Commands;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.Cli.CommandTypes;
+using Catalyst.Modules.Network.Dotnetty.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.Rpc;
 using Google.Protobuf;
 using MultiFormats;
 using Serilog;
@@ -47,7 +46,7 @@ namespace Catalyst.Cli.CommandTypes
         private readonly IDisposable _eventStreamObserverClientAdded;
         private readonly IDisposable _eventStreamObserverClientRemoved;
         private readonly ConcurrentDictionary<int, IDisposable> _subscriptions;
-        private MultiAddress _recipientPeerId;
+        private MultiAddress _recipientAddress;
 
         protected BaseMessageCommand(ICommandContext commandContext, ILogger logger)
             : base(commandContext, logger)
@@ -59,18 +58,22 @@ namespace Catalyst.Cli.CommandTypes
                .OfType<SocketClientRegistryClientRemoved>().Subscribe(SocketClientRegistryClientRemovedOnNext);
         }
 
-        protected MultiAddress RecipientPeerId
+        protected MultiAddress RecipientAddress
         {
             get
             {
-                if (_recipientPeerId != null) return _recipientPeerId;
+                if (_recipientAddress != null)
+                {
+                    return _recipientAddress;
+                }
+
                 var rpcClientConfig = CommandContext.GetNodeConfig(Options.Node);
-                _recipientPeerId = rpcClientConfig.Address;
-                return _recipientPeerId;
+                _recipientAddress = rpcClientConfig.Address;
+                return _recipientAddress;
             }
         }
 
-        protected MultiAddress sender => CommandContext.Address;
+        protected MultiAddress SenderAddress => CommandContext.Address;
 
         public void Dispose() { Dispose(true); }
 
@@ -83,8 +86,8 @@ namespace Catalyst.Cli.CommandTypes
             if (message == null) return;
 
             var messageDto = new MessageDto(
-                message.ToProtocolMessage(sender),
-                RecipientPeerId);
+                message.ToProtocolMessage(SenderAddress),
+                RecipientAddress);
             Target.SendMessage(messageDto);
         }
 

@@ -23,24 +23,20 @@
 
 using System.Linq;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Abstractions.P2P.Repository;
-using Catalyst.Core.Lib.Util;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
-using DotNetty.Transport.Channels;
-using Google.Protobuf;
 using Serilog;
 using MultiFormats;
-using Lib.P2P.Protocols;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
+using Catalyst.Modules.Network.Dotnetty.Rpc.IO.Observers;
+using DotNetty.Transport.Channels;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
     public sealed class PeerBlackListingRequestObserver
-        : RequestObserverBase<SetPeerBlackListRequest, SetPeerBlackListResponse>,
+        : RpcRequestObserverBase<SetPeerBlackListRequest, SetPeerBlackListResponse>,
             IRpcRequestObserver
     {
         /// <summary>
@@ -49,10 +45,9 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         private readonly IPeerRepository _peerRepository;
 
         public PeerBlackListingRequestObserver(IPeerSettings peerSettings,
-            ILibP2PPeerClient peerClient,
             ILogger logger,
             IPeerRepository peerRepository)
-            : base(logger, peerSettings, peerClient)
+            : base(logger, peerSettings)
         {
             _peerRepository = peerRepository;
         }

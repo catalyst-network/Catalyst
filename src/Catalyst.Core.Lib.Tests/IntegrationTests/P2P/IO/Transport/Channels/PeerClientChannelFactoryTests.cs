@@ -25,16 +25,12 @@ using System.Linq;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Network;
-using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using Catalyst.TestUtils.Fakes;
 using DotNetty.Transport.Channels.Embedded;
@@ -45,6 +41,10 @@ using NSubstitute;
 using Serilog;
 using NUnit.Framework;
 using MultiFormats;
+using Catalyst.Modules.Network.Dotnetty.IO.Handlers;
+using Catalyst.Modules.Network.Dotnetty.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.P2P.IO.Messaging.Broadcast;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Messaging.Dto;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.IO.Transport.Channels
 {
@@ -137,7 +137,7 @@ public async Task
                 )
                .ReturnsForAnyArgs(true);
 
-            var observer = new ProtocolMessageObserver(0, Substitute.For<ILogger>());
+            var observer = new ProtocolMessageObserver<ProtocolMessage>(0, Substitute.For<ILogger>());
 
             var messageStream = _clientFactory.InheritedHandlers.OfType<ObservableServiceHandler>().Single().MessageStream;
 
@@ -152,7 +152,7 @@ public async Task
                 _testScheduler.Start();
 
                 observer.Received.Count.Should().Be(1);
-                observer.Received.Single().Payload.CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);
+                observer.Received.Single().CorrelationId.ToCorrelationId().Id.Should().Be(correlationId.Id);
             }
 
             await _serverChannel.DisconnectAsync();

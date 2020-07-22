@@ -21,13 +21,12 @@
 
 #endregion
 
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Abstractions.IO.Observers
 {
-    public interface IBroadcastObserver : IMessageObserver
+    public interface IBroadcastObserver : IMessageObserver<ProtocolMessage>
     { 
-        void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto);
+        void HandleBroadcast(ProtocolMessage message);
     }
 }

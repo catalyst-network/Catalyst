@@ -21,11 +21,10 @@
 
 #endregion
 
-using Catalyst.Abstractions.Cli.Commands;
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.Network;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.Cli.Commands;
 using Dawn;
 using Serilog;
 

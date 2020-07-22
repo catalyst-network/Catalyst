@@ -68,7 +68,7 @@ steps:
   - task: DotNetCoreCLI@2
     displayName: 'Build solution'
     inputs:
-      projects: 'src/**/*.csproj'
+      projects: 'src/*[Tt]ests/*.csproj'
       arguments: '--configuration $(BuildConfiguration)'
       failOnStandardError: 'true'
 

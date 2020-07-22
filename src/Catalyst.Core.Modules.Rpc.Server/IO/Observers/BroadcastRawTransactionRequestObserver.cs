@@ -23,29 +23,26 @@
 
 using Catalyst.Abstractions.IO.Events;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Protocol.Peer;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
+using Catalyst.Modules.Network.Dotnetty.Rpc.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
-using Lib.P2P.Protocols;
 using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
     public class BroadcastRawTransactionRequestObserver
-        : RequestObserverBase<BroadcastRawTransactionRequest, BroadcastRawTransactionResponse>, IRpcRequestObserver
+        : RpcRequestObserverBase<BroadcastRawTransactionRequest, BroadcastRawTransactionResponse>, IRpcRequestObserver
     {
         private readonly ITransactionReceivedEvent _transactionReceivedEvent;
 
         public BroadcastRawTransactionRequestObserver(ILogger logger,
             IPeerSettings peerSettings,
-            ILibP2PPeerClient peerClient,
             ITransactionReceivedEvent transactionReceivedEvent)
-            : base(logger, peerSettings, peerClient)
+            : base(logger, peerSettings)
         {
             _transactionReceivedEvent = transactionReceivedEvent;
         }

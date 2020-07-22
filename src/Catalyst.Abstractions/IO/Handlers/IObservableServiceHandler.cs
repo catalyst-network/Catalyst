@@ -23,10 +23,9 @@
 
 using System;
 using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 
 namespace Catalyst.Abstractions.IO.Handlers
 {
-    public interface IObservableServiceHandler : IChannelHandler, IObservableMessageStreamer<ProtocolMessage>, IDisposable { }
+    public interface IObservableServiceHandler<T> : IChannelHandler, IObservableMessageStreamer<T>, IDisposable { }
 }

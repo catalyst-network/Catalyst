@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Autofac" Version="4.8.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
+    <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
+  </ItemGroup>
+
+</Project>

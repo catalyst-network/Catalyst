@@ -27,13 +27,13 @@ using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Abstractions.P2P.Repository;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
-using DotNetty.Transport.Channels;
 using Serilog;
 using MultiFormats;
-using Lib.P2P.Protocols;
+using Catalyst.Modules.Network.Dotnetty.Rpc.IO.Observers;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
+using DotNetty.Transport.Channels;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
@@ -42,7 +42,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
     /// </summary>
     /// <seealso cref="IRpcRequestObserver" />
     public sealed class PeerListRequestObserver
-        : RequestObserverBase<GetPeerListRequest, GetPeerListResponse>,
+        : RpcRequestObserverBase<GetPeerListRequest, GetPeerListResponse>,
             IRpcRequestObserver
     {
         /// <summary>
@@ -57,10 +57,9 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <param name="logger">The logger.</param>
         /// <param name="peerRepository"></param>
         public PeerListRequestObserver(IPeerSettings peerSettings,
-            ILibP2PPeerClient peerClient,
             ILogger logger,
             IPeerRepository peerRepository)
-            : base(logger, peerSettings, peerClient)
+            : base(logger, peerSettings)
         {
             _peerRepository = peerRepository;
         }
@@ -78,6 +77,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             ICorrelationId correlationId)
         {
             Guard.Argument(getPeerListRequest, nameof(getPeerListRequest)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(sender, nameof(sender)).NotNull();
             Logger.Debug("received message of type PeerListRequest");
 

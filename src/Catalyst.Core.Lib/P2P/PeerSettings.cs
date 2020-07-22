@@ -105,7 +105,7 @@ namespace Catalyst.Core.Lib.P2P
         }
 
         /// <summary>
-        ///     Set attributes
+        ///     Set the local nodes peer settings
         /// </summary>
         /// <param name="rootSection"></param>
         public PeerSettings(IConfigurationRoot rootSection, Peer localPeer, IConfigApi configApi)

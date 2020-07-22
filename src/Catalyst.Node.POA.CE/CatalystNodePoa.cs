@@ -65,8 +65,8 @@ namespace Catalyst.Node.POA.CE
         private readonly IKeySigner _keySigner;
         private readonly ILogger _logger;
         private readonly IMempool<PublicEntryDao> _memPool;
-        private readonly ILibP2PPeerService _peer;
-        private readonly ILibP2PPeerClient _peerClient;
+        private readonly IPeerService _peer;
+        private readonly IPeerClient _peerClient;
         private readonly IPeerSettings _peerSettings;
         private readonly IPublicKey _publicKey;
         private readonly ISynchroniser _synchronizer;
@@ -75,12 +75,12 @@ namespace Catalyst.Node.POA.CE
         private readonly IPeerDiscovery _peerDiscovery;
 
         public CatalystNodePoa(IKeySigner keySigner,
-            ILibP2PPeerService peer,
+            IPeerService peer,
             IConsensus consensus,
             IDfsService dfsService,
             ILedger ledger,
             ILogger logger,
-            ILibP2PPeerClient peerClient,
+            IPeerClient peerClient,
             IPeerSettings peerSettings,
             IMempool<PublicEntryDao> memPool,
             ISynchroniser synchronizer,

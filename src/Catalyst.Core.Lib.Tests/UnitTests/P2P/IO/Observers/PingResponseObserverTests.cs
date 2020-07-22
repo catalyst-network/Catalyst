@@ -24,13 +24,11 @@
 using System;
 using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P.Protocols;
-using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.P2P.IO.Observers;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
-using DotNetty.Transport.Channels;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
@@ -40,12 +38,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 {
     public sealed class PingResponseObserverTests : IDisposable
     {
-        private readonly IChannelHandlerContext _fakeContext;
         private readonly PingResponseObserver _observer;
 
         public PingResponseObserverTests()
         {
-            _fakeContext = Substitute.For<IChannelHandlerContext>();
             _observer = new PingResponseObserver(Substitute.For<IPeerChallengeRequest>(), Substitute.For<ILogger>());
         }
 
@@ -61,8 +57,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 
             var pingResponseObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler,
-                protocolMessage);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(testScheduler, protocolMessage);
 
             _observer.StartObserving(messageStream);
 

@@ -28,14 +28,10 @@ using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Ledger;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.Service;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.IPPN;
-using Catalyst.Protocol.Peer;
 using Dawn;
-using DotNetty.Transport.Channels;
-using Lib.P2P.Protocols;
 using MultiFormats;
 using Serilog;
 
@@ -52,7 +48,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         public DeltaHeightRequestObserver(IPeerSettings peerSettings,
             IDeltaIndexService deltaIndexService,
             IMapperProvider mapperProvider,
-            ILibP2PPeerClient peerClient,
+            IPeerClient peerClient,
             SyncState syncState,
             ILogger logger)
             : base(logger, peerSettings, peerClient)
@@ -68,7 +64,6 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override LatestDeltaHashResponse HandleRequest(LatestDeltaHashRequest deltaHeightRequest,
-            IChannelHandlerContext channelHandlerContext,
             MultiAddress sender,
             ICorrelationId correlationId)
         {

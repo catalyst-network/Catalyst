@@ -11,7 +11,7 @@
                 "nodeId": "node2",
                 "Address": "/ip4/127.0.0.2/tcp/42066/ipfs/18n3naE9kBZoVvgYMV6saMZdwu2yu3QMzKa2BDkb5C5pcuhtrH1G9HHbztbbxA8tGmf4",
                 "PfxFileName": "mycert.pfx",
-                "SslCertPassword": "test",
+                "SslCertPassword": "test"
             }
         ]
     }

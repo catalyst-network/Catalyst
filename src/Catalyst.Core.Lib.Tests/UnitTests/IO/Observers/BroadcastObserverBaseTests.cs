@@ -25,7 +25,6 @@ using System;
 using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.Hashing;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Wire;
@@ -48,7 +47,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
 
             public FailingBroadCastObserver(ILogger logger) : base(logger) { }
 
-            public override void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto)
+            public override void HandleBroadcast(ProtocolMessage message)
             {
                 var count = Interlocked.Increment(ref _counter);
                 if (count % 2 == 0)

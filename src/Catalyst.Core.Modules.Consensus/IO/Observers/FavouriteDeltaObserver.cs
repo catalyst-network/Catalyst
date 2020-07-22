@@ -25,7 +25,6 @@ using System;
 using System.Linq;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Lib.Extensions;
@@ -51,11 +50,11 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
             _peerRepository = peerRepository;
         }
 
-        public override void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto)
+        public override void HandleBroadcast(ProtocolMessage message)
         {
             try
             {
-                var deserialized = messageDto.Payload.FromProtocolMessage<FavouriteDeltaBroadcast>();
+                var deserialized = message.FromProtocolMessage<FavouriteDeltaBroadcast>();
 
                 var previousDeltaDfsHashCid = deserialized.Candidate.PreviousDeltaDfsHash.ToByteArray().ToCid();
                 if (!_hashProvider.IsValidHash(previousDeltaDfsHashCid.Hash.ToArray()))
@@ -71,7 +70,7 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
                     return;
                 }
 
-                var multiAddress = new MultiAddress(messageDto.Payload.Address);
+                var multiAddress = new MultiAddress(message.Address);
                 var messagePoaNode = _peerRepository.GetPoaPeersByPublicKey(multiAddress.GetPublicKey()).FirstOrDefault();
                 if (messagePoaNode == null)
                 {
@@ -86,7 +85,7 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
             catch (Exception exception)
             {
                 Logger.Error(exception,
-                    $"Failed to process favourite delta broadcast {messageDto.Payload.ToJsonString()}.");
+                    $"Failed to process favourite delta broadcast {message.ToJsonString()}.");
             }
         }
     }

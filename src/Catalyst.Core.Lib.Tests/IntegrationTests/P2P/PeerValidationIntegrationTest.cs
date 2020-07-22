@@ -32,25 +32,24 @@ using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
-using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
 using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Cli;
-using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.EventLoop;
 using Catalyst.Core.Lib.P2P;
-using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
 using Catalyst.Core.Lib.P2P.Protocols;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.KeySigner;
 using Catalyst.Core.Modules.Keystore;
+using Catalyst.Modules.Network.Dotnetty;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.P2P.IO.Messaging.Broadcast;
+using Catalyst.Modules.Network.Dotnetty.IO.EventLoop;
+using Catalyst.Modules.Network.Dotnetty.P2P;
+using Catalyst.Modules.Network.Dotnetty.P2P.IO.Transport.Channels;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Lib.P2P;
-using MultiFormats;
 using NSubstitute;
 using NUnit.Framework;
 using Serilog;
@@ -81,6 +80,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             ContainerProvider.ContainerBuilder.RegisterModule(new HashingModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new BulletProofsModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new DfsModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new DotnettyNetworkModule());
 
             ContainerProvider.ContainerBuilder.RegisterType<ConsoleUserOutput>().As<IUserOutput>();
             ContainerProvider.ContainerBuilder.RegisterType<ConsoleUserInput>().As<IUserInput>();
@@ -93,7 +93,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 
             ContainerProvider.ContainerBuilder.Register(c =>
             {
-                var peerClient = c.Resolve<ILibP2PPeerClient>();
+                var peerClient = c.Resolve<IPeerClient>();
                 peerClient.StartAsync().ConfigureAwait(false).GetAwaiter().GetResult();
                 return new PeerChallengeRequest(logger, peerClient, _peerSettings, 10);
             }).As<IPeerChallengeRequest>().SingleInstance();
@@ -110,7 +110,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 
             var keySigner = ContainerProvider.Container.Resolve<IKeySigner>(); // @@
 
-            _peerService = new PeerService(
+            _peerService = new DotnettyPeerService(
                 new UdpServerEventLoopGroupFactory(eventLoopGroupFactoryConfiguration),
                 new PeerServerChannelFactory(ContainerProvider.Container.Resolve<IPeerMessageCorrelationManager>(),
                     ContainerProvider.Container.Resolve<IBroadcastManager>(),

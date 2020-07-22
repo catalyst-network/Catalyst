@@ -23,13 +23,11 @@
 
 using System;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Protocol.Peer;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
 using Catalyst.Protocol.Wire;
-using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using MultiFormats;
 using NSubstitute;
@@ -37,14 +35,16 @@ using Serilog;
 
 namespace Catalyst.TestUtils
 {
-    public class TestMessageObserver<TProto> : MessageObserverBase,
-        IP2PMessageObserver, IRpcResponseObserver, IRpcRequestObserver
+    public class TestMessageObserver<TProto> : MessageObserverBase<ProtocolMessage>,
+        IP2PMessageObserver
         where TProto : IMessage, IMessage<TProto>
     {
+        private static Func<ProtocolMessage, bool> FilterExpression = m => m?.TypeUrl != null && m.TypeUrl == typeof(TProto).ShortenedProtoFullName();
+
         public IObserver<TProto> SubstituteObserver { get; }
         public MultiAddress Address { get; }
         
-        public TestMessageObserver(ILogger logger) : base(logger, typeof(TProto).ShortenedProtoFullName())
+        public TestMessageObserver(ILogger logger) : base(logger, FilterExpression)
         {
             SubstituteObserver = Substitute.For<IObserver<TProto>>();
             Address = MultiAddressHelper.GetAddress();
@@ -52,19 +52,18 @@ namespace Catalyst.TestUtils
 
         public override void OnError(Exception exception) { SubstituteObserver.OnError(exception); }
         
-        public void HandleResponse(IObserverDto<ProtocolMessage> messageDto)
+        public void HandleResponse(ProtocolMessage message)
         {
-            SubstituteObserver.OnNext(messageDto.Payload.FromProtocolMessage<TProto>());
+            SubstituteObserver.OnNext(message.FromProtocolMessage<TProto>());
         }
 
-        public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
+        public override void OnNext(ProtocolMessage message)
         {
-            SubstituteObserver.OnNext(messageDto.Payload.FromProtocolMessage<TProto>());
+            SubstituteObserver.OnNext(message.FromProtocolMessage<TProto>());
         }
 
-        public void HandleResponseObserver(IMessage messageDto,
-            IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderentifier,
+        public void HandleResponseObserver(IMessage message,
+            MultiAddress address,
             ICorrelationId correlationId)
         {
             throw new NotImplementedException();

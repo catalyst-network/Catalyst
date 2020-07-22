@@ -22,59 +22,48 @@
 #endregion
 
 using Catalyst.Abstractions.Hashing;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Core.Lib.P2P.Models;
-using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
-using Catalyst.Core.Modules.Sync.Manager;
 using Catalyst.Core.Modules.Sync.Watcher;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.IPPN;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
-using DotNetty.Transport.Channels;
 using FluentAssertions;
 using Google.Protobuf;
 using MultiFormats.Registry;
 using NSubstitute;
-using SharpRepository.InMemoryRepository;
 using System.Collections.Generic;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
-using Catalyst.Core.Lib.P2P.Repository;
 using NUnit.Framework;
 using MultiFormats;
-using Lib.P2P.Protocols;
 using LibP2P = Lib.P2P;
 using Catalyst.Abstractions.Dfs.CoreApi;
-using System.Linq;
 using System;
 
 namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
 {
     public class DeltaHeightWatcherUnitTests
     {
-        private ILibP2PPeerClient _peerClient;
+        private IPeerClient _peerClient;
         private IHashProvider _hashProvider;
-        private ILibP2PPeerService _peerService;
+        private IPeerService _peerService;
         private ISwarmApi _swarmApi;
-        private ReplaySubject<IObserverDto<ProtocolMessage>> _deltaHeightReplaySubject;
+        private ReplaySubject<ProtocolMessage> _deltaHeightReplaySubject;
 
         [SetUp]
         public void Init()
         {
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
-            _peerService = Substitute.For<ILibP2PPeerService>();
-            _peerClient = Substitute.For<ILibP2PPeerClient>();
+            _peerService = Substitute.For<IPeerService>();
+            _peerClient = Substitute.For<IPeerClient>();
             _swarmApi = Substitute.For<ISwarmApi>();
-            _deltaHeightReplaySubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1);
+            _deltaHeightReplaySubject = new ReplaySubject<ProtocolMessage>(1);
             _peerService.MessageStream.Returns(_deltaHeightReplaySubject.AsObservable());
         }
 
@@ -113,7 +102,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
                           IsSync = true
                       };
 
-                      _deltaHeightReplaySubject.OnNext(new ObserverDto(null, deltaHeightResponse.ToProtocolMessage(peerId, CorrelationId.GenerateCorrelationId())));
+                      _deltaHeightReplaySubject.OnNext(deltaHeightResponse.ToProtocolMessage(peerId, CorrelationId.GenerateCorrelationId()));
                   }
               });
 
@@ -144,7 +133,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
                             IsSync = true
                         };
 
-                        _deltaHeightReplaySubject.OnNext(new ObserverDto(null, deltaHeightResponse.ToProtocolMessage(peerId, CorrelationId.GenerateCorrelationId())));
+                        _deltaHeightReplaySubject.OnNext(deltaHeightResponse.ToProtocolMessage(peerId, CorrelationId.GenerateCorrelationId()));
                     }
                     else
                     {
@@ -155,7 +144,7 @@ namespace Catalyst.Core.Modules.Sync.Tests.UnitTests
                             IsSync = false
                         };
 
-                        _deltaHeightReplaySubject.OnNext(new ObserverDto(null, deltaHeightResponse.ToProtocolMessage(peerId, CorrelationId.GenerateCorrelationId())));
+                        _deltaHeightReplaySubject.OnNext(deltaHeightResponse.ToProtocolMessage(peerId, CorrelationId.GenerateCorrelationId()));
                     }
 
                 }

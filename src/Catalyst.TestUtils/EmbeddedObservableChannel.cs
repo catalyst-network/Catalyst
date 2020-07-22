@@ -22,9 +22,8 @@
 #endregion
 
 using System;
-using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Abstractions.IO.Transport.Channels;
-using Catalyst.Core.Lib.IO.Handlers;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.IO.Handlers;
 using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Embedded;
@@ -44,7 +43,7 @@ namespace Catalyst.TestUtils
         }
     }
 
-    public sealed class EmbeddedObservableChannel : IObservableChannel
+    public sealed class EmbeddedObservableChannel : IObservableChannel<ProtocolMessage>
     {
         private readonly TestScheduler _testScheduler;
         private readonly EmbeddedChannel _channel;
@@ -67,6 +66,6 @@ namespace Catalyst.TestUtils
         }
 
         public IChannel Channel => _channel;
-        public IObservable<IObserverDto<ProtocolMessage>> MessageStream { get; }
+        public IObservable<ProtocolMessage> MessageStream { get; }
     }
 }
