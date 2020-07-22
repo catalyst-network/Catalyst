@@ -26,25 +26,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.EventLoop;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.P2P;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
-using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
 using MultiFormats;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.EventLoop;
+using Catalyst.Modules.Network.Dotnetty.IO.EventLoop;
+using Catalyst.Modules.Network.Dotnetty.P2P;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
 {
@@ -53,7 +52,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
         private ICorrelationId _guid;
         private ILogger _logger;
         private MultiAddress _pid;
-        private IUdpServerChannelFactory _udpServerServerChannelFactory;
+        private IUdpServerChannelFactory<ProtocolMessage> _udpServerServerChannelFactory;
         private IPeerDiscovery _peerDiscovery;
         private List<IP2PMessageObserver> _p2PMessageHandlers;
         private EmbeddedObservableChannel _serverChannel;
@@ -70,7 +69,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
             _logger = Substitute.For<ILogger>();
 
             _serverChannel = new EmbeddedObservableChannel($"Server:{CurrentTestName}");
-            _udpServerServerChannelFactory = Substitute.For<IUdpServerChannelFactory>();
+            _udpServerServerChannelFactory = Substitute.For<IUdpServerChannelFactory<ProtocolMessage>>();
 
             _peerSettings = Substitute.For<IPeerSettings>();
             _peerSettings.BindAddress.Returns(IPAddress.Parse("127.0.0.1"));
@@ -138,7 +137,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P
         {
             _p2PMessageHandlers.Add(pingRequestHandler);
 
-            _peerService = new PeerService(new UdpServerEventLoopGroupFactory(new EventLoopGroupFactoryConfiguration()), 
+            _peerService = new DotnettyPeerService(new UdpServerEventLoopGroupFactory(new EventLoopGroupFactoryConfiguration()), 
                 _udpServerServerChannelFactory,
                 _peerDiscovery,
                 _p2PMessageHandlers,

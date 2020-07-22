@@ -23,7 +23,6 @@
 
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Rpc.IO;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
@@ -59,7 +58,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
         /// <param name="correlationId"></param>
         protected override void HandleResponse(GetMempoolResponse getMempoolResponse,
             IChannelHandlerContext channelHandlerContext,
-            MultiAddress senderentifier,
+            MultiAddress senderAddress,
             ICorrelationId correlationId)
         {
             Guard.Argument(getMempoolResponse, nameof(getMempoolResponse))

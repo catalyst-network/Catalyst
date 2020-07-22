@@ -30,7 +30,6 @@ using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Options;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Modules.Dfs.Extensions;
@@ -50,23 +49,20 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
     /// <inheritdoc cref="IDisposable" />
     public class DeltaHub : IDeltaHub
     {
-        private readonly IBroadcastManager _broadcastManager;
         private readonly MultiAddress _peerId;
         private readonly IDfsService _dfsService;
         private readonly IHashProvider _hashProvider;
-        private readonly ILibP2PPeerClient _peerClient;
+        private readonly IPeerClient _peerClient;
         private readonly ILogger _logger;
 
         protected virtual AsyncRetryPolicy<IFileSystemNode> DfsRetryPolicy { get; }
 
-        public DeltaHub(IBroadcastManager broadcastManager,
-            ILibP2PPeerClient peerClient,
+        public DeltaHub(IPeerClient peerClient,
             IPeerSettings peerSettings,
             IDfsService dfsService,
             IHashProvider hashProvider,
             ILogger logger)
         {
-            _broadcastManager = broadcastManager;
             _peerId = peerSettings.Address;
             _dfsService = dfsService;
             _hashProvider = hashProvider;
@@ -176,7 +172,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 var node = await _dfsService.UnixFsApi.AddAsync(memoryStream, string.Empty,
                         new AddFileOptions { Hash = _hashProvider.HashingAlgorithm.Name }, cancellationToken)
                    .ConfigureAwait(false);
-                
+
                 return node;
             }
         }

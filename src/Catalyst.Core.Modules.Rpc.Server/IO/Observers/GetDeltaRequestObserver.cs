@@ -23,29 +23,27 @@
 
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Modules.Dfs.Extensions;
-using Catalyst.Protocol.Peer;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
+using Catalyst.Modules.Network.Dotnetty.Rpc.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
-using Lib.P2P.Protocols;
 using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
     public sealed class GetDeltaRequestObserver
-        : RequestObserverBase<GetDeltaRequest, GetDeltaResponse>, IRpcRequestObserver
+        : RpcRequestObserverBase<GetDeltaRequest, GetDeltaResponse>, IRpcRequestObserver
     {
         private readonly IDeltaCache _deltaCache;
 
         public GetDeltaRequestObserver(IDeltaCache deltaCache,
             IPeerSettings peerSettings,
-            ILibP2PPeerClient peerClient,
-            ILogger logger) : base(logger, peerSettings, peerClient)
+            ILogger logger) : base(logger, peerSettings)
         {
             _deltaCache = deltaCache;
         }
@@ -56,6 +54,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
             ICorrelationId correlationId)
         {
             Guard.Argument(getDeltaRequest, nameof(getDeltaRequest)).NotNull();
+            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
             Guard.Argument(sender, nameof(sender)).NotNull();
             Logger.Verbose("received message of type GetDeltaRequest:");
             Logger.Verbose("{getDeltaRequest}", getDeltaRequest);

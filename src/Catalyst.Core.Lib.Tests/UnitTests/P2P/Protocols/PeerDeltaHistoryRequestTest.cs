@@ -24,7 +24,6 @@
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Core.Lib.Extensions;
@@ -55,10 +54,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
         {
             this.Setup(TestContext.CurrentContext);
 
-            var subbedPeerClient = Substitute.For<ILibP2PPeerClient>();
+            var subbedPeerClient = Substitute.For<IPeerClient>();
             _testSettings = PeerSettingsHelper.TestPeerSettings();
             _cancellationProvider = new CancellationTokenProvider(TimeSpan.FromSeconds(10));
-            
+
             _peerDeltaHistoryRequest = new PeerDeltaHistoryRequest(
                 Substitute.For<ILogger>(),
                 subbedPeerClient,
@@ -70,12 +69,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
         [Test]
         public async Task Can_Query_Expected_Peer()
         {
-            var recipientPeerId = MultiAddressHelper.GetAddress();
-            await _peerDeltaHistoryRequest.DeltaHistoryAsync(recipientPeerId, 0, 10).ConfigureAwait(false);
-            var expectedDto = Substitute.For<IMessageDto<ProtocolMessage>>();
-            expectedDto.RecipientAddress.Returns(recipientPeerId);
-            expectedDto.SenderAddress.Returns(_testSettings.Address);
-            await _peerDeltaHistoryRequest.PeerClient.ReceivedWithAnyArgs(1).SendMessageAsync(Arg.Is(expectedDto));
+            var recipientAddress = MultiAddressHelper.GetAddress();
+            await _peerDeltaHistoryRequest.DeltaHistoryAsync(recipientAddress, 0, 10).ConfigureAwait(false);
+            await _peerDeltaHistoryRequest.PeerClient.ReceivedWithAnyArgs(1).SendMessageAsync(Arg.Is<ProtocolMessage>(x => x.Address == _testSettings.Address), Arg.Is(recipientAddress));
         }
 
         [Test]
@@ -83,10 +79,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
         {
             var height = 10u;
             var recipientPeerId = MultiAddressHelper.GetAddress();
-            
+
             var hp = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             var lastDeltaHash = hp.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32));
-            
+
             var collection = new List<DeltaIndex>();
 
             //// this matches the fake mock 
@@ -106,7 +102,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
                 collection.Add(index);
                 lastDeltaHash = hp.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32));
             }
-            
+
             var deltaHistoryResponse = new PeerDeltaHistoryResponse(recipientPeerId, collection);
 
             _peerDeltaHistoryRequest.DeltaHistoryResponseMessageStreamer.OnNext(deltaHistoryResponse);
@@ -129,7 +125,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
             var recipientPeerId = MultiAddressHelper.GetAddress();
             _cancellationProvider.Dispose(); //do summet nasty to force exception
             var response = await _peerDeltaHistoryRequest.DeltaHistoryAsync(recipientPeerId, 0, 10).ConfigureAwait(false);
-            response.Should().BeNull();   
+            response.Should().BeNull();
         }
     }
 }

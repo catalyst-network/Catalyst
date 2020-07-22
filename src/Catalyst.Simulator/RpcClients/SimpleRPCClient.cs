@@ -35,28 +35,23 @@ using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Cli;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.FileSystem;
-using Catalyst.Core.Lib.IO.EventLoop;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.Rpc.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.KeySigner;
-using Catalyst.Core.Modules.Keystore;
 using Catalyst.Core.Modules.Rpc.Client;
 using Catalyst.Core.Modules.Rpc.Client.IO.Observers;
 using Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.IO.EventLoop;
+using Catalyst.Modules.Network.Dotnetty.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
 using Catalyst.Protocol.Cryptography;
-using Catalyst.Protocol.Peer;
 using Catalyst.Simulator.Interfaces;
-using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
 using MultiFormats;
-using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
 
@@ -67,7 +62,7 @@ namespace Catalyst.Simulator.RpcClients
         private readonly ILogger _logger;
         private readonly MultiAddress _sender;
         private MultiAddress _recipientPeerId;
-        private Abstractions.Rpc.IRpcClient _rpcClient;
+        private IRpcClient _rpcClient;
         private readonly X509Certificate2 _certificate;
         private readonly RpcClientFactory _rpcClientFactory;
 
@@ -125,17 +120,16 @@ namespace Catalyst.Simulator.RpcClients
             //_sender = publicKey.BuildPeerIdFromPublicKey(IPAddress.Any, 1026);
         }
 
-        public async Task<bool> ConnectRetryAsync(MultiAddress Addressentifier, int retryAttempts = 5)
+        public async Task<bool> ConnectRetryAsync(MultiAddress address, int retryAttempts = 5)
         {
             var retryCountDown = retryAttempts;
             while (retryCountDown > 0)
             {
-                //todo
-                //var isConnectionSuccessful = await ConnectAsync(peerIdentifier).ConfigureAwait(false);
-                //if (isConnectionSuccessful)
-                //{
-                //    return true;
-                //}
+                var isConnectionSuccessful = await ConnectAsync(address).ConfigureAwait(false);
+                if (isConnectionSuccessful)
+                {
+                    return true;
+                }
 
                 _logger.Error("Connection failed retrying...");
                 if (retryAttempts != 0)
@@ -181,7 +175,11 @@ namespace Catalyst.Simulator.RpcClients
             return false;
         }
 
-        public bool IsConnected() { return _rpcClient.Channel.Active; }
+        public bool IsConnected()
+        {
+            return true;
+            //_rpcClient.Channel.Active; 
+        }
 
         public void SendMessage<T>(T message) where T : IMessage
         {
@@ -191,12 +189,12 @@ namespace Catalyst.Simulator.RpcClients
                 protocolMessage,
                 _recipientPeerId);
 
-            _rpcClient.SendMessage(messageDto);
+            //_rpcClient.SendMessage(messageDto);
         }
 
         public void ReceiveMessage<T>(Action<T> message) where T : IMessage<T>
         {
-            _rpcClient.SubscribeToResponse<T>(message.Invoke);
+            //_rpcClient.SubscribeToResponse<T>(message.Invoke);
         }
     }
 }

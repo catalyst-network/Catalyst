@@ -23,5 +23,5 @@
 
 namespace Catalyst.Abstractions.IO.Observers
 {
-    public interface IResponseMessageObserver : IMessageObserver { }
+    public interface IResponseMessageObserver<T> : IMessageObserver<T> { }
 }

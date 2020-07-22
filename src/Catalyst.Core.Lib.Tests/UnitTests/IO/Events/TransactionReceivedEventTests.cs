@@ -46,7 +46,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
     {
         private IMempool<PublicEntryDao> _mempool;
         private ITransactionValidator _transactionValidator;
-        private ILibP2PPeerClient _peerClient;
+        private IPeerClient _peerClient;
         private TransactionReceivedEvent _transactionReceivedEvent;
 
         [SetUp]
@@ -55,7 +55,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
             var mapperProvider = new TestMapperProvider();
             _mempool = Substitute.For<IMempool<PublicEntryDao>>();
             _transactionValidator = Substitute.For<ITransactionValidator>();
-            _peerClient = Substitute.For<ILibP2PPeerClient>();
+            _peerClient = Substitute.For<IPeerClient>();
             _transactionReceivedEvent = new TransactionReceivedEvent(_transactionValidator,
                 _mempool,
                 _peerClient,

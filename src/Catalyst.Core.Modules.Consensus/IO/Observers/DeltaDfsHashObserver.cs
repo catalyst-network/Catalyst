@@ -24,7 +24,6 @@
 using System;
 using System.Linq;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Abstractions.Sync;
@@ -60,7 +59,7 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
             _peerRepository = peerRepository;
         }
 
-        public override void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto)
+        public override void HandleBroadcast(ProtocolMessage message)
         {
             if (!_syncState.IsSynchronized)
             {
@@ -69,7 +68,7 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
 
             try
             {
-                var deserialised = messageDto.Payload.FromProtocolMessage<DeltaDfsHashBroadcast>();
+                var deserialised = message.FromProtocolMessage<DeltaDfsHashBroadcast>();
                 var previousHash = deserialised.PreviousDeltaDfsHash.ToByteArray().ToCid();
                 if (previousHash == null)
                 {
@@ -84,7 +83,7 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
                     return;
                 }
 
-                var multiAddress = new MultiAddress(messageDto.Payload.Address);
+                var multiAddress = new MultiAddress(message.Address);
                 var messagePoaNode = _peerRepository.GetPoaPeersByPublicKey(multiAddress.GetPublicKey()).FirstOrDefault();
                 if (messagePoaNode == null)
                 {

@@ -26,13 +26,11 @@ using System.Reactive.Linq;
 using System.Threading.Tasks;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.IO.Observers;
 using Catalyst.Core.Lib.Service;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
-using DotNetty.Transport.Channels;
 using Lib.P2P;
 using Microsoft.Reactive.Testing;
 using MultiFormats;
@@ -49,13 +47,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         private readonly TestScheduler _testScheduler;
         private readonly ILogger _subbedLogger;
         private readonly DeltaHeightRequestObserver _deltaHeightRequestObserver;
-        private readonly ILibP2PPeerClient _peerClient;
+        private readonly IPeerClient _peerClient;
 
         public DeltaHeightRequestObserverTests()
         {
             _testScheduler = new TestScheduler();
             _subbedLogger = Substitute.For<ILogger>();
-            _peerClient = Substitute.For<ILibP2PPeerClient>();
+            _peerClient = Substitute.For<IPeerClient>();
             var peerSettings = MultiAddressHelper.GetAddress("sender").ToSubstitutedPeerSettings();
             var syncState = new SyncState { IsSynchronized = true };
             _deltaHeightRequestObserver = new DeltaHeightRequestObserver(peerSettings,
@@ -68,11 +66,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         public async Task Can_Process_DeltaHeightRequest_Correctly()
         {
             var deltaHeightRequestMessage = new LatestDeltaHashRequest();
-
-            var fakeContext = Substitute.For<IChannelHandlerContext>();
-            var channeledAny = new ObserverDto(fakeContext,
-                deltaHeightRequestMessage.ToProtocolMessage(MultiAddressHelper.GetAddress(),
-                    CorrelationId.GenerateCorrelationId()));
+            var channeledAny = deltaHeightRequestMessage.ToProtocolMessage(MultiAddressHelper.GetAddress(),
+                    CorrelationId.GenerateCorrelationId());
             var observableStream = new[] { channeledAny }.ToObservable(_testScheduler);
 
             _deltaHeightRequestObserver.StartObserving(observableStream);
@@ -83,14 +78,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             var cid = new Cid { Hash = hash };
 
             var responder = MultiAddressHelper.GetAddress();
-            var dtoResponse = new MessageDto(new LatestDeltaHashResponse
+            var protocolMessage = new LatestDeltaHashResponse
             {
                 DeltaIndex = new DeltaIndex { Cid = cid.ToArray().ToByteString(), Height = 100 }
-            }.ToProtocolMessage(responder, CorrelationId.GenerateCorrelationId()),
-            responder);
+            }.ToProtocolMessage(responder, CorrelationId.GenerateCorrelationId());
 
-            await _peerClient.ReceivedWithAnyArgs(1).SendMessageAsync(dtoResponse)
-                .ConfigureAwait(false);
+            await _peerClient.ReceivedWithAnyArgs(1).SendMessageAsync(protocolMessage, responder).ConfigureAwait(false);
 
             _subbedLogger.ReceivedWithAnyArgs(1);
         }

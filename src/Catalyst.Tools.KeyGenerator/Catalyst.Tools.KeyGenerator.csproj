@@ -8,11 +8,11 @@
         <NoWarn>1701;1702;CS8002</NoWarn>
     </PropertyGroup>
     <ItemGroup>
-        <ProjectReference
-            Include="..\Catalyst.Core.Modules.Cryptography.BulletProofs\Catalyst.Core.Modules.Cryptography.BulletProofs.csproj" />
+        <ProjectReference Include="..\Catalyst.Core.Modules.Cryptography.BulletProofs\Catalyst.Core.Modules.Cryptography.BulletProofs.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Modules.Hashing\Catalyst.Core.Modules.Hashing.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Modules.KeySigner\Catalyst.Core.Modules.KeySigner.csproj" />
         <ProjectReference Include="..\Catalyst.Core.Modules.Keystore\Catalyst.Core.Modules.Keystore.csproj" />
+        <ProjectReference Include="..\Catalyst.Modules.Network.Dotnetty\Catalyst.Modules.Network.Dotnetty.csproj" />
     </ItemGroup>
 
     <ItemGroup>

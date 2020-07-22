@@ -42,8 +42,8 @@ namespace Catalyst.Core.Modules.Sync.Watcher
         private bool _disposed;
         public IDeltaHeightRanker DeltaHeightRanker { private set; get; }
         private IDisposable _deltaHeightSubscription;
-        private readonly ILibP2PPeerService _peerService;
-        private readonly ILibP2PPeerClient _peerClient;
+        private readonly IPeerService _peerService;
+        private readonly IPeerClient _peerClient;
         private readonly ISwarmApi _swarmApi;
 
         public DeltaIndex LatestDeltaHash { set; get; }
@@ -51,9 +51,9 @@ namespace Catalyst.Core.Modules.Sync.Watcher
         private Timer _requestDeltaHeightTimer;
         private readonly AutoResetEvent _autoResetEvent;
 
-        public DeltaHeightWatcher(ILibP2PPeerClient peerClient,
+        public DeltaHeightWatcher(IPeerClient peerClient,
             ISwarmApi swarmApi,
-            ILibP2PPeerService peerService,
+            IPeerService peerService,
             double threshold = 0.5d)
         {
             _peerClient = peerClient;
@@ -120,8 +120,8 @@ namespace Catalyst.Core.Modules.Sync.Watcher
         public void Start()
         {
             _deltaHeightSubscription = _peerService.MessageStream.Where(x => x != null &&
-                    x.Payload.TypeUrl.EndsWith(typeof(LatestDeltaHashResponse).ShortenedProtoFullName()))
-               .Select(x => x.Payload)
+                    x.TypeUrl.EndsWith(typeof(LatestDeltaHashResponse).ShortenedProtoFullName()))
+               .Select(x => x)
                .Subscribe(DeltaHeightOnNext);
 
             _requestDeltaHeightTimer = new Timer(RequestDeltaHeightTimerCallback, null, TimeSpan.Zero, TimeSpan.FromSeconds(10));

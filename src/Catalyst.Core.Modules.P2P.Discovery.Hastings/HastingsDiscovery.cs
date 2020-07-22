@@ -31,18 +31,16 @@ using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.Network;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
-using Catalyst.Abstractions.P2P.IO;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
 using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Abstractions.Types;
 using Catalyst.Abstractions.Util;
+using Catalyst.Core.Lib.Abstractions.P2P.IO;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.Discovery;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Protocol.IPPN;
-using Catalyst.Protocol.Peer;
 using MultiFormats;
 using Serilog;
 
@@ -274,11 +272,8 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
 
             StepProposal.RestoreMemento(new HastingsMemento(newCandidate, new Neighbours()));
 
-            var peerNeighbourRequestDto = new MessageDto(new PeerNeighborsRequest().ToProtocolMessage(_ownNode),
-                StepProposal.Peer
-            );
-
-            PeerClient.SendMessage(peerNeighbourRequestDto);
+            var peerNeighbourRequest = new PeerNeighborsRequest().ToProtocolMessage(_ownNode);
+            PeerClient.SendMessageAsync(peerNeighbourRequest, StepProposal.Peer);
         }
 
         /// <summary>
@@ -314,12 +309,8 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
 
             StepProposal.RestoreMemento(new HastingsMemento(newCandidate, new Neighbours()));
 
-            var peerNeighbourRequestDto = new MessageDto(
-                new PeerNeighborsRequest().ToProtocolMessage(_ownNode, StepProposal.PnrCorrelationId),
-                StepProposal.Peer
-            );
-
-            PeerClient.SendMessage(peerNeighbourRequestDto);
+            var peerNeighbourRequest = new PeerNeighborsRequest().ToProtocolMessage(_ownNode, StepProposal.PnrCorrelationId);
+            PeerClient.SendMessageAsync(peerNeighbourRequest, StepProposal.Peer);
         }
 
         /// <summary>
@@ -417,11 +408,8 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
                 {
                     try
                     {
-                        var pingRequestDto = new MessageDto(
-                            new PingRequest().ToProtocolMessage(_ownNode, n.DiscoveryPingCorrelationId),
-                            n.Address);
-
-                        PeerClient.SendMessage(pingRequestDto);
+                        var pingRequest = new PingRequest().ToProtocolMessage(_ownNode, n.DiscoveryPingCorrelationId);
+                        PeerClient.SendMessageAsync(pingRequest, n.Address);
 
                         // our total expected responses should be same as number of pings sent out,
                         // potential neighbours, can either send response, or we will see them evicted from cache.

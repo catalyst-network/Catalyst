@@ -122,7 +122,7 @@ namespace Catalyst.TestUtils
             ContainerBuilder.RegisterInstance(_fileSystem).As<IFileSystem>();
 
             var keyRegistry = TestKeyRegistry.MockKeyRegistry();
-            ContainerBuilder.RegisterInstance(keyRegistry).As<IKeyRegistry>();
+            ContainerBuilder.RegisterInstance(keyRegistry).As<IKeyRegistry>().SingleInstance();
 
             ContainerBuilder.RegisterModule(new BulletProofsModule());
             ContainerBuilder.RegisterModule(new KeystoreModule());

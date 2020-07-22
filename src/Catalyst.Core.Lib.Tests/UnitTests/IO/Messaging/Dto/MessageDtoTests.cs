@@ -21,15 +21,15 @@
 
 #endregion
 
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
 using NUnit.Framework;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.IO.Messaging.Dto;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Dto
 {

@@ -29,10 +29,7 @@ using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Protocol.IPPN;
-using Catalyst.Protocol.Peer;
 using Dawn;
-using DotNetty.Transport.Channels;
-using Lib.P2P.Protocols;
 using MultiFormats;
 using Serilog;
 
@@ -46,7 +43,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
 
         public GetNeighbourRequestObserver(IPeerSettings peerSettings,
             IPeerRepository repository,
-            ILibP2PPeerClient peerClient,
+            IPeerClient peerClient,
             ILogger logger)
             : base(logger, peerSettings, peerClient)
         {
@@ -62,7 +59,6 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override PeerNeighborsResponse HandleRequest(PeerNeighborsRequest peerNeighborsRequest,
-            IChannelHandlerContext channelHandlerContext,
             MultiAddress sender,
             ICorrelationId correlationId)
         {

@@ -25,17 +25,11 @@ using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Repository;
-using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Protocol.IPPN;
-using Catalyst.Protocol.Peer;
 using Dawn;
-using DotNetty.Transport.Channels;
-using Lib.P2P.Protocols;
 using MultiFormats;
 using Serilog;
-using System;
 
 namespace Catalyst.Core.Lib.P2P.IO.Observers
 {
@@ -43,13 +37,10 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         : RequestObserverBase<PingRequest, PingResponse>,
             IP2PMessageObserver
     {
-        private readonly IPeerRepository _peerRepository;
         public PingRequestObserver(IPeerSettings peerSettings, 
-            IPeerRepository peerRepository,
-            ILibP2PPeerClient peerClient,
+            IPeerClient peerClient,
             ILogger logger)
             : base(logger, peerSettings, peerClient) {
-            _peerRepository = peerRepository;
         }
         
         /// <summary>
@@ -61,7 +52,6 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         /// <param name="correlationId"></param>
         /// <returns><see cref="PingResponse"/></returns>
         protected override PingResponse HandleRequest(PingRequest pingRequest,
-            IChannelHandlerContext channelHandlerContext,
             MultiAddress sender,
             ICorrelationId correlationId)
         {

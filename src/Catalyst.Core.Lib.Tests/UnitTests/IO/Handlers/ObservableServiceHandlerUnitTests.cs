@@ -22,12 +22,12 @@
 #endregion
 
 using System;
-using Catalyst.Core.Lib.IO.Handlers;
 using DotNetty.Transport.Channels;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using Catalyst.Modules.Network.Dotnetty.IO.Handlers;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
 {

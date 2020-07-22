@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
@@ -33,21 +32,23 @@ using Serilog;
 
 namespace Catalyst.Core.Lib.IO.Observers
 {
-    public abstract class BroadcastObserverBase<TProto> : MessageObserverBase, IBroadcastObserver where TProto : IMessage
+    public abstract class BroadcastObserverBase<TProto> : MessageObserverBase<ProtocolMessage>, IBroadcastObserver where TProto : IMessage
     {
-        protected BroadcastObserverBase(ILogger logger) : base(logger, typeof(TProto).ShortenedProtoFullName())
+        private static Func<ProtocolMessage, bool> FilterExpression = m => m?.TypeUrl != null && m.TypeUrl == typeof(TProto).ShortenedProtoFullName();
+
+        protected BroadcastObserverBase(ILogger logger) : base(logger, FilterExpression)
         {
             Guard.Argument(typeof(TProto), nameof(TProto)).Require(t => t.IsBroadcastType(),
                 t => $"{nameof(TProto)} is not of type {MessageTypes.Broadcast.Name}");
         }
 
-        public abstract void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto);
+        public abstract void HandleBroadcast(ProtocolMessage message);
 
-        public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
+        public override void OnNext(ProtocolMessage message)
         {
             try
             {
-                HandleBroadcast(messageDto);
+                HandleBroadcast(message);
             }
             catch (Exception exception)
             {

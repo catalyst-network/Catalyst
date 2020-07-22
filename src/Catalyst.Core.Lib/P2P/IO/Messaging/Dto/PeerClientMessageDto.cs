@@ -23,7 +23,6 @@
 
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
-using Catalyst.Protocol.Peer;
 using Dawn;
 using Google.Protobuf;
 using MultiFormats;

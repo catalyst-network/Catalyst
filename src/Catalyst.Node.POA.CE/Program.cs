@@ -25,20 +25,15 @@ using Autofac;
 using Autofac.Core;
 using Catalyst.Abstractions;
 using Catalyst.Abstractions.Cli;
-using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.DAO;
-using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib;
 using Catalyst.Core.Lib.Cli;
 using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.Kernel;
-using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Modules.Authentication;
 using Catalyst.Core.Modules.Consensus;
-using Catalyst.Core.Modules.Consensus.Cycle;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.Hashing;
@@ -48,27 +43,19 @@ using Catalyst.Core.Modules.Kvm;
 using Catalyst.Core.Modules.Ledger;
 using Catalyst.Core.Modules.Mempool;
 using Catalyst.Core.Modules.P2P.Discovery.Hastings;
-using Catalyst.Core.Modules.Rpc.Server;
 using Catalyst.Core.Modules.Sync;
 using Catalyst.Core.Modules.Web3;
 using Catalyst.Core.Modules.Web3.Options;
+using Catalyst.Modules.Network.LibP2P;
 using Catalyst.Modules.POA.Consensus;
 using Catalyst.Modules.POA.P2P;
-using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Network;
 using CommandLine;
-using Lib.P2P;
-using Lib.P2P.Protocols;
-using MultiFormats;
-using SharpRepository.MongoDbRepository;
-using SharpRepository.Repository;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
 using System.Net;
-using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -140,7 +127,8 @@ namespace Catalyst.Node.POA.CE
                     () => new ApiModule(new HttpOptions(new IPEndPoint(IPAddress.Any, 5005)), new HttpsOptions(new IPEndPoint(IPAddress.Any, 2053), "cert.pfx"), new List<string> {"Catalyst.Core.Modules.Web3", "Catalyst.Core.Modules.Dfs"})
                 },
                 {typeof(PoaConsensusModule), () => new PoaConsensusModule()},
-                {typeof(PoaP2PModule), () => new PoaP2PModule()}
+                {typeof(PoaP2PModule), () => new PoaP2PModule()},
+                {typeof(LibP2PNetworkModule), () => new LibP2PNetworkModule()}
             };
 
         public static void RegisterNodeDependencies(ContainerBuilder containerBuilder,
