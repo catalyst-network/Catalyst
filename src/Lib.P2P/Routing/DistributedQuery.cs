@@ -199,14 +199,14 @@ namespace Lib.P2P.Routing
                 Log.Debug($"Q{Id}.{taskId}.{pass} ask {peer}");
                 try
                 {
-                    //using (var timeout = new CancellationTokenSource(AskTime))
+                    using (var timeout = new CancellationTokenSource(AskTime))
                     //using (var cts = CancellationTokenSource.CreateLinkedTokenSource(timeout.Token, _runningQuery.Token))
-                    using (var stream = await Dht.SwarmService.DialAsync(peer, Dht.ToString(), CancellationToken.None).ConfigureAwait(false))
+                    using (var stream = await Dht.SwarmService.DialAsync(peer, Dht.ToString(), timeout.Token).ConfigureAwait(false))
                     {
                         // Send the KAD query and get a response.
                         Serializer.SerializeWithLengthPrefix(stream, _queryMessage, PrefixStyle.Base128);
-                        await stream.FlushAsync(CancellationToken.None).ConfigureAwait(false);
-                        var response = await ProtoBufHelper.ReadMessageAsync<DhtMessage>(stream, CancellationToken.None).ConfigureAwait(false);
+                        await stream.FlushAsync(timeout.Token).ConfigureAwait(false);
+                        var response = await ProtoBufHelper.ReadMessageAsync<DhtMessage>(stream, timeout.Token).ConfigureAwait(false);
 
                         // Process answer
                         ProcessProviders(response.ProviderPeers);
