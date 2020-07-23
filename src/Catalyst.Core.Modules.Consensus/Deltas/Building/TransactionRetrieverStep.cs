@@ -34,7 +34,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
     internal sealed class TransactionRetrieverStep : IDeltaBuilderStep
     {
         [Todo(Improve.Refactor, "Introduce configuration for delta / voting for size")]
-        private const ulong DeltaGasLimit = 8_000_000;
+        private const ulong DeltaGasLimit = 80_000_000;
 
         [Todo(Improve.Refactor, "Introduce configuration for tx cost")]
         private const ulong MinTransactionEntryGasLimit = 21_000;
