@@ -45,7 +45,6 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Validators
         private ITransactionConfig _transactionConfig;
         private ICryptoContext _cryptoContext;
         private ITransactionValidator _transactionValidator;
-        private ILogger _logger;
 
         private IPrivateKey _privateKey;
 
@@ -56,8 +55,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Validators
         {
             _transactionConfig = new TransactionConfig();
             _cryptoContext = new FfiWrapper();
-            _logger = Substitute.For<ILogger>();
-            _transactionValidator = new TransactionValidator(_cryptoContext, new TransactionConfig(), _logger);
+            _transactionValidator = new TransactionValidator(_cryptoContext, _transactionConfig, Substitute.For<ILogger>());
             _privateKey = _cryptoContext.GeneratePrivateKey();
             _signingContext = new SigningContext
             {
