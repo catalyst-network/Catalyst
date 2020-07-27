@@ -84,12 +84,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
             var invalidTransaction = new PublicEntry
             {
                 SenderAddress = privateKey.GetPublicKey().Bytes.ToByteString(),
+                //Set gas limit to one less then minimum
                 GasLimit = _transactionConfig.MinTransactionEntryGasLimit-1
             };
 
             var signature = new Signature
             {
-                // sign an actual TransactionBroadcast object
+                //Sign an actual TransactionBroadcast object
                 RawBytes = subbedContext.Sign(privateKey, invalidTransaction, new SigningContext())
                    .SignatureBytes.ToByteString(),
                 SigningContext = _signingContext
@@ -121,7 +122,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
 
             var signature = new Signature
             {
-                // sign an actual TransactionBroadcast object
+                //Sign an actual TransactionBroadcast object
                 RawBytes = subbedContext.Sign(privateKey, validTransaction, new SigningContext())
                    .SignatureBytes.ToByteString(),
                 SigningContext = _signingContext
