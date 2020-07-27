@@ -32,44 +32,107 @@ using Google.Protobuf;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using Catalyst.Core.Lib.Config;
+using Catalyst.Abstractions.Config;
+using Catalyst.Abstractions.Cryptography;
+using Catalyst.Abstractions.Validators;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.Validators
 {
+    [TestFixture]
     public sealed class TransactionValidatorTests
     {
-        [Test]
-        public void ValidateTransactionSignature_will_pass_with_valid_transaction_signature()
+        private ITransactionConfig _transactionConfig;
+        private ICryptoContext _cryptoContext;
+        private ITransactionValidator _transactionValidator;
+        private ILogger _logger;
+
+        private IPrivateKey _privateKey;
+
+        private SigningContext _signingContext;
+
+        [SetUp]
+        public void Init()
         {
-            var subbedLogger = Substitute.For<ILogger>();
-            var cryptoContext = new FfiWrapper();
-            var transactionValidator = new TransactionValidator(subbedLogger, cryptoContext);
-
-            // build a valid transaction
-            var privateKey = cryptoContext.GeneratePrivateKey();
-
-            var validTransaction = new PublicEntry
-            {
-                SenderAddress = privateKey.GetPublicKey().Bytes.ToByteString()
-            };
-
-            var signingContext = new SigningContext
+            _transactionConfig = new TransactionConfig();
+            _cryptoContext = new FfiWrapper();
+            _logger = Substitute.For<ILogger>();
+            _transactionValidator = new TransactionValidator(_cryptoContext, new TransactionConfig(), _logger);
+            _privateKey = _cryptoContext.GeneratePrivateKey();
+            _signingContext = new SigningContext
             {
                 NetworkType = NetworkType.Devnet,
                 SignatureType = SignatureType.TransactionPublic
             };
+        }
+
+        [Test]
+        public void ValidateTransactionSignature_Will_Pass_With_Valid_Transaction_Signature()
+        {
+            var validTransaction = new PublicEntry
+            {
+                SenderAddress = _privateKey.GetPublicKey().Bytes.ToByteString(),
+                GasLimit = _transactionConfig.MinTransactionEntryGasLimit
+            };
 
             var signature = new Signature
             {
-                // sign an actual TransactionBroadcast object
-                RawBytes = cryptoContext.Sign(privateKey, validTransaction.ToByteArray(), signingContext.ToByteArray())
+                //Sign an actual PublicEntry object
+                RawBytes = _cryptoContext.Sign(_privateKey, validTransaction.ToByteArray(), _signingContext.ToByteArray())
                    .SignatureBytes.ToByteString(),
-                SigningContext = signingContext
+                SigningContext = _signingContext
             };
 
             validTransaction.Signature = signature;
 
-            var result = transactionValidator.ValidateTransaction(validTransaction);
+            var result = _transactionValidator.ValidateTransaction(validTransaction);
             result.Should().BeTrue();
+        }
+
+        [Test]
+        public void ValidateTransactionSignature_Will_Fail_With_Invalid_Transaction_Signature()
+        {
+            var invalidTransaction = new PublicEntry
+            {
+                SenderAddress = _privateKey.GetPublicKey().Bytes.ToByteString(),
+                GasLimit = _transactionConfig.MinTransactionEntryGasLimit
+            };
+
+            var signature = new Signature
+            {
+                //Sign an actual PublicEntry with a different private key to create a invalid signature
+                RawBytes = _cryptoContext.Sign(_cryptoContext.GeneratePrivateKey(), invalidTransaction.ToByteArray(), _signingContext.ToByteArray())
+                   .SignatureBytes.ToByteString(),
+                SigningContext = _signingContext
+            };
+
+            invalidTransaction.Signature = signature;
+
+            var result = _transactionValidator.ValidateTransaction(invalidTransaction);
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void ValidateTransaction_Will_Fail_With_Less_Than_Minimum_Gas_Limit()
+        {
+            var invalidTransaction = new PublicEntry
+            {
+                SenderAddress = _privateKey.GetPublicKey().Bytes.ToByteString(),
+                //Set GasLimit to 1 less than minimum
+                GasLimit = _transactionConfig.MinTransactionEntryGasLimit - 1
+            };
+
+            var signature = new Signature
+            {
+                RawBytes = _cryptoContext.Sign(_privateKey, invalidTransaction.ToByteArray(), _signingContext.ToByteArray())
+                   .SignatureBytes.ToByteString(),
+                SigningContext = _signingContext
+            };
+
+            invalidTransaction.Signature = signature;
+
+            var result = _transactionValidator.ValidateTransaction(invalidTransaction);
+            result.Should().BeFalse();
         }
     }
 }

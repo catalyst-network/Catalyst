@@ -33,21 +33,69 @@ using FluentAssertions;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using Catalyst.Core.Lib.Config;
+using Catalyst.Abstractions.Config;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
 {
+    [TestFixture]
     public sealed class TransactionValidatorTests
     {
-        [Test]
-        public void TransactionValidator_ValidateTransactionSignature_returns_false_when_signature_is_null()
+        private ICryptoContext _cryptoContext;
+        private ITransactionConfig _transactionConfig;
+        private ILogger _logger;
+        private SigningContext _signingContext;
+
+        [SetUp]
+        public void Init()
         {
-            var subbedLogger = Substitute.For<ILogger>();
-            var subbedContext = Substitute.For<ICryptoContext>();
+            _logger = Substitute.For<ILogger>();
+            _cryptoContext = Substitute.For<ICryptoContext>();
+            _transactionConfig = new TransactionConfig();
+            _signingContext = new SigningContext
+            {
+                NetworkType = NetworkType.Devnet,
+                SignatureType = SignatureType.TransactionPublic
+            };
+        }
 
-            var transactionValidator = new TransactionValidator(subbedLogger, subbedContext);
-
+        [Test]
+        public void TransactionValidator_ValidateTransactionSignature_Returns_False_When_Signature_Is_Null()
+        {
             var invalidSignature = new Signature();
-            var invalidTransaction = new PublicEntry {Signature = invalidSignature};
+            var invalidTransaction = new PublicEntry { Signature = invalidSignature, GasLimit = _transactionConfig.MinTransactionEntryGasLimit };
+            var transactionValidator = new TransactionValidator(_cryptoContext, _transactionConfig, _logger);
+
+            var result = transactionValidator.ValidateTransaction(invalidTransaction);
+            result.Should().BeFalse();
+        }
+
+        [Test]
+        public void TransactionValidator_ValidateTransactionGasLimit_Returns_False_When_Gas_Is_Under_Minimum()
+        {
+            var signatureResult = Substitute.For<ISignature>();
+            var subbedContext = new FakeContext(signatureResult, true);
+
+            signatureResult.SignatureBytes.Returns(new byte[64]);
+
+            var transactionValidator = new TransactionValidator(subbedContext, _transactionConfig, _logger);
+            var privateKey = Substitute.For<IPrivateKey>();
+
+            var invalidTransaction = new PublicEntry
+            {
+                SenderAddress = privateKey.GetPublicKey().Bytes.ToByteString(),
+                GasLimit = _transactionConfig.MinTransactionEntryGasLimit-1
+            };
+
+            var signature = new Signature
+            {
+                // sign an actual TransactionBroadcast object
+                RawBytes = subbedContext.Sign(privateKey, invalidTransaction, new SigningContext())
+                   .SignatureBytes.ToByteString(),
+                SigningContext = _signingContext
+            };
+
+            invalidTransaction.Signature = signature;
 
             var result = transactionValidator.ValidateTransaction(invalidTransaction);
             result.Should().BeFalse();
@@ -55,20 +103,20 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
 
         [Test]
         public void
-            TransactionValidator_ValidateTransactionSignature_returns_true_for_valid_transaction_signature_verification()
+            TransactionValidator_ValidateTransactionSignature_Returns_True_For_Valid_Transaction_Signature_Verification()
         {
-            var subbedLogger = Substitute.For<ILogger>();
             var signatureResult = Substitute.For<ISignature>();
             var subbedContext = new FakeContext(signatureResult, true);
 
             signatureResult.SignatureBytes.Returns(new byte[64]);
 
-            var transactionValidator = new TransactionValidator(subbedLogger, subbedContext);
+            var transactionValidator = new TransactionValidator(subbedContext, _transactionConfig, _logger);
             var privateKey = Substitute.For<IPrivateKey>();
 
             var validTransaction = new PublicEntry
             {
-                SenderAddress = privateKey.GetPublicKey().Bytes.ToByteString()
+                SenderAddress = privateKey.GetPublicKey().Bytes.ToByteString(),
+                GasLimit = _transactionConfig.MinTransactionEntryGasLimit
             };
 
             var signature = new Signature
@@ -76,11 +124,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
                 // sign an actual TransactionBroadcast object
                 RawBytes = subbedContext.Sign(privateKey, validTransaction, new SigningContext())
                    .SignatureBytes.ToByteString(),
-                SigningContext = new SigningContext
-                {
-                    NetworkType = NetworkType.Devnet,
-                    SignatureType = SignatureType.TransactionPublic
-                }
+                SigningContext = _signingContext
             };
 
             validTransaction.Signature = signature;
@@ -91,9 +135,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
 
         [Test]
         public void
-            TransactionValidator_ValidateTransactionSignature_returns_false_for_invalid_transaction_signature_verification()
+            TransactionValidator_ValidateTransactionSignature_Returns_False_For_Invalid_Transaction_Signature_Verification()
         {
-            var subbedLogger = Substitute.For<ILogger>();
             var signatureResult = Substitute.For<ISignature>();
             var subbedContext = new FakeContext(signatureResult, false);
 
@@ -104,21 +147,18 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
             // raw un-signed tx message
             var validTransaction = new PublicEntry
             {
-                SenderAddress = privateKey.GetPublicKey().Bytes.ToByteString()
+                SenderAddress = privateKey.GetPublicKey().Bytes.ToByteString(),
+                GasLimit = _transactionConfig.MinTransactionEntryGasLimit
             };
 
             var txSig = new Signature
             {
                 RawBytes = new byte[64]
                    .ToByteString(), //random bytes that are not of a signed TransactionBroadcast Object
-                SigningContext = new SigningContext
-                {
-                    NetworkType = NetworkType.Devnet,
-                    SignatureType = SignatureType.TransactionPublic
-                }
+                SigningContext = _signingContext
             };
 
-            var transactionValidator = new TransactionValidator(subbedLogger, subbedContext);
+            var transactionValidator = new TransactionValidator(subbedContext, _transactionConfig, _logger);
 
             validTransaction.Signature = txSig;
 

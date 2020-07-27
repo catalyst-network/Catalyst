@@ -22,6 +22,7 @@
 #endregion
 
 using Autofac;
+using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.IO.Events;
@@ -35,6 +36,7 @@ using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Abstractions.Rpc.IO.Messaging.Correlation;
 using Catalyst.Abstractions.Util;
 using Catalyst.Abstractions.Validators;
+using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.IO.Events;
 using Catalyst.Core.Lib.P2P;
@@ -64,6 +66,9 @@ namespace Catalyst.Core.Lib
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<DeltaConfig>().As<IDeltaConfig>().SingleInstance();
+            builder.RegisterType<TransactionConfig>().As<ITransactionConfig>().SingleInstance();
+
             builder.RegisterType<LocalPeer>().As<LibP2P.Peer>().SingleInstance();
 
             builder.RegisterType<PeerSettings>().As<IPeerSettings>();
