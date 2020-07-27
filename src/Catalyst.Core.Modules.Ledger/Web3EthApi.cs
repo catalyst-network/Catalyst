@@ -115,7 +115,7 @@ namespace Catalyst.Core.Modules.Ledger
                 PublicEntry = publicEntry
             };
 
-            _transactionReceived.OnTransactionReceived(broadcast.ToProtocolMessage(_peerId));
+            _transactionReceived.OnTransactionReceived(broadcast.ToProtocolMessage(_peerId), true);
 
             byte[] kvmAddressBytes = Keccak.Compute(publicEntry.SenderAddress.ToByteArray()).Bytes.AsSpan(12).ToArray();
             string hex = kvmAddressBytes.ToHexString() ?? throw new ArgumentNullException("kvmAddressBytes.ToHexString()");

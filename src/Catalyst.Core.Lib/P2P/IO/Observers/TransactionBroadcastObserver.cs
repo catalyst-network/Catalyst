@@ -47,7 +47,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             Logger.Debug("received broadcast");
 
             var deserialised = message.FromProtocolMessage<TransactionBroadcast>();
-            _transactionReceivedEvent.OnTransactionReceived(message);
+            _transactionReceivedEvent.OnTransactionReceived(message, false);
 
             Logger.Debug("transaction signature is {0}", deserialised.PublicEntry.Signature);
         }
