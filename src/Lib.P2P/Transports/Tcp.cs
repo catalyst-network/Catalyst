@@ -53,7 +53,7 @@ namespace Lib.P2P.Transports
         /// <value>
         ///   Defaults to 3 seconds.
         /// </value>
-        private static readonly TimeSpan MinReadTimeout = TimeSpan.FromSeconds(3);
+        private static readonly TimeSpan MinReadTimeout = TimeSpan.FromSeconds(10);
 
         /// <inheritdoc />
         public async Task<Stream> ConnectAsync(MultiAddress address,
