@@ -93,6 +93,12 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
 
                 //Add functionality to check Candidate MerkleRoot against transactions in delta
                 var mostPopularDelta = _deltaElector.GetMostPopularCandidateDelta(previousHash);
+                if (mostPopularDelta == null)
+                {
+                    Logger.Error("Could not find most popular delta.");
+                    return;
+                }
+
                 var mostPopularDeltaProducer = new MultiAddress(mostPopularDelta.Producer).GetPublicKey();
                 if (mostPopularDelta == null || multiAddress.GetPublicKey() != mostPopularDeltaProducer)
                 {

@@ -619,7 +619,7 @@ namespace Lib.P2P
 
                 return stream;
             }
-            catch (Exception)
+            catch (Exception e)
             {
                 stream?.DisposeAsync();
                 throw;
