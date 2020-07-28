@@ -56,6 +56,7 @@ namespace Catalyst.Core.Lib.Kernel
         private IConfigCopier _configCopier;
         private readonly ConfigurationBuilder _configurationBuilder;
         public ILifetimeScope Instance;
+        private NetworkType _networkType;
 
         public ILogger Logger { get; private set; }
         public ContainerBuilder ContainerBuilder { get; set; }
@@ -99,12 +100,15 @@ namespace Catalyst.Core.Lib.Kernel
         public Kernel BuildKernel(bool overwrite = false, string overrideNetworkFile = null)
         {
             _overwrite = overwrite;
-            _configCopier.RunConfigStartUp(_targetConfigFolder, NetworkType.Devnet, null, _overwrite, overrideNetworkFile);
+            _configCopier.RunConfigStartUp(_targetConfigFolder, _networkType, null, _overwrite, overrideNetworkFile);
             
             var config = _configurationBuilder.Build();
             var configurationModule = new ConfigurationModule(config);
 
             ContainerBuilder.RegisterInstance(config);
+            ContainerBuilder.RegisterType<NetworkTypeProvider>().As<INetworkTypeProvider>()
+                .WithParameter("networkType", _networkType).SingleInstance();
+            
             ContainerBuilder.RegisterModule(configurationModule);
             
             if (!string.IsNullOrEmpty(_withPersistence))
@@ -136,9 +140,9 @@ namespace Catalyst.Core.Lib.Kernel
             return this;
         }
         
-        public Kernel WithNetworksConfigFile(NetworkType networkType = NetworkType.Devnet, string overrideNetworkFile = null)
+        public Kernel WithNetworksConfigFile(string overrideNetworkFile = null)
         {
-            var fileName = Constants.NetworkConfigFile(networkType, overrideNetworkFile);
+            var fileName = Constants.NetworkConfigFile(_networkType, overrideNetworkFile);
 
             _configurationBuilder
                .AddJsonFile(
@@ -165,6 +169,13 @@ namespace Catalyst.Core.Lib.Kernel
                     Path.Combine(_targetConfigFolder, configFileName)
                 );
 
+            return this;
+        }
+
+        //Default network type set
+        public Kernel WithNetworkType(NetworkType networkType)
+        {
+            _networkType = networkType!=NetworkType.Unknown ? networkType : NetworkType.Devnet;
             return this;
         }
 
