@@ -75,7 +75,7 @@ namespace Catalyst.Cli
                    .WithConfigCopier(new CliConfigCopier())
                    .WithConfigurationFile(CliConstants.ShellNodesConfigFile)
                    .WithConfigurationFile(CliConstants.ShellConfigFile)
-                   .WithNetworkType(NetworkType.Devnet)
+                   .WithNetworkType(NetworkType.Testnet)
                    .WithNetworksConfigFile(options.OverrideNetworkFile)
                    .BuildKernel()
                    .StartCustomAsync(StartCliAsync);

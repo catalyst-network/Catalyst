@@ -175,7 +175,7 @@ namespace Catalyst.Core.Lib.Kernel
         //Default network type set
         public Kernel WithNetworkType(NetworkType networkType)
         {
-            _networkType = networkType!=NetworkType.Unknown ? networkType : NetworkType.Devnet;
+            _networkType = networkType!=NetworkType.Unknown ? networkType : NetworkType.Testnet;
             return this;
         }
 
