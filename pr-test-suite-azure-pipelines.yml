@@ -51,6 +51,11 @@ steps:
     condition: eq( variables['Agent.OS'], 'Darwin' )
 
   - task: DotNetCoreCLI@2
+    displayName: 'Restore packages'
+    inputs:
+      command: restore
+
+  - task: DotNetCoreCLI@2
     displayName: 'Build solution'
     inputs:
       projects: 'src/*[Tt]ests/*.csproj'
