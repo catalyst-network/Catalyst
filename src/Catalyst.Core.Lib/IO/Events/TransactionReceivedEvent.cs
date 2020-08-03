@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.IO.Events;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P;
