@@ -54,6 +54,7 @@ steps:
     displayName: 'Restore packages'
     inputs:
       command: restore
+      projects: 'src/*[Tt]ests/*.csproj'
 
   - task: DotNetCoreCLI@2
     displayName: 'Build solution'
