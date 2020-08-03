@@ -20,7 +20,7 @@
   },
   "homepage": "https://github.com/vicnaum/truffleTest#readme",
   "dependencies": {
-    "@catalyst-net-js/truffle-provider": "0.0.9",
+    "@catalyst-net-js/truffle-provider": "^0.3.7",
     "eth-json-rpc-filters": "^4.1.1",
     "truffle-hdwallet-provider": "^1.0.17"
   }
