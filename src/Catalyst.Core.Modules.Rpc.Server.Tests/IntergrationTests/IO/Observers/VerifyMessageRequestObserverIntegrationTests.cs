@@ -80,7 +80,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.IntegrationTests.IO.Observers
             ContainerProvider.ContainerBuilder.RegisterModule(new AuthenticationModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new HashingModule());
             ContainerProvider.ContainerBuilder.RegisterType<VerifyMessageRequestObserver>().As<IRpcRequestObserver>();
-            ContainerProvider.ContainerBuilder.RegisterType<NetworkTypeProvider>().As<INetworkTypeProvider>();
+            ContainerProvider.ContainerBuilder.RegisterInstance(new NetworkTypeProvider(NetworkType.Devnet));
             ContainerProvider.ContainerBuilder.RegisterInstance(MultiAddressHelper.GetAddress("Test")).As<MultiAddress>();
 
             ContainerProvider.ConfigureContainerBuilder();
