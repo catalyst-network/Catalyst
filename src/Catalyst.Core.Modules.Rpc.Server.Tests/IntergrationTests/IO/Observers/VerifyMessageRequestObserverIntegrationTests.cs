@@ -68,6 +68,10 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.IntegrationTests.IO.Observers
             Setup(TestContext.CurrentContext);
 
             _testMessageToSign = ByteString.CopyFromUtf8("TestMsg");
+            
+            var networkTypeProvider = Substitute.For<INetworkTypeProvider>();
+            networkTypeProvider.NetworkType.Returns(NetworkType.Devnet);
+            ContainerProvider.ContainerBuilder.RegisterInstance(networkTypeProvider).As<INetworkTypeProvider>();
 
             ContainerProvider.ContainerBuilder.RegisterInstance(TestKeyRegistry.MockKeyRegistry()).As<IKeyRegistry>();
             ContainerProvider.ContainerBuilder.RegisterModule(new KeystoreModule());
@@ -80,7 +84,6 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.IntegrationTests.IO.Observers
             ContainerProvider.ContainerBuilder.RegisterModule(new AuthenticationModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new HashingModule());
             ContainerProvider.ContainerBuilder.RegisterType<VerifyMessageRequestObserver>().As<IRpcRequestObserver>();
-            ContainerProvider.ContainerBuilder.RegisterInstance(new NetworkTypeProvider(NetworkType.Devnet)).As<INetworkTypeProvider>();
             ContainerProvider.ContainerBuilder.RegisterInstance(MultiAddressHelper.GetAddress("Test")).As<MultiAddress>();
 
             ContainerProvider.ConfigureContainerBuilder();
