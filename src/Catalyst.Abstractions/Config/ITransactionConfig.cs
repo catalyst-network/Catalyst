@@ -21,13 +21,10 @@
 
 #endregion
 
-using Catalyst.Protocol.Rpc.Node;
-using Catalyst.Protocol.Wire;
-
-namespace Catalyst.Abstractions.IO.Events
+namespace Catalyst.Abstractions.Config
 {
-    public interface ITransactionReceivedEvent
+    public interface ITransactionConfig
     {
-        ResponseCode OnTransactionReceived(ProtocolMessage message, bool broadcast);
+        ulong MinTransactionEntryGasLimit { get; }
     }
 }

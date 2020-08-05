@@ -21,13 +21,12 @@
 
 #endregion
 
-using Catalyst.Protocol.Rpc.Node;
-using Catalyst.Protocol.Wire;
+using Catalyst.Abstractions.Config;
 
-namespace Catalyst.Abstractions.IO.Events
+namespace Catalyst.Core.Lib.Config
 {
-    public interface ITransactionReceivedEvent
+    public class DeltaConfig : IDeltaConfig
     {
-        ResponseCode OnTransactionReceived(ProtocolMessage message, bool broadcast);
+        public ulong DeltaGasLimit => 8_000_000;
     }
 }
