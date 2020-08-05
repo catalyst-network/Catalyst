@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Cryptography;
@@ -49,6 +50,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IStateProvider _stateProvider;
         private readonly IDeltaExecutor _deltaExecutor;
+        private readonly IDeltaConfig _deltaConfig;
+        private readonly ITransactionConfig _transactionConfig;
         private readonly ILogger _logger;
 
         public DeltaBuilder(IDeltaTransactionRetriever transactionRetriever,
@@ -59,6 +62,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
             IDateTimeProvider dateTimeProvider,
             IStateProvider stateProvider,
             IDeltaExecutor deltaExecutor,
+            IDeltaConfig deltaConfig,
+            ITransactionConfig transactionConfig,
             ILogger logger)
         {
             _transactionRetriever = transactionRetriever;
@@ -69,17 +74,21 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
             _dateTimeProvider = dateTimeProvider;
             _stateProvider = stateProvider;
             _deltaExecutor = deltaExecutor;
+            _deltaConfig = deltaConfig;
+            _transactionConfig = transactionConfig;
+
             _logger = logger;
 
             PrepareSteps();
         }
 
+        //todo We can DI this later
         private void PrepareSteps()
         {
             _steps = new IDeltaBuilderStep[]
             {
                 new PreviousDeltaResolverStep(_deltaCache, _logger),
-                new TransactionRetrieverStep(_transactionRetriever, _logger),
+                new TransactionRetrieverStep(_transactionRetriever, _deltaConfig, _transactionConfig, _logger),
                 new CandidateBuilderStep(_producerUniqueId, _randomFactory, _hashProvider, _logger),
                 new ProducedDeltaBuilderStep(_dateTimeProvider, _logger),
                 new DeltaStateCalculationStep(_stateProvider, _deltaExecutor, _logger),
