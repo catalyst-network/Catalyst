@@ -34,7 +34,6 @@ using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Deltas;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
@@ -45,6 +44,7 @@ using NSubstitute;
 using Serilog;
 using NUnit.Framework;
 using MultiFormats;
+using Catalyst.Core.Modules.Kvm;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
@@ -75,7 +75,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                .Shuffle();
             _producersProvider = Substitute.For<IDeltaProducersProvider>();
             _producersProvider.GetDeltaProducersFromPreviousDelta(Arg.Any<Cid>())
-               .Returns(_producerIds.Select(x => x.GetPublicKey()).ToList());
+               .Returns(_producerIds.Select(x => x.GetPublicKeyBytes().ToKvmAddress()).ToList());
 
             _localIdentifier = MultiAddressHelper.GetAddress("myself, a producer");
             _peerSettings = _localIdentifier.ToSubstitutedPeerSettings();

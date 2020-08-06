@@ -25,6 +25,7 @@ using System;
 using System.Collections.Generic;
 using Catalyst.Abstractions.P2P.Repository;
 using Lib.P2P;
+using Nethermind.Core;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
@@ -32,7 +33,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
     {
         public DeltaProducersProvider(IPeerRepository peerRepository) { PeerRepository = peerRepository; }
 
-        public IList<string> GetDeltaProducersFromPreviousDelta(Cid previousDeltaHash)
+        public IList<Address> GetDeltaProducersFromPreviousDelta(Cid previousDeltaHash)
         {
             throw new NotImplementedException();
         }

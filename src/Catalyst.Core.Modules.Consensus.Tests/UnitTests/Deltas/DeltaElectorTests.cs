@@ -50,6 +50,8 @@ using SharpRepository.InMemoryRepository;
 using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
 using Catalyst.Core.Lib.P2P.Repository;
 using MultiFormats;
+using Nethermind.Core;
+using Catalyst.Core.Modules.Kvm;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
@@ -136,7 +138,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var favourite = DeltaHelper.GetFavouriteDelta(_hashProvider);
             var candidateListKey = DeltaElector.GetCandidateListCacheKey(favourite);
 
-            AddVoterAsExpectedProducer(new MultiAddress(favourite.Voter).GetPublicKey());
+            AddVoterAsExpectedProducer(new MultiAddress(favourite.Voter).GetPublicKeyBytes().ToKvmAddress());
 
             var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
 
@@ -162,7 +164,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 var favourite = DeltaHelper.GetFavouriteDelta(_hashProvider);
                 var candidateListKey = DeltaElector.GetCandidateListCacheKey(favourite);
 
-                AddVoterAsExpectedProducer(new MultiAddress(favourite.Voter).GetPublicKey());
+                AddVoterAsExpectedProducer(new MultiAddress(favourite.Voter).GetPublicKeyBytes().ToKvmAddress());
 
                 var elector = new DeltaElector(realCache, _deltaProducersProvider, _reputationManager, _logger);
 
@@ -184,7 +186,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             _deltaProducersProvider
                .GetDeltaProducersFromPreviousDelta(Arg.Any<Cid>())
-               .Returns(new List<string> { MultiAddressHelper.GetAddress("the only known producer").GetPublicKey() });
+               .Returns(new List<Address> { MultiAddressHelper.GetAddress("the only known producer").GetPublicKeyBytes().ToKvmAddress() });
 
             var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
 
@@ -208,7 +210,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             _deltaProducersProvider
                .GetDeltaProducersFromPreviousDelta(Arg.Any<Cid>())
-               .Returns(new List<string>());
+               .Returns(new List<Address>());
 
             var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
 
@@ -245,7 +247,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                        Voter = MultiAddressHelper.GetAddress((j % votersCount).ToString()).ToString()
                    }).ToList();
 
-                AddVoterAsExpectedProducer(favourites.Select(f => new MultiAddress(f.Voter).GetPublicKey()).ToArray());
+                AddVoterAsExpectedProducer(favourites.Select(f => new MultiAddress(f.Voter).GetPublicKeyBytes().ToKvmAddress()).ToArray());
 
                 var elector = new DeltaElector(realCache, _deltaProducersProvider, _reputationManager, _logger);
 
@@ -288,7 +290,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                        Voter = MultiAddressHelper.GetAddress(j.ToString()).ToString()
                    }).ToList();
 
-                AddVoterAsExpectedProducer(favourites.Select(f => new MultiAddress(f.Voter).GetPublicKey()).ToArray());
+                AddVoterAsExpectedProducer(favourites.Select(f => new MultiAddress(f.Voter).GetPublicKeyBytes().ToKvmAddress()).ToArray());
 
                 var elector = new DeltaElector(realCache, _deltaProducersProvider, _reputationManager, _logger);
 
@@ -321,7 +323,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _logger.Received(1).Debug(Arg.Any<string>(), Arg.Any<Cid>());
         }
 
-        private void AddVoterAsExpectedProducer(params string[] producers)
+        private void AddVoterAsExpectedProducer(params Address[] producers)
         {
             _deltaProducersProvider
                .GetDeltaProducersFromPreviousDelta(Arg.Any<Cid>())
