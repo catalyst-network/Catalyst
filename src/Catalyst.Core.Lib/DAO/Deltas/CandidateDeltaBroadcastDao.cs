@@ -24,9 +24,10 @@
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO.Converters;
-using Catalyst.Core.Lib.DAO.Peer;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
+using Nethermind.Core;
 
 namespace Catalyst.Core.Lib.DAO.Deltas
 {
@@ -44,12 +45,16 @@ namespace Catalyst.Core.Lib.DAO.Deltas
             cfg.CreateMap<CandidateDeltaBroadcast, CandidateDeltaBroadcastDao>()
                .ForMember(e => e.Hash,
                     opt => opt.ConvertUsing<ByteStringToDfsHashConverter, ByteString>())
+               .ForMember(e => e.Producer,
+                    opt => opt.MapFrom(x => new Address(x.Producer.ToByteArray())))
                .ForMember(e => e.PreviousDeltaDfsHash,
                     opt => opt.ConvertUsing<ByteStringToDfsHashConverter, ByteString>());
 
             cfg.CreateMap<CandidateDeltaBroadcastDao, CandidateDeltaBroadcast>()
                .ForMember(e => e.Hash,
                     opt => opt.ConvertUsing<DfsHashToByteStringConverter, string>())
+               .ForMember(e => e.Producer,
+                    opt => opt.MapFrom(x => new Address(x.Producer).Bytes.ToByteString()))
                .ForMember(e => e.PreviousDeltaDfsHash,
                     opt => opt.ConvertUsing<DfsHashToByteStringConverter, string>());
         }

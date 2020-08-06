@@ -45,6 +45,7 @@ using Serilog;
 using NUnit.Framework;
 using MultiFormats;
 using Catalyst.Core.Modules.Kvm;
+using Nethermind.Core;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
@@ -55,7 +56,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         private IDeltaProducersProvider _producersProvider;
         private DeltaVoter _voter;
         private Cid _previousDeltaHash;
-        private IList<MultiAddress> _producerIds;
+        private IList<Address> _producerIds;
         private MultiAddress _localIdentifier;
         private ILogger _logger;
         private IPeerSettings _peerSettings;
@@ -71,11 +72,11 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 _hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).ToCid();
 
             _producerIds = "1234"
-               .Select((c, i) => MultiAddressHelper.GetAddress(c.ToString()))
+               .Select((c, i) => MultiAddressHelper.GetAddress(c.ToString()).GetPublicKeyBytes().ToKvmAddress())
                .Shuffle();
             _producersProvider = Substitute.For<IDeltaProducersProvider>();
             _producersProvider.GetDeltaProducersFromPreviousDelta(Arg.Any<Cid>())
-               .Returns(_producerIds.Select(x => x.GetPublicKeyBytes().ToKvmAddress()).ToList());
+               .Returns(_producerIds);
 
             _localIdentifier = MultiAddressHelper.GetAddress("myself, a producer");
             _peerSettings = _localIdentifier.ToSubstitutedPeerSettings();
@@ -127,7 +128,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _voter.OnNext(new CandidateDeltaBroadcast
             {
                 Hash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
-                Producer = MultiAddressHelper.GetAddress("unknown_producer").ToString()
+                Producer = MultiAddressHelper.GetAddress("unknown_producer").GetPublicKeyBytes().ToKvmAddressByteString()
             });
 
             _cache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
@@ -142,7 +143,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _voter.OnNext(new CandidateDeltaBroadcast
             {
                 PreviousDeltaDfsHash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
-                Producer = MultiAddressHelper.GetAddress("unknown_producer").ToString()
+                Producer = MultiAddressHelper.GetAddress("unknown_producer").GetPublicKeyBytes().ToKvmAddressByteString()
             });
 
             _cache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
@@ -153,7 +154,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         public void When_candidate_is_produced_by_unexpected_producer_should_log_and_return_without_hitting_the_cache()
         {
             var candidateFromUnknownProducer = DeltaHelper.GetCandidateDelta(_hashProvider,
-                producerId: MultiAddressHelper.GetAddress("unknown_producer"));
+                producerId: MultiAddressHelper.GetAddress("unknown_producer").GetPublicKeyBytes().ToKvmAddress());
 
             _voter = new DeltaVoter(_cache, _producersProvider, _peerSettings, _logger);
             _voter.OnNext(candidateFromUnknownProducer);
@@ -294,7 +295,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
                 realCache.TryGetValue(candidate1CacheKey,
                     out ScoredCandidateDelta retrievedCandidate1).Should().BeTrue();
-                retrievedCandidate1.Candidate.Producer.Should().Be(_producerIds.First().ToString());
+                retrievedCandidate1.Candidate.Producer.Should().BeEquivalentTo(_producerIds.First().Bytes.ToByteString());
 
                 realCache.TryGetValue(previousDeltaCacheKey,
                     out ConcurrentBag<string> retrievedCandidateList).Should().BeTrue();
@@ -304,7 +305,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
                 realCache.TryGetValue(candidate2CacheKey,
                     out ScoredCandidateDelta retrievedCandidate2).Should().BeTrue();
-                retrievedCandidate2.Candidate.Producer.Should().Be(_producerIds.Last().ToString());
+                retrievedCandidate2.Candidate.Producer.Should().BeEquivalentTo(_producerIds.Last().Bytes.ToByteString());
 
                 realCache.TryGetValue(previousDeltaCacheKey,
                     out ConcurrentBag<string> retrievedUpdatedCandidateList).Should().BeTrue();
@@ -334,7 +335,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                    .SequenceEqual(previousDeltaHash.ToArray()).Should().BeTrue();
                 favouriteCandidate.Candidate.Hash.ToByteArray()
                    .SequenceEqual(scoredCandidates[1].Candidate.Hash.ToByteArray()).Should().BeTrue();
-                favouriteCandidate.Candidate.Producer.Should().Be(scoredCandidates[1].Candidate.Producer);
+                favouriteCandidate.Candidate.Producer.Should().BeEquivalentTo(scoredCandidates[1].Candidate.Producer);
             }
         }
 

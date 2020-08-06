@@ -24,7 +24,9 @@
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO.Peer;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Wire;
+using Nethermind.Core;
 
 namespace Catalyst.Core.Lib.DAO.Deltas
 {
@@ -38,7 +40,11 @@ namespace Catalyst.Core.Lib.DAO.Deltas
     {
         public void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<FavouriteDeltaBroadcast, FavouriteDeltaBroadcastDao>().ReverseMap();
+            cfg.CreateMap<FavouriteDeltaBroadcast, FavouriteDeltaBroadcastDao>()
+                .ForMember(e => e.Voter, opt => opt.MapFrom(x => new Address(x.Voter.ToByteArray())));
+
+            cfg.CreateMap<FavouriteDeltaBroadcastDao, FavouriteDeltaBroadcast>()
+               .ForMember(e => e.Voter, opt => opt.MapFrom(x => new Address(x.Voter).Bytes.ToByteString()));
         }
     }
 }

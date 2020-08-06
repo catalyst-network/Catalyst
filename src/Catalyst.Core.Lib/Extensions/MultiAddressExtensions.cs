@@ -22,7 +22,11 @@
 #endregion
 
 using Catalyst.Core.Lib.Util;
+using Google.Protobuf;
 using MultiFormats;
+using Nethermind.Core;
+using Nethermind.Core.Crypto;
+using Nethermind.Evm;
 using System.Net;
 
 namespace Catalyst.Core.Lib.Extensions
@@ -47,6 +51,16 @@ namespace Catalyst.Core.Lib.Extensions
         public static byte[] GetPublicKeyBytes(this MultiAddress address)
         {
             return address.PeerId.GetPublicKeyBytesFromPeerId();
+        }
+
+        public static Address GetKvmAddress(this MultiAddress address)
+        {
+            return new Address(ValueKeccak.Compute(GetPublicKeyBytes(address)).BytesAsSpan.SliceWithZeroPadding(0, 20).ToArray());
+        }
+
+        public static ByteString GetKvmAddressByteString(this MultiAddress address)
+        {
+            return GetKvmAddress(address).Bytes.ToByteString() ?? ByteString.Empty;
         }
 
         public static IPEndPoint GetIPEndPoint(this MultiAddress address)

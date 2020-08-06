@@ -26,12 +26,13 @@ using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Dfs.Extensions;
+using Catalyst.Core.Modules.Kvm;
 using Catalyst.Protocol.Deltas;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf.WellKnownTypes;
 using Lib.P2P;
 using MultiFormats;
+using Nethermind.Core;
 
 namespace Catalyst.TestUtils
 {
@@ -64,36 +65,36 @@ namespace Catalyst.TestUtils
         public static CandidateDeltaBroadcast GetCandidateDelta(IHashProvider hashProvider,
             Cid previousDeltaHash = null,
             Cid hash = null,
-            MultiAddress producerId = null)
+            Address producerId = null)
         {
             var candidateHash = hash ??
                 hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).ToCid();
             var previousHash = previousDeltaHash ??
                 hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).ToCid();
             var producer = producerId
-             ?? MultiAddressHelper.GetAddress(ByteUtil.GenerateRandomByteArray(32));
+             ?? MultiAddressHelper.GetAddress(ByteUtil.GenerateRandomByteArray(32)).GetPublicKeyBytes().ToKvmAddress();
 
             return new CandidateDeltaBroadcast
             {
                 Hash = MultiBase.Decode(candidateHash).ToByteString(),
                 PreviousDeltaDfsHash = MultiBase.Decode(previousHash).ToByteString(),
-                Producer = producer.ToString()
+                Producer = producer.Bytes.ToByteString()
             };
         }
 
         public static FavouriteDeltaBroadcast GetFavouriteDelta(IHashProvider hashProvider,
             Cid previousDeltaHash = null,
             Cid hash = null,
-            MultiAddress producerId = null,
-            MultiAddress voterId = null)
+            Address producerId = null,
+            Address voterId = null)
         {
             var candidate = GetCandidateDelta(hashProvider, previousDeltaHash, hash, producerId);
-            var voter = voterId ?? MultiAddressHelper.GetAddress();
+            var voter = voterId ?? MultiAddressHelper.GetAddress().GetPublicKeyBytes().ToKvmAddress();
 
             return new FavouriteDeltaBroadcast
             {
                 Candidate = candidate,
-                Voter = voter.ToString()
+                Voter = voter.Bytes.ToByteString()
             };
         }
     }

@@ -168,7 +168,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             var original = new CandidateDeltaBroadcast
             {
                 Hash = MultiBase.Decode(hash.ToCid()).ToByteString(),
-                Producer = MultiAddressHelper.GetAddress("test").ToString(),
+                Producer = MultiAddressHelper.GetAddress("test").GetKvmAddressByteString(),
                 PreviousDeltaDfsHash = MultiBase.Decode(previousHash.ToCid()).ToByteString()
             };
 
@@ -203,8 +203,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         {
             var original = new FavouriteDeltaBroadcast
             {
-                Candidate = DeltaHelper.GetCandidateDelta(_hashProvider, producerId: MultiAddressHelper.GetAddress("not me")),
-                Voter = MultiAddressHelper.GetAddress("test").ToString()
+                Candidate = DeltaHelper.GetCandidateDelta(_hashProvider, producerId: MultiAddressHelper.GetAddress("not me").GetKvmAddress()),
+                Voter = MultiAddressHelper.GetAddress("test").GetKvmAddressByteString()
             };
 
             var contextDao = original.ToDao<FavouriteDeltaBroadcast, FavouriteDeltaBroadcastDao>(_mapperProvider);

@@ -52,5 +52,10 @@ namespace Catalyst.Core.Modules.Kvm
         {
             return recipient?.ToKvmAddress().Bytes.ToByteString() ?? ByteString.Empty;
         }
+
+        public static ByteString ToKvmAddressByteString(this byte[] publicKey)
+        {
+            return publicKey?.ToKvmAddress().Bytes.ToByteString() ?? ByteString.Empty;
+        }
     }
 }

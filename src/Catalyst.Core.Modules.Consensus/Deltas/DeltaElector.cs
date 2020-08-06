@@ -38,6 +38,7 @@ using Lib.P2P;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using MultiFormats;
+using Nethermind.Core;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
@@ -92,14 +93,14 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 Guard.Argument(candidate, nameof(candidate)).NotNull().Require(f => f.IsValid());
 
                 var cid = candidate.Candidate.PreviousDeltaDfsHash.ToByteArray().ToCid();
-                var candidateAddress = new MultiAddress(candidate.Voter);
-                var candidatePublicKey = candidateAddress.GetPublicKey();
+                var candidateAddress = new Address(candidate.Voter.ToByteArray());
                 if (!_deltaProducersProvider
                    .GetDeltaProducersFromPreviousDelta(cid)
-                   .Any(p => p.Equals(candidatePublicKey)))
+                   .Any(p => p.Equals(candidateAddress)))
                 {
-                    var reputationChange = new ReputationChange(candidate.Voter, ReputationEventType.VoterIsNotProducer);
-                    _reputationManager.OnNext(reputationChange);
+                    //todo
+                    //var reputationChange = new ReputationChange(candidate.Voter, ReputationEventType.VoterIsNotProducer);
+                    //_reputationManager.OnNext(reputationChange);
 
                     _logger.Debug(
                         "Voter {voter} is not a producer for this cycle succeeding {deltaHash} and its vote has been discarded.",
