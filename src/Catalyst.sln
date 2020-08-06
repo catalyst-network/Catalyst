@@ -194,6 +194,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Cli", "Catalyst.Cl
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Cli.Tests", "Catalyst.Cli.Tests\Catalyst.Cli.Tests.csproj", "{EF217648-56B7-4E96-B8DB-1C2C543B291D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Cli.SmartContractConsole", "Catalyst.Cli.SmartContractConsole\Catalyst.Cli.SmartContractConsole.csproj", "{69469B19-FEF6-4043-BC15-4DED23FF51BE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -512,6 +514,10 @@ Global
 		{EF217648-56B7-4E96-B8DB-1C2C543B291D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF217648-56B7-4E96-B8DB-1C2C543B291D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF217648-56B7-4E96-B8DB-1C2C543B291D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{69469B19-FEF6-4043-BC15-4DED23FF51BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{69469B19-FEF6-4043-BC15-4DED23FF51BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{69469B19-FEF6-4043-BC15-4DED23FF51BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{69469B19-FEF6-4043-BC15-4DED23FF51BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

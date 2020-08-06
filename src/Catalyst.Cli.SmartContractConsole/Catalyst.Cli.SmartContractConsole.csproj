@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Nethereum" Version="0.93.0-date20200803-1151.git-eaea926" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
+    <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
+    <ProjectReference Include="..\Catalyst.Core.Modules.Cryptography.BulletProofs\Catalyst.Core.Modules.Cryptography.BulletProofs.csproj" />
+    <ProjectReference Include="..\Catalyst.Protocol\Catalyst.Protocol.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="KovanAbi.txt">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+</Project>

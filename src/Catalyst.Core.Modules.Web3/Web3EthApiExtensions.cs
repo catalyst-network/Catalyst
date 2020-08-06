@@ -96,7 +96,7 @@ namespace Catalyst.Core.Modules.Web3
             return new PublicEntry
             {
                 Nonce = (ulong) api.StateReader.GetNonce(root, transactionCall.From),
-                SenderAddress = transactionCall.From.Bytes.ToByteString(),
+                SenderAddress = transactionCall.From?.Bytes.ToByteString() ?? ByteString.Empty,
                 ReceiverAddress = transactionCall.To?.Bytes.ToByteString() ?? ByteString.Empty,
                 GasLimit = (ulong) transactionCall.Gas.GetValueOrDefault(),
                 GasPrice = transactionCall.GasPrice.GetValueOrDefault().ToUint256ByteString(),
