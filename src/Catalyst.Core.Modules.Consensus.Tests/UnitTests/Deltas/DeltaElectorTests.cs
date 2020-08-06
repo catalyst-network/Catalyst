@@ -98,14 +98,15 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             _cache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
             _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());
-        }   
-        
+        }
+
         [Test]
         public void When_receiving_invalid_candidate_should_log_and_not_hit_the_cache()
         {
             var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
 
-            elector.OnNext(new FavouriteDeltaBroadcast{
+            elector.OnNext(new FavouriteDeltaBroadcast
+            {
                 Candidate = new CandidateDeltaBroadcast
                 {
                     Hash = ByteUtil.GenerateRandomByteArray(32).ToByteString(),
@@ -116,8 +117,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             _cache.DidNotReceiveWithAnyArgs().TryGetValue(Arg.Any<object>(), out Arg.Any<object>());
             _cache.DidNotReceiveWithAnyArgs().CreateEntry(Arg.Any<object>());
-        }   
-        
+        }
+
         [Test]
         public void When_receiving_no_voterid_should_log_and_not_hit_the_cache()
         {
@@ -153,7 +154,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             var addedValue = addedEntry.Value;
             addedValue.Should().BeAssignableTo<IDictionary<FavouriteDeltaBroadcast, bool>>();
-            ((IDictionary<FavouriteDeltaBroadcast, bool>) addedValue).Should().ContainKey(favourite);
+            ((IDictionary<FavouriteDeltaBroadcast, bool>)addedValue).Should().ContainKey(favourite);
         }
 
         [Test]
@@ -198,32 +199,32 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _cache.DidNotReceiveWithAnyArgs().TryGetValue(default, out _);
         }
 
-        //todo
-        //[Test]
-        //public void Should_DeRep_Peers_That_Vote_When_They_Are_Not_Delta_Producers()
-        //{
-        //    var favourite = DeltaHelper.GetFavouriteDelta(_hashProvider);
+        [Test]
+        public void Should_DeRep_Peers_That_Vote_When_They_Are_Not_Delta_Producers()
+        {
+            var peerMultiAddress = MultiAddressHelper.GetAddress("peer");
+            var favourite = DeltaHelper.GetFavouriteDelta(_hashProvider, voterId: peerMultiAddress.GetKvmAddress());
 
-        //    var peer = new Peer { Reputation = 100, Address = favourite.Voter };
-        //    _reputationManager.PeerRepository.Add(new Peer { Reputation = 100, Address = favourite.Voter });
+            var peer = new Peer { Reputation = 100, Address = peerMultiAddress, KvmAddress = peerMultiAddress.GetKvmAddress() };
+            _reputationManager.PeerRepository.Add(peer);
 
-        //    var expectedReputation = peer.Reputation + ReputationEventType.VoterIsNotProducer.Amount;
+            var expectedReputation = peer.Reputation + ReputationEventType.VoterIsNotProducer.Amount;
 
-        //    _deltaProducersProvider
-        //       .GetDeltaProducersFromPreviousDelta(Arg.Any<Cid>())
-        //       .Returns(new List<Address>());
+            _deltaProducersProvider
+               .GetDeltaProducersFromPreviousDelta(Arg.Any<Cid>())
+               .Returns(new List<Address>());
 
-        //    var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
+            var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
 
-        //    elector.OnNext(favourite);
+            elector.OnNext(favourite);
 
-        //    _testScheduler.Start();
+            _testScheduler.Start();
 
-        //    var updatedPeer = _reputationManager.PeerRepository.Get(favourite.Voter);
-        //    expectedReputation.Should().Be(updatedPeer.Reputation);
+            var updatedPeer = _reputationManager.PeerRepository.Get(peerMultiAddress.ToString());
+            expectedReputation.Should().Be(updatedPeer.Reputation);
 
-        //    _cache.DidNotReceiveWithAnyArgs().TryGetValue(default, out _);
-        //}
+            _cache.DidNotReceiveWithAnyArgs().TryGetValue(default, out _);
+        }
 
         [Test]
         public void When_favourite_has_different_producer_it_should_not_create_duplicate_entries()

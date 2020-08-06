@@ -30,10 +30,8 @@ using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Modules.POA.Consensus.Deltas;
-using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Google.Protobuf;
 using Lib.P2P;
 using Microsoft.Extensions.Caching.Memory;
 using MultiFormats.Registry;
@@ -41,7 +39,6 @@ using NSubstitute;
 using Serilog;
 using NUnit.Framework;
 using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
-using MultiFormats;
 using Catalyst.Core.Lib.Extensions;
 using Nethermind.Core;
 
@@ -49,7 +46,6 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
 {
     public class PoaDeltaProducersProviderTests
     {
-        private Peer _selfAsPeer;
         private List<Peer> _peers;
         private PoaDeltaProducersProvider _poaDeltaProducerProvider;
         private Cid _previousDeltaHash;
@@ -62,7 +58,6 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
             var peerSettings = MultiAddressHelper.GetAddress("TEST").ToSubstitutedPeerSettings();
-            _selfAsPeer = new Peer { Address = peerSettings.Address };
             var rand = new Random();
             _peers = Enumerable.Range(0, 5)
                .Select(_ =>

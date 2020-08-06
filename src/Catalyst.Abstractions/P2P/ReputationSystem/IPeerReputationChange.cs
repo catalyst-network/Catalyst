@@ -22,14 +22,13 @@
 #endregion
 
 using Catalyst.Abstractions.Config;
-using Catalyst.Protocol.Peer;
-using MultiFormats;
+using Nethermind.Core;
 
 namespace Catalyst.Abstractions.P2P.ReputationSystem
 {
     public interface IPeerReputationChange
     {
-        MultiAddress Address { get; }
+        Address Address { get; }
         IReputationEvents ReputationEvent { get; }
     }
 }

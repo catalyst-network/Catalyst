@@ -24,6 +24,7 @@
 using Autofac;
 using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.P2P.ReputationSystem;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Core.Lib.P2P.ReputationSystem;
 using Catalyst.Core.Modules.Dfs;
@@ -59,6 +60,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
             var subbedPeer = new Peer
             {
                 Address = pid,
+                KvmAddress = pid.GetKvmAddress(),
                 Reputation = initialRep
             };
             _reputationManager.PeerRepository.Add(subbedPeer);
@@ -72,7 +74,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
 
             var savedPeer = SavePeerInRepo(pid);
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
-            peerReputationChange.Address.Returns(pid);
+            peerReputationChange.Address.Returns(pid.GetKvmAddress());
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(100);
             _reputationManager.OnNext(peerReputationChange);
@@ -87,7 +89,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
 
             var savedPeer = SavePeerInRepo(pid);
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
-            peerReputationChange.Address.Returns(pid);
+            peerReputationChange.Address.Returns(pid.GetKvmAddress());
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(-100);
             _reputationManager.OnNext(peerReputationChange);
@@ -102,7 +104,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
 
             var savedPeer = SavePeerInRepo(pid);
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
-            peerReputationChange.Address.Returns(pid);
+            peerReputationChange.Address.Returns(pid.GetKvmAddress());
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(-200);
             _reputationManager.OnNext(peerReputationChange);
@@ -117,7 +119,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P.ReputationSystem
 
             var savedPeer = SavePeerInRepo(pid, -100);
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
-            peerReputationChange.Address.Returns(pid);
+            peerReputationChange.Address.Returns(pid.GetKvmAddress());
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(200);
             _reputationManager.OnNext(peerReputationChange);
