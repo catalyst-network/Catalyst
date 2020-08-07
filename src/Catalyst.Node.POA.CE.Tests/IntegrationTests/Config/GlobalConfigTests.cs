@@ -27,6 +27,7 @@ using System.Linq;
 using Autofac;
 using Catalyst.Abstractions;
 using Catalyst.Abstractions.Cli;
+using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.DAO;
 using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Core.Lib;
@@ -82,6 +83,9 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.Config
 
             _containerProvider = new ContainerProvider(_configFilesUsed, FileSystem, Output);
 
+            var networkTypeProvider = Substitute.For<INetworkTypeProvider>();
+            networkTypeProvider.NetworkType.Returns(network);
+
             SocketPortHelper.AlterConfigurationToGetUniquePort(_containerProvider.ConfigurationRoot);
 
             _containerProvider.ConfigureContainerBuilder();
@@ -91,6 +95,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.Config
             containerBuilder.RegisterType<ConsoleUserOutput>().As<IUserOutput>();
             containerBuilder.RegisterType<ConsoleUserInput>().As<IUserInput>();
             containerBuilder.RegisterInstance(Substitute.For<IPeerDiscovery>()).As<IPeerDiscovery>();
+            containerBuilder.RegisterInstance(networkTypeProvider).As<INetworkTypeProvider>();
             containerBuilder.RegisterModule(new KeystoreModule());
             containerBuilder.RegisterModule(new KeySignerModule());
             containerBuilder.RegisterModule(new ConsensusModule());

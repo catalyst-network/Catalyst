@@ -31,7 +31,9 @@ using FluentAssertions;
 using Google.Protobuf;
 using NSubstitute;
 using System.Linq;
+using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.Keystore;
+using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Consensus;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
@@ -66,6 +68,10 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.IntegrationTests.IO.Observers
             Setup(TestContext.CurrentContext);
 
             _testMessageToSign = ByteString.CopyFromUtf8("TestMsg");
+            
+            var networkTypeProvider = Substitute.For<INetworkTypeProvider>();
+            networkTypeProvider.NetworkType.Returns(NetworkType.Devnet);
+            ContainerProvider.ContainerBuilder.RegisterInstance(networkTypeProvider).As<INetworkTypeProvider>();
 
             ContainerProvider.ContainerBuilder.RegisterInstance(TestKeyRegistry.MockKeyRegistry()).As<IKeyRegistry>();
             ContainerProvider.ContainerBuilder.RegisterModule(new KeystoreModule());
@@ -78,7 +84,6 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.IntegrationTests.IO.Observers
             ContainerProvider.ContainerBuilder.RegisterModule(new AuthenticationModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new HashingModule());
             ContainerProvider.ContainerBuilder.RegisterType<VerifyMessageRequestObserver>().As<IRpcRequestObserver>();
-
             ContainerProvider.ContainerBuilder.RegisterInstance(MultiAddressHelper.GetAddress("Test")).As<MultiAddress>();
 
             ContainerProvider.ConfigureContainerBuilder();

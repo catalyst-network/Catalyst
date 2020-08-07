@@ -75,8 +75,12 @@ namespace Catalyst.Node.POA.CE
         [Option('o', "overwrite-config", HelpText = "Overwrite the data directory configs.")]
         public bool OverwriteConfig { get; set; }
 
+        [Option( "network-type", HelpText = "The network type")]
+        public NetworkType NetworkType { get; set; }
+        
         [Option("network-file", HelpText = "The name of the network file")]
         public string OverrideNetworkFile { get; set; }
+
 
         [Option('r', "reset", HelpText = "Reset the state")]
         public bool Reset { get; set; }
@@ -186,7 +190,8 @@ namespace Catalyst.Node.POA.CE
             {
                 await Kernel
                    .WithDataDirectory()
-                   .WithNetworksConfigFile(NetworkType.Devnet, options.OverrideNetworkFile)
+                   .WithNetworkType(options.NetworkType)
+                   .WithNetworksConfigFile(options.OverrideNetworkFile)
                    .WithSerilogConfigFile()
                    .WithConfigCopier(new PoaConfigCopier())
                    .WithPersistenceConfiguration()

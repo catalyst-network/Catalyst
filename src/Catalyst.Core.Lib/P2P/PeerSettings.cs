@@ -28,10 +28,12 @@ using System.Net;
 using System.Net.NetworkInformation;
 using System.Net.Sockets;
 using System.Reflection;
+using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Protocol.Network;
@@ -108,12 +110,12 @@ namespace Catalyst.Core.Lib.P2P
         ///     Set the local nodes peer settings
         /// </summary>
         /// <param name="rootSection"></param>
-        public PeerSettings(IConfigurationRoot rootSection, Peer localPeer, IConfigApi configApi)
+        public PeerSettings(IConfigurationRoot rootSection, Peer localPeer, IConfigApi configApi, INetworkTypeProvider networkTypeProvider)
         {
+            _networkType = networkTypeProvider.NetworkType;
             Guard.Argument(rootSection, nameof(rootSection)).NotNull();
 
             var section = rootSection.GetSection("CatalystNodeConfiguration").GetSection("Peer");
-            Enum.TryParse(section.GetSection("Network").Value, out _networkType);
 
             var pksi = Convert.FromBase64String(localPeer.PublicKey);
             PublicKey = pksi.GetPublicKeyBytesFromPeerId().ToBase58();

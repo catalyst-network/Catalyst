@@ -26,6 +26,7 @@ using System.Net;
 using System.Threading.Tasks;
 using Autofac;
 using Catalyst.Abstractions.Cli;
+using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.KeySigner;
@@ -36,6 +37,7 @@ using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
 using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Cli;
+using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.P2P.Protocols;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
@@ -48,6 +50,7 @@ using Catalyst.Modules.Network.Dotnetty.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Modules.Network.Dotnetty.IO.EventLoop;
 using Catalyst.Modules.Network.Dotnetty.P2P;
 using Catalyst.Modules.Network.Dotnetty.P2P.IO.Transport.Channels;
+using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
@@ -88,6 +91,10 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             var passwordManager = Substitute.For<IPasswordManager>();
             passwordManager.PromptPassword(Arg.Is(PasswordRegistryTypes.DefaultNodePassword), Arg.Any<string>()).Returns(TestPasswordReader.BuildSecureStringPassword("test"));
             ContainerProvider.ContainerBuilder.RegisterInstance(passwordManager).As<IPasswordManager>();
+            
+            var networkTypeProvider = Substitute.For<INetworkTypeProvider>();
+            networkTypeProvider.NetworkType.Returns(NetworkType.Devnet);
+            ContainerProvider.ContainerBuilder.RegisterInstance(networkTypeProvider).As<INetworkTypeProvider>();
 
             _peerSettings = (PeerSettings) ContainerProvider.Container.Resolve<IPeerSettings>();
 
