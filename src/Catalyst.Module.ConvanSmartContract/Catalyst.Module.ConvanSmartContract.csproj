@@ -1,0 +1,28 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Library</OutputType>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Remove="ValidatorContract2.json" />
+    <None Remove="ValidatorContract2json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <EmbeddedResource Include="ValidatorContract2.json" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\submodules\nethermind\src\Nethermind\Nethermind.Abi\Nethermind.Abi.csproj" />
+    <ProjectReference Include="..\..\submodules\nethermind\src\Nethermind\Nethermind.Blockchain\Nethermind.Blockchain.csproj" />
+    <ProjectReference Include="..\..\submodules\nethermind\src\Nethermind\Nethermind.Consensus.AuRa\Nethermind.Consensus.AuRa.csproj" />
+    <ProjectReference Include="..\..\submodules\nethermind\src\Nethermind\Nethermind.Consensus\Nethermind.Consensus.csproj" />
+    <ProjectReference Include="..\..\submodules\nethermind\src\Nethermind\Nethermind.Core\Nethermind.Core.csproj" />
+    <ProjectReference Include="..\..\submodules\nethermind\src\Nethermind\Nethermind.Evm\Nethermind.Evm.csproj" />
+    <ProjectReference Include="..\..\submodules\nethermind\src\Nethermind\Nethermind.Facade\Nethermind.Facade.csproj" />
+    <ProjectReference Include="..\..\submodules\nethermind\src\Nethermind\Nethermind.Specs\Nethermind.Specs.csproj" />
+  </ItemGroup>
+
+</Project>
