@@ -1,7 +1,6 @@
 {
     "CatalystNodeConfiguration": {
         "Peer": {
-            "Network": "Mainnet",
             "PublicKey": "hv6vvbt2u567syz5labuqnfabsc3zobfwekl4cy3c574n6vkj7sq",
             "Port": 42076,
             "BindAddress": "127.0.0.1",

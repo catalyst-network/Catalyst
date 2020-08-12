@@ -25,21 +25,8 @@ using Catalyst.Protocol.Network;
 
 namespace Catalyst.Abstractions.Config
 {
-    public interface IConfigCopier
+    public interface INetworkTypeProvider
     {
-        /// <summary>
-        ///     Finds out which config files are missing from the catalyst home directory and
-        ///     copies them over if needed.
-        /// </summary>
-        /// <param name="dataDir">Home catalyst directory</param>
-        /// <param name="networkType">Network on which to run the node</param>
-        /// <param name="sourceFolder"></param>
-        /// <param name="overwrite">Should config existing config files be overwritten by default?</param>
-        /// <param name="overrideNetworkFile"></param>
-        void RunConfigStartUp(string dataDir, 
-            NetworkType networkType, 
-            string sourceFolder = null, 
-            bool overwrite = false, 
-            string overrideNetworkFile = null);
+        NetworkType NetworkType { get; }
     }
 }
