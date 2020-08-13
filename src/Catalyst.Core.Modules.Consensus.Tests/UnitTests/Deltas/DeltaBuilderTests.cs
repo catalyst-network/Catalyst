@@ -379,7 +379,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         private void ValidateDeltaCandidate(CandidateDeltaBroadcast candidate, byte[] expectedBytesToHash)
         {
             candidate.Should().NotBeNull();
-            candidate.Producer.Should().Be(_producer.ToString());
+            candidate.Producer.Should().BeEquivalentTo(_producer.GetKvmAddressByteString());
             candidate.PreviousDeltaDfsHash.ToByteArray().SequenceEqual(_previousDeltaHash.ToArray()).Should().BeTrue();
 
             var expectedHash = _hashProvider.ComputeMultiHash(expectedBytesToHash).ToCid();

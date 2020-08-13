@@ -81,7 +81,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _deltaElector.Received(1).OnNext(Arg.Is<FavouriteDeltaBroadcast>(c =>
                 c.Candidate.Hash.SequenceEqual(_newHash.ToArray().ToByteString())
              && c.Candidate.PreviousDeltaDfsHash.Equals(_prevHash.ToArray().ToByteString())
-             && c.Candidate.Producer == _producerId.ToString()));
+             && c.Candidate.Producer == _producerId.GetKvmAddressByteString()));
         }
 
         [Test]
@@ -117,13 +117,13 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             {
                 Hash = newHash.ToByteString(),
                 PreviousDeltaDfsHash = prevHash.ToByteString(),
-                Producer = producerId.ToString()
+                Producer = producerId.GetKvmAddressByteString()
             };
 
             var favouriteDeltaBroadcast = new FavouriteDeltaBroadcast
             {
                 Candidate = candidate,
-                Voter = voterId.ToString()
+                Voter = voterId.GetKvmAddressByteString()
             };
 
             return favouriteDeltaBroadcast.ToProtocolMessage(MultiAddressHelper.GetAddress());

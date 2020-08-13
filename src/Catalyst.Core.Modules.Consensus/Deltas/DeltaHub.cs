@@ -23,6 +23,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Consensus.Deltas;
@@ -80,7 +81,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             Guard.Argument(candidate, nameof(candidate)).NotNull().Require(c => c.IsValid());
             _logger.Information("Broadcasting candidate delta {0}", candidate);
 
-            if (!candidate.Producer.Equals(_peerId.ToString()))
+            if (!candidate.Producer.SequenceEqual(_peerId.GetKvmAddressByteString()))
             {
                 _logger.Warning($"{nameof(BroadcastCandidate)} " +
                     "should only be called by the producer of a candidate.");

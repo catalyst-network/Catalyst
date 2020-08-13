@@ -82,6 +82,7 @@ using Catalyst.Abstractions.Sync.Interfaces;
 using System.Net;
 using Catalyst.Core.Modules.Web3.Options;
 using Catalyst.Modules.Network.Dotnetty.IO.Observers;
+using Catalyst.Modules.Network.LibP2P;
 
 namespace Catalyst.TestUtils
 {
@@ -190,7 +191,8 @@ namespace Catalyst.TestUtils
                     () => new ApiModule(new HttpOptions(new IPEndPoint(IPAddress.Any, 5005)), new HttpsOptions(new IPEndPoint(IPAddress.Any, 2053), "cert.pfx"), new List<string> {"Catalyst.Core.Modules.Web3", "Catalyst.Core.Modules.Dfs"})
                 },
                 {typeof(PoaConsensusModule), () => new PoaConsensusModule()},
-                {typeof(PoaP2PModule), () => new PoaP2PModule()}
+                {typeof(PoaP2PModule), () => new PoaP2PModule()},
+                {typeof(LibP2PNetworkModule), () => new LibP2PNetworkModule()}
             };
 
         private int NodeNumber { get; }

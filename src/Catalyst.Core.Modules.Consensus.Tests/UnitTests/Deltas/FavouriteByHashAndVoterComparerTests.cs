@@ -70,51 +70,51 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 {
                     Candidate = new CandidateDeltaBroadcast
                     {
-                        Hash = hash1, Producer = producer1.ToString(), PreviousDeltaDfsHash = previousHash1
+                        Hash = hash1, Producer = producer1.GetKvmAddressByteString(), PreviousDeltaDfsHash = previousHash1
                     },
-                    Voter = voter1.ToString()
+                    Voter = voter1.GetKvmAddressByteString()
                 },
                 new FavouriteDeltaBroadcast
                 {
                     Candidate = new CandidateDeltaBroadcast
                     {
-                        Hash = hash2, Producer = producer1.ToString(), PreviousDeltaDfsHash = previousHash1
+                        Hash = hash2, Producer = producer1.GetKvmAddressByteString(), PreviousDeltaDfsHash = previousHash1
                     },
-                    Voter = voter1.ToString()
+                    Voter = voter1.GetKvmAddressByteString()
                 }, false ),
 
            new FavouritesTestData(new FavouriteDeltaBroadcast
                 {
                     Candidate = new CandidateDeltaBroadcast
                     {
-                        Hash = hash1, Producer = producer1.ToString(), PreviousDeltaDfsHash = previousHash1
+                        Hash = hash1, Producer = producer1.GetKvmAddressByteString(), PreviousDeltaDfsHash = previousHash1
                     },
-                    Voter = voter1.ToString()
+                    Voter = voter1.GetKvmAddressByteString()
                 },
                 new FavouriteDeltaBroadcast
                 {
                     Candidate = new CandidateDeltaBroadcast
                     {
-                        Hash = hash1, Producer = producer1.ToString(), PreviousDeltaDfsHash = previousHash1
+                        Hash = hash1, Producer = producer1.GetKvmAddressByteString(), PreviousDeltaDfsHash = previousHash1
                     },
-                    Voter = voter2.ToString()
+                    Voter = voter2.GetKvmAddressByteString()
                 }, false ),
 
             new FavouritesTestData(new FavouriteDeltaBroadcast
                 {
                     Candidate = new CandidateDeltaBroadcast
                     {
-                        Hash = hash1, Producer = producer1.ToString(), PreviousDeltaDfsHash = previousHash1
+                        Hash = hash1, Producer = producer1.GetKvmAddressByteString(), PreviousDeltaDfsHash = previousHash1
                     },
-                    Voter = voter1.ToString()
+                    Voter = voter1.GetKvmAddressByteString()
                 },
                 new FavouriteDeltaBroadcast
                 {
                     Candidate = new CandidateDeltaBroadcast
                     {
-                        Hash = hash1, Producer = producer2.ToString(), PreviousDeltaDfsHash = previousHash2
+                        Hash = hash1, Producer = producer2.GetKvmAddressByteString(), PreviousDeltaDfsHash = previousHash2
                     },
-                    Voter = voter1.ToString()
+                    Voter = voter1.GetKvmAddressByteString()
                 }, true)
         };
 

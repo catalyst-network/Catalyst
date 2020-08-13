@@ -40,6 +40,7 @@ using NSubstitute;
 using Serilog;
 using NUnit.Framework;
 using MultiFormats;
+using Catalyst.Core.Modules.Kvm;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
 {
@@ -73,7 +74,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             var candidateDeltaBroadcast = new CandidateDeltaBroadcast
             {
                 PreviousDeltaDfsHash = prevHash.ToArray().ToByteString(),
-                Producer = multiAddress.ToString()
+                Producer = multiAddress.GetPublicKeyBytes().ToKvmAddressByteString()
             };
 
             var deltaElector = Substitute.For<IDeltaElector>();
@@ -99,7 +100,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             var candidateDeltaBroadcast = new CandidateDeltaBroadcast
             {
                 PreviousDeltaDfsHash = prevHash.ToArray().ToByteString(),
-                Producer = multiAddress.ToString()
+                Producer = multiAddress.GetPublicKeyBytes().ToKvmAddressByteString()
             };
 
             var deltaElector = Substitute.For<IDeltaElector>();
@@ -124,7 +125,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             var candidateDeltaBroadcast = new CandidateDeltaBroadcast
             {
                 PreviousDeltaDfsHash = prevHash.ToArray().ToByteString(),
-                Producer = multiAddress.ToString()
+                Producer = multiAddress.GetPublicKeyBytes().ToKvmAddressByteString()
             };
 
             var deltaElector = Substitute.For<IDeltaElector>();

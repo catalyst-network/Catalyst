@@ -26,6 +26,7 @@ using Catalyst.Abstractions.Lib.Util;
 using Catalyst.Abstractions.P2P.Models;
 using Catalyst.Abstractions.Service.Attributes;
 using MultiFormats;
+using Nethermind.Core;
 using SharpRepository.Repository;
 
 namespace Catalyst.Core.Lib.P2P.Models
@@ -35,10 +36,14 @@ namespace Catalyst.Core.Lib.P2P.Models
     {
         [RepositoryPrimaryKey(Order = 1)]
         public string DocumentId => Address.ToString();
-        
+
         /// <inheritdoc />
         public MultiAddress Address { get; set; }
 
+        /// <inheritdoc />
+        public Address KvmAddress { get; set; }
+
+        /// <inheritdoc />
         public bool IsPoaNode { set; get; }
 
         /// <inheritdoc />

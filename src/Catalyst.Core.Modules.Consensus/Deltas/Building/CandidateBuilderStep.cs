@@ -29,7 +29,7 @@ using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Dfs.Extensions;
-using Catalyst.Protocol.Peer;
+using Catalyst.Core.Modules.Kvm;
 using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
@@ -106,7 +106,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
                    .ToByteString(),
 
                 // Idj
-                Producer = _producerUniqueId.ToString(),
+                Producer = _producerUniqueId.GetPublicKeyBytes().ToKvmAddressByteString(),
                 PreviousDeltaDfsHash = context.PreviousDeltaHash.ToArray().ToByteString()
             };
             

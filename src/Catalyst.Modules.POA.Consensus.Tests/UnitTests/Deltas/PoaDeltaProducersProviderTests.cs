@@ -30,10 +30,8 @@ using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Modules.POA.Consensus.Deltas;
-using Catalyst.Protocol.Peer;
 using Catalyst.TestUtils;
 using FluentAssertions;
-using Google.Protobuf;
 using Lib.P2P;
 using Microsoft.Extensions.Caching.Memory;
 using MultiFormats.Registry;
@@ -41,14 +39,13 @@ using NSubstitute;
 using Serilog;
 using NUnit.Framework;
 using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
-using MultiFormats;
 using Catalyst.Core.Lib.Extensions;
+using Nethermind.Core;
 
 namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
 {
     public class PoaDeltaProducersProviderTests
     {
-        private Peer _selfAsPeer;
         private List<Peer> _peers;
         private PoaDeltaProducersProvider _poaDeltaProducerProvider;
         private Cid _previousDeltaHash;
@@ -61,7 +58,6 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
             var peerSettings = MultiAddressHelper.GetAddress("TEST").ToSubstitutedPeerSettings();
-            _selfAsPeer = new Peer { Address = peerSettings.Address };
             var rand = new Random();
             _peers = Enumerable.Range(0, 5)
                .Select(_ =>
@@ -93,19 +89,19 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
         {
             _producersByPreviousDelta.TryGetValue(Arg.Any<string>(), out Arg.Any<object>()).Returns(false);
 
-            var peers = _peers.Select(x=>x.Address.GetPublicKey());
+            var peers = _peers.Select(x=>x.Address.GetKvmAddress());
 
             var expectedProducers = peers.Select(p =>
                 {
-                    var ranking = _hashProvider.ComputeMultiHash(p, _previousDeltaHash.ToArray()).ToArray();
+                    var ranking = _hashProvider.ComputeMultiHash(p.Bytes, _previousDeltaHash.ToArray()).ToArray();
                     return new
                     {
-                        PublicKey = p,
+                        KvmAddress = p,
                         ranking
                     };
                 })
                .OrderBy(h => h.ranking, ByteUtil.ByteListMinSizeComparer.Default)
-               .Select(h => h.PublicKey)
+               .Select(h => h.KvmAddress)
                .ToList();
 
             var producers = _poaDeltaProducerProvider.GetDeltaProducersFromPreviousDelta(_previousDeltaHash);
@@ -130,7 +126,7 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
                     out Arg.Any<object>())
                .Returns(ci =>
                 {
-                    ci[1] = new List<string>();
+                    ci[1] = new List<Address>();
                     return true;
                 });
 

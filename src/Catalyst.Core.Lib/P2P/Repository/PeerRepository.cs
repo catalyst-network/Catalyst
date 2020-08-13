@@ -27,8 +27,8 @@ using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Protocol.Peer;
-using Google.Protobuf;
 using MultiFormats;
+using Nethermind.Core;
 using SharpRepository.Repository;
 using SharpRepository.Repository.Queries;
 using SharpRepository.Repository.Specifications;
@@ -68,6 +68,11 @@ namespace Catalyst.Core.Lib.P2P.Repository
         public IEnumerable<Peer> GetPeersByAddress(MultiAddress address)
         {
             return _repository.FindAll(m => m.Address == address);
+        }
+
+        public IEnumerable<Peer> GetPeersByKvmAddress(Address kvmAddress)
+        {
+            return _repository.FindAll(m => m.KvmAddress == kvmAddress);
         }
 
         public IEnumerable<Peer> GetPoaPeersByPublicKey(string publicKeyBase58)

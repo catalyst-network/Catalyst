@@ -43,41 +43,41 @@ namespace Catalyst.Protocol.Tests.UnitTests.Wire
                 {
                     Candidate = new CandidateDeltaBroadcast
                     {
-                        Producer = "",
+                        Producer = ByteString.Empty,
                         Hash = ByteString.CopyFromUtf8("hash"),
                         PreviousDeltaDfsHash = ByteString.CopyFromUtf8("yes")
                     },
-                    Voter = MultiAddressHelper.GetAddress().ToString()
+                    Voter = MultiAddressHelper.GetAddress().GetKvmAddressByteString()
                 });
                 Add(new FavouriteDeltaBroadcast
                 {
                     Candidate = new CandidateDeltaBroadcast
                     {
-                        Producer = MultiAddressHelper.GetAddress().ToString(),
+                        Producer = MultiAddressHelper.GetAddress().GetKvmAddressByteString(),
                         Hash = ByteString.Empty,
                         PreviousDeltaDfsHash = ByteString.CopyFromUtf8("yes")
                     },
-                    Voter = MultiAddressHelper.GetAddress().ToString()
+                    Voter = MultiAddressHelper.GetAddress().GetKvmAddressByteString()
                 });
                 Add(new FavouriteDeltaBroadcast
                 {
                     Candidate = new CandidateDeltaBroadcast
                     {
-                        Producer = MultiAddressHelper.GetAddress().ToString(),
+                        Producer = MultiAddressHelper.GetAddress().GetKvmAddressByteString(),
                         Hash = ByteString.CopyFromUtf8("hash"),
                         PreviousDeltaDfsHash = ByteString.Empty
                     },
-                    Voter = MultiAddressHelper.GetAddress().ToString()
+                    Voter = MultiAddressHelper.GetAddress().GetKvmAddressByteString()
                 });
                 Add(new FavouriteDeltaBroadcast
                 {
                     Candidate = new CandidateDeltaBroadcast
                     {
-                        Producer = MultiAddressHelper.GetAddress().ToString(),
+                        Producer = MultiAddressHelper.GetAddress().GetKvmAddressByteString(),
                         Hash = ByteString.CopyFromUtf8("hash"),
                         PreviousDeltaDfsHash = ByteString.CopyFromUtf8("ok")
                     },
-                    Voter = ""
+                    Voter = ByteString.Empty
                 });
             }
         }
@@ -95,11 +95,11 @@ namespace Catalyst.Protocol.Tests.UnitTests.Wire
             {
                 Candidate = new CandidateDeltaBroadcast
                 {
-                    Producer = MultiAddressHelper.GetAddress("producer").ToString(),
+                    Producer = MultiAddressHelper.GetAddress("producer").GetKvmAddressByteString(),
                     Hash = ByteString.CopyFromUtf8("hash"),
                     PreviousDeltaDfsHash = ByteString.CopyFromUtf8("ok")
                 },
-                Voter = MultiAddressHelper.GetAddress("voter").ToString(),
+                Voter = MultiAddressHelper.GetAddress("voter").GetKvmAddressByteString(),
             };
             candidate.IsValid().Should().BeTrue();
         }
