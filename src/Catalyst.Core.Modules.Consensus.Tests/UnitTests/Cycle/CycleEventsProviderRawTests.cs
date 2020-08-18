@@ -50,7 +50,6 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
     {
         private ICycleEventsProvider _cycleEventsProvider;
         private ManualResetEventSlim _manualResetEventSlim;
-        private IPublicKey _publicKey;
         private IKeySigner _keySigner;
         private IValidatorSetStore _validatorSetStore;
         private IDeltaCache _deltaCache;
@@ -60,20 +59,20 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
         {
             var cryptoContext = new FfiWrapper();
             var privateKey = cryptoContext.GeneratePrivateKey();
-            _publicKey = privateKey.GetPublicKey();
+            var publicKey = privateKey.GetPublicKey();
 
             _keySigner = Substitute.For<IKeySigner>();
-            _keySigner.GetPrivateKey(KeyRegistryTypes.DefaultKey).GetPublicKey().Returns(_publicKey);
+            _keySigner.GetPrivateKey(KeyRegistryTypes.DefaultKey).GetPublicKey().Returns(publicKey);
 
             _validatorSetStore = Substitute.For<IValidatorSetStore>();
-            _validatorSetStore.Get(Arg.Any<long>()).GetValidators().Returns(new List<Address> { _publicKey.ToKvmAddress() });
+            _validatorSetStore.Get(Arg.Any<long>()).GetValidators().Returns(new List<Address> { publicKey.ToKvmAddress() });
 
             var deltaNumber = 0;
             _deltaCache = Substitute.For<IDeltaCache>();
             _deltaCache.TryGetOrAddConfirmedDelta(Arg.Any<Cid>(), out Arg.Any<Delta>())
                 .Returns(x =>
                 {
-                    x[1] = new Delta() { DeltaNumber = deltaNumber++ };
+                    x[1] = new Delta { DeltaNumber = deltaNumber++ };
                     return true;
                 });
 

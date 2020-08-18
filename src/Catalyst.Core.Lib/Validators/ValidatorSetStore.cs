@@ -30,7 +30,7 @@ namespace Catalyst.Core.Lib.Validators
 {
     public class ValidatorSetStore : IValidatorSetStore
     {
-        private SortedList<long, IValidatorSet> _validatorSets;
+        private readonly SortedList<long, IValidatorSet> _validatorSets;
 
         public ValidatorSetStore(IValidatorSetConfig validatorSetConfig)
         {

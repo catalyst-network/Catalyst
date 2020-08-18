@@ -173,7 +173,7 @@ namespace Catalyst.Core.Modules.Consensus
                 _deltaCache.TryGetOrAddConfirmedDelta(currentDeltaCid, out Delta currentDelta);
                 var currentDeltaHeight = currentDelta.DeltaNumber;
 
-                StartCycle(currentDeltaHeight++);
+                StartCycle(++currentDeltaHeight);
             }
 
             _logger.Debug("Stream {PhaseChanges} completed.", nameof(PhaseChanges));

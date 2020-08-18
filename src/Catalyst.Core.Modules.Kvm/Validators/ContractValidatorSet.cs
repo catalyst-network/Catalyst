@@ -29,7 +29,7 @@ namespace Catalyst.Core.Modules.Kvm.Validators
 {
     public class ContractValidatorSet : IValidatorSet
     {
-        private string _contractAddress;
+        private readonly string _contractAddress;
 
         public long StartBlock { get; }
 

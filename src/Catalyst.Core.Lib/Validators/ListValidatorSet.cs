@@ -30,7 +30,7 @@ namespace Catalyst.Core.Lib.Validators
 {
     public class ListValidatorSet : IValidatorSet
     {
-        private IEnumerable<Address> _validators;
+        private readonly IEnumerable<Address> _validators;
         public long StartBlock { get; }
 
         public ListValidatorSet(long startBlock, IEnumerable<string> validators)

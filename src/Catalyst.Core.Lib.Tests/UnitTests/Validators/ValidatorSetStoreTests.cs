@@ -38,7 +38,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
         public void Can_Read_Validator_Set_From_Store()
         {
             var listValidatorSet = new ListValidatorSet(0, new[] { "0x1a2149b4df5cbac970bc38fecc5237800c688c8b" });
-            var validatorSets = new List<IValidatorSet>() { listValidatorSet };
+            var validatorSets = new List<IValidatorSet> { listValidatorSet };
 
             var validatorSetConfig = Substitute.For<IValidatorSetConfig>();
             validatorSetConfig.GetValidatorSetsAsync().Returns(validatorSets);
@@ -54,7 +54,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Validators
             var listValidatorSet1 = new ListValidatorSet(0, new[] { "0x1a2149b4df5cbac970bc38fecc5237800c688c8a" });
             var listValidatorSet2 = new ListValidatorSet(100, new[] { "0x1a2149b4df5cbac970bc38fecc5237800c688c8b", "0x1a2149b4df5cbac970bc38fecc5237800c688c8b" });
 
-            var validatorSets = new List<IValidatorSet>() { listValidatorSet1, listValidatorSet2 };
+            var validatorSets = new List<IValidatorSet> { listValidatorSet1, listValidatorSet2 };
 
             var validatorSetConfig = Substitute.For<IValidatorSetConfig>();
             validatorSetConfig.GetValidatorSetsAsync().Returns(validatorSets);
