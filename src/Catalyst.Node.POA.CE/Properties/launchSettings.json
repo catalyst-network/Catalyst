@@ -1,8 +1,7 @@
 {
   "profiles": {
     "Catalyst.Core": {
-      "commandName": "Project",
-      "commandLineArgs": "--reset"
+      "commandName": "Project"
     }
   }
 }
