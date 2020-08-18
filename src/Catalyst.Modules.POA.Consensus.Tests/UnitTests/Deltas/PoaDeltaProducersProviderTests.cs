@@ -42,6 +42,9 @@ using Catalyst.Core.Lib.Extensions;
 using Nethermind.Core;
 using Catalyst.Abstractions.Validators;
 using Catalyst.Core.Modules.Kvm;
+using Catalyst.Abstractions.Kvm;
+using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Protocol.Deltas;
 
 namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
 {
@@ -78,11 +81,21 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
             var validatorSetStore = Substitute.For<IValidatorSetStore>();
             validatorSetStore.Get(Arg.Any<long>()).GetValidators().Returns(_peers.Select(x => x.Address.GetPublicKeyBytes().ToKvmAddress()));
 
+            var deltaNumber = 0;
+            var deltaCache = Substitute.For<IDeltaCache>();
+            deltaCache.TryGetOrAddConfirmedDelta(Arg.Any<Cid>(), out Arg.Any<Delta>())
+                .Returns(x =>
+                {
+                    x[1] = new Delta { DeltaNumber = deltaNumber++ };
+                    return true;
+                });
+
             _poaDeltaProducerProvider = new PoaDeltaProducersProvider(
                 peerSettings,
                 _producersByPreviousDelta,
                 _hashProvider,
                 validatorSetStore,
+                deltaCache,
                 logger);
         }
 
