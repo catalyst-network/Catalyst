@@ -23,8 +23,17 @@
 
 using Catalyst.Abstractions.Consensus.Cycle;
 using Catalyst.Abstractions.Consensus.Deltas;
+using Catalyst.Abstractions.Cryptography;
+using Catalyst.Abstractions.KeySigner;
+using Catalyst.Abstractions.Types;
+using Catalyst.Abstractions.Validators;
 using Catalyst.Core.Modules.Consensus.Cycle;
+using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Core.Modules.Kvm;
+using Catalyst.Protocol.Deltas;
 using FluentAssertions;
+using Lib.P2P;
+using Nethermind.Core;
 using NSubstitute;
 using NUnit.Framework;
 using Serilog;
@@ -41,11 +50,34 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
     {
         private ICycleEventsProvider _cycleEventsProvider;
         private ManualResetEventSlim _manualResetEventSlim;
+        private IPublicKey _publicKey;
+        private IKeySigner _keySigner;
+        private IValidatorSetStore _validatorSetStore;
+        private IDeltaCache _deltaCache;
 
         [SetUp]
         public void Init()
         {
-            _cycleEventsProvider = new CycleEventsProviderRaw(CycleConfiguration.Default, new DateTimeProvider(), Substitute.For<IDeltaHashProvider>(), Substitute.For<ILogger>());
+            var cryptoContext = new FfiWrapper();
+            var privateKey = cryptoContext.GeneratePrivateKey();
+            _publicKey = privateKey.GetPublicKey();
+
+            _keySigner = Substitute.For<IKeySigner>();
+            _keySigner.GetPrivateKey(KeyRegistryTypes.DefaultKey).GetPublicKey().Returns(_publicKey);
+
+            _validatorSetStore = Substitute.For<IValidatorSetStore>();
+            _validatorSetStore.Get(Arg.Any<long>()).GetValidators().Returns(new List<Address> { _publicKey.ToKvmAddress() });
+
+            var deltaNumber = 0;
+            _deltaCache = Substitute.For<IDeltaCache>();
+            _deltaCache.TryGetOrAddConfirmedDelta(Arg.Any<Cid>(), out Arg.Any<Delta>())
+                .Returns(x =>
+                {
+                    x[1] = new Delta() { DeltaNumber = deltaNumber++ };
+                    return true;
+                });
+
+            _cycleEventsProvider = new CycleEventsProviderRaw(CycleConfiguration.Default, new DateTimeProvider(), Substitute.For<IDeltaHashProvider>(), _deltaCache, _validatorSetStore, _keySigner, Substitute.For<ILogger>());
 
             //Block until we receive a completed event from the PhaseChanges observable.
             _manualResetEventSlim = new ManualResetEventSlim();
@@ -159,7 +191,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
             var secondProviderStartOffset = CycleConfiguration.Default.CycleDuration.Divide(3);
 
             //Create a second event cycle provider
-            using var cycleEventsProvider2 = new CycleEventsProviderRaw(CycleConfiguration.Default, new DateTimeProvider(), Substitute.For<IDeltaHashProvider>(), Substitute.For<ILogger>());
+            using var cycleEventsProvider2 = new CycleEventsProviderRaw(CycleConfiguration.Default, new DateTimeProvider(), Substitute.For<IDeltaHashProvider>(), _deltaCache, _validatorSetStore, _keySigner, Substitute.For<ILogger>());
 
             //Create event observers for the cycle event providers
             var fakeObserver1 = Substitute.For<IObserver<IPhase>>();

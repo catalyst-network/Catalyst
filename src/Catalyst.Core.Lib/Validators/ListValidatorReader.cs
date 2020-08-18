@@ -22,21 +22,20 @@
 #endregion
 
 using Catalyst.Abstractions.Validators;
-using Newtonsoft.Json.Linq;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace Catalyst.Core.Lib.Validators
 {
     public class ListValidatorReader : IValidatorReader
     {
-        private IValidatorSetStore _validatorSetStore;
-        public ListValidatorReader(IValidatorSetStore validatorSetStore) => _validatorSetStore = validatorSetStore;
-
-        public void SetValidatorSetAtBlock(string startBlock, JProperty jProp)
+        public void AddValidatorSet(IList<IValidatorSet> validatorSets, long startBlock, IConfigurationSection configurationSection)
         {
-            if (jProp.Name.ToLower() == "list")
+            if (configurationSection.Key.ToLower() == "list")
             {
-                _validatorSetStore.Add(new ListValidatorSet(int.Parse(startBlock), jProp.Value.ToObject<IList<string>>()));
+                var addressList = configurationSection.AsEnumerable().Where(x => !string.IsNullOrWhiteSpace(x.Value)).Select(x => x.Value).ToList();
+                validatorSets.Add(new ListValidatorSet(startBlock, addressList));
             }
         }
     }

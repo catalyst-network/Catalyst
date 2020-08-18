@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.Validators;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,12 +30,22 @@ namespace Catalyst.Core.Lib.Validators
 {
     public class ValidatorSetStore : IValidatorSetStore
     {
-        private SortedList<int, IValidatorSet> _validatorSets;
+        private SortedList<long, IValidatorSet> _validatorSets;
 
-        public ValidatorSetStore() => _validatorSets = new SortedList<int, IValidatorSet>();
+        public ValidatorSetStore(IValidatorSetConfig validatorSetConfig)
+        {
+            var descendingComparer = Comparer<long>.Create((x, y) => y.CompareTo(x));
+            _validatorSets = new SortedList<long, IValidatorSet>(descendingComparer);
+
+            foreach (var validatorSet in validatorSetConfig.GetValidatorSetsAsync().ConfigureAwait(false).GetAwaiter().GetResult())
+            {
+                Add(validatorSet);
+            }
+
+        }
 
         public void Add(IValidatorSet validatorSet) => _validatorSets.Add(validatorSet.StartBlock, validatorSet);
 
-        public IValidatorSet Get(int startBlock) => _validatorSets.FirstOrDefault(x => x.Key >= startBlock).Value;
+        public IValidatorSet Get(long startBlock) => _validatorSets.FirstOrDefault(x => x.Key <= startBlock).Value;
     }
 }

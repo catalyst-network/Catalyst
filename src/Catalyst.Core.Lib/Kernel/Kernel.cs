@@ -152,6 +152,19 @@ namespace Catalyst.Core.Lib.Kernel
             return this;
         }
 
+        public Kernel WithValidatorSetFile()
+        {
+            var fileName = Constants.ValidatorSetConfigFile;
+
+            _configurationBuilder
+               .AddJsonFile(
+                    Path.Combine(_targetConfigFolder, fileName)
+                );
+
+            return this;
+        }
+
+
         public Kernel WithSerilogConfigFile(string serilog = default)
         {
             _configurationBuilder

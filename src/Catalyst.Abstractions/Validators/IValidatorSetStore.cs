@@ -26,6 +26,6 @@ namespace Catalyst.Abstractions.Validators
     public interface IValidatorSetStore
     {
         void Add(IValidatorSet validatorSet);
-        IValidatorSet Get(int startBlock);
+        IValidatorSet Get(long startBlock);
     }
 }

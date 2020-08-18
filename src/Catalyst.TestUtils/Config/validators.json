@@ -1,0 +1,10 @@
+{
+    "multi": {
+        "0": {
+            "list": [ "0x1a2149b4df5cbac970bc38fecc5237800c688c8b" ]
+        },
+        "900": {
+            "contract": "0x79dd7e4c1b9adb07f71b54dba2d54db2fa549de3"
+        }
+    }
+}

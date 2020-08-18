@@ -90,7 +90,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
             context.CoinbaseEntry = new CoinbaseEntry
             {
                 Amount = summedFees.ToUint256ByteString(),
-                ReceiverPublicKey = _producerUniqueId.GetPublicKeyBytes().ToByteString()
+                ReceiverKvmAddress = _producerUniqueId.GetPublicKeyBytes().ToKvmAddressByteString()
             };
             
             byte[] globalLedgerStateUpdate = shuffledEntriesBytes

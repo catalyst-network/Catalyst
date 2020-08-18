@@ -28,6 +28,7 @@ using System.Threading;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Repository;
+using Catalyst.Abstractions.Validators;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Deltas;
@@ -51,20 +52,21 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
         private readonly MemoryCacheEntryOptions _cacheEntryOptions;
         private readonly Peer _selfAsPeer;
         private readonly IHashProvider _hashProvider;
+        private readonly IValidatorSetStore _validatorSetStore;
 
         /// <inheritdoc />
         public IPeerRepository PeerRepository { get; }
 
-        public PoaDeltaProducersProvider(IPeerRepository peerRepository,
-            IPeerSettings peerSettings,
+        public PoaDeltaProducersProvider(IPeerSettings peerSettings,
             IMemoryCache producersByPreviousDelta,
             IHashProvider hashProvider,
+            IValidatorSetStore validatorSetStore,
             ILogger logger)
         {
             _logger = logger;
             _selfAsPeer = new Peer { Address = peerSettings.Address };
-            PeerRepository = peerRepository;
             _hashProvider = hashProvider;
+            _validatorSetStore = validatorSetStore;
             _cacheEntryOptions = new MemoryCacheEntryOptions()
                .AddExpirationToken(
                     new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(3)).Token));
@@ -87,11 +89,11 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
             _logger.Information("Calculating favourite delta producers for the successor of {0}.",
                 previousDeltaHash);
 
-            var allPeers = PeerRepository.GetActivePoaPeers().Select(x => x.Address.GetPublicKeyBytes().ToKvmAddress());
+            var validators = _validatorSetStore.Get(0).GetValidators();
 
             var previous = previousDeltaHash.ToArray();
 
-            var peerAddressesInPriorityOrder = allPeers.Select(address =>
+            var peerAddressesInPriorityOrder = validators.Select(address =>
                 {
                     var ranking = _hashProvider.ComputeMultiHash(address.Bytes, previous).ToArray();
                     return new

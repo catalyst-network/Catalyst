@@ -102,7 +102,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _zeroCoinbaseEntry = new CoinbaseEntry
             {
                 Amount = UInt256.Zero.ToUint256ByteString(),
-                ReceiverPublicKey = _producer.GetPublicKeyBytes().ToByteString()
+                ReceiverKvmAddress = _producer.GetPublicKeyBytes().ToKvmAddressByteString()
             };
 
             _logger = Substitute.For<ILogger>();
@@ -368,7 +368,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var expectedCoinBase = new CoinbaseEntry
             {
                 Amount = selectedTransactions.Sum(t => t.GasPrice.ToUInt256() * t.GasLimit).ToUint256ByteString(),
-                ReceiverPublicKey = _producer.GetPublicKeyBytes().ToByteString()
+                ReceiverKvmAddress = _producer.GetPublicKeyBytes().ToKvmAddressByteString()
             };
 
             var expectedBytesToHash = shuffledEntriesBytes.Concat(signaturesInOrder)

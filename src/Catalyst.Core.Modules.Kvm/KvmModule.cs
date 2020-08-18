@@ -26,7 +26,9 @@ using Autofac;
 using Autofac.Builder;
 using Autofac.Core;
 using Catalyst.Abstractions.Kvm;
+using Catalyst.Abstractions.Validators;
 using Catalyst.Core.Lib.FileSystem;
+using Catalyst.Core.Modules.Kvm.Validators;
 using Nethermind.Core.Specs;
 using Nethermind.Db;
 using Nethermind.Db.Rocks;
@@ -56,6 +58,8 @@ namespace Catalyst.Core.Modules.Kvm
             //builder.RegisterInstance(new StateDb()).As<ISnapshotableDb>().SingleInstance(); // state db
 
             builder.RegisterType<StateReader>().As<IStateReader>(); // state db
+
+            builder.RegisterType<ContractValidatorReader>().As<IValidatorReader>();
         }
     }
 

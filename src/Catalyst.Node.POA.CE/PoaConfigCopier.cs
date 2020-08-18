@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -35,6 +35,7 @@ namespace Catalyst.Node.POA.CE
             return new List<string>
             {
                 PoaConstants.RpcAuthenticationCredentialsFile,
+                Constants.ValidatorSetConfigFile,
                 Constants.SerilogJsonConfigFile,
                 Constants.NetworkConfigFile(network, overrideNetworkFile)
             };

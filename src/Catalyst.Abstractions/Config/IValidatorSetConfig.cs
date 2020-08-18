@@ -23,19 +23,12 @@
 
 using Catalyst.Abstractions.Validators;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
-public class ContractValidatorSet : IValidatorSet
+namespace Catalyst.Abstractions.Config
 {
-    private string _contractAddress;
-
-    public int StartBlock { get; }
-
-    public ContractValidatorSet(int startBlock, string contractAddress)
+    public interface IValidatorSetConfig
     {
-        StartBlock = startBlock;
-        _contractAddress = contractAddress;
+        Task<IEnumerable<IValidatorSet>> GetValidatorSetsAsync();
     }
-
-    //Get validators from smart contract
-    public IEnumerable<string> GetValidators() => new List<string>();
 }

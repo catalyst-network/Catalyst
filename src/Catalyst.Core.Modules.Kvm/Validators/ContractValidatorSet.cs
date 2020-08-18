@@ -24,21 +24,22 @@
 using Catalyst.Abstractions.Validators;
 using Nethermind.Core;
 using System.Collections.Generic;
-using System.Linq;
 
-namespace Catalyst.Core.Lib.Validators
+namespace Catalyst.Core.Modules.Kvm.Validators
 {
-    public class ListValidatorSet : IValidatorSet
+    public class ContractValidatorSet : IValidatorSet
     {
-        private IEnumerable<Address> _validators;
+        private string _contractAddress;
+
         public long StartBlock { get; }
 
-        public ListValidatorSet(long startBlock, IEnumerable<string> validators)
+        public ContractValidatorSet(long startBlock, string contractAddress)
         {
             StartBlock = startBlock;
-            _validators = validators.Select(x => new Address(x));
+            _contractAddress = contractAddress;
         }
 
-        public IEnumerable<Address> GetValidators() => _validators;
+        //Get validators from smart contract
+        public IEnumerable<Address> GetValidators() => new List<Address>();
     }
 }

@@ -25,7 +25,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Abstractions.Hashing;
-using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
@@ -41,6 +40,8 @@ using NUnit.Framework;
 using Peer = Catalyst.Core.Lib.P2P.Models.Peer;
 using Catalyst.Core.Lib.Extensions;
 using Nethermind.Core;
+using Catalyst.Abstractions.Validators;
+using Catalyst.Core.Modules.Kvm;
 
 namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
 {
@@ -69,18 +70,19 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
 
             var logger = Substitute.For<ILogger>();
 
-            var peerRepository = Substitute.For<IPeerRepository>();
-            peerRepository.GetActivePoaPeers().Returns(_ => _peers);
-
             _previousDeltaHash =
                 _hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).ToCid();
 
             _producersByPreviousDelta = Substitute.For<IMemoryCache>();
 
-            _poaDeltaProducerProvider = new PoaDeltaProducersProvider(peerRepository,
+            var validatorSetStore = Substitute.For<IValidatorSetStore>();
+            validatorSetStore.Get(Arg.Any<long>()).GetValidators().Returns(_peers.Select(x => x.Address.GetPublicKeyBytes().ToKvmAddress()));
+
+            _poaDeltaProducerProvider = new PoaDeltaProducersProvider(
                 peerSettings,
                 _producersByPreviousDelta,
                 _hashProvider,
+                validatorSetStore,
                 logger);
         }
 

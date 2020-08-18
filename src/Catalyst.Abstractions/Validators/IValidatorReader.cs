@@ -21,12 +21,13 @@
 
 #endregion
 
-using Newtonsoft.Json.Linq;
+using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 
 namespace Catalyst.Abstractions.Validators
 {
     public interface IValidatorReader
     {
-        void SetValidatorSetAtBlock(string startBlock, JProperty jProp);
+        void AddValidatorSet(IList<IValidatorSet> validatorSets, long startBlock, IConfigurationSection configurationSection);
     }
 }

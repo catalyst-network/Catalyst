@@ -193,6 +193,7 @@ namespace Catalyst.Node.POA.CE
                    .WithNetworkType(options.NetworkType)
                    .WithNetworksConfigFile(options.OverrideNetworkFile)
                    .WithSerilogConfigFile()
+                   .WithValidatorSetFile()
                    .WithConfigCopier(new PoaConfigCopier())
                    .WithPersistenceConfiguration()
                    .BuildKernel(options.OverwriteConfig)

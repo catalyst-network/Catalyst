@@ -22,20 +22,19 @@
 #endregion
 
 using Catalyst.Abstractions.Validators;
-using Newtonsoft.Json.Linq;
+using Microsoft.Extensions.Configuration;
+using System.Collections.Generic;
 
-namespace Catalyst.Core.Lib.Validators
+namespace Catalyst.Core.Modules.Kvm.Validators
 {
     public class ContractValidatorReader : IValidatorReader
     {
-        private IValidatorSetStore _validatorSetStore;
-        public ContractValidatorReader(IValidatorSetStore validatorSetStore) => _validatorSetStore = validatorSetStore;
-
-        public void SetValidatorSetAtBlock(string startBlock, JProperty jProp)
+        public void AddValidatorSet(IList<IValidatorSet> validatorSets, long startBlock, IConfigurationSection configurationSection)
         {
-            if (jProp.Name.ToLower() == "contract")
+            if (configurationSection.Key.ToLower() == "contract")
             {
-                _validatorSetStore.Add(new ContractValidatorSet(int.Parse(startBlock), (string)jProp.Value));
+                var contractAddress = configurationSection.Value;
+                validatorSets.Add(new ContractValidatorSet(startBlock, contractAddress));
             }
         }
     }

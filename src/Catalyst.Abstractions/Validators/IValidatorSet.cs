@@ -21,13 +21,14 @@
 
 #endregion
 
+using Nethermind.Core;
 using System.Collections.Generic;
 
 namespace Catalyst.Abstractions.Validators
 {
     public interface IValidatorSet
     {
-        int StartBlock { get; }
-        IEnumerable<string> GetValidators();
+        long StartBlock { get; }
+        IEnumerable<Address> GetValidators();
     }
 }

@@ -49,6 +49,7 @@ using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Nethermind.Dirichlet.Numerics;
 using NUnit.Framework;
+using Catalyst.Core.Modules.Kvm;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 {
@@ -221,12 +222,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 
             var original = new CoinbaseEntry
             {
-                ReceiverPublicKey = pubKeyBytes.ToByteString(),
+                ReceiverKvmAddress = pubKeyBytes.ToKvmAddressByteString(),
                 Amount = 271314.ToUint256ByteString()
             };
 
             var messageDao = original.ToDao<CoinbaseEntry, CoinbaseEntryDao>(_mapperProvider);
-            messageDao.ReceiverPublicKey.Should().Be(pubKeyBytes.KeyToString());
+            messageDao.ReceiverKvmAddress.Should().Be(pubKeyBytes.ToKvmAddress().ToString());
 
             var reconverted = messageDao.ToProtoBuff<CoinbaseEntryDao, CoinbaseEntry>(_mapperProvider);
             reconverted.Should().Be(original);

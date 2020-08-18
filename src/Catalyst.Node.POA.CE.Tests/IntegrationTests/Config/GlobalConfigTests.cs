@@ -77,7 +77,8 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.Config
             _configFilesUsed = new[]
                 {
                     Constants.NetworkConfigFile(network),
-                    Constants.SerilogJsonConfigFile
+                    Constants.SerilogJsonConfigFile,
+                    Constants.ValidatorSetConfigFile
                 }
                .Select(f => Path.Combine(Constants.ConfigSubFolder, f));
 
