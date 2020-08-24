@@ -113,7 +113,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         [Ignore("Setup to run in pipeline only")]
         [Category(Traits.E2EMongoDb)]
         [TestCase(nameof(ModulesList))]
-        public void PeerRepo_All_Dbs_Can_Update_And_Retrieve(Module dbModule)
+        public void PeerRepo_All_Dbs_Can_Update_And_Retrieve(Autofac.Module dbModule)
         {
             RegisterModules(dbModule);
 
@@ -123,7 +123,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         [Ignore("Setup to run in pipeline only")]
         [Category(Traits.E2EMongoDb)]
         [TestCase(nameof(ModulesList))]
-        public void PeerRepo_All_Dbs_Can_Save_And_Retrieve(Module dbModule)
+        public void PeerRepo_All_Dbs_Can_Save_And_Retrieve(Autofac.Module dbModule)
         {
             RegisterModules(dbModule);
 
@@ -168,7 +168,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             }
         }
 
-        private void RegisterModules(Module module)
+        private void RegisterModules(Autofac.Module module)
         {
             ContainerProvider.ConfigureContainerBuilder();
 

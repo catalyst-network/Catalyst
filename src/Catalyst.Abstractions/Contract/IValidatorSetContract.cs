@@ -21,20 +21,12 @@
 
 #endregion
 
-using Autofac;
-using Catalyst.Core.Lib.DAO;
-using SharpRepository.MongoDbRepository;
+using Nethermind.Core;
 
-namespace Catalyst.TestUtils.Repository
+namespace Catalyst.Abstractions.Contract
 {
-    public sealed class MongoDbTestModule<TDao> : Autofac.Module
-        where TDao : DaoBase, new()
-
+    public interface IValidatorSetContract
     {
-        protected override void Load(ContainerBuilder builder)
-        {
-            builder.RegisterType<MongoDbRepository<TDao, string>>().As<SharpRepository.Repository.IRepository<TDao, string>>().SingleInstance();
-        }
+        Address[] GetValidators(Address contractAddress);
     }
 }
-

@@ -24,6 +24,7 @@
 using Autofac;
 using Autofac.Configuration;
 using Catalyst.Abstractions.Config;
+using Catalyst.Abstractions.Contract;
 using Catalyst.Abstractions.Validators;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Extensions;
@@ -31,6 +32,7 @@ using Catalyst.Core.Lib.Validators;
 using Catalyst.Core.Modules.Kvm.Validators;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.Config
@@ -71,6 +73,9 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Config
             //Readers
             containerBuilder.RegisterType<ListValidatorReader>().As<IValidatorReader>();
             containerBuilder.RegisterType<ContractValidatorReader>().As<IValidatorReader>();
+
+            //Contract
+            containerBuilder.RegisterInstance(Substitute.For<IValidatorSetContract>()).As<IValidatorSetContract>();
 
             //Store
             containerBuilder.RegisterType<ValidatorSetStore>().As<IValidatorSetStore>().SingleInstance();

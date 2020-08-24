@@ -20,6 +20,7 @@
       <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
       <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
       <ProjectReference Include="..\Catalyst.Core.Modules.Cryptography.BulletProofs\Catalyst.Core.Modules.Cryptography.BulletProofs.csproj" />
+      <ProjectReference Include="..\Catalyst.Module.ConvanSmartContract\Catalyst.Module.ConvanSmartContract.csproj" />
     </ItemGroup>
     <ItemGroup>
       <PackageReference Include="Autofac" Version="4.8.1" />

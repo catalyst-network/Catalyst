@@ -26,16 +26,15 @@ using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Ledger.Models;
 using Catalyst.Core.Modules.Kvm;
-using Catalyst.Core.Lib.DAO.Ledger;
-using Catalyst.Core.Lib.Service;
 using Catalyst.Core.Modules.Ledger.Repository;
-using SharpRepository.InMemoryRepository;
 using SharpRepository.Repository;
 using SharpRepository.MongoDbRepository;
+using Catalyst.Core.Modules.Ledger.Contract;
+using Catalyst.Abstractions.Contract;
 
 namespace Catalyst.Core.Modules.Ledger
 {
-    public class LedgerModule : Module 
+    public class LedgerModule : Autofac.Module
     {
         protected override void Load(ContainerBuilder builder)
         {
@@ -56,10 +55,12 @@ namespace Catalyst.Core.Modules.Ledger
             builder.RegisterType<DeltaResolver>().As<IDeltaResolver>().SingleInstance();
 
             builder.RegisterType<Ledger>().As<ILedger>().SingleInstance()
-               .WithExecutionParameters(builder);
+            .WithExecutionParameters(builder)
+            .WithStateDbParameters(builder);
 
-            builder.RegisterType<Web3EthApi>().As<IWeb3EthApi>().SingleInstance()
-               .WithExecutionParameters(builder);
+            builder.RegisterType<Web3EthApi>().As<IWeb3EthApi>().SingleInstance().WithExecutionParameters(builder);
+
+            builder.RegisterType<CallableContractProxy>().As<ICallableContractProxy>().SingleInstance().WithExecutionParameters(builder);
         }  
     }
 }

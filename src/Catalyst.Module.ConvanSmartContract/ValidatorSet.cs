@@ -21,20 +21,29 @@
 
 #endregion
 
-using Autofac;
-using Catalyst.Core.Lib.DAO;
-using SharpRepository.MongoDbRepository;
+using Catalyst.Abstractions.Contract;
+using Nethermind.Core;
 
-namespace Catalyst.TestUtils.Repository
+namespace Catalyst.Module.ConvanSmartContract
 {
-    public sealed class MongoDbTestModule<TDao> : Autofac.Module
-        where TDao : DaoBase, new()
-
+    public class ValidatorSet
     {
-        protected override void Load(ContainerBuilder builder)
+        private readonly IValidatorSetContract _validatorSetContract;
+        private readonly Address _contractAddress;
+
+        public ValidatorSet(IValidatorSetContract validatorSetContract, Address contractAddress)
         {
-            builder.RegisterType<MongoDbRepository<TDao, string>>().As<SharpRepository.Repository.IRepository<TDao, string>>().SingleInstance();
+            _validatorSetContract = validatorSetContract;
+            _contractAddress = contractAddress;
+        }
+
+        /// <summary>
+        /// Get current validator set (last enacted or initial if no changes ever made)
+        /// function getValidators() constant returns (address[] _validators);
+        /// </summary>
+        public Address[] GetValidators()
+        {
+            return _validatorSetContract.GetValidators(_contractAddress);
         }
     }
 }
-
