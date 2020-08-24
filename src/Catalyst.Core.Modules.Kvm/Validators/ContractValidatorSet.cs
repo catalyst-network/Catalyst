@@ -31,7 +31,6 @@ namespace Catalyst.Core.Modules.Kvm.Validators
 {
     public class ContractValidatorSet : IValidatorSet
     {
-        private readonly Address _contractAddress;
         private readonly ValidatorSet _validatorSet;
 
         public long StartBlock { get; }
@@ -39,8 +38,7 @@ namespace Catalyst.Core.Modules.Kvm.Validators
         public ContractValidatorSet(IValidatorSetContract validatorSetContract, long startBlock, string contractAddress)
         {
             StartBlock = startBlock;
-            _contractAddress = new Address(contractAddress);
-            _validatorSet = new ValidatorSet(validatorSetContract, _contractAddress);
+            _validatorSet = new ValidatorSet(validatorSetContract, new Address(contractAddress));
         }
 
         //Get validators from smart contract

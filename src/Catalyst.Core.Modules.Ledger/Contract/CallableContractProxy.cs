@@ -45,7 +45,7 @@ namespace Catalyst.Core.Modules.Ledger.Contract
         private readonly IStateProvider _stateProvider;
         private readonly IStorageProvider _storageProvider;
 
-        public const long DefaultContractGasLimit = 1_600_000L;
+        private static ulong DefaultContractGasLimit = 1_600_000L;
 
         public CallableContractProxy(IDeltaHashProvider deltaHashProvider, IDeltaCache deltaCache, IDeltaExecutor deltaExecutor, IStateProvider stateProvider, IStorageProvider storageProvider)
         {

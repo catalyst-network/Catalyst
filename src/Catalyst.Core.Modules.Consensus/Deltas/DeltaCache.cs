@@ -81,8 +81,6 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
             _memoryCache = memoryCache;
 
-            var stats = stateProvider.CollectStats();
-
             stateProvider.CreateAccount(TruffleTestAccount, 1_000_000_000.Kat());
             stateProvider.CreateAccount(CatalystTruffleTestAccount, 1_000_000_000.Kat());
 
@@ -103,32 +101,6 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
             GenesisHash = hashProvider.ComputeMultiHash(genesisDelta).ToCid();
             _memoryCache.Set(GenesisHash, genesisDelta);
-
-            var latestDeltaIndex = deltaIndexService.LatestDeltaIndex();
-            if (latestDeltaIndex != null)
-            {
-                TryGetOrAddConfirmedDelta(latestDeltaIndex.Cid, out Delta latestDelta);
-                stateProvider.StateRoot = new Keccak(latestDelta.StateRoot.ToByteArray());
-
-                //deltaIndexService.TryFind(0, out Cid genesisCid);
-                //GenesisHash = genesisCid;
-
-                //TryGetOrAddConfirmedDelta(GenesisHash, out Delta storedGenesisDelta);
-                //_memoryCache.Set(GenesisHash, storedGenesisDelta);
-            }
-            else
-            {
-                //stateProvider.StateRoot = new Keccak(Bytes.FromHexString("0x7752faf5f2abb074cdfcffb3ad1c2c0fb552915a5daf8c468ba00b015b153e39"));
-
-
-            }
-
-            //stateProvider.RecalculateStateRoot();
-
-            string state = stateProvider.DumpState();
-
-
-            var a = 0;
         }
 
         private void EvictionCallback(object key, object value, EvictionReason reason, object state) { _logger.Debug("Evicted Delta {0} from cache.", key); }

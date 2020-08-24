@@ -30,6 +30,8 @@ using NUnit.Framework;
 using System.Collections.Generic;
 using System.Linq;
 using System.IO;
+using Catalyst.Abstractions.Contract;
+using NSubstitute;
 
 namespace Catalyst.Core.Modules.Kvm.Tests.UnitTests.Validators
 {
@@ -74,21 +76,21 @@ namespace Catalyst.Core.Modules.Kvm.Tests.UnitTests.Validators
             var multi = config.GetSection("validators:multi");
             var validatorSetAtStartBlocks = multi.GetChildren();
 
-            //var validatorReader = new ContractValidatorReader();
+            var validatorReader = new ContractValidatorReader(Substitute.For<IValidatorSetContract>());
 
-            //foreach (var validatorSetAtStartBlock in validatorSetAtStartBlocks)
-            //{
-            //    if (validatorSetAtStartBlock.Key == null)
-            //    {
-            //        continue;
-            //    }
+            foreach (var validatorSetAtStartBlock in validatorSetAtStartBlocks)
+            {
+                if (validatorSetAtStartBlock.Key == null)
+                {
+                    continue;
+                }
 
-            //    var startBlock = long.Parse(validatorSetAtStartBlock.Key);
-            //    var property = validatorSetAtStartBlock.GetChildren().FirstOrDefault();
-            //    validatorReader.AddValidatorSet(validatorSets, startBlock, property);
-            //}
+                var startBlock = long.Parse(validatorSetAtStartBlock.Key);
+                var property = validatorSetAtStartBlock.GetChildren().FirstOrDefault();
+                validatorReader.AddValidatorSet(validatorSets, startBlock, property);
+            }
 
-            //validatorSets.Count.Should().Be(1);
+            validatorSets.Count.Should().Be(1);
         }
     }
 }
