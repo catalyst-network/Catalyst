@@ -53,6 +53,10 @@ namespace Catalyst.Module.ConvanSmartContract.Contract
 
         private Address[] DecodeAddresses(byte[] data)
         {
+            if (data.Length == 0)
+            {
+                return new Address[] { };
+            }
             var objects = _abiEncoder.Decode(Definition.GetFunction(GetValidatorsFunction).GetReturnInfo(), data);
             return GetAddresses(objects);
         }
