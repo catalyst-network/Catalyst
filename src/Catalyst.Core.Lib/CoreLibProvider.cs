@@ -66,6 +66,11 @@ namespace Catalyst.Core.Lib
     {
         protected override void Load(ContainerBuilder builder)
         {
+            builder.RegisterType<ValidatorSetConfig>().As<IValidatorSetConfig>().SingleInstance();
+            builder.RegisterType<ValidatorSetStore>().As<IValidatorSetStore>().SingleInstance();
+            builder.RegisterType<ListValidatorReader>().As<IValidatorReader>();
+
+
             builder.RegisterType<DeltaConfig>().As<IDeltaConfig>().SingleInstance();
             builder.RegisterType<TransactionConfig>().As<ITransactionConfig>().SingleInstance();
 

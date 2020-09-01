@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -40,18 +39,11 @@ using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Abstractions.Types;
-using Catalyst.Core.Lib.Cryptography.Proto;
 using Catalyst.Core.Lib.DAO.Transaction;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Modules.Hashing;
+using Catalyst.Core.Modules.Kvm;
 using Dawn;
-using Lib.P2P.Protocols;
-using Lib.P2P.PubSub;
 using MultiFormats;
-using MultiFormats.Registry;
-using Org.BouncyCastle.Asn1;
-using Org.BouncyCastle.Asn1.X509;
-using ProtoBuf;
 using Serilog;
 
 namespace Catalyst.Node.POA.CE
@@ -125,6 +117,7 @@ namespace Catalyst.Node.POA.CE
 
             _logger.Information($"***** using PeerId: {peerId} *****");
             _logger.Information($"***** using PublicKey: {_publicKey.Bytes.ToBase58()} *****");
+            _logger.Information($"***** using KvmAddress: {_publicKey.ToKvmAddress()} *****");
 
             await _peerDiscovery?.DiscoveryAsync();
 
@@ -136,11 +129,7 @@ namespace Catalyst.Node.POA.CE
 
             _synchronizer.SyncCompleted.Subscribe((x) =>
             {
-                var currentPoaNode = _peerRepository.GetPoaPeersByPublicKey(_peerSettings.Address.GetPublicKey()).FirstOrDefault();
-                if (currentPoaNode == null)
-                    _logger.Information($"Current node with IP address '{_peerSettings.Address.GetIpAddress()}' is not found in poa node list. So this node will not take part in consensus.");
-                else
-                    Consensus.StartProducing();
+                Consensus.StartProducing();
             });
 
             bool exit;

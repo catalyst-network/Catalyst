@@ -25,13 +25,14 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
+using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Repository;
-using Catalyst.Core.Lib.Extensions;
+using Catalyst.Abstractions.Validators;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Consensus.Deltas;
-using Catalyst.Core.Modules.Kvm;
+using Catalyst.Protocol.Deltas;
 using Dawn;
 using Lib.P2P;
 using Microsoft.Extensions.Caching.Memory;
@@ -51,24 +52,28 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
         private readonly MemoryCacheEntryOptions _cacheEntryOptions;
         private readonly Peer _selfAsPeer;
         private readonly IHashProvider _hashProvider;
+        private readonly IValidatorSetStore _validatorSetStore;
+        private readonly IDeltaCache _deltaCache;
 
         /// <inheritdoc />
         public IPeerRepository PeerRepository { get; }
 
-        public PoaDeltaProducersProvider(IPeerRepository peerRepository,
-            IPeerSettings peerSettings,
+        public PoaDeltaProducersProvider(IPeerSettings peerSettings,
             IMemoryCache producersByPreviousDelta,
             IHashProvider hashProvider,
+            IValidatorSetStore validatorSetStore,
+            IDeltaCache deltaCache,
             ILogger logger)
         {
             _logger = logger;
             _selfAsPeer = new Peer { Address = peerSettings.Address };
-            PeerRepository = peerRepository;
             _hashProvider = hashProvider;
+            _validatorSetStore = validatorSetStore;
             _cacheEntryOptions = new MemoryCacheEntryOptions()
                .AddExpirationToken(
                     new CancellationChangeToken(new CancellationTokenSource(TimeSpan.FromMinutes(3)).Token));
             _producersByPreviousDelta = producersByPreviousDelta;
+            _deltaCache = deltaCache;
 
         }
 
@@ -87,11 +92,13 @@ namespace Catalyst.Modules.POA.Consensus.Deltas
             _logger.Information("Calculating favourite delta producers for the successor of {0}.",
                 previousDeltaHash);
 
-            var allPeers = PeerRepository.GetActivePoaPeers().Select(x => x.Address.GetPublicKeyBytes().ToKvmAddress());
+            _deltaCache.TryGetOrAddConfirmedDelta(previousDeltaHash, out Delta delta);
+
+            var validators = _validatorSetStore.Get(delta.DeltaNumber + 1).GetValidators();
 
             var previous = previousDeltaHash.ToArray();
 
-            var peerAddressesInPriorityOrder = allPeers.Select(address =>
+            var peerAddressesInPriorityOrder = validators.Select(address =>
                 {
                     var ranking = _hashProvider.ComputeMultiHash(address.Bytes, previous).ToArray();
                     return new

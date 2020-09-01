@@ -21,24 +21,14 @@
 
 #endregion
 
+using Catalyst.Abstractions.Validators;
 using System.Collections.Generic;
-using Catalyst.Core.Lib.Config;
-using Catalyst.Protocol.Network;
+using System.Threading.Tasks;
 
-namespace Catalyst.Node.POA.CE
+namespace Catalyst.Abstractions.Config
 {
-    public sealed class PoaConfigCopier : ConfigCopier
+    public interface IValidatorSetConfig
     {
-        protected override IEnumerable<string> RequiredConfigFiles(NetworkType network,
-            string overrideNetworkFile = null)
-        {
-            return new List<string>
-            {
-                PoaConstants.RpcAuthenticationCredentialsFile,
-                Constants.ValidatorSetConfigFile,
-                Constants.SerilogJsonConfigFile,
-                Constants.NetworkConfigFile(network, overrideNetworkFile)
-            };
-        }
+        Task<IEnumerable<IValidatorSet>> GetValidatorSetsAsync();
     }
 }

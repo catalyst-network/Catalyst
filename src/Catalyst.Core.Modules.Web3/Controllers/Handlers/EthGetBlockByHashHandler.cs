@@ -54,7 +54,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
             var firstCoinBaseEntry = delta.CoinbaseEntries.FirstOrDefault();
             if (firstCoinBaseEntry != null)
             {
-                author = new Address(Keccak.Compute(firstCoinBaseEntry.ReceiverPublicKey.ToByteArray()));
+                author = new Address(Keccak.Compute(firstCoinBaseEntry.ReceiverKvmAddress.ToByteArray()));
             }
             else
             {

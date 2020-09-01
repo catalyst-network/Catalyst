@@ -21,24 +21,21 @@
 
 #endregion
 
+using Catalyst.Abstractions.Validators;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
-using Catalyst.Core.Lib.Config;
-using Catalyst.Protocol.Network;
 
-namespace Catalyst.Node.POA.CE
+namespace Catalyst.Core.Modules.Kvm.Validators
 {
-    public sealed class PoaConfigCopier : ConfigCopier
+    public class ContractValidatorReader : IValidatorReader
     {
-        protected override IEnumerable<string> RequiredConfigFiles(NetworkType network,
-            string overrideNetworkFile = null)
+        public void AddValidatorSet(IList<IValidatorSet> validatorSets, long startBlock, IConfigurationSection configurationSection)
         {
-            return new List<string>
+            if (configurationSection.Key.ToLower() == "contract")
             {
-                PoaConstants.RpcAuthenticationCredentialsFile,
-                Constants.ValidatorSetConfigFile,
-                Constants.SerilogJsonConfigFile,
-                Constants.NetworkConfigFile(network, overrideNetworkFile)
-            };
+                var contractAddress = configurationSection.Value;
+                validatorSets.Add(new ContractValidatorSet(startBlock, contractAddress));
+            }
         }
     }
 }

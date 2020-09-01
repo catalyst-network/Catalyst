@@ -21,24 +21,25 @@
 
 #endregion
 
+using Catalyst.Abstractions.Validators;
+using Nethermind.Core;
 using System.Collections.Generic;
-using Catalyst.Core.Lib.Config;
-using Catalyst.Protocol.Network;
 
-namespace Catalyst.Node.POA.CE
+namespace Catalyst.Core.Modules.Kvm.Validators
 {
-    public sealed class PoaConfigCopier : ConfigCopier
+    public class ContractValidatorSet : IValidatorSet
     {
-        protected override IEnumerable<string> RequiredConfigFiles(NetworkType network,
-            string overrideNetworkFile = null)
+        private readonly string _contractAddress;
+
+        public long StartBlock { get; }
+
+        public ContractValidatorSet(long startBlock, string contractAddress)
         {
-            return new List<string>
-            {
-                PoaConstants.RpcAuthenticationCredentialsFile,
-                Constants.ValidatorSetConfigFile,
-                Constants.SerilogJsonConfigFile,
-                Constants.NetworkConfigFile(network, overrideNetworkFile)
-            };
+            StartBlock = startBlock;
+            _contractAddress = contractAddress;
         }
+
+        //Get validators from smart contract
+        public IEnumerable<Address> GetValidators() => new List<Address>();
     }
 }

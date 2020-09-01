@@ -34,6 +34,12 @@ using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using Serilog;
+using Catalyst.Protocol.Deltas;
+using Catalyst.Abstractions.Validators;
+using Catalyst.Abstractions.KeySigner;
+using Catalyst.Abstractions.Types;
+using Catalyst.Core.Modules.Kvm;
+using Nethermind.Core;
 
 namespace Catalyst.Core.Modules.Consensus
 {
@@ -43,6 +49,10 @@ namespace Catalyst.Core.Modules.Consensus
         private readonly CancellationTokenSource _cancellationTokenSource;
         private readonly IDateTimeProvider _dateTimeProvider;
         private readonly IDeltaHashProvider _deltaHashProvider;
+        private readonly IDeltaCache _deltaCache;
+        private readonly IValidatorSetStore _validatorSetStore;
+        private readonly IKeySigner _keySigner;
+        private readonly Address _kvmAddress;
 
         private readonly IList<IPhaseName> _orderedPhaseNamesByOffset;
         private readonly IList<IPhaseStatus> _orderedPhaseStatuses;
@@ -58,6 +68,9 @@ namespace Catalyst.Core.Modules.Consensus
         public CycleEventsProviderRaw(ICycleConfiguration configuration,
             IDateTimeProvider dateTimeProvider,
             IDeltaHashProvider deltaHashProvider,
+            IDeltaCache deltaCache,
+            IValidatorSetStore validatorSetStore,
+            IKeySigner keySigner,
             ILogger logger)
         {
             _cancellationTokenSource = new CancellationTokenSource();
@@ -65,7 +78,13 @@ namespace Catalyst.Core.Modules.Consensus
             Configuration = configuration;
             _dateTimeProvider = dateTimeProvider;
             _deltaHashProvider = deltaHashProvider;
+            _deltaCache = deltaCache;
+            _validatorSetStore = validatorSetStore;
             _logger = logger;
+
+            var privateKey = keySigner.GetPrivateKey(KeyRegistryTypes.DefaultKey);
+            var publicKey = privateKey.GetPublicKey();
+            _kvmAddress = publicKey.ToKvmAddress();
 
             _phaseChangesMessageSubject = new ReplaySubject<IPhase>();
             PhaseChanges = _phaseChangesMessageSubject.AsObservable();
@@ -148,10 +167,13 @@ namespace Catalyst.Core.Modules.Consensus
         /// </summary>
         private void EventCycleLoopThread()
         {
-            var cycleNumber = 1UL;
             while (!_cancellationTokenSource.IsCancellationRequested)
             {
-                StartCycle(cycleNumber++);
+                var currentDeltaCid = _deltaHashProvider.GetLatestDeltaHash(_dateTimeProvider.UtcNow);
+                _deltaCache.TryGetOrAddConfirmedDelta(currentDeltaCid, out Delta currentDelta);
+                var currentDeltaHeight = currentDelta.DeltaNumber;
+
+                StartCycle(++currentDeltaHeight);
             }
 
             _logger.Debug("Stream {PhaseChanges} completed.", nameof(PhaseChanges));
@@ -163,7 +185,7 @@ namespace Catalyst.Core.Modules.Consensus
         /// Each cycle will produce 8 phase events excluding 'idle' phase status: 4 phases * 2 phase statuses = 8 phase events.
         /// </summary>
         /// <param name="cycleNumber">The current cycle</param>
-        private void StartCycle(ulong cycleNumber)
+        private void StartCycle(long cycleNumber)
         {
             var phaseNumber = 0;
             var statusNumber = 0;
@@ -171,7 +193,10 @@ namespace Catalyst.Core.Modules.Consensus
             var startTime = GetDateUntilNextCycleStart();
             var nextCycleStartTime = startTime.Add(Configuration.CycleDuration);
 
-            _logger.Debug($"Event Provider Cycle {cycleNumber} Starting at: {startTime}");
+            var validators = _validatorSetStore.Get(cycleNumber);
+            var isValidator = validators.GetValidators().Contains(_kvmAddress);
+
+            _logger.Debug($"Event Provider Cycle {cycleNumber } Starting at: {startTime}");
             _logger.Debug($"Event Provider Cycle {cycleNumber + 1} Starting at: {nextCycleStartTime}");
 
             while (phaseNumber < _orderedPhaseNamesByOffset.Count && !_cancellationTokenSource.IsCancellationRequested)
@@ -184,7 +209,10 @@ namespace Catalyst.Core.Modules.Consensus
                 if (phase != null)
                 {
                     _logger.Debug("Current delta production phase {phase}", phase);
-                    _phaseChangesMessageSubject.OnNext(phase);
+                    if (isValidator)
+                    {
+                        _phaseChangesMessageSubject.OnNext(phase);
+                    }
                     statusNumber++;
                 }
 

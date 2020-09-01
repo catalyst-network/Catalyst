@@ -21,24 +21,22 @@
 
 #endregion
 
+using Catalyst.Abstractions.Validators;
+using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
-using Catalyst.Core.Lib.Config;
-using Catalyst.Protocol.Network;
+using System.Linq;
 
-namespace Catalyst.Node.POA.CE
+namespace Catalyst.Core.Lib.Validators
 {
-    public sealed class PoaConfigCopier : ConfigCopier
+    public class ListValidatorReader : IValidatorReader
     {
-        protected override IEnumerable<string> RequiredConfigFiles(NetworkType network,
-            string overrideNetworkFile = null)
+        public void AddValidatorSet(IList<IValidatorSet> validatorSets, long startBlock, IConfigurationSection configurationSection)
         {
-            return new List<string>
+            if (configurationSection.Key.ToLower() == "list")
             {
-                PoaConstants.RpcAuthenticationCredentialsFile,
-                Constants.ValidatorSetConfigFile,
-                Constants.SerilogJsonConfigFile,
-                Constants.NetworkConfigFile(network, overrideNetworkFile)
-            };
+                var addressList = configurationSection.AsEnumerable().Where(x => !string.IsNullOrWhiteSpace(x.Value)).Select(x => x.Value).ToList();
+                validatorSets.Add(new ListValidatorSet(startBlock, addressList));
+            }
         }
     }
 }
