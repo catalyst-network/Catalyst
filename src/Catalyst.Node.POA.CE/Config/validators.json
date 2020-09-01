@@ -2,9 +2,9 @@
     "validators": {
         "multi": {
             "0": {
-                "list": [ "0x5fe351dd36e699b1c87b48199a1739d4939fdcbe", "0x732a8962824729671edde41b511532ada29da5bf" ]
+                "list": [ "0x5fe351dd36e699b1c87b48199a1739d4939fdcbe"]
             },
-            "90": {
+            "900": {
                 "contract": "0x2932E7Af4fB3936c62eEff34Bf9c4448f1C2E63c"
             }
         }
