@@ -48,6 +48,7 @@ using Catalyst.Core.Modules.Sync;
 using Catalyst.Modules.Network.LibP2P;
 using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
+using Nethermind.Db;
 using NSubstitute;
 using NUnit.Framework;
 using SharpRepository.InMemoryRepository;
@@ -101,7 +102,6 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.Config
             containerBuilder.RegisterModule(new KeySignerModule());
             containerBuilder.RegisterModule(new ConsensusModule());
             containerBuilder.RegisterModule(new DfsModule());
-            containerBuilder.RegisterModule(new KvmModule());
             containerBuilder.RegisterModule(new LedgerModule());
             containerBuilder.RegisterModule(new MempoolModule());
             containerBuilder.RegisterModule(new KeystoreModule());
@@ -110,7 +110,6 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.Config
             containerBuilder.RegisterModule(new SynchroniserModule());
             containerBuilder.RegisterModule(new LibP2PNetworkModule());
             containerBuilder.RegisterType<InMemoryRepository<DeltaIndexDao, string>>().As<IRepository<DeltaIndexDao, string>>().SingleInstance();
-
             containerBuilder.RegisterAssemblyTypes(typeof(CoreLibProvider).Assembly)
                .AssignableTo<IMapperInitializer>().As<IMapperInitializer>();
             containerBuilder.RegisterType<MapperProvider>().As<IMapperProvider>()

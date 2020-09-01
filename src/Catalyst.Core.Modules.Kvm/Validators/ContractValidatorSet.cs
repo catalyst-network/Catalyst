@@ -21,7 +21,9 @@
 
 #endregion
 
+using Catalyst.Abstractions.Contract;
 using Catalyst.Abstractions.Validators;
+using Catalyst.Module.ConvanSmartContract;
 using Nethermind.Core;
 using System.Collections.Generic;
 
@@ -29,17 +31,17 @@ namespace Catalyst.Core.Modules.Kvm.Validators
 {
     public class ContractValidatorSet : IValidatorSet
     {
-        private readonly string _contractAddress;
+        private readonly ValidatorSet _validatorSet;
 
         public long StartBlock { get; }
 
-        public ContractValidatorSet(long startBlock, string contractAddress)
+        public ContractValidatorSet(IValidatorSetContract validatorSetContract, long startBlock, string contractAddress)
         {
             StartBlock = startBlock;
-            _contractAddress = contractAddress;
+            _validatorSet = new ValidatorSet(validatorSetContract, new Address(contractAddress));
         }
 
         //Get validators from smart contract
-        public IEnumerable<Address> GetValidators() => new List<Address>();
+        public IEnumerable<Address> GetValidators() => _validatorSet.GetValidators();
     }
 }

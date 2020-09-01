@@ -118,7 +118,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
         [Ignore("Setup to run in pipeline only")]
         [Category(Traits.E2EMongoDb)]
         [TestCase(nameof(ModulesList))]
-        public void TransactionRepository_All_Dbs_Can_Update_And_Retrieve(Module dbModule)
+        public void TransactionRepository_All_Dbs_Can_Update_And_Retrieve(Autofac.Module dbModule)
         {
             RegisterModules(dbModule);
 
@@ -128,7 +128,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
         [Ignore("Setup to run in pipeline only")]
         [Category(Traits.E2EMongoDb)]
         [TestCase(nameof(ModulesList))]
-        public void TransactionBroadcastRepository_All_Dbs_Can_Save_And_Retrieve(Module dbModule)
+        public void TransactionBroadcastRepository_All_Dbs_Can_Save_And_Retrieve(Autofac.Module dbModule)
         {
             RegisterModules(dbModule);
 
@@ -175,7 +175,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.IntegrationTests
             }
         }
 
-        private void RegisterModules(Module module)
+        private void RegisterModules(Autofac.Module module)
         {
             ContainerProvider.ConfigureContainerBuilder();
 

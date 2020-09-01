@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Abstractions.Contract;
 using Catalyst.Abstractions.Validators;
 using Microsoft.Extensions.Configuration;
 using System.Collections.Generic;
@@ -29,12 +30,19 @@ namespace Catalyst.Core.Modules.Kvm.Validators
 {
     public class ContractValidatorReader : IValidatorReader
     {
+        private readonly IValidatorSetContract _validatorSetContract;
+
+        public ContractValidatorReader(IValidatorSetContract validatorSetContract)
+        {
+            _validatorSetContract = validatorSetContract;
+        }
+
         public void AddValidatorSet(IList<IValidatorSet> validatorSets, long startBlock, IConfigurationSection configurationSection)
         {
             if (configurationSection.Key.ToLower() == "contract")
             {
                 var contractAddress = configurationSection.Value;
-                validatorSets.Add(new ContractValidatorSet(startBlock, contractAddress));
+                validatorSets.Add(new ContractValidatorSet(_validatorSetContract, startBlock, contractAddress));
             }
         }
     }

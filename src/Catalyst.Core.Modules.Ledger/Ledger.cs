@@ -61,7 +61,7 @@ namespace Catalyst.Core.Modules.Ledger
         private readonly IStateProvider _stateProvider;
         private readonly IStorageProvider _storageProvider;
         private readonly ISnapshotableDb _stateDb;
-        private readonly IDb _codeDb;
+        private readonly ISnapshotableDb _codeDb;
         private readonly ITransactionRepository _receipts;
         private readonly IMempool<PublicEntryDao> _mempool;
         private readonly IMapperProvider _mapperProvider;
@@ -87,7 +87,7 @@ namespace Catalyst.Core.Modules.Ledger
             IStateProvider stateProvider,
             IStorageProvider storageProvider,
             ISnapshotableDb stateDb,
-            IDb codeDb,
+            ISnapshotableDb codeDb,
             IAccountRepository accounts,
             IDeltaIndexService deltaIndexService,
             ITransactionRepository receipts,
@@ -241,6 +241,7 @@ namespace Catalyst.Core.Modules.Ledger
                 }
 
                 _stateDb.Commit();
+                _codeDb.Commit();
 
                 _latestKnownDelta = deltaHash;
 

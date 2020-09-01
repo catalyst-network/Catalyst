@@ -28,7 +28,7 @@ using SharpRepository.Repository;
 
 namespace Catalyst.TestUtils.Repository
 {
-    public sealed class InMemoryTestModule<TDao> : Module
+    public sealed class InMemoryTestModule<TDao> : Autofac.Module
         where TDao : DaoBase, new()
     { 
         protected override void Load(ContainerBuilder builder)

@@ -219,6 +219,7 @@ namespace Catalyst.Core.Modules.Kvm
 
             var (sender, recipient) = ExtractSenderAndRecipient(entry);
             var isPrecompile = recipient.IsPrecompiled(spec);
+
             var env = PrepareEnv(entry, sender, recipient, stateUpdate, isPrecompile);
 
             var gasLimit = entry.GasLimit;

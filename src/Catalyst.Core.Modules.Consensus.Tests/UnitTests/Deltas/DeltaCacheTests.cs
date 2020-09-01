@@ -68,7 +68,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var stateProvider = Substitute.For<IStateProvider>();
             stateProvider.StateRoot.Returns(Keccak.Zero);
 
-            _deltaCache = new DeltaCache(_hashProvider, _memoryCache, _dfsReader, tokenProvider, storageProvider, stateProvider, new StateDb(), Substitute.For<IDeltaIndexService>(), _logger);
+            _deltaCache = new DeltaCache(_hashProvider, _memoryCache, _dfsReader, tokenProvider, storageProvider, stateProvider, Substitute.For<ISnapshotableDb>(), Substitute.For<ISnapshotableDb>(), Substitute.For<IDeltaIndexService>(), _logger);
         }
 
         [Test]

@@ -43,10 +43,10 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
         protected override BlockForRpc Handle(Keccak deltaHash, bool includeFullTxs, IWeb3EthApi api)
         {
             DeltaWithCid deltaWithCid = api.GetDeltaWithCid(deltaHash.ToCid());
-            return BuildBlock(deltaWithCid, deltaWithCid.Delta.DeltaNumber, api.HashProvider, includeFullTxs);
+            return BuildBlock(api, deltaWithCid, deltaWithCid.Delta.DeltaNumber, api.HashProvider, includeFullTxs);
         }
 
-        private static BlockForRpc BuildBlock(DeltaWithCid deltaWithCid, long blockNumber, IHashProvider hashProvider, bool includeFullTxs)
+        private static BlockForRpc BuildBlock(IWeb3EthApi api, DeltaWithCid deltaWithCid, long blockNumber, IHashProvider hashProvider, bool includeFullTxs)
         {
             var (delta, deltaHash) = deltaWithCid;
 
@@ -54,7 +54,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
             var firstCoinBaseEntry = delta.CoinbaseEntries.FirstOrDefault();
             if (firstCoinBaseEntry != null)
             {
-                author = new Address(Keccak.Compute(firstCoinBaseEntry.ReceiverKvmAddress.ToByteArray()));
+                author = new Address(firstCoinBaseEntry.ReceiverKvmAddress.ToByteArray());
             }
             else
             {
@@ -70,7 +70,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
                 Difficulty = 1,
                 Hash = deltaHash,
                 Number = blockNumber,
-                GasLimit = (long) delta.GasLimit,
+                GasLimit = (long)delta.GasLimit,
                 GasUsed = delta.GasUsed,
                 Timestamp = new UInt256(delta.TimeStamp.Seconds),
                 ParentHash = blockNumber == 0 ? null : Cid.Read(delta.PreviousDeltaDfsHash.ToByteArray()),
@@ -81,9 +81,9 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
                 MixHash = Keccak.Zero,
                 Nonce = nonce,
                 Uncles = new Keccak[0],
-                Transactions = includeFullTxs? (IEnumerable<object>) delta.PublicEntries : delta.PublicEntries.Select(x => x.GetHash(hashProvider))
+                Transactions = includeFullTxs ? (IEnumerable<object>)api.ToTransactionsForRpc(deltaWithCid) : delta.PublicEntries.Select(x => x.GetHash(hashProvider))
             };
-            blockForRpc.TotalDifficulty = (UInt256) ((long) blockForRpc.Difficulty * (blockNumber + 1));
+            blockForRpc.TotalDifficulty = (UInt256)((long)blockForRpc.Difficulty * (blockNumber + 1));
             blockForRpc.Sha3Uncles = Keccak.OfAnEmptySequenceRlp;
             return blockForRpc;
         }

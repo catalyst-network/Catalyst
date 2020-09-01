@@ -21,20 +21,26 @@
 
 #endregion
 
-using Autofac;
-using Catalyst.Core.Lib.DAO;
-using SharpRepository.MongoDbRepository;
+using System;
+using Catalyst.Module.ConvanSmartContract;
+using FluentAssertions;
+using FluentAssertions.Json;
+using Nethermind.Serialization.Json.Abi;
+using Newtonsoft.Json.Linq;
+using NUnit.Framework;
 
-namespace Catalyst.TestUtils.Repository
+namespace Nethermind.Abi.Test.Json
 {
-    public sealed class MongoDbTestModule<TDao> : Autofac.Module
-        where TDao : DaoBase, new()
-
+    public class AbiDefinitionParserTests
     {
-        protected override void Load(ContainerBuilder builder)
+        [TestCase(typeof(ValidatorSet))]
+        public void Can_load_contract(Type contractType)
         {
-            builder.RegisterType<MongoDbRepository<TDao, string>>().As<SharpRepository.Repository.IRepository<TDao, string>>().SingleInstance();
+            var parser = new AbiDefinitionParser();
+            var json = parser.LoadContract(contractType);
+            var contract = parser.Parse(json);
+            var serialized = parser.Serialize(contract);
+            JToken.Parse(serialized).Should().ContainSubtree(json);
         }
     }
 }
-
