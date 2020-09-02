@@ -44,12 +44,12 @@ module.exports = {
     // options below to some value.
     //
     development: {
-      provider: () => new HDWalletProvider(mnemonic, `http://127.0.0.1:8545`),
+      provider: () => new HDWalletProvider(mnemonic, `http://localhost:8545`),
       network_id: "*",       // Any network (default: none)
     },
 
     catalyst: {
-        provider: () => new HDWalletProvider(mnemonic, `http://127.0.0.1:5005/api/eth/request`),
+        provider: () => new HDWalletProvider(mnemonic, `http://localhost:5005/api/eth/request`),
       network_id: "*",       // Any network (default: none)
     },
 

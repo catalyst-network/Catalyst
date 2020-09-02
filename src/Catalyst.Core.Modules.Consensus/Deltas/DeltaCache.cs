@@ -39,7 +39,6 @@ using MultiFormats;
 using Nethermind.Db;
 using Nethermind.State;
 using Serilog;
-using Catalyst.Core.Lib.DAO.Ledger;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
