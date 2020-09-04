@@ -28,5 +28,7 @@ namespace Catalyst.Abstractions.Contract
     public interface IValidatorSetContract
     {
         Address[] GetValidators(Address contractAddress);
+        bool CheckInitiateChangeEvent(Address contractAddress, BlockHeader blockHeader, TxReceipt[] receipts, out Address[] addresses);
+        void FinalizeChange(Address contractAddress, BlockHeader blockHeader);
     }
 }

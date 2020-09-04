@@ -24,4 +24,7 @@
         <PackageReference Include="NUnit" Version="3.12.0" />
         <PackageReference Include="NUnit3TestAdapter" Version="3.16.1" />
     </ItemGroup>
+    <ItemGroup>
+      <Folder Include="IntegrationTests\TruffleTest\build\" />
+    </ItemGroup>
 </Project>

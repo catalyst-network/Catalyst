@@ -24,6 +24,7 @@
 using System;
 using System.Collections.Generic;
 using Catalyst.Abstractions.Ledger.Models;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Modules.Kvm;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
@@ -95,7 +96,8 @@ namespace Catalyst.Core.Modules.Ledger
                 return null;
             }
 
-            return publicKeyByteString.ToByteArray().ToKvmAddress();
+            return new Address(publicKeyByteString.ToByteArray());
+            //.ToKvmAddress();
         }
 
         public bool IsTracingActions => false;

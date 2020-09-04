@@ -67,12 +67,12 @@ namespace Catalyst.Core.Modules.Ledger.Contract
             return newDelta;
         }
 
-        private PublicEntry GenerateTransaction(Address contractAddress, byte[] transactionData)
+        private PublicEntry GenerateTransaction(Address contractAddress, Address sender, byte[] transactionData)
         {
             return new PublicEntry
             {
                 Nonce = 0,
-                SenderAddress = Address.SystemUser.Bytes.ToByteString(),
+                SenderAddress = sender.Bytes.ToByteString(),
                 ReceiverAddress = contractAddress?.Bytes.ToByteString(),
                 GasLimit = DefaultContractGasLimit,
                 GasPrice = UInt256.Zero.ToUint256ByteString(),
@@ -83,7 +83,12 @@ namespace Catalyst.Core.Modules.Ledger.Contract
 
         public byte[] Call(Address contractAddress, byte[] data)
         {
-            var transaction = GenerateTransaction(contractAddress, data);
+            return Call(contractAddress, Address.SystemUser, data);
+        }
+
+        public byte[] Call(Address contractAddress, Address sender, byte[] data)
+        {
+            var transaction = GenerateTransaction(contractAddress, sender, data);
 
             var latestDeltaCid = _deltaHashProvider.GetLatestDeltaHash();
             _deltaCache.TryGetOrAddConfirmedDelta(latestDeltaCid, out Delta latestDelta);

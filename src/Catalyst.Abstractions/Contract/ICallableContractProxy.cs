@@ -28,5 +28,6 @@ namespace Catalyst.Abstractions.Contract
     public interface ICallableContractProxy
     {
         byte[] Call(Address contractAddress, byte[] data);
+        byte[] Call(Address contractAddress, Address sender, byte[] data);
     }
 }

@@ -34,6 +34,7 @@ using Catalyst.Protocol.Rpc.Node;
 using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
+using MongoDB.Bson.IO;
 using MultiFormats;
 using Nethermind.Core.Crypto;
 using Serilog;
@@ -84,6 +85,9 @@ namespace Catalyst.Core.Lib.IO.Events
             }
 
             var transactionDao = transactionBroadcast.PublicEntry.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider);
+            string hex1 = publicEntry.Data.ToByteArray().ToHexString();
+
+            var a = Newtonsoft.Json.JsonConvert.SerializeObject(transactionDao);
 
             _logger.Verbose("Adding transaction {id} to mempool", transactionDao.Id);
 

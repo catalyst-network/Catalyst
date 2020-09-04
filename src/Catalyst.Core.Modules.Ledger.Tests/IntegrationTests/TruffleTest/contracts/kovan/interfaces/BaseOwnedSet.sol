@@ -112,7 +112,10 @@ contract BaseOwnedSet is Owned {
 	{
 		status[_validator].isIn = true;
 		status[_validator].index = pending.length;
-		pending.push(_validator);
+		//pending.push(_validator);
+
+        validators.push(_validator);
+
 		triggerChange();
 	}
 
@@ -204,7 +207,6 @@ contract BaseOwnedSet is Owned {
 
 	function triggerChange()
 		private
-		whenFinalized
 	{
 		finalized = false;
 		initiateChange();
