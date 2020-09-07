@@ -111,7 +111,8 @@ contract BaseOwnedSet is Owned {
 		isNotValidator(_validator)
 	{
 		status[_validator].isIn = true;
-		status[_validator].index = pending.length;
+        status[_validator].index = validators.length;
+		//status[_validator].index = pending.length;
 
         validators.push(_validator);
 		//pending.push(_validator);
