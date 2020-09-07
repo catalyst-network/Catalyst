@@ -54,9 +54,12 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
 
             // here we need a read only delta executor (like in block builders - everything reverts in the end)
             _stateProvider.StateRoot = stateRoot;
-            _deltaExecutor.CallAndReset(context.ProducedDelta, NullTxTracer.Instance);
 
+            var callOutputTracer = new CallOutputTracer();
+            _deltaExecutor.CallAndReset(context.ProducedDelta, callOutputTracer);
             _stateProvider.Reset();
+
+            context.ProducedDelta.GasUsed = callOutputTracer.GasSpent;
         }
     }
 }

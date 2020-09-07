@@ -70,13 +70,13 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
                     return;
                 }
 
-                var multiAddress = new MultiAddress(message.Address);
-                var messagePoaNode = _peerRepository.GetPoaPeersByPublicKey(multiAddress.GetPublicKey()).FirstOrDefault();
-                if (messagePoaNode == null)
-                {
-                    Logger.Error($"Message from IP address '{multiAddress.GetIpAddress()}' with public key '{multiAddress.GetPublicKey()}' is not found in producer node list.");
-                    return;
-                }
+                //var multiAddress = new MultiAddress(message.Address);
+                //var messagePoaNode = _peerRepository.GetPoaPeersByPublicKey(multiAddress.GetPublicKey()).FirstOrDefault();
+                //if (messagePoaNode == null)
+                //{
+                //    Logger.Error($"Message from IP address '{multiAddress.GetIpAddress()}' with public key '{multiAddress.GetPublicKey()}' is not found in producer node list.");
+                //    return;
+                //}
 
                 deserialized.IsValid();
 

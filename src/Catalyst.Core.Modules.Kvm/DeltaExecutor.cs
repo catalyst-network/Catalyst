@@ -288,10 +288,6 @@ namespace Catalyst.Core.Modules.Kvm
                 var executionType = entry.IsValidDeploymentEntry ? ExecutionType.Create : ExecutionType.Call;
                 using (var state = new VmState((long) unspentGas, env, executionType, isPrecompile, true, false))
                 {
-                    if(state.GasAvailable == 198580)
-                    {
-                        var a = 0;
-                    }
                     substate = _virtualMachine.Run(state, txTracer);
                     unspentGas = (ulong) state.GasAvailable;
                 }

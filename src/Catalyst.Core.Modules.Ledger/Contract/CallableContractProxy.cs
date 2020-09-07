@@ -77,7 +77,8 @@ namespace Catalyst.Core.Modules.Ledger.Contract
         {
             return new PublicEntry
             {
-                Nonce = (ulong)_stateProvider.GetNonce(sender),
+                //_stateProvider.GetNonce(sender)
+                Nonce = (ulong)0,
                 SenderAddress = sender.Bytes.ToByteString(),
                 ReceiverAddress = contractAddress?.Bytes.ToByteString(),
                 GasLimit = DefaultContractGasLimit,

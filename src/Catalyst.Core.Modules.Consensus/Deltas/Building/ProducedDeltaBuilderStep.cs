@@ -61,8 +61,6 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
                     context.Transactions
                 },
 
-                GasUsed = (long)context.Transactions.Sum(x => x.GasLimit),
-
                 TimeStamp = Timestamp.FromDateTime(_dateTimeProvider.UtcNow)
             };
 
