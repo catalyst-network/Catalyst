@@ -29,6 +29,6 @@ namespace Catalyst.Abstractions.Contract
     {
         Address[] GetValidators(Address contractAddress);
         bool CheckInitiateChangeEvent(Address contractAddress, BlockHeader blockHeader, TxReceipt[] receipts, out Address[] addresses);
-        void FinalizeChange(Address contractAddress, BlockHeader blockHeader);
+        void FinalizeChange(Address contractAddress);
     }
 }

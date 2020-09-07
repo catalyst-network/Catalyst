@@ -43,6 +43,7 @@ namespace Catalyst.Module.ConvanSmartContract.Contract
         internal static readonly string GetValidatorsFunction = Definition.GetFunctionName(nameof(GetValidators));
         internal static readonly string OwnerFunction = Definition.GetFunctionName(nameof(Owner));
         internal static readonly string FinalizeChangeFunction = Definition.GetFunctionName(nameof(FinalizeChange));
+        internal static readonly string FinalizedFunction = Definition.GetFunctionName(nameof(Finalized));
 
         public ValidatorSetContract(IAbiEncoder abiEncoder, ICallableContractProxy callableContractProxy)
         {
@@ -61,23 +62,41 @@ namespace Catalyst.Module.ConvanSmartContract.Contract
 
         public Address[] GetValidators(Address contractAddress)
         {
-            var owner = Owner(contractAddress);
+            //var owner = Owner(contractAddress);
 
             var data = _abiEncoder.Encode(Definition.GetFunction(GetValidatorsFunction).GetCallInfo());
 
+            /*var val = Finalized(contractAddress);
+
+            FinalizeChange(contractAddress);*/
+
             var returnData = _callableContractProxy.Call(contractAddress, data);
+
+            //val = Finalized(contractAddress);
 
             return DecodeAddresses(returnData);
         }
 
-        public void FinalizeChange(Address contractAddress, BlockHeader blockHeader)
+        public void FinalizeChange(Address contractAddress)
         {
+            _callableContractProxy.EnsureSystemAccount();
             var data = _abiEncoder.Encode(Definition.GetFunction(FinalizeChangeFunction).GetCallInfo());
 
-            var returnData = _callableContractProxy.Call(contractAddress, Address.SystemUser, data);
+            var returnData = _callableContractProxy.Call(contractAddress, Address.SystemUser, data, false);
 
             var a = 0;
             //TryCall(blockHeader, nameof(FinalizeChange), Address.SystemUser, out _);
+        }
+
+        public bool Finalized(Address contractAddress)
+        {
+            var data = _abiEncoder.Encode(Definition.GetFunction(FinalizedFunction).GetCallInfo());
+
+            var returnData = _callableContractProxy.Call(contractAddress, Address.SystemUser, data);
+
+            var objects = _abiEncoder.Decode(Definition.GetFunction(FinalizedFunction).GetReturnInfo(), returnData);
+
+            return (bool)objects[0];
         }
 
 

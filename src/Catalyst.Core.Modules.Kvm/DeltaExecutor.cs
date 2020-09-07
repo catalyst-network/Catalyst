@@ -510,6 +510,7 @@ namespace Catalyst.Core.Modules.Kvm
             return false;
         }
 
+
         private bool ValidateSenderBalance(PublicEntry entry,
             ExecutionEnvironment env,
             ulong intrinsicGas,

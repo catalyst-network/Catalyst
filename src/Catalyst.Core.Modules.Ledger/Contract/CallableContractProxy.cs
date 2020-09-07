@@ -25,12 +25,14 @@ using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Contract;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Core.Modules.Kvm;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
 using Lib.P2P;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
+using Nethermind.Db;
 using Nethermind.Dirichlet.Numerics;
 using Nethermind.Evm.Tracing;
 using Nethermind.State;
@@ -44,16 +46,20 @@ namespace Catalyst.Core.Modules.Ledger.Contract
         private readonly IDeltaExecutor _deltaExecutor;
         private readonly IStateProvider _stateProvider;
         private readonly IStorageProvider _storageProvider;
+        private readonly ISnapshotableDb _stateDb;
+        private readonly ISnapshotableDb _codeDb;
 
         private static ulong DefaultContractGasLimit = 1_600_000L;
 
-        public CallableContractProxy(IDeltaHashProvider deltaHashProvider, IDeltaCache deltaCache, IDeltaExecutor deltaExecutor, IStateProvider stateProvider, IStorageProvider storageProvider)
+        public CallableContractProxy(IDeltaHashProvider deltaHashProvider, IDeltaCache deltaCache, IDeltaExecutor deltaExecutor, IStateProvider stateProvider, IStorageProvider storageProvider, ISnapshotableDb stateDb, ISnapshotableDb codeDb)
         {
             _deltaHashProvider = deltaHashProvider;
             _deltaCache = deltaCache;
             _deltaExecutor = deltaExecutor;
             _stateProvider = stateProvider;
             _storageProvider = storageProvider;
+            _stateDb = stateDb;
+            _codeDb = codeDb;
         }
 
         public Delta CreateOneOffDelta(Cid cid, Delta delta, PublicEntry publicEntry)
@@ -71,7 +77,7 @@ namespace Catalyst.Core.Modules.Ledger.Contract
         {
             return new PublicEntry
             {
-                Nonce = 0,
+                Nonce = (ulong)_stateProvider.GetNonce(sender),
                 SenderAddress = sender.Bytes.ToByteString(),
                 ReceiverAddress = contractAddress?.Bytes.ToByteString(),
                 GasLimit = DefaultContractGasLimit,
@@ -81,12 +87,12 @@ namespace Catalyst.Core.Modules.Ledger.Contract
             };
         }
 
-        public byte[] Call(Address contractAddress, byte[] data)
+        public byte[] Call(Address contractAddress, byte[] data, bool callAndRestore = true)
         {
-            return Call(contractAddress, Address.SystemUser, data);
+            return Call(contractAddress, Address.SystemUser, data, callAndRestore);
         }
 
-        public byte[] Call(Address contractAddress, Address sender, byte[] data)
+        public byte[] Call(Address contractAddress, Address sender, byte[] data, bool callAndRestore = true)
         {
             var transaction = GenerateTransaction(contractAddress, sender, data);
 
@@ -100,11 +106,33 @@ namespace Catalyst.Core.Modules.Ledger.Contract
             CallOutputTracer callOutputTracer = new CallOutputTracer();
 
             _stateProvider.StateRoot = root;
-            _deltaExecutor.CallAndReset(newDelta, callOutputTracer);
-            _stateProvider.Reset();
-            _storageProvider.Reset();
+
+            if (callAndRestore)
+            {
+                _deltaExecutor.CallAndReset(newDelta, callOutputTracer);
+                _stateProvider.Reset();
+                _storageProvider.Reset();
+            }
+            else
+            {
+                _deltaExecutor.Execute(newDelta, callOutputTracer);
+                _stateDb.Commit();
+                _codeDb.Commit();
+            }
 
             return callOutputTracer.ReturnValue;
+        }
+
+        /// <summary>
+        /// Creates <see cref="Address.SystemUser"/> account if its not in current state.
+        /// </summary>
+        public void EnsureSystemAccount()
+        {
+            if (!_stateProvider.AccountExists(Address.SystemUser))
+            {
+                _stateProvider.CreateAccount(Address.SystemUser, UInt256.Zero);
+                _stateProvider.Commit(CatalystGenesisSpec.Instance);
+            }
         }
     }
 }

@@ -112,11 +112,10 @@ contract BaseOwnedSet is Owned {
 	{
 		status[_validator].isIn = true;
 		status[_validator].index = pending.length;
-		//pending.push(_validator);
 
         validators.push(_validator);
-
-		triggerChange();
+		//pending.push(_validator);
+		//triggerChange();
 	}
 
 	// Remove a validator.
@@ -128,15 +127,21 @@ contract BaseOwnedSet is Owned {
 		// Remove validator from pending by moving the
 		// last element to its slot
 		uint index = status[_validator].index;
-		pending[index] = pending[pending.length - 1];
-		status[pending[index]].index = index;
-		delete pending[pending.length - 1];
-		pending.length--;
+		validators[index] = validators[validators.length - 1];
+		status[validators[index]].index = index;
+		delete validators[validators.length - 1];
+		validators.length--;
+
+	    //uint index = status[_validator].index;
+		//pending[index] = pending[pending.length - 1];
+		//status[pending[index]].index = index;
+		//delete pending[pending.length - 1];
+		//pending.length--
 
 		// Reset address status
 		delete status[_validator];
 
-		triggerChange();
+		//triggerChange();
 	}
 
 	function setRecentBlocks(uint _recentBlocks)
@@ -207,6 +212,7 @@ contract BaseOwnedSet is Owned {
 
 	function triggerChange()
 		private
+		whenFinalized
 	{
 		finalized = false;
 		initiateChange();
