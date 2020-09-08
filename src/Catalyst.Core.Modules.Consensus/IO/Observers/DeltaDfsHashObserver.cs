@@ -33,6 +33,7 @@ using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Wire;
 using Dawn;
 using MultiFormats;
+using Nethermind.Core;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Consensus.IO.Observers
@@ -93,14 +94,8 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
 
                 //Add functionality to check Candidate MerkleRoot against transactions in delta
                 var mostPopularDelta = _deltaElector.GetMostPopularCandidateDelta(previousHash);
-                if (mostPopularDelta == null)
-                {
-                    Logger.Error("Could not find most popular delta.");
-                    return;
-                }
-
-                var mostPopularDeltaProducer = new MultiAddress(mostPopularDelta.Producer).GetPublicKey();
-                if (mostPopularDelta == null || multiAddress.GetPublicKey() != mostPopularDeltaProducer)
+                var mostPopularDeltaProducer = new Address(mostPopularDelta.Producer.ToByteArray());
+                if (mostPopularDelta == null || multiAddress.GetKvmAddress() != mostPopularDeltaProducer)
                 {
                     Logger.Error("Delta is null or not the most popular.");
                     return;

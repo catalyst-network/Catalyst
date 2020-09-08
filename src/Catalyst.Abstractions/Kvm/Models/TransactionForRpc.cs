@@ -24,7 +24,6 @@
 using Lib.P2P;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
-
 using Nethermind.Dirichlet.Numerics;
 using Nethermind.Serialization.Json;
 using Newtonsoft.Json;

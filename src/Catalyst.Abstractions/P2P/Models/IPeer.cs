@@ -24,8 +24,8 @@
 using System;
 using Catalyst.Abstractions.Attributes;
 using Catalyst.Abstractions.Repository;
-using Catalyst.Protocol.Peer;
 using MultiFormats;
+using Nethermind.Core;
 
 namespace Catalyst.Abstractions.P2P.Models
 {
@@ -46,6 +46,10 @@ namespace Catalyst.Abstractions.P2P.Models
         /// <summary>Gets the peer identifier.</summary>
         /// <value>The peer identifier.</value>
         MultiAddress Address { get; }
+
+        /// <summary>Gets the kvm address.</summary>
+        /// <value>The kvm address.</value>
+        Address KvmAddress { set; get; }
 
         /// <summary>Gets a value indicating whether this instance is awol peer.</summary>
         /// <value><c>true</c> if this instance is awol peer; otherwise, <c>false</c>.</value>

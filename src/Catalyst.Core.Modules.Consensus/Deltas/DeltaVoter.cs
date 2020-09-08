@@ -38,6 +38,7 @@ using Lib.P2P;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
 using MultiFormats;
+using Nethermind.Core;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
@@ -164,7 +165,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             favourite = new FavouriteDeltaBroadcast
             {
                 Candidate = bestCandidate,
-                Voter = _localPeerIdentifier.ToString()
+                Voter = _localPeerIdentifier.GetKvmAddressByteString()
             };
 
             _logger.Debug("Retrieved favourite candidate delta {candidate} for the successor of delta {previousDelta}",
@@ -179,10 +180,9 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             var preferredProducers = _deltaProducersProvider
                .GetDeltaProducersFromPreviousDelta(candidate.PreviousDeltaDfsHash.ToByteArray().ToCid());
 
-            var address = new MultiAddress(candidate.Producer);
-            var candidatePublicKey = address.GetPublicKey();
+            var address = new Address(candidate.Producer.ToByteArray());
             var ranking = preferredProducers.ToList()
-               .FindIndex(p => p.Equals(candidatePublicKey));
+               .FindIndex(p => p.Equals(address));
 
             var identifier = candidate.Producer;
             _logger.Verbose("ranking for block produced by {producerId} = {ranking}",

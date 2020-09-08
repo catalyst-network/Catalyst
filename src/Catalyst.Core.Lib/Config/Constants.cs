@@ -30,6 +30,9 @@ namespace Catalyst.Core.Lib.Config
         // <summary> Folder with config files </summary>
         public static string ConfigSubFolder => "Config";
 
+        // <summary> ValidatorSet configuration file </summary>
+        public static string ValidatorSetConfigFile => "validators.json";
+
         // <summary> Serilog configuration file </summary>
         public static string SerilogJsonConfigFile => "serilog.json";
 

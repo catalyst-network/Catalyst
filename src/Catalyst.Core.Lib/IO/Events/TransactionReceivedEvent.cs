@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.IO.Events;
 using Catalyst.Abstractions.Mempool;
 using Catalyst.Abstractions.P2P;
@@ -60,7 +61,7 @@ namespace Catalyst.Core.Lib.IO.Events
             _logger = logger;
         }
 
-        public ResponseCode OnTransactionReceived(ProtocolMessage protocolMessage)
+        public ResponseCode OnTransactionReceived(ProtocolMessage protocolMessage, bool broadcast)
         {
             var transactionBroadcast = protocolMessage.FromProtocolMessage<TransactionBroadcast>();
             PublicEntry publicEntry = transactionBroadcast.PublicEntry;
@@ -71,7 +72,7 @@ namespace Catalyst.Core.Lib.IO.Events
                 {
                     return ResponseCode.Error;
                 }
-                
+
                 byte[] kvmAddressBytes = Keccak.Compute(publicEntry.SenderAddress.ToByteArray()).Bytes.AsSpan(12).ToArray();
                 string hex = kvmAddressBytes.ToHexString() ?? throw new ArgumentNullException("kvmAddressBytes.ToHexString()");
                 publicEntry.SenderAddress = kvmAddressBytes.ToByteString();
@@ -94,8 +95,11 @@ namespace Catalyst.Core.Lib.IO.Events
 
             _mempool.Service.CreateItem(transactionDao);
 
-            _logger.Information("Broadcasting {signature} transaction", protocolMessage);
-            _peerClient.BroadcastAsync(protocolMessage).ConfigureAwait(false);
+            if (broadcast)
+            {
+                _logger.Information("Broadcasting {signature} transaction", protocolMessage);
+                _peerClient.BroadcastAsync(protocolMessage).ConfigureAwait(false);
+            }
 
             return ResponseCode.Successful;
         }

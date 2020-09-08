@@ -69,7 +69,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
             _transactionValidator.ValidateTransaction(Arg.Any<PublicEntry>())
                .Returns(false);
             _transactionReceivedEvent.OnTransactionReceived(new TransactionBroadcast {PublicEntry = new PublicEntry{SenderAddress = new byte[32].ToByteString()}}
-                   .ToProtocolMessage(MultiAddressHelper.GetAddress(), CorrelationId.GenerateCorrelationId())).Should()
+                   .ToProtocolMessage(MultiAddressHelper.GetAddress(), CorrelationId.GenerateCorrelationId()), false).Should()
                .Be(ResponseCode.Error);
             _peerClient.DidNotReceiveWithAnyArgs()?.BroadcastAsync(default);
         }
@@ -86,7 +86,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
 
             _transactionReceivedEvent
                .OnTransactionReceived(transaction.ToProtocolMessage(MultiAddressHelper.GetAddress(),
-                    CorrelationId.GenerateCorrelationId()))
+                    CorrelationId.GenerateCorrelationId()), false)
                .Should().Be(ResponseCode.Exists);
             _peerClient.DidNotReceiveWithAnyArgs()?.BroadcastAsync(default);
             _mempool.Service.DidNotReceiveWithAnyArgs().CreateItem(default);
@@ -101,7 +101,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Events
                .Returns(true);
             _transactionReceivedEvent
                .OnTransactionReceived(transaction.ToProtocolMessage(MultiAddressHelper.GetAddress(),
-                    CorrelationId.GenerateCorrelationId()))
+                    CorrelationId.GenerateCorrelationId()), true)
                .Should().Be(ResponseCode.Successful);
 
             _mempool.Service.Received(1).CreateItem(Arg.Any<PublicEntryDao>());

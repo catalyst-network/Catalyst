@@ -35,6 +35,8 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using Catalyst.Core.Lib.Extensions;
+using Nethermind.Core;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
 {
@@ -57,14 +59,15 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
         {
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
             var pid = MultiAddressHelper.GetAddress("some_peer");
-            peerReputationChange.Address.Returns(pid);
+            peerReputationChange.Address.Returns(pid.GetKvmAddress());
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(100);
 
             var results = new List<Peer>();
             var subbedPeer = new Peer
             {
-                Address = pid
+                Address = pid,
+                KvmAddress = pid.GetKvmAddress()
             };
             results.Add(subbedPeer);
             SetRepoReturnValue(results);
@@ -75,7 +78,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
 
             _testScheduler.Start();
 
-            _subbedPeerRepository.ReceivedWithAnyArgs(1).GetAll();
+            _subbedPeerRepository.ReceivedWithAnyArgs(1).GetPeersByKvmAddress(Arg.Any<Address>());
             _subbedPeerRepository.ReceivedWithAnyArgs(1).Update(Arg.Is(subbedPeer));
         }
 
@@ -84,7 +87,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
         {
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
             var pid = MultiAddressHelper.GetAddress("some_peer");
-            peerReputationChange.Address.Returns(pid);
+            peerReputationChange.Address.Returns(pid.GetKvmAddress());
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(100);
 
@@ -92,6 +95,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
             var subbedPeer = new Peer
             {
                 Address = pid,
+                KvmAddress = pid.GetKvmAddress(),
                 Reputation = 100
             };
             results.Add(subbedPeer);
@@ -103,7 +107,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
 
             _testScheduler.Start();
 
-            _subbedPeerRepository.ReceivedWithAnyArgs(1).GetAll();
+            _subbedPeerRepository.ReceivedWithAnyArgs(1).GetPeersByKvmAddress(Arg.Any<Address>());
             _subbedPeerRepository.ReceivedWithAnyArgs(1).Update(Arg.Is<Peer>(r => r.Reputation == 200));
         }
 
@@ -112,7 +116,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
         {
             var peerReputationChange = Substitute.For<IPeerReputationChange>();
             var pid = MultiAddressHelper.GetAddress("some_peer");
-            peerReputationChange.Address.Returns(pid);
+            peerReputationChange.Address.Returns(pid.GetKvmAddress());
             peerReputationChange.ReputationEvent.Returns(Substitute.For<IReputationEvents>());
             peerReputationChange.ReputationEvent.Amount.Returns(-100);
 
@@ -120,6 +124,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
             var subbedPeer = new Peer
             {
                 Address = pid,
+                KvmAddress = pid.GetKvmAddress(),
                 Reputation = 100
             };
             results.Add(subbedPeer);
@@ -132,7 +137,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
 
             _testScheduler.Start();
 
-            _subbedPeerRepository.ReceivedWithAnyArgs(1).GetAll();
+            _subbedPeerRepository.ReceivedWithAnyArgs(1).GetPeersByKvmAddress(Arg.Any<Address>());
             _subbedPeerRepository.ReceivedWithAnyArgs(1).Update(Arg.Is<Peer>(r => r.Reputation == 0));
         }
 
@@ -151,7 +156,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
             };
 
             var peerReputationChangeEvent1 = Substitute.For<IPeerReputationChange>();
-            peerReputationChangeEvent1.Address.Returns(pid1);
+            peerReputationChangeEvent1.Address.Returns(pid1.GetKvmAddress());
 
             var subbedPeer2 = new Peer
             {
@@ -160,7 +165,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
             };
 
             var peerReputationChangeEvent2 = Substitute.For<IPeerReputationChange>();
-            peerReputationChangeEvent2.Address.Returns(pid2);
+            peerReputationChangeEvent2.Address.Returns(pid2.GetKvmAddress());
 
             results.Add(subbedPeer1);
             results.Add(subbedPeer2);
@@ -185,11 +190,11 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.ReputationSystem
 
                 _testScheduler.Start();
 
-                streamObserver.Received(1).OnNext(Arg.Is<IPeerReputationChange>(r => r.Address.Equals(pid1)));
-                streamObserver.Received(1).OnNext(Arg.Is<IPeerReputationChange>(r => r.Address.Equals(pid2)));
+                streamObserver.Received(1).OnNext(Arg.Is<IPeerReputationChange>(r => r.Address.Equals(pid1.GetKvmAddress())));
+                streamObserver.Received(1).OnNext(Arg.Is<IPeerReputationChange>(r => r.Address.Equals(pid2.GetKvmAddress())));
             }
         }
 
-        private void SetRepoReturnValue(IEnumerable<Peer> list) { _subbedPeerRepository.GetAll().Returns(list); }
+        private void SetRepoReturnValue(IEnumerable<Peer> list) { _subbedPeerRepository.GetPeersByKvmAddress(Arg.Any<Address>()).Returns(list); }
     }
 }

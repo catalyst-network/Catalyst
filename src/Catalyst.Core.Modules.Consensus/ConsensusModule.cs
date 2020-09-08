@@ -34,7 +34,7 @@ using Catalyst.Core.Modules.Kvm;
 
 namespace Catalyst.Core.Modules.Consensus
 {
-    public class ConsensusModule : Module
+    public class ConsensusModule : Autofac.Module
     {
         protected override void Load(ContainerBuilder builder)
         {
@@ -50,7 +50,9 @@ namespace Catalyst.Core.Modules.Consensus
             builder.RegisterType<DeltaElector>().As<IDeltaElector>().SingleInstance();
             builder.RegisterType<DeltaHashProvider>().As<IDeltaHashProvider>().SingleInstance().WithParameter("capacity", 10_000);
             builder.RegisterType<DeltaCache>().As<IDeltaCache>().SingleInstance()
-               .WithExecutionParameters(builder);
+               .WithExecutionParameters(builder)
+               .WithStateDbParameters(builder);
+
             builder.RegisterType<DeltaVoter>().As<IDeltaVoter>().SingleInstance();
             builder.RegisterType<TransactionComparerByPriceAndHash>().As<ITransactionComparer>();
             builder.RegisterType<DeltaHub>().As<IDeltaHub>().SingleInstance();

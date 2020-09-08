@@ -45,13 +45,13 @@ using Serilog;
 using NUnit.Framework;
 using MultiFormats;
 using Catalyst.Modules.Network.Dotnetty.Abstractions.P2P.IO.Messaging.Broadcast;
+using Catalyst.Core.Modules.Kvm;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
     public sealed class DeltaHubTests
     {
         private IHashProvider _hashProvider;
-        private IBroadcastManager _broadcastManager;
         private MultiAddress _address;
         private DeltaHub _hub;
         private IDfsService _dfsService;
@@ -59,7 +59,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
         private sealed class DeltaHubWithFastRetryPolicy : DeltaHub
         {
-            public DeltaHubWithFastRetryPolicy(IBroadcastManager broadcastManager,
+            public DeltaHubWithFastRetryPolicy(
                 IPeerClient peerClient,
                 IPeerSettings peerSettings,
                 IDfsService dfsService,
@@ -77,18 +77,17 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         {
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _peerClient = Substitute.For<IPeerClient>();
-            _broadcastManager = Substitute.For<IBroadcastManager>();
             var logger = Substitute.For<ILogger>();
             _address = MultiAddressHelper.GetAddress("me");
             _dfsService = Substitute.For<IDfsService>();
-            _hub = new DeltaHubWithFastRetryPolicy(_broadcastManager, _peerClient, _address.ToSubstitutedPeerSettings(), _dfsService, _hashProvider, logger);
+            _hub = new DeltaHubWithFastRetryPolicy(_peerClient, _address.ToSubstitutedPeerSettings(), _dfsService, _hashProvider, logger);
         }
 
         [Test]
         public async Task BroadcastCandidate_should_not_broadcast_candidates_from_other_nodes()
         {
             var notMyCandidate = DeltaHelper.GetCandidateDelta(_hashProvider,
-                producerId: MultiAddressHelper.GetAddress("not me"));
+                producerId: MultiAddressHelper.GetAddress("not me").GetPublicKeyBytes().ToKvmAddress());
 
             _hub.BroadcastCandidate(notMyCandidate);
             await _peerClient.DidNotReceiveWithAnyArgs().BroadcastAsync(default).ConfigureAwait(false);
@@ -98,7 +97,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         public void BroadcastCandidate_should_allow_broadcasting_candidate_from_this_node()
         {
             var myCandidate = DeltaHelper.GetCandidateDelta(_hashProvider,
-                producerId: _address);
+                producerId: _address.GetPublicKeyBytes().ToKvmAddress());
 
             _hub.BroadcastCandidate(myCandidate);
             _peerClient.Received(1)?.BroadcastAsync(Arg.Is<ProtocolMessage>(
@@ -111,7 +110,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var favourite = new FavouriteDeltaBroadcast
             {
                 Candidate = DeltaHelper.GetCandidateDelta(_hashProvider),
-                Voter = _address.ToString()
+                Voter = _address.GetPublicKeyBytes().ToKvmAddressByteString()
             };
 
             _hub.BroadcastFavouriteCandidateDelta(favourite);

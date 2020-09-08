@@ -1,5 +1,5 @@
 var Kovan = artifacts.require("kovan/OwnedSet");
 
 module.exports = function(deployer) {
-    deployer.deploy(Kovan, ["0xb77aec9f59f9d6f39793289a09aea871932619ed"]);
+    deployer.deploy(Kovan, ["0x5fe351dd36e699b1c87b48199a1739d4939fdcbe"]);
 };

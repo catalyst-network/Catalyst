@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Repository;
@@ -37,7 +38,7 @@ using Nethermind.Core.Crypto;
 using Nethermind.Dirichlet.Numerics;
 using Nethermind.Evm.Tracing;
 
-namespace Catalyst.Core.Modules.Web3 
+namespace Catalyst.Core.Modules.Web3
 {
     public static class Web3EthApiExtensions
     {
@@ -95,16 +96,16 @@ namespace Catalyst.Core.Modules.Web3
         {
             return new PublicEntry
             {
-                Nonce = (ulong) api.StateReader.GetNonce(root, transactionCall.From),
-                SenderAddress = transactionCall.From?.Bytes.ToByteString() ?? ByteString.Empty,
+                Nonce = (ulong)api.StateReader.GetNonce(root, transactionCall.From),
+                SenderAddress = transactionCall.From.Bytes.ToByteString(),
                 ReceiverAddress = transactionCall.To?.Bytes.ToByteString() ?? ByteString.Empty,
-                GasLimit = (ulong) transactionCall.Gas.GetValueOrDefault(),
+                GasLimit = (ulong)transactionCall.Gas.GetValueOrDefault(),
                 GasPrice = transactionCall.GasPrice.GetValueOrDefault().ToUint256ByteString(),
-                Amount = transactionCall.Value.GetValueOrDefault().ToUint256ByteString(), 
+                Amount = transactionCall.Value.GetValueOrDefault().ToUint256ByteString(),
                 Data = transactionCall.Data?.ToByteString() ?? ByteString.Empty
             };
         }
-        
+
         public static TransactionForRpc ToTransactionForRpc(this IWeb3EthApi api, DeltaWithCid deltaWithCid, int transactionIndex)
         {
             var (delta, deltaCid) = deltaWithCid;
@@ -115,7 +116,7 @@ namespace Catalyst.Core.Modules.Web3
             {
                 GasPrice = publicEntry.GasPrice.ToUInt256(),
                 BlockHash = deltaCid,
-                BlockNumber = (UInt256) deltaNumber,
+                BlockNumber = (UInt256)deltaNumber,
                 Nonce = publicEntry.Nonce,
                 To = ToAddress(publicEntry.ReceiverAddress),
                 From = ToAddress(publicEntry.SenderAddress),
@@ -126,8 +127,37 @@ namespace Catalyst.Core.Modules.Web3
                 S = new byte[0],
                 V = UInt256.Zero,
                 Gas = publicEntry.GasLimit,
-                TransactionIndex = (UInt256) transactionIndex
+                TransactionIndex = (UInt256)transactionIndex
             };
+        }
+
+        public static IEnumerable<TransactionForRpc> ToTransactionsForRpc(this IWeb3EthApi api, DeltaWithCid deltaWithCid)
+        {
+            var (delta, deltaCid) = deltaWithCid;
+            var publicEntries = delta.PublicEntries;
+            var deltaNumber = delta.DeltaNumber;
+
+            for (var i = 0; i < publicEntries.Count; i++)
+            {
+                var publicEntry = publicEntries[i];
+                yield return new TransactionForRpc
+                {
+                    GasPrice = publicEntry.GasPrice.ToUInt256(),
+                    BlockHash = deltaCid,
+                    BlockNumber = (UInt256)deltaNumber,
+                    Nonce = publicEntry.Nonce,
+                    To = ToAddress(publicEntry.ReceiverAddress),
+                    From = ToAddress(publicEntry.SenderAddress),
+                    Value = publicEntry.Amount.ToUInt256(),
+                    Hash = publicEntry.GetHash(api.HashProvider),
+                    Data = publicEntry.Data.ToByteArray(),
+                    R = new byte[0],
+                    S = new byte[0],
+                    V = UInt256.Zero,
+                    Gas = publicEntry.GasLimit,
+                    TransactionIndex = (UInt256)i
+                };
+            }
         }
 
         public static Address ToAddress(ByteString address)

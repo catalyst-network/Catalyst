@@ -27,7 +27,7 @@ using SharpRepository.MongoDbRepository;
 
 namespace Catalyst.TestUtils.Repository
 {
-    public sealed class MongoDbTestModule<TDao> : Module
+    public sealed class MongoDbTestModule<TDao> : Autofac.Module
         where TDao : DaoBase, new()
 
     {

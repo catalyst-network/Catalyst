@@ -36,7 +36,7 @@ namespace Catalyst.Core.Lib.Config
     {
         /// <inheritdoc />
         public void RunConfigStartUp(string dataDir,
-            NetworkType networkType = NetworkType.Devnet,
+            NetworkType networkType,
             string sourceFolder = null,
             bool overwrite = false,
             string overrideNetworkFile = null)

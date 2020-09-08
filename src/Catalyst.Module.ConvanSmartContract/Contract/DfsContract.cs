@@ -2,7 +2,6 @@
 using System;
 using System.Collections.Generic;
 using Nethermind.Abi;
-using Nethermind.Consensus.AuRa;
 using Nethermind.Consensus.AuRa.Contracts;
 using Nethermind.Core;
 using Nethermind.Evm;
@@ -11,7 +10,7 @@ using Nethermind.State;
 
 namespace Catalyst.Module.ConvanSmartContract
 {
-    public class DfsSmartContract : Contract
+    public class DfsSmartContract : Nethermind.Consensus.AuRa.Contracts.Contract
     {
         private readonly IAbiEncoder _abiEncoder;
 

@@ -30,7 +30,7 @@ using SharpRepository.Repository;
 
 namespace Catalyst.TestUtils.Repository
 {
-    public sealed class EfCoreDbTestModule : Module
+    public sealed class EfCoreDbTestModule : Autofac.Module
     {
         private readonly string _connectionString;
         public EfCoreDbTestModule(string connectionString) { _connectionString = connectionString; }

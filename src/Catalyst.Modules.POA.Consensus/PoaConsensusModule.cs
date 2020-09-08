@@ -27,7 +27,7 @@ using Catalyst.Modules.POA.Consensus.Deltas;
 
 namespace Catalyst.Modules.POA.Consensus
 {
-    public class PoaConsensusModule : Module
+    public class PoaConsensusModule : Autofac.Module
     {
         protected override void Load(ContainerBuilder builder)
         {

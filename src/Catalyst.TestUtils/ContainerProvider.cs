@@ -40,6 +40,7 @@ using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.KeySigner;
 using Catalyst.Core.Modules.Keystore;
+using Catalyst.Core.Modules.Kvm;
 using DotNetty.Common.Internal.Logging;
 using Microsoft.Extensions.Configuration;
 using Nethermind.Db;
@@ -128,9 +129,7 @@ namespace Catalyst.TestUtils
             ContainerBuilder.RegisterModule(new KeystoreModule());
             ContainerBuilder.RegisterModule(new KeySignerModule());
             ContainerBuilder.RegisterModule(new HashingModule());
-
-            ContainerBuilder.RegisterInstance(new MemDb()).As<IDb>().SingleInstance();
-            ContainerBuilder.RegisterInstance(new StateDb()).As<ISnapshotableDb>().SingleInstance();
+            ContainerBuilder.RegisterModule(new KvmModule(true));
 
             var inMemoryStore = new InMemoryStore<string, EncryptedKey>();
             ContainerBuilder.RegisterInstance(inMemoryStore).As<IStore<string, EncryptedKey>>().SingleInstance();

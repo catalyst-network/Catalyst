@@ -49,6 +49,7 @@ using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
 using Nethermind.Dirichlet.Numerics;
 using NUnit.Framework;
+using Catalyst.Core.Modules.Kvm;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 {
@@ -168,7 +169,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             var original = new CandidateDeltaBroadcast
             {
                 Hash = MultiBase.Decode(hash.ToCid()).ToByteString(),
-                Producer = MultiAddressHelper.GetAddress("test").ToString(),
+                Producer = MultiAddressHelper.GetAddress("test").GetKvmAddressByteString(),
                 PreviousDeltaDfsHash = MultiBase.Decode(previousHash.ToCid()).ToByteString()
             };
 
@@ -203,8 +204,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         {
             var original = new FavouriteDeltaBroadcast
             {
-                Candidate = DeltaHelper.GetCandidateDelta(_hashProvider, producerId: MultiAddressHelper.GetAddress("not me")),
-                Voter = MultiAddressHelper.GetAddress("test").ToString()
+                Candidate = DeltaHelper.GetCandidateDelta(_hashProvider, producerId: MultiAddressHelper.GetAddress("not me").GetKvmAddress()),
+                Voter = MultiAddressHelper.GetAddress("test").GetKvmAddressByteString()
             };
 
             var contextDao = original.ToDao<FavouriteDeltaBroadcast, FavouriteDeltaBroadcastDao>(_mapperProvider);
@@ -221,12 +222,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 
             var original = new CoinbaseEntry
             {
-                ReceiverPublicKey = pubKeyBytes.ToByteString(),
+                ReceiverKvmAddress = pubKeyBytes.ToKvmAddressByteString(),
                 Amount = 271314.ToUint256ByteString()
             };
 
             var messageDao = original.ToDao<CoinbaseEntry, CoinbaseEntryDao>(_mapperProvider);
-            messageDao.ReceiverPublicKey.Should().Be(pubKeyBytes.KeyToString());
+            messageDao.ReceiverKvmAddress.Should().Be(pubKeyBytes.ToKvmAddress().ToString());
 
             var reconverted = messageDao.ToProtoBuff<CoinbaseEntryDao, CoinbaseEntry>(_mapperProvider);
             reconverted.Should().Be(original);

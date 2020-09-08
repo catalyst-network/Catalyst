@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -70,18 +69,14 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
         {
             try
             {
-                var peer = PeerRepository.GetAll().FirstOrDefault(p => p.Address.Equals(peerReputationChange.Address));
-                //todo come back to later
-                if (peer == null)
+                var peers = PeerRepository.GetPeersByKvmAddress(peerReputationChange.Address);
+                foreach (var peer in peers)
                 {
-                    return;
+                    Guard.Argument(peer, nameof(peer)).NotNull();
+
+                    peer.Reputation += peerReputationChange.ReputationEvent.Amount;
+                    PeerRepository.Update(peer);
                 }
-
-                Guard.Argument(peer, nameof(peer)).NotNull();
-
-                // ReSharper disable once PossibleNullReferenceException
-                peer.Reputation += peerReputationChange.ReputationEvent.Amount;
-                PeerRepository.Update(peer);
             }
             catch (Exception e)
             {

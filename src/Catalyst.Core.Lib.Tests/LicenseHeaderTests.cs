@@ -31,7 +31,6 @@ using Catalyst.TestUtils;
 using FluentAssertions;
 using NUnit.Framework;
 
-
 namespace Catalyst.Core.Lib.Tests
 {
     public class LicenseHeaderTests : FileSystemBasedTest

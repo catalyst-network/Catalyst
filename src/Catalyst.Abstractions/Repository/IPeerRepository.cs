@@ -25,8 +25,8 @@ using System;
 using System.Collections.Generic;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Protocol.Peer;
-using Google.Protobuf;
 using MultiFormats;
+using Nethermind.Core;
 
 namespace Catalyst.Abstractions.P2P.Repository
 {
@@ -39,6 +39,7 @@ namespace Catalyst.Abstractions.P2P.Repository
         IEnumerable<Peer> GetActivePoaPeers();
         IEnumerable<Peer> GetRandomPeers(int count);
         IEnumerable<Peer> GetPeersByAddress(MultiAddress address);
+        IEnumerable<Peer> GetPeersByKvmAddress(Address kvmAddress);
         IEnumerable<Peer> GetPoaPeersByPublicKey(string publicKeyBase58);
 
         void Add(Peer peer);

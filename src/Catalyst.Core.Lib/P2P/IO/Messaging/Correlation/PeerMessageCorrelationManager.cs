@@ -82,7 +82,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Correlation
             {
                 Logger.Debug($"{response.CorrelationId} message not found");
 
-                _reputationEvent.OnNext(new ReputationChange(response.Address,
+                _reputationEvent.OnNext(new ReputationChange(new MultiAddress(response.Address),
                     ReputationEventType.UnCorrelatableMessage)
                 );
                 return false;
@@ -91,7 +91,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Messaging.Correlation
             ValidateResponseType(response, message);
 
             Logger.Debug($"{response.CorrelationId} message found");
-            _reputationEvent.OnNext(new ReputationChange(message.Recipient,
+            _reputationEvent.OnNext(new ReputationChange(message.Recipient.GetKvmAddress(),
                 ReputationEventType.ResponseReceived)
             );
             return true;

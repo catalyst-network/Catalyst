@@ -6,12 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <None Remove="ValidatorContract2.json" />
-    <None Remove="ValidatorContract2json" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <EmbeddedResource Include="ValidatorContract2.json" />
+    <EmbeddedResource Include="ValidatorSet.json" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,6 +18,8 @@
     <ProjectReference Include="..\..\submodules\nethermind\src\Nethermind\Nethermind.Evm\Nethermind.Evm.csproj" />
     <ProjectReference Include="..\..\submodules\nethermind\src\Nethermind\Nethermind.Facade\Nethermind.Facade.csproj" />
     <ProjectReference Include="..\..\submodules\nethermind\src\Nethermind\Nethermind.Specs\Nethermind.Specs.csproj" />
+    <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
+    <ProjectReference Include="..\Catalyst.Core.Modules.Web3\Catalyst.Core.Modules.Web3.csproj" />
   </ItemGroup>
 
 </Project>

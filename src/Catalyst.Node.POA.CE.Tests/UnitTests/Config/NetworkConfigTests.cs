@@ -27,6 +27,7 @@ using System.Linq;
 using System.Net;
 using Autofac;
 using Autofac.Configuration;
+using Catalyst.Abstractions.Config;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Protocol.Network;
@@ -88,9 +89,11 @@ namespace Catalyst.Node.POA.CE.Tests.UnitTests.Config
             };
 
             var config = Substitute.For<IConfigApi>();
+            var networkTypeProvider = Substitute.For<INetworkTypeProvider>();
+            networkTypeProvider.NetworkType.Returns(NetworkType.Devnet);
             var swarm = JToken.FromObject(new List<string> { $"/ip4/0.0.0.0/tcp/4100" });
             config.GetAsync("Addresses.Swarm").Returns(swarm);
-            var peerSettings = new PeerSettings(configRoot, peer, config);
+            var peerSettings = new PeerSettings(configRoot, peer, config, networkTypeProvider);
 
             peerSettings.Should().NotBeNull();
             peerSettings.NetworkType.Should().NotBeNull();
