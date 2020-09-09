@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Linq;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P.Repository;
@@ -43,7 +42,6 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
         private readonly IDeltaHashProvider _deltaHashProvider;
         private readonly IDeltaElector _deltaElector;
         private readonly SyncState _syncState;
-        private readonly IPeerRepository _peerRepository;
 
         public DeltaDfsHashObserver(IDeltaHashProvider deltaHashProvider,
             IDeltaElector deltaElector,
@@ -57,7 +55,6 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
             _syncState = syncState;
             _deltaHashProvider = deltaHashProvider;
             _deltaElector = deltaElector;
-            _peerRepository = peerRepository;
         }
 
         public override void HandleBroadcast(ProtocolMessage message)
@@ -85,12 +82,6 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
                 }
 
                 var multiAddress = new MultiAddress(message.Address);
-                //var messagePoaNode = _peerRepository.GetPoaPeersByPublicKey(multiAddress.GetPublicKey()).FirstOrDefault();
-                //if (messagePoaNode == null)
-                //{
-                //    Logger.Error($"Message from IP address '{multiAddress.GetIpAddress()}' with public key '{multiAddress.GetPublicKey()}' is not found in producer node list.");
-                //    return;
-                //}
 
                 //Add functionality to check Candidate MerkleRoot against transactions in delta
                 var mostPopularDelta = _deltaElector.GetMostPopularCandidateDelta(previousHash);

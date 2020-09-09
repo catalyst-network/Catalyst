@@ -22,16 +22,14 @@
 #endregion
 
 using System;
-using System.Linq;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.P2P.Repository;
+using Catalyst.Abstractions.Ledger;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Wire;
-using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Consensus.IO.Observers
@@ -40,20 +38,25 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
     {
         private readonly IDeltaElector _deltaElector;
         private readonly IHashProvider _hashProvider;
-        private readonly IPeerRepository _peerRepository;
+        private readonly ILedgerInformation _ledgerInformation;
 
-        public FavouriteDeltaObserver(IDeltaElector deltaElector, IPeerRepository peerRepository, IHashProvider hashProvider, ILogger logger)
+        public FavouriteDeltaObserver(IDeltaElector deltaElector, IHashProvider hashProvider, ILedgerInformation ledgerInformation, ILogger logger)
             : base(logger)
         {
             _deltaElector = deltaElector;
             _hashProvider = hashProvider;
-            _peerRepository = peerRepository;
+            _ledgerInformation = ledgerInformation;
         }
 
         public override void HandleBroadcast(ProtocolMessage message)
         {
             try
             {
+                if (!_ledgerInformation.IsConcensusReady)
+                {
+                    return;
+                }
+
                 var deserialized = message.FromProtocolMessage<FavouriteDeltaBroadcast>();
 
                 var previousDeltaDfsHashCid = deserialized.Candidate.PreviousDeltaDfsHash.ToByteArray().ToCid();
@@ -69,14 +72,6 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
                     Logger.Error("Hash is not a valid hash");
                     return;
                 }
-
-                //var multiAddress = new MultiAddress(message.Address);
-                //var messagePoaNode = _peerRepository.GetPoaPeersByPublicKey(multiAddress.GetPublicKey()).FirstOrDefault();
-                //if (messagePoaNode == null)
-                //{
-                //    Logger.Error($"Message from IP address '{multiAddress.GetIpAddress()}' with public key '{multiAddress.GetPublicKey()}' is not found in producer node list.");
-                //    return;
-                //}
 
                 deserialized.IsValid();
 

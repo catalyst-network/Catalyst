@@ -58,6 +58,8 @@ namespace Catalyst.Core.Modules.Ledger
             .WithExecutionParameters(builder)
             .WithStateDbParameters(builder);
 
+            builder.RegisterType<LedgerInformation>().As<ILedgerInformation>().SingleInstance();
+
             builder.RegisterType<Web3EthApi>().As<IWeb3EthApi>().SingleInstance().WithExecutionParameters(builder);
 
             builder.RegisterType<CallableContractProxy>().As<ICallableContractProxy>().SingleInstance().WithExecutionParameters(builder);

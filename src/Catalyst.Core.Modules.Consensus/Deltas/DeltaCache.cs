@@ -95,6 +95,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
 
             var genesisDelta = new Delta
             {
+                DeltaNumber = 0,
                 TimeStamp = Timestamp.FromDateTime(DateTime.UnixEpoch),
                 StateRoot = ByteString.CopyFrom(stateProvider.StateRoot.Bytes),
             };

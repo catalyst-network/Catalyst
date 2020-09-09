@@ -97,7 +97,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                    .GetDeltaProducersFromPreviousDelta(cid)
                    .Any(p => p.Equals(candidateAddress)))
                 {
-                    var reputationChange = new ReputationChange(new Address(candidate.Voter.ToByteArray()), ReputationEventType.VoterIsNotProducer);
+                    var reputationChange = new ReputationChange(candidateAddress, ReputationEventType.VoterIsNotProducer);
                     _reputationManager.OnNext(reputationChange);
 
                     _logger.Debug(

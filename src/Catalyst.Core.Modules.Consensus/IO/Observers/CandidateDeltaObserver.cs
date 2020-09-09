@@ -22,10 +22,10 @@
 #endregion
 
 using System;
-using System.Linq;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
@@ -44,20 +44,25 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
     {
         private readonly IDeltaVoter _deltaVoter;
         private readonly IHashProvider _hashProvider;
-        private readonly IPeerRepository _peerRepository;
+        private readonly ILedgerInformation _ledgerInformation;
 
-        public CandidateDeltaObserver(IDeltaVoter deltaVoter, IPeerRepository peerRepository, IHashProvider provider, ILogger logger)
+        public CandidateDeltaObserver(IDeltaVoter deltaVoter, IPeerRepository peerRepository, IHashProvider provider, ILedgerInformation ledgerInformation, ILogger logger)
             : base(logger)
         {
             _deltaVoter = deltaVoter;
-            _peerRepository = peerRepository;
             _hashProvider = provider;
+            _ledgerInformation = ledgerInformation;
         }
 
         public override void HandleBroadcast(ProtocolMessage message)
         {
             try
             {
+                if (!_ledgerInformation.IsConcensusReady)
+                {
+                    return;
+                }
+
                 var multiAddress = new MultiAddress(message.Address);
                 Logger.Verbose("received {message} from {port}", message.CorrelationId.ToCorrelationId(),
                     multiAddress.GetPort());
@@ -83,13 +88,6 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
                     Logger.Error("Hash is not a valid hash");
                     return;
                 }
-
-                //var messagePoaNode = _peerRepository.GetPoaPeersByPublicKey(multiAddress.GetPublicKey()).FirstOrDefault();
-                //if (messagePoaNode == null)
-                //{
-                //    Logger.Error($"Message from IP address '{multiAddress.GetIpAddress()}' with public key '{multiAddress.GetPublicKey()}' is not found in producer node list.");
-                //    return;
-                //}
 
                 if (deserialized.IsValid())
                 {
