@@ -63,9 +63,6 @@ namespace Catalyst.Node.POA.CE
 {
     internal class Options
     {
-        [Option("ipfs-password", HelpText = "The password for IPFS.  Defaults to prompting for the password.")]
-        public string IpfsPassword { get; set; }
-
         [Option("ssl-cert-password", HelpText = "The password for ssl cert.  Defaults to prompting for the password.")]
         public string SslCertPassword { get; set; }
 
@@ -84,6 +81,9 @@ namespace Catalyst.Node.POA.CE
 
         [Option('r', "reset", HelpText = "Reset the state")]
         public bool Reset { get; set; }
+
+        [Option('u', "uninstall", HelpText = "Uninstall the node after execution")]
+        public bool Uninstall { get; set; }
     }
 
     public static class Program
