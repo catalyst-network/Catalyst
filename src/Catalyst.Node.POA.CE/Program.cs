@@ -58,6 +58,7 @@ using System.Linq;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
+using Catalyst.Core.Lib.FileSystem;
 
 namespace Catalyst.Node.POA.CE
 {
@@ -201,6 +202,11 @@ namespace Catalyst.Node.POA.CE
                    .WithPassword(PasswordRegistryTypes.CertificatePassword, options.SslCertPassword)
                    .Reset(options.Reset)
                    .StartCustomAsync(CustomBootLogicAsync);
+                if (options.Uninstall)
+                {
+                    Kernel.Logger.Debug("Uninstalling the Catalyst Node"); 
+                    new FileSystem().GetCatalystDataDir().Delete(true);
+                }
 
                 return 0;
             }
