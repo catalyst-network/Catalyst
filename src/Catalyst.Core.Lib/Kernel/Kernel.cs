@@ -251,9 +251,9 @@ namespace Catalyst.Core.Lib.Kernel
             }
         }
 
-        public Kernel Reset(bool reset)
+        public Kernel Reset(bool shouldReset)
         {
-            if (reset)
+            if (shouldReset)
             {
                 Logger.Information("Resetting State");
 
@@ -321,9 +321,9 @@ namespace Catalyst.Core.Lib.Kernel
             return this;
         }
         
-        public Kernel Uninstall(bool uninstall)
+        public Kernel Uninstall(bool shouldUninstall)
         {
-            if (uninstall)
+            if (shouldUninstall)
             {
                 Logger.Information("Uninstalling Catalyst Node");
                 
