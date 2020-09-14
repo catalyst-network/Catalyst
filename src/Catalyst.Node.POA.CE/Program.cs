@@ -201,6 +201,7 @@ namespace Catalyst.Node.POA.CE
                    .WithPassword(PasswordRegistryTypes.DefaultNodePassword, options.NodePassword)
                    .WithPassword(PasswordRegistryTypes.CertificatePassword, options.SslCertPassword)
                    .Reset(options.Reset)
+                   .Uninstall(options.Uninstall)
                    .StartCustomAsync(CustomBootLogicAsync);
                 if (options.Uninstall)
                 {

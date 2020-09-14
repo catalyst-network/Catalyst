@@ -251,6 +251,18 @@ namespace Catalyst.Core.Lib.Kernel
             }
         }
 
+        public Kernel Uninstall(bool uninstall)
+        {
+            if (uninstall)
+            {
+                Logger.Information("Uninstalling Catalyst Node");
+                
+                new FileSystem.FileSystem().GetCatalystDataDir().Delete(true);
+            }
+
+            return this;
+        }
+
         public Kernel Reset(bool reset)
         {
             if (reset)
