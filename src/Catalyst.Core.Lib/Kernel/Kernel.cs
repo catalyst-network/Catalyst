@@ -251,9 +251,9 @@ namespace Catalyst.Core.Lib.Kernel
             }
         }
 
-        public Kernel Reset(bool reset)
+        public Kernel Reset(bool shouldReset)
         {
-            if (reset)
+            if (shouldReset)
             {
                 Logger.Information("Resetting State");
 
@@ -316,6 +316,18 @@ namespace Catalyst.Core.Lib.Kernel
                         mempool.Delete(mempoolItem);
                     }
                 });
+            }
+
+            return this;
+        }
+        
+        public Kernel Uninstall(bool shouldUninstall)
+        {
+            if (shouldUninstall)
+            {
+                Logger.Information("Uninstalling Catalyst Node");
+                
+                new FileSystem.FileSystem().GetCatalystDataDir().Delete(true);
             }
 
             return this;
