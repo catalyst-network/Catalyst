@@ -63,9 +63,9 @@ namespace Catalyst.Core.Modules.Kvm
 
             var catDir = new FileSystem().GetCatalystDataDir().FullName;
             var codeDb = _useInMemoryDb ? new MemDb() : (IDb)new CodeRocksDb(catDir, DbConfig.Default);
-            var code = new StateDb(codeDb);
+            StateDb code = new(codeDb);
             var stateDb = _useInMemoryDb ? new MemDb() : (IDb)new StateRocksDb(catDir, DbConfig.Default);
-            var state = new StateDb(stateDb);
+            StateDb state = new(stateDb);
 
             builder.RegisterInstance(code).As<IDb>().Named<IDb>("codeDb").SingleInstance();
             builder.RegisterInstance(state).As<IDb>().Named<IDb>("stateDb").SingleInstance();
@@ -98,10 +98,10 @@ namespace Catalyst.Core.Modules.Kvm
         {
             var serviceName = Guid.NewGuid().ToString();
 
-            var stateProvider = new ByTypeNamedParameter<IStateProvider>(serviceName);
-            var storageProvider = new ByTypeNamedParameter<IStorageProvider>(serviceName);
-            var kvm = new ByTypeNamedParameter<IKvm>(serviceName);
-            var executor = new ByTypeNamedParameter<IDeltaExecutor>(serviceName);
+            ByTypeNamedParameter<IStateProvider> stateProvider = new(serviceName);
+            ByTypeNamedParameter<IStorageProvider> storageProvider = new(serviceName);
+            ByTypeNamedParameter<IKvm> kvm = new(serviceName);
+            ByTypeNamedParameter<IDeltaExecutor> executor = new(serviceName);
 
             builder.RegisterType<StateProvider>().Named<IStateProvider>(serviceName).SingleInstance()
             .WithStateDbParameters(builder);

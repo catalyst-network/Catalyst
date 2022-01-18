@@ -227,7 +227,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [Test]
         public void When_second_candidate_is_more_popular_it_should_score_higher()
         {
-            using (var realCache = new MemoryCache(new MemoryCacheOptions()))
+            using (MemoryCache realCache = new(new MemoryCacheOptions()))
             {
                 _voter = new DeltaVoter(realCache, _producersProvider, _peerSettings, _logger);
 
@@ -273,7 +273,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [Test]
         public void When_candidates_not_in_cache_should_create_or_update_a_previous_hash_entry()
         {
-            using (var realCache = new MemoryCache(new MemoryCacheOptions()))
+            using (MemoryCache realCache = new(new MemoryCacheOptions()))
             {
                 _voter = new DeltaVoter(realCache, _producersProvider, _peerSettings, _logger);
 
@@ -316,7 +316,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [Test]
         public void GetFavouriteDelta_should_retrieve_favourite_delta()
         {
-            using (var realCache = new MemoryCache(new MemoryCacheOptions()))
+            using (MemoryCache realCache = new(new MemoryCacheOptions()))
             {
                 _voter = new DeltaVoter(realCache, _producersProvider, _peerSettings, _logger);
 
@@ -342,7 +342,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [Test]
         public void GetFavouriteDelta_should_return_null_on_unknown_previous_delta_hash()
         {
-            using (var realCache = new MemoryCache(new MemoryCacheOptions()))
+            using (MemoryCache realCache = new(new MemoryCacheOptions()))
             {
                 _voter = new DeltaVoter(realCache, _producersProvider, _peerSettings, _logger);
 
@@ -360,7 +360,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [Test]
         public void GetFavouriteDelta_should_return_lowest_hash_when_candidate_scores_are_equal()
         {
-            using (var realCache = new MemoryCache(new MemoryCacheOptions()))
+            using (MemoryCache realCache = new(new MemoryCacheOptions()))
             {
                 _voter = new DeltaVoter(realCache, _producersProvider, _peerSettings, _logger);
 

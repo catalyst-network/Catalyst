@@ -48,7 +48,7 @@ namespace Catalyst.Abstractions.Hashing
 
             try
             {
-                using (var output = new CodedOutputStream(array))
+                using (CodedOutputStream output = new(array))
                 {
                     message.WriteTo(output);
                 }
@@ -110,7 +110,7 @@ namespace Catalyst.Abstractions.Hashing
 
             try
             {
-                using (var output = new CodedOutputStream(array))
+                using (CodedOutputStream output = new(array))
                 {
                     message.WriteTo(output);
                 }

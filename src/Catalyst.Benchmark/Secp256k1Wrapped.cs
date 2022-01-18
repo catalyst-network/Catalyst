@@ -32,7 +32,7 @@ namespace Catalyst.Benchmark
     [BenchmarkCategory("secp256k1")]
     public class Secp256k1Wrapped
     {
-        private static readonly SecureRandom Random = new SecureRandom();
+        private static readonly SecureRandom Random = new();
 
         private byte[] _privateKey;
         private byte[] _publicKey;

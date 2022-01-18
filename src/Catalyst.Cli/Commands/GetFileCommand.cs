@@ -60,11 +60,11 @@ namespace Catalyst.Cli.Commands
             var protocolMessage = message.ToProtocolMessage(SenderAddress);
             var correlationId = protocolMessage.CorrelationId.ToCorrelationId();
 
-            var messageDto = new MessageDto(
+            MessageDto messageDto = new(
                 protocolMessage,
                 RecipientAddress);
 
-            var fileTransfer = new DownloadFileTransferInformation(
+            DownloadFileTransferInformation fileTransfer = new(
                 SenderAddress,
                 RecipientAddress,
                 Target.Channel,

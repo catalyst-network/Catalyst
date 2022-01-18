@@ -71,8 +71,8 @@ namespace Catalyst.Modules.Network.Dotnetty.P2P.IO.Transport.Channels
             _keySigner = keySigner;
             _peerIdValidator = peerIdValidator;
             _signingContext = new SigningContext {NetworkType = peerSettings.NetworkType, SignatureType = SignatureType.ProtocolPeer};
-            
-            var messageSubject = new ReplaySubject<ProtocolMessage>();
+
+            ReplaySubject<ProtocolMessage> messageSubject = new();
             MessageStream = messageSubject.AsObservable();
         }
 

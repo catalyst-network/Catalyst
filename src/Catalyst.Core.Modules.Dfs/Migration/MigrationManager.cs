@@ -79,7 +79,7 @@ namespace Catalyst.Core.Modules.Dfs.Migration
                     return 0;
                 }
                 
-                using (var reader = new StreamReader(path))
+                using (StreamReader reader = new(path))
                 {
                     var s = reader.ReadLine();
                     return int.Parse(s ?? throw new NullReferenceException(("stream null")));

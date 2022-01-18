@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <Title>Catalyst POA Node</Title>
-        <Authors>James Kirby (nshcore@protonmail.com)</Authors>
+        <Authors>Darren Priestnall (darren.op@catalystnet.org)</Authors>
         <PackageDescription>Catalyst POA Node</PackageDescription>
         <AssemblyCopyrightAttribute>Copyright © 2019 AtlasCity.io</AssemblyCopyrightAttribute>
         <OutputType>Exe</OutputType>
@@ -20,10 +20,10 @@
       <None Remove="Config\nodes.json" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="CommandLineParser" Version="2.5.0" />
+        <PackageReference Include="CommandLineParser" Version="2.8.0" />
         <PackageReference Include="SharpRepository.InMemoryRepository" Version="2.0.3.1" />
-        <PackageReference Include="SharpRepository.Ioc.Autofac" Version="2.0.4.2" />
-        <PackageReference Include="SharpRepository.MongoDbRepository" Version="2.1.0-prerelease" />
+        <PackageReference Include="SharpRepository.Ioc.Autofac" Version="2.2.0" />
+        <PackageReference Include="SharpRepository.MongoDbRepository" Version="2.1.1" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\Catalyst.Core.Modules.Authentication\Catalyst.Core.Modules.Authentication.csproj" />

@@ -52,7 +52,7 @@ namespace Lib.P2P.Routing
         }
 
         private ConcurrentDictionary<string, List<ProviderInfo>> _content =
-            new ConcurrentDictionary<string, List<ProviderInfo>>();
+            new();
 
         private string Key(Cid cid) { return "/providers/" + cid.Hash.ToBase32(); }
 

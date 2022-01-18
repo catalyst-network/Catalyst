@@ -1,4 +1,4 @@
-﻿<Project>
+<Project>
     <PropertyGroup>
         <Company>catalystnet.org</Company>
         <Copyright>Copyright © 2019 Catalyst Network</Copyright>
@@ -6,8 +6,8 @@
         <PackageLicenseUrl>http://opensource.org/licenses/GPL-3.0</PackageLicenseUrl>
         <RepositoryUrl>https://github.com/Catalyst-network/Catalyst.Node</RepositoryUrl>
         <RepositoryType>git</RepositoryType>
-        <RuntimeFrameworkVersion>3.0.0</RuntimeFrameworkVersion>
-        <LangVersion>8.0</LangVersion>
+        <RuntimeFrameworkVersion>6.0.0</RuntimeFrameworkVersion>
+        <LangVersion>latest</LangVersion>
         <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
         <Deterministic>true</Deterministic>
         <PlatformTarget>AnyCPU</PlatformTarget>

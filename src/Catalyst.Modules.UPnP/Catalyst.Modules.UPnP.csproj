@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <Title>UPnP CLI</Title>
         <PackageDescription>CLI tool to set up port forwarding</PackageDescription>
         <AssemblyCopyrightAttribute>Copyright © 2020 AtlasCity.io</AssemblyCopyrightAttribute>
@@ -15,10 +15,10 @@
         <NoWarn>1701;1702;CS8002</NoWarn>
     </PropertyGroup>
     <ItemGroup>
-        <PackageReference Include="Mono.Nat" Version="2.0.0" />
-        <PackageReference Include="CommandLineParser" Version="2.5.0" />
-        <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
-        <PackageReference Include="Serilog" Version="2.8.0" />
-        <PackageReference Include="Serilog.Sinks.Console" Version="3.1.1" />
+        <PackageReference Include="Mono.Nat" Version="3.0.2" />
+        <PackageReference Include="CommandLineParser" Version="2.8.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
+        <PackageReference Include="Serilog" Version="2.10.0" />
+        <PackageReference Include="Serilog.Sinks.Console" Version="4.0.1" />
     </ItemGroup>
 </Project>

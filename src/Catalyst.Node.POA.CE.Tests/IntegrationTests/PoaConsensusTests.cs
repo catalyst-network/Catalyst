@@ -52,7 +52,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 
             ContainerProvider.ConfigureContainerBuilder(true, true, true);
 
-            var context = new FfiWrapper();
+            FfiWrapper context = new();
 
             _endOfTestCancellationSource = new CancellationTokenSource();
 
@@ -69,7 +69,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             _nodes = new List<PoaTestNode>();
             foreach (var nodeDetails in poaNodeDetails)
             {
-                var node = new PoaTestNode(nodeDetails.index, true, nodeDetails.fileSystem);
+                PoaTestNode node = new(nodeDetails.index, true, nodeDetails.fileSystem);
                 _nodes.Add(node);
             }
         }
@@ -96,7 +96,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 
             //At least one delta should be produced
             var maxDeltasProduced = 1;
-            var files = new List<string>();
+            List<string> files = new();
             for (var i = 0; i < _nodes.Count; i++)
             {
                 var dfsDir = Path.Combine(FileSystem.GetCatalystDataDir().FullName, $"producer{i}/dfs", "blocks");

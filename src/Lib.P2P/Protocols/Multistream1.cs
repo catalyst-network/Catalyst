@@ -42,7 +42,7 @@ namespace Lib.P2P.Protocols
         public string Name { get; } = "multistream";
 
         /// <inheritdoc />
-        public SemVersion Version { get; } = new SemVersion(1);
+        public SemVersion Version { get; } = new(1);
 
         /// <inheritdoc />
         public override string ToString() { return $"/{Name}/{Version}"; }

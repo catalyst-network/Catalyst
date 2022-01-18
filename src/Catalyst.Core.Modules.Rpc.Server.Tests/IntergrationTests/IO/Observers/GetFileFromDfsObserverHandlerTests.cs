@@ -92,10 +92,10 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.IntegrationTests.IO.Observers
                 IDownloadFileInformation fileDownloadInformation = new DownloadFileTransferInformation(rpcPeer,
                     nodePeer,
                     _fakeContext.Channel, correlationId, fakeFileOutputPath, 0);
-                var getFileFromDfsResponseHandler =
-                    new GetFileFromDfsResponseObserver(_logger, _fileDownloadFactory);
-                var transferBytesHandler =
-                    new TransferFileBytesRequestObserver(_fileDownloadFactory, peerSettings, _logger);
+                GetFileFromDfsResponseObserver getFileFromDfsResponseHandler =
+                    new(_logger, _fileDownloadFactory);
+                TransferFileBytesRequestObserver transferBytesHandler =
+                    new(_fileDownloadFactory, peerSettings, _logger);
 
                 _fileDownloadFactory.RegisterTransfer(fileDownloadInformation);
 

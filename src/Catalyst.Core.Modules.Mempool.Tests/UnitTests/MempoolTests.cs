@@ -107,7 +107,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
         public void Delete_should_log_deletion_errors()
         {
             var keys = Enumerable.Range(0, 3).Select(i => i.ToString()).ToArray();
-            var connectTimeoutException = new TimeoutException("that mempool connection was too slow");
+            TimeoutException connectTimeoutException = new("that mempool connection was too slow");
             _memPool.Service.WhenForAnyArgs(t => t.DeleteItem(keys))
                .Throw(connectTimeoutException);
 
@@ -157,7 +157,7 @@ namespace Catalyst.Core.Modules.Mempool.Tests.UnitTests
         [Test]
         public void SaveMempoolDocument_Should_Return_False_And_Log_On_Store_Exception()
         {
-            var exception = new TimeoutException("underlying store is not connected");
+            TimeoutException exception = new("underlying store is not connected");
             _memPool.Service.TryReadItem(default)
                .ThrowsForAnyArgs(exception);
 

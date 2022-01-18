@@ -65,7 +65,7 @@ namespace Lib.P2P.Discovery
 
             // Create the DNS records for this peer.  The TXT record
             // is singular and must contain the peer ID.
-            var profile = new ServiceProfile(
+            ServiceProfile profile = new(
                 LocalPeer.Id.ToBase58(),
                 ServiceName,
                 ushort.Parse(tcpPort),

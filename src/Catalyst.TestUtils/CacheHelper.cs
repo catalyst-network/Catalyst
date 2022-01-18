@@ -35,9 +35,9 @@ namespace Catalyst.TestUtils
         {
             var correlationId = (ByteString) key;
             var cacheEntry = Substitute.For<ICacheEntry>();
-            var expirationTokens = new List<IChangeToken>();
+            List<IChangeToken> expirationTokens = new();
             cacheEntry.ExpirationTokens.Returns(expirationTokens);
-            var expirationCallbacks = new List<PostEvictionCallbackRegistration>();
+            List<PostEvictionCallbackRegistration> expirationCallbacks = new();
             cacheEntry.PostEvictionCallbacks.Returns(expirationCallbacks);
 
             cache.CreateEntry(correlationId).Returns(cacheEntry);

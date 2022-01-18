@@ -33,7 +33,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
         [Test]
         public void Scheduler_Should_Be_The_Default_TaskPoolScheduler()
         {
-            var provider = new CycleSchedulerProvider();
+            CycleSchedulerProvider provider = new();
             provider.Scheduler.Should().Be(TaskPoolScheduler.Default);
         }
     }

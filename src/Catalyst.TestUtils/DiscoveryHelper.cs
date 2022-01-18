@@ -78,7 +78,7 @@ namespace Catalyst.TestUtils
         public static IHastingsOriginator MockOriginator(MultiAddress peer = default,
             INeighbours neighbours = default)
         {
-            var memento = new HastingsMemento(peer, neighbours);
+            HastingsMemento memento = new(peer, neighbours);
             return new HastingsOriginator(memento);
         }
 
@@ -190,7 +190,7 @@ namespace Catalyst.TestUtils
 
         public static IHastingsCareTaker MockCareTaker(IEnumerable<IHastingsMemento> history = default)
         {
-            var careTaker = new HastingsCareTaker();
+            HastingsCareTaker careTaker = new();
 
             history?.ToList().ForEach(m => { careTaker.Add(m); });
 

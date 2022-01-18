@@ -40,7 +40,7 @@ namespace Catalyst.Modules.Network.Dotnetty.Tests.UnitTests.Rpc.IO.Exceptions
 
             var exceptionToString = exception.ToString();
 
-            var binaryFormatter = new BinaryFormatter();
+            BinaryFormatter binaryFormatter = new();
             using (var memoryStream = new MemoryStream())
             {
                 binaryFormatter.Serialize(memoryStream, exception);

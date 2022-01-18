@@ -74,7 +74,7 @@ namespace Lib.P2P.Cryptography
             // Salsa20 function is not reversible thus increasing our security margin.
             var encrypted = new byte[64];
             var nonce = Encoding.ASCII.GetBytes("finprint");
-            var cipher = new Salsa20Engine();
+            Salsa20Engine cipher = new();
             cipher.Init(true, new ParametersWithIV(new KeyParameter(Value), nonce));
             cipher.ProcessBytes(encrypted, 0, encrypted.Length, encrypted, 0);
 

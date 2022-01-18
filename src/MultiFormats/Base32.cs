@@ -83,7 +83,7 @@ namespace MultiFormats
         /// <remarks>
         ///   <paramref name="input"/> is case-insensitive and allows padding.
         /// </remarks>
-        public static byte[] Decode(string input) { return SimpleBase.Base32.Rfc4648.Decode(input); }
+        public static byte[] Decode(string input) { return SimpleBase.Base32.Rfc4648.Decode(input).ToArray(); }
 
         /// <summary>
         ///   Converts the specified <see cref="string"/>, which encodes binary data as base 32 digits, 

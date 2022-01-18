@@ -139,7 +139,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests.IO.Observers
         /// <returns></returns>
         private GetPeerInfoResponse GetPeerInfoTest(MultiAddress address)
         {
-            var testScheduler = new TestScheduler();
+            TestScheduler testScheduler = new();
 
             var senderAddress = MultiAddressHelper.GetAddress("sender");
             var getPeerInfoRequest = new GetPeerInfoRequest {Address = address.ToString()};
@@ -149,7 +149,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests.IO.Observers
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
             var peerSettings = senderAddress.ToSubstitutedPeerSettings();
-            var handler = new GetPeerInfoRequestObserver(peerSettings, _logger, _peerRepository);
+            GetPeerInfoRequestObserver handler = new(peerSettings, _logger, _peerRepository);
 
             handler.StartObserving(messageStream);
 

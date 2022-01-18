@@ -42,7 +42,7 @@ namespace Lib.P2P.Protocols
         public string Name { get; } = "mplex";
 
         /// <inheritdoc />
-        public SemVersion Version { get; } = new SemVersion(6, 7);
+        public SemVersion Version { get; } = new(6, 7);
 
         /// <inheritdoc />
         public override string ToString() { return $"/{Name}/{Version}"; }

@@ -57,9 +57,9 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests.IO.Observers
         [Test]
         public void Valid_GetVersion_Request_Should_Send_VersionResponse()
         {
-            var testScheduler = new TestScheduler();
+            TestScheduler testScheduler = new();
 
-            var versionRequest = new VersionRequest();
+            VersionRequest versionRequest = new();
             var protocolMessage =
                 versionRequest.ToProtocolMessage(MultiAddressHelper.GetAddress("sender"));
 
@@ -68,7 +68,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests.IO.Observers
             );
 
             var peerSettings = MultiAddressHelper.GetAddress("sender").ToSubstitutedPeerSettings();
-            var handler = new GetVersionRequestObserver(peerSettings, _logger);
+            GetVersionRequestObserver handler = new(peerSettings, _logger);
 
             handler.StartObserving(messageStream);
 

@@ -58,9 +58,9 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             var block = await _blockApi.GetAsync(id, cancel).ConfigureAwait(false);
             var format = GetDataFormat(id);
             var canonical = format.Deserialise(block.DataBytes);
-            await using (var ms = new MemoryStream())
-            using (var sr = new StreamReader(ms))
-            using (var reader = new JsonTextReader(sr))
+            await using (MemoryStream ms = new())
+            using (StreamReader sr = new(ms))
+            using (JsonTextReader reader = new(sr))
             {
                 canonical.WriteJSONTo(ms);
                 ms.Position = 0;
@@ -115,9 +115,9 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             bool pin = true,
             CancellationToken cancel = default)
         {
-            await using (var ms = new MemoryStream())
-            await using (var sw = new StreamWriter(ms))
-            using (var writer = new JsonTextWriter(sw))
+            await using (MemoryStream ms = new())
+            await using (StreamWriter sw = new(ms))
+            using (JsonTextWriter writer = new(sw))
             {
                 await data.WriteToAsync(writer, cancel);
                 writer.Flush();

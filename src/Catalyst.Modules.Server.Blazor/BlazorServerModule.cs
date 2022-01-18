@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -52,7 +52,14 @@ namespace Catalyst.Modules.Server.Blazor
                 //Ignored exception as the server cannot start without container being built
             }
 
-            builder.RegisterBuildCallback(Start);
+            builder.RegisterBuildCallback(c =>
+            {
+                // TODO TheNewAutonomy
+                //     _autofacServiceProviderFactory.SetContainer(container);
+                //     _ = container.Resolve<IHost>().RunAsync().ConfigureAwait(false);
+            });
+
+            //      builder.RegisterBuildCallback(Start);
         }
 
         private void Start(IContainer container)
@@ -93,7 +100,7 @@ namespace Catalyst.Modules.Server.Blazor
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            var listener = new DiagnosticListener("Microsoft.AspNetCore");
+            DiagnosticListener listener = new("Microsoft.AspNetCore");
             services.AddSingleton(listener);
             services.AddSingleton<DiagnosticSource>(listener);
             services.AddRazorPages();

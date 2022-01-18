@@ -112,9 +112,9 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
 
             await using (var stream = file.OpenReadStream())
             {
-                using (var text = new StreamReader(stream))
+                using (StreamReader text = new(stream))
                 {
-                    using (var reader = new JsonTextReader(text))
+                    using (JsonTextReader reader = new(text))
                     {
                         var json = await JObject.LoadAsync(reader);
                         await DfsService.ConfigApi.ReplaceAsync(json);

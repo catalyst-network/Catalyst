@@ -43,7 +43,7 @@ namespace Catalyst.Core.Lib.Config
 
         public async Task<IEnumerable<IValidatorSet>> GetValidatorSetsAsync()
         {
-            var validatorSets = new List<IValidatorSet>();
+            List<IValidatorSet> validatorSets = new();
             var multi = _configuration.GetSection("validators:multi");
             var validatorSetAtStartBlocks = multi.GetChildren();
 

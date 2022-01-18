@@ -62,7 +62,7 @@ namespace Catalyst.TestUtils
         private readonly IFileSystem _fileSystem;
         private readonly TestContext _output;
         private IConfigurationRoot _configRoot;
-        public ContainerBuilder ContainerBuilder { get; } = new ContainerBuilder();
+        public ContainerBuilder ContainerBuilder { get; } = new();
         private IContainer _container;
 
         public ContainerProvider(IEnumerable<string> configFilesUsed,
@@ -88,7 +88,7 @@ namespace Catalyst.TestUtils
                     return _configRoot;
                 }
 
-                var configBuilder = new ConfigurationBuilder();
+                ConfigurationBuilder configBuilder = new();
                 _configFilesUsed.ToList().ForEach(f => configBuilder.AddJsonFile(f));
 
                 _configRoot = configBuilder.Build();
@@ -104,7 +104,7 @@ namespace Catalyst.TestUtils
         {
             SocketPortHelper.AlterConfigurationToGetUniquePort(ConfigurationRoot);
 
-            var configurationModule = new ConfigurationModule(ConfigurationRoot);
+            ConfigurationModule configurationModule = new(ConfigurationRoot);
             ContainerBuilder.RegisterModule(configurationModule);
             ContainerBuilder.RegisterModule(new CoreLibProvider());
             ContainerBuilder.RegisterInstance(ConfigurationRoot).As<IConfigurationRoot>();
@@ -115,10 +115,10 @@ namespace Catalyst.TestUtils
                     ConfigurationRoot.GetSection("CatalystNodeConfiguration:PersistenceConfiguration"));
             ContainerBuilder.RegisterSharpRepository(repoFactory);
 
-            var passwordReader = new TestPasswordReader();
+            TestPasswordReader passwordReader = new();
             ContainerBuilder.RegisterInstance(passwordReader).As<IPasswordReader>();
 
-            var certificateStore = new TestCertificateStore();
+            TestCertificateStore certificateStore = new();
             ContainerBuilder.RegisterInstance(certificateStore).As<ICertificateStore>();
             ContainerBuilder.RegisterInstance(_fileSystem).As<IFileSystem>();
 
@@ -131,7 +131,7 @@ namespace Catalyst.TestUtils
             ContainerBuilder.RegisterModule(new HashingModule());
             ContainerBuilder.RegisterModule(new KvmModule(true));
 
-            var inMemoryStore = new InMemoryStore<string, EncryptedKey>();
+            InMemoryStore<string, EncryptedKey> inMemoryStore = new();
             ContainerBuilder.RegisterInstance(inMemoryStore).As<IStore<string, EncryptedKey>>().SingleInstance();
 
             ConfigureLogging(writeLogsToTestOutput, writeLogsToFile, logDotNettyTraffic);

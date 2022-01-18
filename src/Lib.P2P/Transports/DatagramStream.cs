@@ -33,8 +33,8 @@ namespace Lib.P2P.Transports
     {
         private Socket _socket;
         private bool _ownsSocket;
-        private MemoryStream _sendBuffer = new MemoryStream();
-        private MemoryStream _receiveBuffer = new MemoryStream();
+        private MemoryStream _sendBuffer = new();
+        private MemoryStream _receiveBuffer = new();
         private byte[] _datagram = new byte[2048];
 
         public DatagramStream(Socket socket, bool ownsSocket = false)
@@ -97,7 +97,7 @@ namespace Lib.P2P.Transports
         {
             if (_sendBuffer.Position > 0)
             {
-                var bytes = new ArraySegment<byte>(_sendBuffer.ToArray());
+                ArraySegment<byte> bytes = new(_sendBuffer.ToArray());
                 _sendBuffer.Position = 0;
                 await _socket.SendAsync(bytes, SocketFlags.None).ConfigureAwait(false);
             }

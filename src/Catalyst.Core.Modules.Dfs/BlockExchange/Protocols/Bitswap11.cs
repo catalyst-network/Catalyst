@@ -52,7 +52,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange.Protocols
         public string Name { get; } = "ipfs/bitswap";
 
         /// <inheritdoc />
-        public SemVersion Version { get; } = new SemVersion(1, 1);
+        public SemVersion Version { get; } = new(1, 1);
 
         /// <inheritdoc />
         public override string ToString() { return $"/{Name}/{Version}"; }
@@ -105,7 +105,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange.Protocols
                 log.Debug($"got block(s) from {connection.RemotePeer}");
                 foreach (var sentBlock in request.payload)
                 {
-                    await using (var ms = new MemoryStream(sentBlock.prefix))
+                    await using (MemoryStream ms = new(sentBlock.prefix))
                     {
                         ms.ReadVarint32();
                         var contentType = ms.ReadMultiCodec().Name;
@@ -212,7 +212,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange.Protocols
         /// </returns>
         private byte[] GetCidPrefix(Cid id)
         {
-            using (var ms = new MemoryStream())
+            using (MemoryStream ms = new())
             {
                 ms.WriteVarint(id.Version);
                 ms.WriteMultiCodec(id.ContentType);

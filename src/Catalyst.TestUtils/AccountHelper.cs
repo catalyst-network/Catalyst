@@ -33,7 +33,7 @@ namespace Catalyst.TestUtils
             AccountTypes accountType = default,
             string publicAddress = "0x32Be343B94f860124dC4fEe278FDCBD38C102D88")
         {
-            var account = new Account(publicAddress, accountType ?? AccountTypes.Public, balance);
+            Account account = new(publicAddress, accountType ?? AccountTypes.Public, balance);
             return account;
         }
     }

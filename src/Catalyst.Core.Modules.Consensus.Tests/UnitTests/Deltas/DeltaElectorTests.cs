@@ -81,7 +81,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [Test]
         public void When_receiving_null_favourite_should_log_and_not_hit_the_cache()
         {
-            var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
+            DeltaElector elector = new(_cache, _deltaProducersProvider, _reputationManager, _logger);
 
             elector.OnNext(null);
 
@@ -92,7 +92,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [Test]
         public void When_receiving_empty_favourite_should_log_and_not_hit_the_cache()
         {
-            var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
+            DeltaElector elector = new(_cache, _deltaProducersProvider, _reputationManager, _logger);
 
             elector.OnNext(new FavouriteDeltaBroadcast());
 
@@ -103,7 +103,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [Test]
         public void When_receiving_invalid_candidate_should_log_and_not_hit_the_cache()
         {
-            var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
+            DeltaElector elector = new(_cache, _deltaProducersProvider, _reputationManager, _logger);
 
             elector.OnNext(new FavouriteDeltaBroadcast
             {
@@ -122,7 +122,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [Test]
         public void When_receiving_no_voterid_should_log_and_not_hit_the_cache()
         {
-            var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
+            DeltaElector elector = new(_cache, _deltaProducersProvider, _reputationManager, _logger);
 
             elector.OnNext(new FavouriteDeltaBroadcast
             {
@@ -141,7 +141,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             AddVoterAsExpectedProducer(new Address(favourite.Voter.ToByteArray()));
 
-            var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
+            DeltaElector elector = new(_cache, _deltaProducersProvider, _reputationManager, _logger);
 
             var addedEntry = Substitute.For<ICacheEntry>();
             _cache.CreateEntry(Arg.Is<string>(s => s.Equals(candidateListKey)))
@@ -160,14 +160,14 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [Test]
         public void When_receiving_known_favourite_should_not_store_in_cache()
         {
-            using (var realCache = new MemoryCache(new MemoryCacheOptions()))
+            using (MemoryCache realCache = new(new MemoryCacheOptions()))
             {
                 var favourite = DeltaHelper.GetFavouriteDelta(_hashProvider);
                 var candidateListKey = DeltaElector.GetCandidateListCacheKey(favourite);
 
                 AddVoterAsExpectedProducer(new Address(favourite.Voter.ToByteArray()));
 
-                var elector = new DeltaElector(realCache, _deltaProducersProvider, _reputationManager, _logger);
+                DeltaElector elector = new(realCache, _deltaProducersProvider, _reputationManager, _logger);
 
                 elector.OnNext(favourite);
                 elector.OnNext(favourite);
@@ -189,7 +189,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                .GetDeltaProducersFromPreviousDelta(Arg.Any<Cid>())
                .Returns(new List<Address> { MultiAddressHelper.GetAddress("the only known producer").GetPublicKeyBytes().ToKvmAddress() });
 
-            var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
+            DeltaElector elector = new(_cache, _deltaProducersProvider, _reputationManager, _logger);
 
             elector.OnNext(favourite);
 
@@ -214,7 +214,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                .GetDeltaProducersFromPreviousDelta(Arg.Any<Cid>())
                .Returns(new List<Address>());
 
-            var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
+            DeltaElector elector = new(_cache, _deltaProducersProvider, _reputationManager, _logger);
 
             elector.OnNext(favourite);
 
@@ -229,7 +229,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [Test]
         public void When_favourite_has_different_producer_it_should_not_create_duplicate_entries()
         {
-            using (var realCache = new MemoryCache(new MemoryCacheOptions()))
+            using (MemoryCache realCache = new(new MemoryCacheOptions()))
             {
                 var producers = "abc".Select(c => MultiAddressHelper.GetAddress(c.ToString()).GetPublicKeyBytes().ToKvmAddress())
                    .ToArray();
@@ -251,7 +251,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
                 AddVoterAsExpectedProducer(favourites.Select(f => new Address(f.Voter.ToByteArray())).ToArray());
 
-                var elector = new DeltaElector(realCache, _deltaProducersProvider, _reputationManager, _logger);
+                DeltaElector elector = new(realCache, _deltaProducersProvider, _reputationManager, _logger);
 
                 var favouriteStream = favourites.ToObservable();
                 using (favouriteStream.Subscribe(elector))
@@ -271,7 +271,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [Test]
         public void GetMostPopularCandidateDelta_should_return_the_favourite_with_most_voter_ids()
         {
-            using (var realCache = new MemoryCache(new MemoryCacheOptions()))
+            using (MemoryCache realCache = new(new MemoryCacheOptions()))
             {
                 var producers = "ab".Select(c => MultiAddressHelper.GetAddress(c.ToString()).GetPublicKeyBytes().ToKvmAddress())
                    .ToArray();
@@ -294,7 +294,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
                 AddVoterAsExpectedProducer(favourites.Select(f => new Address(f.Voter.ToByteArray())).ToArray());
 
-                var elector = new DeltaElector(realCache, _deltaProducersProvider, _reputationManager, _logger);
+                DeltaElector elector = new(realCache, _deltaProducersProvider, _reputationManager, _logger);
 
                 var favouriteStream = favourites.ToObservable();
                 using (favouriteStream.Subscribe(elector))
@@ -315,7 +315,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         {
             _cache.TryGetValue(Arg.Any<object>(), out Arg.Any<object>()).Returns(false);
 
-            var elector = new DeltaElector(_cache, _deltaProducersProvider, _reputationManager, _logger);
+            DeltaElector elector = new(_cache, _deltaProducersProvider, _reputationManager, _logger);
 
             var previousHash = _hashProvider.ComputeUtf8MultiHash("previous").ToCid();
 

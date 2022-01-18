@@ -64,7 +64,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [Test]
         public void TryReadDeltaFromDfs_Should_Return_False_And_Log_When_Hash_Not_Found_On_Dfs()
         {
-            var exception = new FileNotFoundException("that hash is not good");
+            FileNotFoundException exception = new("that hash is not good");
             _dfsService.UnixFsApi.ReadFileAsync(Arg.Any<string>(), Arg.Any<CancellationToken>())
                .Throws(exception);
 
@@ -113,7 +113,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         public void TryReadDeltaFromDfs_Should_Pass_Cancellation_Token()
         {
             var cid = _hashProvider.ComputeUtf8MultiHash("good hash").ToCid();
-            var cancellationToken = new CancellationToken();
+            CancellationToken cancellationToken = new();
 
             var matchingDelta = DeltaHelper.GetDelta(_hashProvider);
             _dfsService.UnixFsApi.ReadFileAsync(cid, CancellationToken.None)

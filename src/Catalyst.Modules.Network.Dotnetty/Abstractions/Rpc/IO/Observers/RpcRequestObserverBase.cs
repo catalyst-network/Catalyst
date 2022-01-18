@@ -70,7 +70,7 @@ namespace Catalyst.Modules.Network.Dotnetty.Rpc.IO.Observers
                     recipientAddress,
                     correlationId);
 
-                var responseDto = new MessageDto(
+                MessageDto responseDto = new(
                     response.ToProtocolMessage(PeerSettings.Address, correlationId),
                     recipientAddress);
 

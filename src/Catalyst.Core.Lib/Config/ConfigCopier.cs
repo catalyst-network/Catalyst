@@ -43,7 +43,7 @@ namespace Catalyst.Core.Lib.Config
         {
             Guard.Argument(dataDir, nameof(dataDir)).NotNull().NotEmpty().NotWhiteSpace();
 
-            var dataDirInfo = new DirectoryInfo(dataDir);
+            DirectoryInfo dataDirInfo = new(dataDir);
             if (!dataDirInfo.Exists)
             {
                 dataDirInfo.Create();

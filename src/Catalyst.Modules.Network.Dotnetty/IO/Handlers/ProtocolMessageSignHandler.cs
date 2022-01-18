@@ -57,7 +57,7 @@ namespace Catalyst.Modules.Network.Dotnetty.IO.Handlers
         {
             Logger.Verbose("Signing message {message}", message);
             var protocolMessageSigned = message.Content.Sign(_keySigner, _signingContext);
-            var signedDto = new SignedMessageDto(protocolMessageSigned, message.RecipientAddress);
+            SignedMessageDto signedDto = new(protocolMessageSigned, message.RecipientAddress);
             return context.WriteAsync(signedDto);
         }
     }

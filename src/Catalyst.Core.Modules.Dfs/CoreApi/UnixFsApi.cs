@@ -94,7 +94,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
 
             var blockService = GetBlockService(options);
 
-            var chunker = new SizeChunker();
+            SizeChunker chunker = new();
             var nodes = await chunker.ChunkAsync(stream, name, options, blockService, _keyApi, cancel)
                .ConfigureAwait(false);
 
@@ -139,7 +139,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                 }
 
                 // Bundle DefaultLinksPerBlock links into a block.
-                var tree = new List<UnixFsNode>();
+                List<UnixFsNode> tree = new();
                 for (var i = 0;; ++i)
                 {
                     var bundle = fsNodes.Skip(DefaultLinksPerBlock * i).Take(DefaultLinksPerBlock);
@@ -174,9 +174,9 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                 FileSize = fileSize,
                 BlockSizes = unixFsNodes.Select(n => (ulong) n.Size).ToArray()
             };
-            var pb = new MemoryStream();
+            MemoryStream pb = new();
             Serializer.Serialize(pb, dm);
-            var dag = new DagNode(pb.ToArray(), links);
+            DagNode dag = new(pb.ToArray(), links);
 
             // Save it.
             dag.Id = await blockService.PutAsync(
@@ -229,10 +229,10 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             {
                 Type = DataType.Directory
             };
-            var pb = new MemoryStream();
+            MemoryStream pb = new();
             Serializer.Serialize(pb, dm);
             var fileSystemLinks = links as IFileSystemLink[] ?? links.ToArray();
-            var dag = new DagNode(pb.ToArray(), fileSystemLinks);
+            DagNode dag = new(pb.ToArray(), fileSystemLinks);
 
             // Save it.
             var cid = await GetBlockService(options).PutAsync(
@@ -280,7 +280,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                     throw new NotSupportedException($"Cannot read content type '{cid.ContentType}'.");
             }
 
-            var dag = new DagNode(block.DataStream);
+            DagNode dag = new(block.DataStream);
             var dm = Serializer.Deserialize<DataMessage>(dag.DataStream);
             var fsn = new UnixFsNode
             {
@@ -302,7 +302,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         {
             await using (var data = await ReadFileAsync(path, cancel).ConfigureAwait(false))
             {
-                using (var text = new StreamReader(data))
+                using (StreamReader text = new(data))
                 {
                     return await text.ReadToEndAsync().ConfigureAwait(false);
                 }
@@ -331,8 +331,8 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         {
             var r = await _nameApi.ResolveAsync(path, true, false, cancel).ConfigureAwait(false);
             var cid = Cid.Decode(r.Remove(0, 6));
-            var ms = new MemoryStream();
-            await using (var tarStream = new TarOutputStream(ms, 1))
+            MemoryStream ms = new();
+            await using (TarOutputStream tarStream = new(ms, 1))
             {
                 using (var archive = TarArchive.CreateOutputTarArchive(tarStream))
                 {
@@ -360,7 +360,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
                 dm = Serializer.Deserialize<DataMessage>(dag.DataStream);
             }
 
-            var entry = new TarEntry(new TarHeader());
+            TarEntry entry = new(new TarHeader());
             var header = entry.TarHeader;
             header.Mode = 0x1ff; // 777 in octal
             header.LinkName = string.Empty;

@@ -94,9 +94,9 @@ namespace Lib.P2P.Cryptography
         /// </returns>
         public static Key CreatePublicKeyFromIpfs(byte[] bytes)
         {
-            var key = new Key();
+            Key key = new();
 
-            var ms = new MemoryStream(bytes, false);
+            MemoryStream ms = new(bytes, false);
             var ipfsKey = Serializer.Deserialize<PublicKeyMessage>(ms);
 
             switch (ipfsKey.Type)
@@ -128,7 +128,7 @@ namespace Lib.P2P.Cryptography
         /// </param>
         public static Key CreatePrivateKey(AsymmetricKeyParameter privateKey)
         {
-            var key = new Key();
+            Key key = new();
             key._privateKey = privateKey;
 
             // Get the public key from the private key.

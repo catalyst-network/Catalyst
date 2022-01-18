@@ -92,12 +92,12 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 Guard.Argument(candidate, nameof(candidate)).NotNull().Require(f => f.IsValid());
 
                 var cid = candidate.Candidate.PreviousDeltaDfsHash.ToByteArray().ToCid();
-                var candidateAddress = new Address(candidate.Voter.ToByteArray());
+                Address candidateAddress = new(candidate.Voter.ToByteArray());
                 if (!_deltaProducersProvider
                    .GetDeltaProducersFromPreviousDelta(cid)
                    .Any(p => p.Equals(candidateAddress)))
                 {
-                    var reputationChange = new ReputationChange(new Address(candidate.Voter.ToByteArray()), ReputationEventType.VoterIsNotProducer);
+                    ReputationChange reputationChange = new(new Address(candidate.Voter.ToByteArray()), ReputationEventType.VoterIsNotProducer);
                     _reputationManager.OnNext(reputationChange);
 
                     _logger.Debug(

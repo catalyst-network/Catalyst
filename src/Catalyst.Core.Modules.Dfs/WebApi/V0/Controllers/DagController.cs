@@ -94,11 +94,11 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
 
             await using (var stream = file.OpenReadStream())
             {
-                using (var sr = new StreamReader(stream))
+                using (StreamReader sr = new(stream))
                 {
-                    using (var tr = new JsonTextReader(sr))
+                    using (JsonTextReader tr = new(sr))
                     {
-                        var serializer = new JsonSerializer();
+                        JsonSerializer serializer = new();
                         JObject json = (JObject) serializer.Deserialize(tr);
 
                         var cid = await DfsService.DagApi.PutAsync(

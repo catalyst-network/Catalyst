@@ -123,7 +123,7 @@ namespace Catalyst.TestUtils
                 return;
             }
 
-            var regex = new Regex(CurrentTestName + @"_(?<timestamp>[\d]{16})");
+            Regex regex = new(CurrentTestName + @"_(?<timestamp>[\d]{16})");
 
             var oldDirectories = TestDirectory.Parent.EnumerateDirectories()
                .Where(d =>

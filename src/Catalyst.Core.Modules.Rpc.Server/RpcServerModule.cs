@@ -41,27 +41,27 @@ namespace Catalyst.Core.Modules.Rpc.Server
             builder.RegisterType<RpcServer>().As<IRpcServer>().SingleInstance();
             builder.RegisterType<RpcServerSettings>().As<IRpcServerSettings>();
 
-            async void BuildCallback(IContainer container)
+            //  builder.RegisterBuildCallback(BuildCallback);
+            builder.RegisterBuildCallback(c =>
             {
-                if (container == null)
-                {
-                    throw new ArgumentNullException(nameof(container));
-                }
-                
-                var logger = container.Resolve<ILogger>();
-                try
-                {
-                    var rpcServer = container.Resolve<IRpcServer>();
-                    await rpcServer.StartAsync().ConfigureAwait(false);
-                }
-                catch (Exception e)
-                {
-                    logger.Error(e, "Error loading API");
-                }
-            }
+                // TODO TheNewAutonomy
+                /*       if (container == null)
+                       {
+                           throw new ArgumentNullException(nameof(container));
+                       }
 
-            builder.RegisterBuildCallback(BuildCallback);
-            
+                       var logger = container.Resolve<ILogger>();
+                       try
+                       {
+                           var rpcServer = container.Resolve<IRpcServer>();
+                           await rpcServer.StartAsync().ConfigureAwait(false);
+                       }
+                       catch (Exception e)
+                       {
+                           logger.Error(e, "Error loading API");
+                       }*/
+            });
+
             base.Load(builder);
         }  
     }

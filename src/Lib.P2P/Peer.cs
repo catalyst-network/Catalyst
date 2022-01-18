@@ -35,7 +35,7 @@ namespace Lib.P2P
     /// </remarks>
     public class Peer : IEquatable<Peer>
     {
-        private static MultiAddress[] _noAddress = new MultiAddress[0];
+        private static MultiAddress[] _noAddress = Array.Empty<MultiAddress>();
         private const string Unknown = "unknown/0.0";
 
         /// <summary>

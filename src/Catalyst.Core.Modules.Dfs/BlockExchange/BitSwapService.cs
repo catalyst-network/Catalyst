@@ -44,8 +44,8 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
     {
         private static ILog _log = LogManager.GetLogger(typeof(BitSwapService));
 
-        private readonly ConcurrentDictionary<Cid, WantedBlock> _wants = new ConcurrentDictionary<Cid, WantedBlock>();
-        private readonly ConcurrentDictionary<Peer, BitswapLedger> _peerLedgers = new ConcurrentDictionary<Peer, BitswapLedger>();
+        private readonly ConcurrentDictionary<Cid, WantedBlock> _wants = new();
+        private readonly ConcurrentDictionary<Peer, BitswapLedger> _peerLedgers = new();
 
         /// <summary>
         ///   The supported bitswap protocols.
@@ -277,7 +277,7 @@ namespace Catalyst.Core.Modules.Dfs.BlockExchange
                 _log.Debug($"{peer} wants {id}");
             }
 
-            var tsc = new TaskCompletionSource<IDataBlock>();
+            TaskCompletionSource<IDataBlock> tsc = new();
             var want = _wants.AddOrUpdate(
                 id,
                 (key) => new WantedBlock

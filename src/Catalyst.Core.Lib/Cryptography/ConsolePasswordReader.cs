@@ -43,7 +43,7 @@ namespace Catalyst.Core.Lib.Cryptography
 
         public SecureString ReadSecurePassword(string prompt)
         {
-            var pwd = new SecureString();
+            SecureString pwd = new();
             ReadCharsFromConsole(prompt, (c, i) => pwd.AppendChar(c), i => pwd.RemoveAt(i));
             pwd.MakeReadOnly();
             return pwd;

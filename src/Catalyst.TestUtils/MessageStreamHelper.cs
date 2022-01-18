@@ -55,7 +55,7 @@ namespace Catalyst.TestUtils
          TestScheduler testScheduler,
          ProtocolMessage response)
         {
-            var channeledAny = new ObserverDto(fakeContext, response);
+            ObserverDto channeledAny = new(fakeContext, response);
             var messageStream = new[] { channeledAny }.ToObservable(testScheduler);
             return messageStream;
         }

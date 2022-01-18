@@ -46,7 +46,7 @@ namespace Catalyst.Abstractions.Types
         static RpcMessages()
         {
             // ReSharper disable once CollectionNeverQueried.Local
-            var messageMap = new Dictionary<string, RpcMessages>();
+            Dictionary<string, RpcMessages> messageMap = new();
             var types = AppDomain.CurrentDomain.GetAssemblies()
                .SelectMany(t => t.GetTypes())
                .Where(t => t.IsClass && t.Namespace == MessageNamespace

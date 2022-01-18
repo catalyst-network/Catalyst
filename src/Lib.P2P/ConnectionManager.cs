@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -45,7 +45,7 @@ namespace Lib.P2P
         ///   The connections to other peers. Key is the base58 hash of the peer ID.
         /// </summary>
         private readonly ConcurrentDictionary<string, List<PeerConnection>> _connections =
-            new ConcurrentDictionary<string, List<PeerConnection>>();
+            new();
 
         private static string Key(Peer peer) { return peer.Id.ToBase58(); }
 
@@ -192,7 +192,7 @@ namespace Lib.P2P
                 return false;
             }
 
-            var newConns = new List<PeerConnection>();
+            List<PeerConnection> newConns = new();
             newConns.AddRange(originalConns.Where(c => c != connection));
             _connections.TryUpdate(Key(connection.RemotePeer), newConns, originalConns);
 

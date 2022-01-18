@@ -50,7 +50,7 @@ namespace Catalyst.Core.Modules.Dfs.UnixFs
             public long Position;
         }
 
-        private readonly List<BlockInfo> blocks = new List<BlockInfo>();
+        private readonly List<BlockInfo> blocks = new();
 
         /// <summary>
         ///     Creates a new instance of the <see cref="ChunkedStream" /> class with

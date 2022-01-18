@@ -166,7 +166,7 @@ namespace Catalyst.Core.Modules.Cryptography.BulletProofs
 
         internal static unsafe bool BatchVerify(IList<ISignature> signatures, IList<byte[]> messages, ReadOnlySpan<byte> context)
         {
-            var sigBatch = new SignatureBatch();
+            SignatureBatch sigBatch = new();
             sigBatch.Signatures.AddRange(signatures.Select(x => x.SignatureBytes.ToByteString()));
             sigBatch.PublicKeys.AddRange(signatures.Select(x => x.PublicKeyBytes.ToByteString()));
             sigBatch.Messages.AddRange(messages.Select(x => x.ToByteString()));

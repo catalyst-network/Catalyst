@@ -60,7 +60,7 @@ namespace Catalyst.Core.Lib.FileSystem
             {
                 var fullPath = Path.GetFullPath(path);
 
-                var dirInfo = new DirectoryInfo(fullPath);
+                DirectoryInfo dirInfo = new(fullPath);
                 if (!dirInfo.Exists)
                 {
                     dirInfo.Create();

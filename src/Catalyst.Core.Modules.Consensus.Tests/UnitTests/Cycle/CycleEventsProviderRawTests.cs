@@ -57,7 +57,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
         [SetUp]
         public void Init()
         {
-            var cryptoContext = new FfiWrapper();
+            FfiWrapper cryptoContext = new();
             var privateKey = cryptoContext.GeneratePrivateKey();
             var publicKey = privateKey.GetPublicKey();
 
@@ -190,7 +190,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
             var secondProviderStartOffset = CycleConfiguration.Default.CycleDuration.Divide(3);
 
             //Create a second event cycle provider
-            using var cycleEventsProvider2 = new CycleEventsProviderRaw(CycleConfiguration.Default, new DateTimeProvider(), Substitute.For<IDeltaHashProvider>(), _deltaCache, _validatorSetStore, _keySigner, Substitute.For<ILogger>());
+            using CycleEventsProviderRaw cycleEventsProvider2 = new(CycleConfiguration.Default, new DateTimeProvider(), Substitute.For<IDeltaHashProvider>(), _deltaCache, _validatorSetStore, _keySigner, Substitute.For<ILogger>());
 
             //Create event observers for the cycle event providers
             var fakeObserver1 = Substitute.For<IObserver<IPhase>>();

@@ -62,7 +62,7 @@ namespace Catalyst.Modules.POA.Consensus.Tests.UnitTests.Deltas
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
             var peerSettings = MultiAddressHelper.GetAddress("TEST").ToSubstitutedPeerSettings();
-            var rand = new Random();
+            Random rand = new();
             _peers = Enumerable.Range(0, 5)
                .Select(_ =>
                 {

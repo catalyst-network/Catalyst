@@ -72,7 +72,7 @@ namespace Catalyst.Core.Lib.Util
 
             var result = TimeSpan.Zero;
             var negative = false;
-            using (var sr = new StringReader(s))
+            using (StringReader sr = new(s))
             {
                 if (sr.Peek() == '-')
                 {
@@ -121,7 +121,7 @@ namespace Catalyst.Core.Lib.Util
 
         private static double ParseNumber(StringReader reader)
         {
-            var s = new StringBuilder();
+            StringBuilder s = new();
             while (true)
             {
                 var c = (char) reader.Peek();
@@ -138,7 +138,7 @@ namespace Catalyst.Core.Lib.Util
 
         private static string ParseUnit(StringReader reader)
         {
-            var s = new StringBuilder();
+            StringBuilder s = new();
             while (true)
             {
                 var c = (char) reader.Peek();
@@ -170,7 +170,7 @@ namespace Catalyst.Core.Lib.Util
             if (duration.Ticks == 0)
                 return zeroValue;
 
-            var s = new StringBuilder();
+            StringBuilder s = new();
             if (duration.Ticks < 0)
             {
                 s.Append('-');

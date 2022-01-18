@@ -41,8 +41,8 @@ namespace MultiFormats.Registry
     /// </remarks>
     public class MultiBaseAlgorithm
     {
-        internal static Dictionary<string, MultiBaseAlgorithm> Names = new Dictionary<string, MultiBaseAlgorithm>();
-        public static Dictionary<char, MultiBaseAlgorithm> Codes = new Dictionary<char, MultiBaseAlgorithm>();
+        internal static Dictionary<string, MultiBaseAlgorithm> Names = new();
+        public static Dictionary<char, MultiBaseAlgorithm> Codes = new();
 
         /// <summary>
         ///   Register the standard multi-base algorithms for IPFS.
@@ -52,10 +52,10 @@ namespace MultiFormats.Registry
         {
             Register("base58btc", 'z',
                 bytes => SimpleBase.Base58.Bitcoin.Encode(bytes),
-                s => SimpleBase.Base58.Bitcoin.Decode(s));
+                s => SimpleBase.Base58.Bitcoin.Decode(s).ToArray());
             Register("base58flickr", 'Z',
                 bytes => SimpleBase.Base58.Flickr.Encode(bytes),
-                s => SimpleBase.Base58.Flickr.Decode(s));
+                s => SimpleBase.Base58.Flickr.Decode(s).ToArray());
             Register("base64", 'm',
                 bytes => bytes.ToBase64NoPad(),
                 s => s.FromBase64NoPad());
@@ -67,37 +67,37 @@ namespace MultiFormats.Registry
                 s => s.FromBase64Url());
             Register("base16", 'f',
                 bytes => SimpleBase.Base16.EncodeLower(bytes),
-                s => SimpleBase.Base16.Decode(s));
+                s => SimpleBase.Base16.Decode(s).ToArray());
             Register("base32", 'b',
                 bytes => SimpleBase.Base32.Rfc4648.Encode(bytes, false).ToLowerInvariant(),
-                s => SimpleBase.Base32.Rfc4648.Decode(s));
+                s => SimpleBase.Base32.Rfc4648.Decode(s).ToArray());
             Register("base32pad", 'c',
                 bytes => SimpleBase.Base32.Rfc4648.Encode(bytes, true).ToLowerInvariant(),
-                s => SimpleBase.Base32.Rfc4648.Decode(s));
+                s => SimpleBase.Base32.Rfc4648.Decode(s).ToArray());
             Register("base32hex", 'v',
                 bytes => SimpleBase.Base32.ExtendedHex.Encode(bytes, false).ToLowerInvariant(),
-                s => SimpleBase.Base32.ExtendedHex.Decode(s));
+                s => SimpleBase.Base32.ExtendedHex.Decode(s).ToArray());
             Register("base32hexpad", 't',
                 bytes => SimpleBase.Base32.ExtendedHex.Encode(bytes, true).ToLowerInvariant(),
-                s => SimpleBase.Base32.ExtendedHex.Decode(s));
+                s => SimpleBase.Base32.ExtendedHex.Decode(s).ToArray());
             Register("BASE16", 'F',
                 bytes => SimpleBase.Base16.EncodeUpper(bytes),
-                s => SimpleBase.Base16.Decode(s));
+                s => SimpleBase.Base16.Decode(s).ToArray());
             Register("BASE32", 'B',
                 bytes => SimpleBase.Base32.Rfc4648.Encode(bytes, false),
-                s => SimpleBase.Base32.Rfc4648.Decode(s));
+                s => SimpleBase.Base32.Rfc4648.Decode(s).ToArray());
             Register("BASE32PAD", 'C',
                 bytes => SimpleBase.Base32.Rfc4648.Encode(bytes, true),
-                s => SimpleBase.Base32.Rfc4648.Decode(s));
+                s => SimpleBase.Base32.Rfc4648.Decode(s).ToArray());
             Register("BASE32HEX", 'V',
                 bytes => SimpleBase.Base32.ExtendedHex.Encode(bytes, false),
-                s => SimpleBase.Base32.ExtendedHex.Decode(s));
+                s => SimpleBase.Base32.ExtendedHex.Decode(s).ToArray());
             Register("BASE32HEXPAD", 'T',
                 bytes => SimpleBase.Base32.ExtendedHex.Encode(bytes, true),
-                s => SimpleBase.Base32.ExtendedHex.Decode(s));
+                s => SimpleBase.Base32.ExtendedHex.Decode(s).ToArray());
             Register("base32z", 'h',
                 bytes => Base32Z.Codec.Encode(bytes, false),
-                s => Base32Z.Codec.Decode(s));
+                s => Base32Z.Codec.Decode(s).ToArray());
 
             // Not supported
 #if false

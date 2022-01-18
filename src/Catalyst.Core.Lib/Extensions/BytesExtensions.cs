@@ -67,7 +67,7 @@ namespace Catalyst.Core.Lib.Extensions
     {
         public static MemoryStream ToMemoryStream(this byte[] content)
         {
-            var memoryStream = new MemoryStream();
+            MemoryStream memoryStream = new();
             memoryStream.Write(content, 0, content.Length);
             memoryStream.Seek(0, SeekOrigin.Begin);
             return memoryStream;

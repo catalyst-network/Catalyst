@@ -50,7 +50,7 @@ namespace Lib.P2P.SecureCommunication
         private Stream _stream;
         private byte[] _inBlock;
         private int _inBlockOffset;
-        private MemoryStream _outStream = new MemoryStream();
+        private MemoryStream _outStream = new();
         private HMac _inHmac;
         private HMac _outHmac;
         private IStreamCipher _decrypt;
@@ -91,7 +91,7 @@ namespace Lib.P2P.SecureCommunication
             if (cipherName == "AES-256" || cipherName == "AES-512")
             {
                 _decrypt = new CtrStreamCipher(new AesEngine());
-                var p = new ParametersWithIV(new KeyParameter(remoteKey.CipherKey), remoteKey.Iv);
+                ParametersWithIV p = new(new KeyParameter(remoteKey.CipherKey), remoteKey.Iv);
                 _decrypt.Init(false, p);
 
                 _encrypt = new CtrStreamCipher(new AesEngine());

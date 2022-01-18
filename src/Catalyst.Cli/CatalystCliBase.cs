@@ -103,7 +103,7 @@ namespace Catalyst.Cli
             containerBuilder.RegisterType<ConsoleUserOutput>().As<IUserOutput>();
             containerBuilder.RegisterType<CatalystCli>().As<ICatalystCli>();
             containerBuilder.RegisterType<ConsoleUserInput>().As<IUserInput>();
-            var socketClientRegistry = new SocketClientRegistry<IRpcClient>();
+            SocketClientRegistry<IRpcClient> socketClientRegistry = new();
             containerBuilder.RegisterInstance(socketClientRegistry).As<ISocketClientRegistry<IRpcClient>>();
             containerBuilder.RegisterType<CommandContext>().As<ICommandContext>();
 

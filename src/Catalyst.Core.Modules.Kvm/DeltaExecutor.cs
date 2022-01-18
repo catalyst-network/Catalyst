@@ -286,7 +286,7 @@ namespace Catalyst.Core.Modules.Kvm
                 if (entry.IsValidDeploymentEntry) PrepareContractAccount(env.CodeSource);
 
                 var executionType = entry.IsValidDeploymentEntry ? ExecutionType.Create : ExecutionType.Call;
-                using (var state = new VmState((long) unspentGas, env, executionType, isPrecompile, true, false))
+                using (VmState state = new((long) unspentGas, env, executionType, isPrecompile, true, false))
                 {
                     substate = _virtualMachine.Run(state, txTracer);
                     unspentGas = (ulong) state.GasAvailable;

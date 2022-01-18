@@ -145,7 +145,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
             bool force = false)
         {
             var cid = await DfsService.BlockApi.RemoveAsync(arg, true, Cancel);
-            var dto = new HashDto();
+            HashDto dto = new();
             if (cid == null && !force)
             {
                 dto.Hash = arg;

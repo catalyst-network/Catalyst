@@ -108,7 +108,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
             }
 
             var key = await DfsService.KeyApi.RemoveAsync(arg, Cancel);
-            var dto = new CryptoKeysDto();
+            CryptoKeysDto dto = new();
             if (key != null)
             {
                 dto.Keys = new[]

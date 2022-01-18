@@ -56,7 +56,7 @@ namespace Catalyst.Core.Lib.FileSystem
     public class FileStore<TName, TValue> : IStore<TName, TValue>
         where TValue : class
     {
-        private readonly AsyncReaderWriterLock _storeLock = new AsyncReaderWriterLock();
+        private readonly AsyncReaderWriterLock _storeLock = new();
 
         /// <summary>
         ///     A function to write the JSON encoded entity to the stream.
@@ -67,12 +67,12 @@ namespace Catalyst.Core.Lib.FileSystem
         public static Func<Stream, TName, TValue, CancellationToken, Task> JsonSerialize =
             (stream, name, value, cancel) =>
             {
-                using var writer = new StreamWriter(stream);
+                using StreamWriter writer = new(stream);
                 using var jtw = new JsonTextWriter(writer)
                 {
                     Formatting = Formatting.Indented
                 };
-                var ser = new JsonSerializer();
+                JsonSerializer ser = new();
                 ser.Serialize(jtw, value);
                 jtw.Flush();
                 return Task.CompletedTask;
@@ -87,9 +87,9 @@ namespace Catalyst.Core.Lib.FileSystem
         public static Func<Stream, TName, CancellationToken, Task<TValue>> JsonDeserialize =
             (stream, name, cancel) =>
             {
-                using var reader = new StreamReader(stream);
-                using var jtr = new JsonTextReader(reader);
-                var ser = new JsonSerializer();
+                using StreamReader reader = new(stream);
+                using JsonTextReader jtr = new(reader);
+                JsonSerializer ser =new ();
                 return Task.FromResult(ser.Deserialize<TValue>(jtr));
             };
 
@@ -282,7 +282,7 @@ namespace Catalyst.Core.Lib.FileSystem
 
             using (await _storeLock.ReaderLockAsync().ConfigureAwait(false))
             {
-                var fi = new FileInfo(path);
+                FileInfo fi = new(path);
                 long? length = null;
                 if (fi.Exists)
                 {

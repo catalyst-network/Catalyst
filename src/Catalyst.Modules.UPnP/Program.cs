@@ -78,8 +78,8 @@ namespace Catalyst.Modules.UPnP
 
             var mappings = ParseJsonWithLogging(options.TcpProperties, options.UdpProperties, json, logger);
             if (!(mappings?.Count > 0)) return 0;
-            
-            var portMapper = new PortMapper(provider, logger);
+
+            PortMapper portMapper = new(provider, logger);
             
             var timeout = options.Timeout > 0 ? options.Timeout : PortMapperConstants.DefaultTimeout;
 
@@ -91,7 +91,7 @@ namespace Catalyst.Modules.UPnP
         {
             try
             {
-                using var r = new StreamReader(path);
+                using StreamReader r = new(path);
                 return r.ReadToEnd();
             }
             catch(Exception)

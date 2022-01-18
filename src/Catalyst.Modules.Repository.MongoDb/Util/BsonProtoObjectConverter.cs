@@ -36,7 +36,7 @@ namespace Catalyst.Modules.Repository.MongoDb.Util
 
         public object Deserialize(BsonDeserializationContext context, BsonDeserializationArgs args)
         {
-            var parser = new JsonParser(JsonParser.Settings.Default);
+            JsonParser parser = new(JsonParser.Settings.Default);
             var buffer = context.Reader.ReadRawBsonDocument();
             var json = new RawBsonDocument(buffer).ToJson();
             var jObject = JObject.Parse(json);
@@ -45,7 +45,7 @@ namespace Catalyst.Modules.Repository.MongoDb.Util
 
         public void Serialize(BsonSerializationContext context, BsonSerializationArgs args, object value)
         {
-            var formatter = new JsonFormatter(JsonFormatter.Settings.Default);
+            JsonFormatter formatter = new(JsonFormatter.Settings.Default);
             string format = formatter.Format((T) value);
             var bsonDocument = BsonDocument.Parse(format);
             var raw = bsonDocument.ToBson();

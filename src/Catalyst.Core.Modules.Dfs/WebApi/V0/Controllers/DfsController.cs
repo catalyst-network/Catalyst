@@ -108,7 +108,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
                 Response.ContentType = "application/json";
             }
 
-            using (var sw = new StringWriter())
+            using (StringWriter sw = new())
             {
                 JsonSerializer.Create().Serialize(sw, o);
                 sw.Write('\n');

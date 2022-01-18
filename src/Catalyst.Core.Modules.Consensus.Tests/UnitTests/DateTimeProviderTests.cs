@@ -32,7 +32,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
         [Test]
         public void UtcNow_should_return_utc_DateTimeKind()
         {
-            var provider = new DateTimeProvider();
+            DateTimeProvider provider = new();
             var now = provider.UtcNow;
 
             now.Kind.Should().Be(DateTimeKind.Utc);

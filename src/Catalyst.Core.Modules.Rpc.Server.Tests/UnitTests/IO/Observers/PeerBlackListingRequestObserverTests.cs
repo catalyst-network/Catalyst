@@ -133,7 +133,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests.IO.Observers
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
 
             var peerSettings = _senderId.ToSubstitutedPeerSettings();
-            var handler = new PeerBlackListingRequestObserver(peerSettings, _logger, _peerRepository);
+            PeerBlackListingRequestObserver handler = new(peerSettings, _logger, _peerRepository);
             handler.StartObserving(messageStream);
 
             _testScheduler.Start();

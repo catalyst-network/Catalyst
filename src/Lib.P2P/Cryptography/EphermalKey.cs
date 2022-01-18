@@ -90,8 +90,8 @@ namespace Lib.P2P.Cryptography
             {
                 throw new KeyNotFoundException($"Unknown curve name '{curveName}'.");
             }
-            
-            var domain = new ECDomainParameters(ecP.Curve, ecP.G, ecP.N, ecP.H, ecP.GetSeed());
+
+            ECDomainParameters domain = new(ecP.Curve, ecP.G, ecP.N, ecP.H, ecP.GetSeed());
             var q = ecP.Curve.DecodePoint(bytes);
             return new EphermalKey
             {
@@ -115,8 +115,8 @@ namespace Lib.P2P.Cryptography
             {
                 throw new Exception($"Unknown curve name '{curveName}'.");
             }
-            
-            var domain = new ECDomainParameters(ecP.Curve, ecP.G, ecP.N, ecP.H, ecP.GetSeed());
+
+            ECDomainParameters domain = new(ecP.Curve, ecP.G, ecP.N, ecP.H, ecP.GetSeed());
             var g = GeneratorUtilities.GetKeyPairGenerator("EC");
             g.Init(new ECKeyGenerationParameters(domain, new SecureRandom()));
             var keyPair = g.GenerateKeyPair();

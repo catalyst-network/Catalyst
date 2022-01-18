@@ -55,7 +55,7 @@ namespace Catalyst.Abstractions.Options
         ///   The derived encryption key is used to store the encrypted keys.
         ///   Theses options can not change once the key chain is created.
         /// </remarks>
-        public KeyChainDekOptions Dek { get; set; } = new KeyChainDekOptions();
+        public KeyChainDekOptions Dek { get; set; } = new();
     }
 
     /// <summary>

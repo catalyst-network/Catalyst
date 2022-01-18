@@ -101,7 +101,7 @@ namespace Catalyst.Core.Lib.Cryptography
         private bool TryGet(string fileName, out X509Certificate2 certificate)
         {
             var fullPath = Path.Combine(_storageFolder.ToString(), fileName);
-            var fileInfo = new FileInfo(fullPath);
+            FileInfo fileInfo = new(fullPath);
             certificate = null;
 
             if (!fileInfo.Exists)
@@ -153,16 +153,16 @@ namespace Catalyst.Core.Lib.Cryptography
         public static X509Certificate2 BuildSelfSignedServerCertificate(SecureString password,
             string commonName = LocalHost)
         {
-            var sanBuilder = new SubjectAlternativeNameBuilder();
+            SubjectAlternativeNameBuilder sanBuilder = new();
             sanBuilder.AddIpAddress(IPAddress.Loopback);
             sanBuilder.AddIpAddress(IPAddress.IPv6Loopback);
             sanBuilder.AddDnsName(LocalHost);
             sanBuilder.AddDnsName(Environment.MachineName);
 
-            var distinguishedName = new X500DistinguishedName($"CN={commonName}");
+            X500DistinguishedName distinguishedName = new($"CN={commonName}");
             using (var rsa = RSA.Create(2048))
             {
-                var request = new CertificateRequest(distinguishedName, rsa, HashAlgorithmName.SHA256,
+                CertificateRequest request = new(distinguishedName, rsa, HashAlgorithmName.SHA256,
                     RSASignaturePadding.Pkcs1);
 
                 request.CertificateExtensions.Add(

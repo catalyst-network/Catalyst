@@ -35,7 +35,7 @@ namespace Catalyst.Benchmark
     public class Ed25519phCatalystFfi
     {
         private readonly ICryptoContext _cryptoContext = new FfiWrapper();
-        private static readonly Random Random = new Random();
+        private static readonly Random Random = new();
         private IPrivateKey _privateKey;
         private byte[] _message;
         private byte[] _context;

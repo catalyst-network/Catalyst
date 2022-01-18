@@ -56,7 +56,7 @@ namespace Lib.P2P.Protocols
         /// <typeparam name="T"></typeparam>
         public static void Register<T>() where T : IPeerProtocol, new()
         {
-            var p = new T();
+            T p = new();
             Protocols.Add(p.ToString(), () => new T());
         }
 

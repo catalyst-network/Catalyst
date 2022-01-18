@@ -71,8 +71,8 @@ namespace Lib.P2P.Transports
             {
                 throw new ArgumentException($"Missing IP address in '{address}'.", nameof(address));
             }
-            
-            var socket = new Socket(
+
+            Socket socket = new(
                 ip.Name == "ip4" ? AddressFamily.InterNetwork : AddressFamily.InterNetworkV6,
                 SocketType.Stream,
                 ProtocolType.Tcp);
@@ -163,8 +163,8 @@ namespace Lib.P2P.Transports
             }
             
             var ipAddress = IPAddress.Parse(ip.Value);
-            var endPoint = new IPEndPoint(ipAddress, port);
-            var socket = new Socket(
+            IPEndPoint endPoint = new(ipAddress, port);
+            Socket socket = new(
                 endPoint.AddressFamily,
                 SocketType.Stream,
                 ProtocolType.Tcp);
@@ -248,7 +248,7 @@ namespace Lib.P2P.Transports
                     MultiAddress remote = null;
                     if (conn.RemoteEndPoint is IPEndPoint endPoint)
                     {
-                        var s = new StringBuilder();
+                        StringBuilder s = new();
                         s.Append(endPoint.AddressFamily == AddressFamily.InterNetwork ? "/ip4/" : "/ip6/");
                         s.Append(endPoint.Address);
                         s.Append("/tcp/");

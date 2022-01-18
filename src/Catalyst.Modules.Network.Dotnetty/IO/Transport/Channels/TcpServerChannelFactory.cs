@@ -57,7 +57,7 @@ namespace Catalyst.Modules.Network.Dotnetty.IO.Transport.Channels
         {
             var supervisorLoopGroup = ((ITcpServerEventLoopGroupFactory) handlerEventLoopGroupFactory)
                .GetOrCreateSupervisorEventLoopGroup();
-            var channelHandler = new ServerChannelInitializerBase<IChannel>(HandlerGenerationFunction, handlerEventLoopGroupFactory, certificate);
+            ServerChannelInitializerBase<IChannel> channelHandler = new(HandlerGenerationFunction, handlerEventLoopGroupFactory, certificate);
 
             return await new ServerBootstrap()
                .Group(handlerEventLoopGroupFactory.GetOrCreateSocketIoEventLoopGroup(), supervisorLoopGroup)

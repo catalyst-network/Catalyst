@@ -44,7 +44,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
 
         public MultiAddress Peer { get; private set; }
 
-        public static readonly HastingsOriginator Default = new HastingsOriginator(default);
+        public static readonly HastingsOriginator Default = new(default);
 
         public HastingsOriginator(IHastingsMemento hastingsMemento)
         {

@@ -67,7 +67,7 @@ namespace Catalyst.TestUtils
             var delay = waitPeriod == default ? TimeSpan.FromMilliseconds(100) : waitPeriod;
 
             var performCheck = condition.Compile();
-            var stopWatch = new Stopwatch();
+            Stopwatch stopWatch = new();
             stopWatch.Start();
             while (!performCheck())
             {
@@ -91,7 +91,7 @@ namespace Catalyst.TestUtils
             var waitDelay = TimeSpan.FromMilliseconds(100);
             var timeout = TimeSpan.FromMilliseconds(500);
 
-            var watch = new Stopwatch();
+            Stopwatch watch = new();
             watch.Start();
             var success = await TaskHelper.WaitForAsync(
                     () => IncreaseAndCheckIfAboveLimit(ref attempts,
@@ -117,7 +117,7 @@ namespace Catalyst.TestUtils
 
             var timeout = TimeSpan.FromSeconds(1);
 
-            var watch = new Stopwatch();
+            Stopwatch watch = new();
             watch.Start();
             var success = await TaskHelper.WaitForAsync(
                     () => IncreaseAndCheckIfAboveLimit(ref attempts, 2), timeout)
@@ -137,13 +137,13 @@ namespace Catalyst.TestUtils
             var waitDelay = TimeSpan.FromMilliseconds(50);
             var timeout = TimeSpan.FromMilliseconds(500);
 
-            var watch = new Stopwatch();
+            Stopwatch watch = new();
             watch.Start();
             new Func<Task>(async () => await TaskHelper.WaitForAsyncOrThrowAsync(
                         () => IncreaseAndCheckIfAboveLimit(ref attempts,
                             (int) (timeout.TotalMilliseconds / waitDelay.TotalMilliseconds) + 1), timeout, waitDelay)
-                   .ConfigureAwait(false)).Should().Throw<Exception>()
-               .And.Message.Should().Contain(nameof(IncreaseAndCheckIfAboveLimit));
+                   .ConfigureAwait(false)).Should().ThrowAsync<Exception>()
+                   .WithMessage<Exception>(nameof(IncreaseAndCheckIfAboveLimit));
             watch.Stop();
 
             attempts.Should().BeGreaterOrEqualTo(9);
@@ -158,7 +158,7 @@ namespace Catalyst.TestUtils
             var timeout = TimeSpan.FromSeconds(1);
             var waitDelay = TimeSpan.FromMilliseconds(50);
 
-            var watch = new Stopwatch();
+            Stopwatch watch = new();
             watch.Start();
             await TaskHelper.WaitForAsyncOrThrowAsync(
                     () => IncreaseAndCheckIfAboveLimit(ref attempts, 2), timeout, waitDelay)

@@ -43,7 +43,7 @@ namespace Lib.P2P.Multiplex
     /// </remarks>
     public class Substream : Stream
     {
-        private BufferBlock<byte[]> _inBlocks = new BufferBlock<byte[]>();
+        private BufferBlock<byte[]> _inBlocks = new();
         private byte[] _inBlock;
         private int _inBlockOffset;
         private bool _eos;

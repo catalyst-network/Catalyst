@@ -47,7 +47,7 @@ namespace Catalyst.Core.Lib.Extensions
     {
         public static byte[] GetPublicKeyBytesFromPeerId(this byte[] peerIdBytes)
         {
-            var peerId = new MultiHash("id", peerIdBytes);
+            MultiHash peerId = new("id", peerIdBytes);
             return GetPublicKeyBytesFromPeerId(peerId);
         }
 
@@ -55,9 +55,9 @@ namespace Catalyst.Core.Lib.Extensions
         {
             try
             {
-                using var ms = new MemoryStream(peerId.Digest);
+                using MemoryStream ms = new(peerId.Digest);
                 var publicKey = Serializer.Deserialize<PublicKey>(ms);
-                using var aIn = new Asn1InputStream(publicKey.Data);
+                using Asn1InputStream aIn = new(publicKey.Data);
                 var info = SubjectPublicKeyInfo.GetInstance(aIn.ReadObject());
                 return info.PublicKeyData.GetBytes();
             }
@@ -69,16 +69,16 @@ namespace Catalyst.Core.Lib.Extensions
 
         public static MultiHash ToPeerId(this byte[] publicKeyBytes)
         {
-            var publicKey = new Ed25519PublicKeyParameters(publicKeyBytes, 0);
+            Ed25519PublicKeyParameters publicKey = new(publicKeyBytes, 0);
             var pksi = SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(publicKey).GetDerEncoded();
             var pk = new PublicKey
             {
                 Type = KeyType.Ed25519,
                 Data = pksi
             };
-            using var ms = new MemoryStream();
+            using MemoryStream ms = new();
             Serializer.Serialize(ms, pk);
-            var id = new MultiHash("id", ms.ToArray());
+            MultiHash id = new("id", ms.ToArray());
             return id;
         }
 

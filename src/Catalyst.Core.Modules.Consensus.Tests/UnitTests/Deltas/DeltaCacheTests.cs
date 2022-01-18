@@ -129,9 +129,9 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             ExpectDeltaFromDfsAndNotFromCache(cid, deltaFromDfs);
 
             var cacheEntry = Substitute.For<ICacheEntry>();
-            var expirationTokens = new List<IChangeToken>();
+            List<IChangeToken> expirationTokens = new();
             cacheEntry.ExpirationTokens.Returns(expirationTokens);
-            var expirationCallbacks = new List<PostEvictionCallbackRegistration>();
+            List<PostEvictionCallbackRegistration> expirationCallbacks = new();
             cacheEntry.PostEvictionCallbacks.Returns(expirationCallbacks);
 
             _memoryCache.CreateEntry(cid).Returns(cacheEntry);

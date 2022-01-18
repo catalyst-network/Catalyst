@@ -79,7 +79,7 @@ namespace Lib.P2P.Multiplex
         /// </summary>
         public event EventHandler<Substream> SubstreamClosed;
 
-        private readonly AsyncLock _channelWriteLock = new AsyncLock();
+        private readonly AsyncLock _channelWriteLock = new();
 
         /// <summary>
         ///   The substreams that are open.
@@ -87,7 +87,7 @@ namespace Lib.P2P.Multiplex
         /// <value>
         ///   The key is stream ID and the value is a <see cref="Substream"/>.
         /// </value>
-        public ConcurrentDictionary<long, Substream> Substreams = new ConcurrentDictionary<long, Substream>();
+        public ConcurrentDictionary<long, Substream> Substreams = new();
 
         /// <summary>
         ///   Determines if the muxer is the initiator.

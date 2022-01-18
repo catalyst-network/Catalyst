@@ -180,7 +180,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             var preferredProducers = _deltaProducersProvider
                .GetDeltaProducersFromPreviousDelta(candidate.PreviousDeltaDfsHash.ToByteArray().ToCid());
 
-            var address = new Address(candidate.Producer.ToByteArray());
+            Address address = new(candidate.Producer.ToByteArray());
             var ranking = preferredProducers.ToList()
                .FindIndex(p => p.Equals(address));
 

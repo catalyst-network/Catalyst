@@ -123,7 +123,7 @@ namespace Catalyst.Core.Modules.Keystore
             UseEncryptedKey(ekey, key => { kp = GetKeyPairFromPrivateKey(key); });
 
             // Add recipient type based on key type.
-            var edGen = new CmsEnvelopedDataGenerator();
+            CmsEnvelopedDataGenerator edGen = new();
             switch (kp.Private)
             {
                 case RsaPrivateCrtKeyParameters _:
@@ -190,7 +190,7 @@ namespace Catalyst.Core.Modules.Keystore
         public async Task<byte[]> ReadProtectedDataAsync(byte[] cipherText,
             CancellationToken cancel = default)
         {
-            var cms = new CmsEnvelopedDataParser(cipherText);
+            CmsEnvelopedDataParser cms = new(cipherText);
 
             // Find a recipient whose key we hold. We only deal with recipient names
             // issued by ipfs (O=ipfs, OU=keystore).
@@ -286,7 +286,7 @@ namespace Catalyst.Core.Modules.Keystore
             // TODO: get digest based on Options.Hash
             passphrase.UseSecretBytes(plain =>
             {
-                var pdb = new Pkcs5S2ParametersGenerator(new Sha256Digest());
+                Pkcs5S2ParametersGenerator pdb = new(new Sha256Digest());
                 pdb.Init(
                     plain,
                     Encoding.UTF8.GetBytes(Options.Dek.Salt),
@@ -381,7 +381,7 @@ namespace Catalyst.Core.Modules.Keystore
                         }
                     };
 
-                    using var ms = new MemoryStream();
+                    using MemoryStream ms = new();
                     Serializer.Serialize(ms, publicKey);
                     result = Convert.ToBase64String(ms.ToArray());
                 });
@@ -446,12 +446,12 @@ namespace Catalyst.Core.Modules.Keystore
             var key = await _store.GetAsync(name, cancel).ConfigureAwait(false);
             UseEncryptedKey(key, pkey =>
             {
-                using var sw = new StringWriter();
+                using StringWriter sw = new();
                 var pkcs8 = new Pkcs8Generator(pkey, Pkcs8Generator.PbeSha1_3DES)
                 {
                     Password = password
                 };
-                var pw = new PemWriter(sw);
+                PemWriter pw = new(sw);
                 pw.WriteObject(pkcs8);
                 pw.Writer.Flush();
                 pem = sw.ToString();
@@ -467,13 +467,13 @@ namespace Catalyst.Core.Modules.Keystore
             CancellationToken cancel = default)
         {
             AsymmetricKeyParameter key;
-            using (var sr = new StringReader(pem))
+            using (StringReader sr = new(pem))
             {
                 using var pf = new PasswordFinder
                 {
                     Password = password
                 };
-                var reader = new PemReader(sr, pf);
+                PemReader reader = new(sr, pf);
                 try
                 {
                     key = reader.ReadObject() as AsymmetricKeyParameter;
@@ -568,12 +568,12 @@ namespace Catalyst.Core.Modules.Keystore
 
         private void UseEncryptedKey(EncryptedKey key, Action<AsymmetricKeyParameter> action)
         {
-            using var sr = new StringReader(key.Pem);
+            using StringReader sr = new(key.Pem);
             using var pf = new PasswordFinder
             {
                 Password = _dek
             };
-            var reader = new PemReader(sr, pf);
+            PemReader reader = new(sr, pf);
             var privateKey = (AsymmetricKeyParameter) reader.ReadObject();
             action(privateKey);
         }
@@ -587,13 +587,13 @@ namespace Catalyst.Core.Modules.Keystore
 
             // Create the PKCS #8 container for the key
             string pem;
-            await using (var sw = new StringWriter())
+            await using (StringWriter sw = new())
             {
                 var pkcs8 = new Pkcs8Generator(keyPair.Private, Pkcs8Generator.PbeSha1_3DES)
                 {
                     Password = _dek
                 };
-                var pw = new PemWriter(sw);
+                PemWriter pw = new(sw);
                 pw.WriteObject(pkcs8);
                 await pw.Writer.FlushAsync();
                 pem = sw.ToString();
@@ -651,7 +651,7 @@ namespace Catalyst.Core.Modules.Keystore
                     throw new NotSupportedException($"The key type {key.GetType().Name} is not supported.");
             }
 
-            using (var ms = new MemoryStream())
+            using (MemoryStream ms = new())
             {
                 Serializer.Serialize(ms, publicKey);
 
@@ -674,7 +674,7 @@ namespace Catalyst.Core.Modules.Keystore
             {
                 case RsaPrivateCrtKeyParameters rsa:
                 {
-                    var pub = new RsaKeyParameters(false, rsa.Modulus, rsa.PublicExponent);
+                    RsaKeyParameters pub = new(false, rsa.Modulus, rsa.PublicExponent);
                     keyPair = new AsymmetricCipherKeyPair(pub, privateKey);
                     break;
                 }
@@ -687,7 +687,7 @@ namespace Catalyst.Core.Modules.Keystore
                 case ECPrivateKeyParameters ec:
                 {
                     var q = ec.Parameters.G.Multiply(ec.D);
-                    var pub = new ECPublicKeyParameters(ec.AlgorithmName, q, ec.PublicKeyParamSet);
+                    ECPublicKeyParameters pub = new(ec.AlgorithmName, q, ec.PublicKeyParamSet);
                     keyPair = new AsymmetricCipherKeyPair(pub, ec);
                     break;
                 }
@@ -738,7 +738,7 @@ namespace Catalyst.Core.Modules.Keystore
             UseEncryptedKey(ekey, key => { kp = GetKeyPairFromPrivateKey(key); });
 
             // A signer for the key.
-            var ku = new KeyUsage(KeyUsage.DigitalSignature
+            KeyUsage ku = new(KeyUsage.DigitalSignature
               | KeyUsage.DataEncipherment
               | KeyUsage.KeyEncipherment);
             ISignatureFactory signatureFactory = null;
@@ -768,14 +768,14 @@ namespace Catalyst.Core.Modules.Keystore
             }
 
             // Build the certificate.
-            var dn = new X509Name($"CN={ekey.Id}, OU=keystore, O=ipfs");
-            var ski = new SubjectKeyIdentifier(Base58.Decode(ekey.Id));
+            X509Name dn = new($"CN={ekey.Id}, OU=keystore, O=ipfs");
+            SubjectKeyIdentifier ski = new(Base58.Decode(ekey.Id));
 
             // Not a certificate authority.
             // TODO: perhaps the "self" key is a CA and all other keys issued by it.
-            var bc = new BasicConstraints(false);
+            BasicConstraints bc = new(false);
 
-            var certGenerator = new X509V3CertificateGenerator();
+            X509V3CertificateGenerator certGenerator = new();
             certGenerator.SetIssuerDN(dn);
             certGenerator.SetSubjectDN(dn);
             certGenerator.SetSerialNumber(BigInteger.ValueOf(1));

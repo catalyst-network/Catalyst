@@ -93,7 +93,7 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.IO
         {
             _fileSystem.SetCurrentPath(_sourceFolder).Should().BeTrue();
 
-            var fileSystem = new FileSystem();
+            FileSystem fileSystem = new();
 
             CheckSavedPath(_sourceFolder).Should().BeTrue();
 

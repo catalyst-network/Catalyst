@@ -358,7 +358,7 @@ namespace MultiFormats
                 throw new FormatException("An IPFS multiaddr must start with '/'.");
             }
 
-            var name = new StringBuilder();
+            StringBuilder name = new();
             Protocols.Clear();
             int c;
             while (true)
@@ -458,7 +458,7 @@ namespace MultiFormats
         /// </summary>
         public override string ToString()
         {
-            using (var s = new StringWriter())
+            using (StringWriter s = new())
             {
                 Write(s);
                 return s.ToString();
@@ -476,7 +476,7 @@ namespace MultiFormats
         /// </remarks>
         public byte[] ToArray()
         {
-            using (var ms = new MemoryStream())
+            using (MemoryStream ms = new())
             {
                 Write(ms);
                 return ms.ToArray();

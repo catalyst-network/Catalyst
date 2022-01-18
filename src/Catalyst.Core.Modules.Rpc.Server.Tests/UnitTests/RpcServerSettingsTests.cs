@@ -40,7 +40,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
             rpcSection.GetSection("PfxFileName").Value.Returns(pfxFileName);
             rpcSection.GetSection("Address").Value.Returns("/ip4/127.0.0.1/tcp/9000");
 
-            var rpcSeverSettings = new RpcServerSettings(config);
+            RpcServerSettings rpcSeverSettings = new(config);
 
             rpcSeverSettings.NodeConfig.Should().Be(config);
             rpcSeverSettings.PfxFileName.Should().Be(pfxFileName);

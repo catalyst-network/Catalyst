@@ -88,7 +88,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests.IO.Observers
 
         private MemoryStream GetFakeDfsStream(FileTransferResponseCodeTypes fakeResponse)
         {
-            var fakeStream = new MemoryStream();
+            MemoryStream fakeStream = new();
             fakeStream.Write(new byte[50]);
             _dfsService.UnixFsApi.ReadFileAsync(Arg.Any<string>()).Returns(fakeStream);
             _fileTransferFactory.RegisterTransfer(Arg.Any<IUploadFileInformation>()).Returns(fakeResponse);

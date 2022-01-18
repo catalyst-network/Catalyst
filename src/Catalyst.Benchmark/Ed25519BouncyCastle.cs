@@ -31,7 +31,7 @@ namespace Catalyst.Benchmark
     [BenchmarkCategory("ed25519")]
     public class Ed25519BouncyCastle
     {
-        private static readonly SecureRandom Random = new SecureRandom();
+        private static readonly SecureRandom Random = new();
         private byte[] _privateKey;
         private byte[] _publicKey;
         private byte[] _message;

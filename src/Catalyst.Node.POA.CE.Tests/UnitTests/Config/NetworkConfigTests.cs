@@ -74,13 +74,13 @@ namespace Catalyst.Node.POA.CE.Tests.UnitTests.Config
         {
             var configRoot = new ConfigurationBuilder().AddJsonFile(networkConfig).Build();
 
-            var configModule = new ConfigurationModule(configRoot);
+            ConfigurationModule configModule = new(configRoot);
 
-            var containerBuilder = new ContainerBuilder();
+            ContainerBuilder containerBuilder = new();
             containerBuilder.RegisterModule(configModule);
             containerBuilder.RegisterInstance(configRoot).As<IConfigurationRoot>();
 
-            var address = new MultiAddress("/ip4/192.168.0.181/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdwu2yu3QMzKa2BDkb5C5pcuhtrH1G9HHbztbbxA8tGmf4");
+            MultiAddress address = new("/ip4/192.168.0.181/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdwu2yu3QMzKa2BDkb5C5pcuhtrH1G9HHbztbbxA8tGmf4");
             var peer = new Peer
             {
                 PublicKey = "CAESLDAqMAUGAytlcAMhADyXIeZUUBKx3OiDdhDb5GGrDUPOhhzJWPf80Iqam3lr",
@@ -93,10 +93,10 @@ namespace Catalyst.Node.POA.CE.Tests.UnitTests.Config
             networkTypeProvider.NetworkType.Returns(NetworkType.Devnet);
             var swarm = JToken.FromObject(new List<string> { $"/ip4/0.0.0.0/tcp/4100" });
             config.GetAsync("Addresses.Swarm").Returns(swarm);
-            var peerSettings = new PeerSettings(configRoot, peer, config, networkTypeProvider);
+            PeerSettings peerSettings = new(configRoot, peer, config, networkTypeProvider);
 
             peerSettings.Should().NotBeNull();
-            peerSettings.NetworkType.Should().NotBeNull();
+            peerSettings.NetworkType.Should().NotBe(null);
             peerSettings.Port.Should().BeInRange(1025, 65535);
             peerSettings.BindAddress.Should().BeOfType<IPAddress>();
             peerSettings.PublicKey.Should().NotBeNullOrWhiteSpace();

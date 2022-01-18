@@ -29,7 +29,7 @@ namespace Catalyst.TestUtils
     //nice idea from https://stackoverflow.com/questions/12163840/nsubstitute-multiple-return-sequence
     public class SubstituteResults<T>
     {
-        private readonly Queue<Func<T>> _values = new Queue<Func<T>>();
+        private readonly Queue<Func<T>> _values = new();
         public SubstituteResults(T result) { _values.Enqueue(() => result); }
         public SubstituteResults(Func<T> value) { _values.Enqueue(value); }
         public SubstituteResults<T> Then(T value) { return Then(() => value); }

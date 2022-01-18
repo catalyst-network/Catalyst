@@ -49,7 +49,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
     public class HastingsDiscovery
         : IPeerDiscovery, IDisposable
     {
-        private static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1, 1);
+        private static readonly SemaphoreSlim SemaphoreSlim = new(1, 1);
         private readonly ICancellationTokenProvider _cancellationTokenProvider;
         private readonly IDisposable _evictionSubscription;
         private readonly int _hasValidCandidatesCheckMillisecondsFrequency;
@@ -423,7 +423,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
                     }
                 });
 
-                var newValidState = new HastingsMemento(StepProposal.Peer, new Neighbours(newNeighbours));
+                HastingsMemento newValidState = new(StepProposal.Peer, new Neighbours(newNeighbours));
 
                 StepProposal.RestoreMemento(newValidState);
             }

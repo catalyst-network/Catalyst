@@ -49,7 +49,7 @@ namespace Catalyst.Core.Lib.Extensions
         {
             Guard.Argument(enumerable, nameof(enumerable)).NotNull();
 
-            var sum = new UInt256();
+            UInt256 sum = new();
 
             // ReSharper disable once LoopCanBeConvertedToQuery
             foreach (var item in enumerable)

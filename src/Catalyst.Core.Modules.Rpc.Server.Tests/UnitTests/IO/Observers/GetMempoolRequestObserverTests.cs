@@ -69,7 +69,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests.IO.Observers
 
         private static List<PublicEntryDao> CreateTestTransactions()
         {
-            var mapperProvider = new TestMapperProvider();
+            TestMapperProvider mapperProvider = new();
             var txLst = new List<TransactionBroadcast>
             {
                 TransactionHelper.GetPublicTransaction(234, "standardPubKey", "sign1"),
@@ -82,7 +82,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests.IO.Observers
         [TestCaseSource(nameof(MempoolTransactions))]
         public void GetMempool_UsingFilledMempool_ShouldSendGetMempoolResponse(List<PublicEntryDao> mempoolTransactions)
         {
-            var testScheduler = new TestScheduler();
+            TestScheduler testScheduler = new();
             var mempool = Substitute.For<IMempool<PublicEntryDao>>();
             mempool.Service.GetAll().Returns(mempoolTransactions);
 
@@ -92,7 +92,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests.IO.Observers
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
             var peerSettings = MultiAddressHelper.GetAddress("sender").ToSubstitutedPeerSettings();
-            var handler = new GetMempoolRequestObserver(peerSettings, mempool, _mapperProvider, _logger);
+            GetMempoolRequestObserver handler = new(peerSettings, mempool, _mapperProvider, _logger);
 
             handler.StartObserving(messageStream);
 

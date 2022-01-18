@@ -30,7 +30,7 @@ namespace Catalyst.Core.Lib.Util
 {
     public static class ByteUtil
     {
-        private static readonly Random Rand = new Random();
+        private static readonly Random Rand = new();
         public static byte[] ZeroByteArray { get; } = {0};
         public static byte[] EmptyByteArray { get; } = new byte[0];
 

@@ -31,14 +31,14 @@ namespace Catalyst.KBucket
     [TestClass]
     public class DetermineNodeTest
     {
-        private static readonly Bucket<Contact> Left = new Bucket<Contact>();
-        private static readonly Bucket<Contact> Right = new Bucket<Contact>();
+        private static readonly Bucket<Contact> Left = new();
+        private static readonly Bucket<Contact> Right = new();
         private static readonly Bucket<Contact> Root = new Bucket<Contact> {Left = Left, Right = Right};
 
         [TestMethod]
         public void Tests()
         {
-            var kBucket = new KBucket<Contact>();
+            KBucket<Contact> kBucket = new();
             Bucket<Contact> actual;
 
             actual = kBucket._DetermineNode(Root, new byte[] {0x00}, 0);

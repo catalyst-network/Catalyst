@@ -44,7 +44,7 @@ namespace Lib.P2P.Discovery
         /// <inheritdoc />
         public override ServiceProfile BuildProfile()
         {
-            var profile = new ServiceProfile(
+            ServiceProfile profile = new(
                 SafeLabel(LocalPeer.Id.ToBase32()),
                 ServiceName,
                 0
@@ -85,7 +85,7 @@ namespace Lib.P2P.Discovery
             if (label.Length <= maxLength)
                 return label;
 
-            var sb = new StringBuilder();
+            StringBuilder sb = new();
             while (label.Length > maxLength)
             {
                 sb.Append(label.Substring(0, maxLength));

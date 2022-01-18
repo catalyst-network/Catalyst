@@ -72,7 +72,7 @@ namespace Catalyst.Core.Lib.IO.Handlers
             }
 
             var sig = signedMessage.Signature.RawBytes.ToByteArray();
-            var address = new MultiAddress(signedMessage.Address);
+            MultiAddress address = new(signedMessage.Address);
             var pub = address.GetPublicKeyBytes();
 
             var signature = _keySigner.CryptoContext.GetSignatureFromBytes(sig, pub);

@@ -49,7 +49,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
             try
             {
                 Transaction tx = Rlp.Decode<Transaction>(transaction);
-                EthereumEcdsa ecdsa = new EthereumEcdsa(MainnetSpecProvider.Instance, LimboLogs.Instance);
+                EthereumEcdsa ecdsa = new(MainnetSpecProvider.Instance, LimboLogs.Instance);
                 tx.SenderAddress = ecdsa.RecoverAddress(tx, MainnetSpecProvider.IstanbulBlockNumber);
                 tx.Timestamp = (UInt256) DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                 publicEntry = new PublicEntry

@@ -33,8 +33,8 @@ namespace Catalyst.KBucket
         [TestMethod]
         public void Add()
         {
-            var bucket = new KBucket<Contact>();
-            var x = new Contact("1");
+            KBucket<Contact> bucket = new();
+            Contact x = new("1");
             bucket.Add(x);
             Assert.AreEqual(1, bucket.Count);
             Assert.IsTrue(bucket.Contains(x));
@@ -43,8 +43,8 @@ namespace Catalyst.KBucket
         [TestMethod]
         public void AddDuplicate()
         {
-            var bucket = new KBucket<Contact>();
-            var x = new Contact("1");
+            KBucket<Contact> bucket = new();
+            Contact x = new("1");
             bucket.Add(x);
             bucket.Add(x);
             Assert.AreEqual(1, bucket.Count);
@@ -54,7 +54,7 @@ namespace Catalyst.KBucket
         [TestMethod]
         public void AddBadContact()
         {
-            var bucket = new KBucket<Contact>();
+            KBucket<Contact> bucket = new();
             ExceptionAssert.Throws<ArgumentNullException>(() => bucket.Add(null));
             ExceptionAssert.Throws<ArgumentNullException>(() => bucket.Add(new Contact("a") {Id = null}));
             ExceptionAssert.Throws<ArgumentNullException>(() => bucket.Add(new Contact("a") {Id = new byte[0]}));
@@ -63,9 +63,9 @@ namespace Catalyst.KBucket
         [TestMethod]
         public void TryGet()
         {
-            var bucket = new KBucket<Contact>();
-            var alpha = new Contact("alpha");
-            var beta = new Contact("beta");
+            KBucket<Contact> bucket = new();
+            Contact alpha = new("alpha");
+            Contact beta = new("beta");
             bucket.Add(alpha);
 
             var q = bucket.TryGet(alpha.Id, out var found);
@@ -80,7 +80,7 @@ namespace Catalyst.KBucket
         [TestMethod]
         public void Count()
         {
-            var bucket = new KBucket<Contact>();
+            KBucket<Contact> bucket = new();
             Assert.AreEqual(0, bucket.Count);
 
             bucket.Add(new Contact("a"));
@@ -101,7 +101,7 @@ namespace Catalyst.KBucket
         [TestMethod]
         public void Clear()
         {
-            var bucket = new KBucket<Contact>();
+            KBucket<Contact> bucket = new();
             Assert.AreEqual(0, bucket.Count);
 
             bucket.Add(new Contact("a"));
@@ -116,7 +116,7 @@ namespace Catalyst.KBucket
         [TestMethod]
         public void Remove()
         {
-            var bucket = new KBucket<Contact>();
+            KBucket<Contact> bucket = new();
             Assert.AreEqual(0, bucket.Count);
 
             bucket.Add(new Contact("a"));
@@ -135,7 +135,7 @@ namespace Catalyst.KBucket
         [TestMethod]
         public void CopyTo()
         {
-            var bucket = new KBucket<Contact>();
+            KBucket<Contact> bucket = new();
             Assert.AreEqual(0, bucket.Count);
 
             bucket.Add(new Contact("a"));
@@ -155,7 +155,7 @@ namespace Catalyst.KBucket
         [TestMethod]
         public void Enumerate()
         {
-            var bucket = new KBucket<Contact>();
+            KBucket<Contact> bucket = new();
             var nContacts = bucket.ContactsPerBucket + 1;
             for (var i = 0; i < nContacts; ++i)
             {
@@ -180,7 +180,7 @@ namespace Catalyst.KBucket
         [TestMethod]
         public async Task ThreadSafe()
         {
-            var bucket = new KBucket<Contact>();
+            KBucket<Contact> bucket = new();
             const int nContacts = 1000;
             const int nTasks = 100;
             var tasks = new Task[nTasks];

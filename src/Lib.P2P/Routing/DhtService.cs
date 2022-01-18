@@ -45,7 +45,7 @@ namespace Lib.P2P.Routing
         public virtual string Name { get; } = "libp2p-cs/kad";
 
         /// <inheritdoc />
-        public SemVersion Version { get; } = new SemVersion(1);
+        public SemVersion Version { get; } = new(1);
 
         /// <summary>
         ///   Provides access to other peers.
@@ -349,7 +349,7 @@ namespace Lib.P2P.Routing
             var found = SwarmService.LocalPeer.Id == peerId ? SwarmService.LocalPeer : SwarmService.KnownPeers.FirstOrDefault(p => p.Id == peerId);
 
             // Find the closer peers.
-            var closerPeers = new List<Peer>();
+            List<Peer> closerPeers = new();
             if (found != null)
             {
                 closerPeers.Add(found);

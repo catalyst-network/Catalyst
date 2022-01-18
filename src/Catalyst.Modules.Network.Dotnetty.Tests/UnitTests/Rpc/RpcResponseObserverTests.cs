@@ -43,7 +43,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc
             var correlationId = CorrelationId.GenerateCorrelationId();
 
             var logger = Substitute.For<ILogger>();
-            var responseObserver = new TestRpcResponseObserver(logger);
+            TestRpcResponseObserver responseObserver = new(logger);
 
             Assert.Throws<ArgumentNullException>(() => responseObserver
                .HandleResponseObserver(null, channelHandlerContext,
@@ -57,7 +57,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc
             var correlationId = CorrelationId.GenerateCorrelationId();
 
             var logger = Substitute.For<ILogger>();
-            var responseObserver = new TestRpcResponseObserver(logger);
+            TestRpcResponseObserver responseObserver = new(logger);
 
             Assert.Throws<ArgumentNullException>(() => responseObserver
                .HandleResponseObserver(new VersionResponse(), null,
@@ -71,7 +71,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Rpc
             var correlationId = CorrelationId.GenerateCorrelationId();
 
             var logger = Substitute.For<ILogger>();
-            var responseObserver = new TestRpcResponseObserver(logger);
+            TestRpcResponseObserver responseObserver = new(logger);
 
             Assert.Throws<ArgumentNullException>(() => responseObserver
                .HandleResponseObserver(new VersionResponse(), channelHandlerContext,

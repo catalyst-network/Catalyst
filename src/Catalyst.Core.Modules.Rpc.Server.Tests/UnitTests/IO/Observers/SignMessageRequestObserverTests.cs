@@ -71,7 +71,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests.IO.Observers
         [TestCase("Hello&?!1253Catalyst")]
         public void SignMessageRequestObserver_Can_Return_SignMessageResponse(string message)
         {
-            var testScheduler = new TestScheduler();
+            TestScheduler testScheduler = new();
 
             var signMessageRequest = new SignMessageRequest
             {
@@ -85,8 +85,8 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests.IO.Observers
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
             var peerSettings = MultiAddressHelper.GetAddress("sender").ToSubstitutedPeerSettings();
-            var handler =
-                new SignMessageRequestObserver(peerSettings, _logger, _keySigner);
+            SignMessageRequestObserver handler =
+                new(peerSettings, _logger, _keySigner);
 
             handler.StartObserving(messageStream);
 

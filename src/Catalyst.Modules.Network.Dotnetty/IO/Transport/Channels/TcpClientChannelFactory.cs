@@ -51,7 +51,7 @@ namespace Catalyst.Modules.Network.Dotnetty.IO.Transport.Channels
             MultiAddress address,
             X509Certificate2 certificate = null)
         {
-            var channelHandler = new ClientChannelInitializerBase<ISocketChannel>(HandlerGenerationFunction,
+            ClientChannelInitializerBase<ISocketChannel> channelHandler = new(HandlerGenerationFunction,
                 handlerEventLoopGroupFactory,
                 address.GetIpAddress(),
                 certificate);

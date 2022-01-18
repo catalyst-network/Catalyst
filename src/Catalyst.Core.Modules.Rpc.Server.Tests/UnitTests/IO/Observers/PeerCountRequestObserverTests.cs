@@ -82,7 +82,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests.IO.Observers
         public void TestPeerListRequestResponse(int fakePeers)
         {
             var peerService = Substitute.For<IPeerRepository>();
-            var peerList = new List<Peer>();
+            List<Peer> peerList = new();
 
             for (var i = 0; i < fakePeers; i++)
             {
@@ -107,7 +107,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests.IO.Observers
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
 
             var peerSettings = sendPeerId.ToSubstitutedPeerSettings();
-            var handler = new PeerCountRequestObserver(peerSettings, peerService, _logger);
+            PeerCountRequestObserver handler = new(peerSettings, peerService, _logger);
             handler.StartObserving(messageStream);
 
             _testScheduler.Start();
