@@ -84,7 +84,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.IntegrationTests.IO.Observers
             );
 
             var peerSettings = MultiAddressHelper.GetAddress("sender").ToSubstitutedPeerSettings();
-            var handler = new GetInfoRequestObserver(
+            GetInfoRequestObserver handler = new(
                 peerSettings, _config, _logger);
 
             handler.StartObserving(messageStream);

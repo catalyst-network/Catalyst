@@ -45,7 +45,7 @@ namespace Catalyst.KBucket
         /// <summary>
         /// 
         /// </summary>
-        private readonly ReaderWriterLockSlim _rwlock = new ReaderWriterLockSlim();
+        private readonly ReaderWriterLockSlim _rwlock = new();
 
         /// <summary>
         /// 
@@ -93,7 +93,7 @@ namespace Catalyst.KBucket
         /// <summary>
         ///   The root of the binary tree.
         /// </summary>
-        public Bucket<T> Root { get; private set; } = new Bucket<T>();
+        public Bucket<T> Root { get; private set; } = new();
 
         /// <summary>
         ///   Raised when a bucket needs splitting but cannot be split.

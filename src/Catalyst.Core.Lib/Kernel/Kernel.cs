@@ -103,7 +103,7 @@ namespace Catalyst.Core.Lib.Kernel
             _configCopier.RunConfigStartUp(_targetConfigFolder, _networkType, null, _overwrite, overrideNetworkFile);
             
             var config = _configurationBuilder.Build();
-            var configurationModule = new ConfigurationModule(config);
+            ConfigurationModule configurationModule = new(config);
 
             ContainerBuilder.RegisterInstance(config);
             ContainerBuilder.RegisterType<NetworkTypeProvider>().As<INetworkTypeProvider>()
@@ -229,7 +229,7 @@ namespace Catalyst.Core.Lib.Kernel
             ContainerBuilder.RegisterBuildCallback(buildCallback =>
             {
                 var passwordRegistry = buildCallback.Resolve<IPasswordRegistry>();
-                var ss = new SecureString();
+                SecureString ss = new();
                 foreach (var c in password)
                 {
                     ss.AppendChar(c);

@@ -42,13 +42,13 @@ namespace Lib.P2P.PubSub
     {
         private static ILog _log = LogManager.GetLogger(typeof(FloodRouter));
 
-        private MessageTracker _tracker = new MessageTracker();
-        private ConcurrentDictionary<string, string> _localTopics = new ConcurrentDictionary<string, string>();
+        private MessageTracker _tracker = new();
+        private ConcurrentDictionary<string, string> _localTopics = new();
 
         /// <summary>
         ///   The topics of interest of other peers.
         /// </summary>
-        public TopicManager RemoteTopics { get; set; } = new TopicManager();
+        public TopicManager RemoteTopics { get; set; } = new();
 
         /// <inheritdoc />
         public event EventHandler<PublishedMessage> MessageReceived;
@@ -57,7 +57,7 @@ namespace Lib.P2P.PubSub
         public string Name { get; } = "floodsub";
 
         /// <inheritdoc />
-        public SemVersion Version { get; } = new SemVersion(1);
+        public SemVersion Version { get; } = new(1);
 
         /// <inheritdoc />
         public override string ToString() { return $"/{Name}/{Version}"; }
@@ -241,7 +241,7 @@ namespace Lib.P2P.PubSub
         {
             // Get binary representation
             byte[] bin;
-            using (var ms = new MemoryStream())
+            using (MemoryStream ms = new())
             {
                 Serializer.SerializeWithLengthPrefix(ms, msg, PrefixStyle.Base128);
                 bin = ms.ToArray();

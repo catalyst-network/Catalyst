@@ -78,9 +78,9 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests.IO.Observers
         [TestCase("FakePeer1002", "FakePeer6000", "FakePeerSataoshi")]
         public void TestPeerListRequestResponse(params string[] fakePeers)
         {
-            var testScheduler = new TestScheduler();
+            TestScheduler testScheduler = new();
             var peerService = Substitute.For<IPeerRepository>();
-            var peerList = new List<Peer>();
+            List<Peer> peerList = new();
 
             fakePeers.ToList().ForEach(fakePeer =>
             {
@@ -103,7 +103,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests.IO.Observers
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
             var peerSettings = MultiAddressHelper.GetAddress("sender").ToSubstitutedPeerSettings();
-            var handler = new PeerListRequestObserver(peerSettings, _logger, peerService);
+            PeerListRequestObserver handler = new(peerSettings, _logger, peerService);
             handler.StartObserving(messageStream);
 
             testScheduler.Start();

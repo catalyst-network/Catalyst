@@ -52,7 +52,7 @@ namespace Lib.P2P.PubSub
 
         private long _nextSequenceNumber;
         private ConcurrentDictionary<TopicHandler, TopicHandler> _topicHandlers;
-        private readonly MessageTracker _tracker = new MessageTracker();
+        private readonly MessageTracker _tracker = new();
 
         // TODO: A general purpose CancellationTokenSource that stops publishing of
         // messages when this service is stopped.
@@ -183,7 +183,7 @@ namespace Lib.P2P.PubSub
         /// <inheritdoc />
         public Task PublishAsync(string topic, Stream message, CancellationToken cancel = default)
         {
-            using (var ms = new MemoryStream())
+            using (MemoryStream ms = new())
             {
 #pragma warning disable VSTHRD103
                 message.CopyTo(ms);

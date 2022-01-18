@@ -34,7 +34,7 @@ namespace Lib.P2P.PubSub
     {
         private static readonly IEnumerable<Peer> Nopeers = Enumerable.Empty<Peer>();
 
-        private ConcurrentDictionary<string, HashSet<Peer>> _topics = new ConcurrentDictionary<string, HashSet<Peer>>();
+        private ConcurrentDictionary<string, HashSet<Peer>> _topics = new();
 
         /// <summary>
         ///   Get the peers interested in a topic.

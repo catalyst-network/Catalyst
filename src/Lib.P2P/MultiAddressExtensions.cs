@@ -37,10 +37,10 @@ namespace Lib.P2P
     public static class MultiAddressExtensions
     {
         private static Dictionary<AddressFamily, string> _supportedDnsAddressFamilies =
-            new Dictionary<AddressFamily, string>();
+            new();
 
-        private static MultiAddress _http = new MultiAddress("/tcp/80");
-        private static MultiAddress _https = new MultiAddress("/tcp/443");
+        private static MultiAddress _http = new("/tcp/80");
+        private static MultiAddress _https = new("/tcp/443");
 
         static MultiAddressExtensions()
         {
@@ -95,7 +95,7 @@ namespace Lib.P2P
         public static async Task<List<MultiAddress>> ResolveAsync(this MultiAddress multiaddress,
             CancellationToken cancel = default)
         {
-            var list = new List<MultiAddress>();
+            List<MultiAddress> list = new();
 
             // HTTP
             var i = multiaddress.Protocols.FindIndex(ma => ma.Name == "http");
@@ -135,7 +135,7 @@ namespace Lib.P2P
                     protocolName == "dns6" && a.AddressFamily == AddressFamily.InterNetworkV6);
             foreach (var addr in addresses)
             {
-                var ma0 = new MultiAddress(_supportedDnsAddressFamilies[addr.AddressFamily] + addr);
+                MultiAddress ma0 = new(_supportedDnsAddressFamilies[addr.AddressFamily] + addr);
                 var ma1 = multiaddress.Clone();
                 ma1.Protocols[i] = ma0.Protocols[0];
                 list.Add(ma1);

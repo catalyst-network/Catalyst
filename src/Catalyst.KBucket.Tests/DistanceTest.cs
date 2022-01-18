@@ -34,7 +34,7 @@ namespace Catalyst.KBucket
         [TestMethod]
         public void Tristanls()
         {
-            var bucket = new KBucket<Contact>();
+            KBucket<Contact> bucket = new();
 
             Assert.AreEqual((ulong) 0, bucket.Distance(new byte[] {0x00}, new byte[] {0x00}));
             Assert.AreEqual((ulong) 1, bucket.Distance(new byte[] {0x00}, new byte[] {0x01}));
@@ -46,13 +46,13 @@ namespace Catalyst.KBucket
         [TestMethod]
         public void ByContact()
         {
-            var bucket = new KBucket<Contact>();
-            var c0 = new Contact((byte) 0);
-            var c1 = new Contact((byte) 1);
-            var c2 = new Contact((byte) 2);
-            var c00 = new Contact((byte) 0, (byte) 0);
-            var c0124 = new Contact((byte) 0x01, (byte) 0x24);
-            var c4024 = new Contact((byte) 0x40, (byte) 0x24);
+            KBucket<Contact> bucket = new();
+            Contact c0 = new((byte) 0);
+            Contact c1 = new((byte) 1);
+            Contact c2 = new((byte) 2);
+            Contact c00 = new((byte) 0, (byte) 0);
+            Contact c0124 = new((byte) 0x01, (byte) 0x24);
+            Contact c4024 = new((byte) 0x40, (byte) 0x24);
             Assert.AreEqual((ulong) 0, bucket.Distance(c0, c0));
             Assert.AreEqual((ulong) 1, bucket.Distance(c0, c1));
             Assert.AreEqual((ulong) 3, bucket.Distance(c2, c1));

@@ -38,16 +38,16 @@ namespace Catalyst.Core.Modules.Web3.Client.Tests.UnitTests
     {
         [Test]
         public void Can_Add_Swagger() {
-            var serviceCollection = new ServiceCollection();
-            var apiModule = new ApiModule(new HttpOptions(new IPEndPoint(IPAddress.Any, 5005)), new List<string>(), true);
+            ServiceCollection serviceCollection = new();
+            ApiModule apiModule = new(new HttpOptions(new IPEndPoint(IPAddress.Any, 5005)), new List<string>(), true);
             apiModule.ConfigureServices(serviceCollection);
             serviceCollection.Any(service => service.ServiceType == typeof(ISwaggerProvider)).Should().Be(true);
         }
 
         [Test]
         public void Can_Not_Add_Swagger() {
-            var serviceCollection = new ServiceCollection();
-            var apiModule = new ApiModule(new HttpOptions(new IPEndPoint(IPAddress.Any, 5005)), new List<string>(), false);
+            ServiceCollection serviceCollection = new();
+            ApiModule apiModule = new(new HttpOptions(new IPEndPoint(IPAddress.Any, 5005)), new List<string>(), false);
             apiModule.ConfigureServices(serviceCollection);
             serviceCollection.Any(service => service.ServiceType == typeof(ISwaggerProvider)).Should().Be(false);
         }
@@ -60,8 +60,8 @@ namespace Catalyst.Core.Modules.Web3.Client.Tests.UnitTests
                 typeof(ICorsService),
             };
 
-            var serviceCollection = new ServiceCollection();
-            var apiModule = new ApiModule(new HttpOptions(new IPEndPoint(IPAddress.Any, 5005)), new List<string>(), true);
+            ServiceCollection serviceCollection = new();
+            ApiModule apiModule = new(new HttpOptions(new IPEndPoint(IPAddress.Any, 5005)), new List<string>(), true);
             apiModule.ConfigureServices(serviceCollection);
 
             foreach (var serviceType in serviceTypes)

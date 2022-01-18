@@ -117,8 +117,8 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
 
             _synchroniser.DeltaCache.GenesisHash.Returns(_genesisHash);
 
-            var stateDbDevice = new MemDb();
-            var codeDbDevice = new MemDb();
+            MemDb stateDbDevice = new();
+            MemDb codeDbDevice = new();
 
             _stateDb = new StateDb(stateDbDevice);
             _codeDb = new StateDb(codeDbDevice);
@@ -126,10 +126,10 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             _stateProvider = new StateProvider(_stateDb, _codeDb, LimboLogs.Instance);
             _storageProvider = new StorageProvider(_stateDb, _stateProvider, LimboLogs.Instance);
 
-            var stateUpdateHashProvider = new StateUpdateHashProvider();
+            StateUpdateHashProvider stateUpdateHashProvider = new();
             _specProvider = new CatalystSpecProvider();
 
-            var kvm = new KatVirtualMachine(_stateProvider, _storageProvider, stateUpdateHashProvider, _specProvider, _hashProvider, _cryptoContext,
+            KatVirtualMachine kvm = new(_stateProvider, _storageProvider, stateUpdateHashProvider, _specProvider, _hashProvider, _cryptoContext,
                 LimboLogs.Instance);
             _deltaExecutor = new DeltaExecutor(_specProvider, _stateProvider, _storageProvider, kvm, new FfiWrapper(),
                 _logger);
@@ -181,7 +181,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             _deltaHashProvider.DeltaHashUpdates.Returns(updates.Select(h => (Cid) h).ToObservable(_testScheduler));
 
             // do not remove - it registers with observable so there is a reference to this object held until the test is ended
-            var _ = new Ledger(_deltaExecutor, _stateProvider, _storageProvider, _stateDb, _codeDb,
+            Ledger _ = new(_deltaExecutor, _stateProvider, _storageProvider, _stateDb, _codeDb,
                 _fakeRepository, _deltaIndexService, _receipts, _deltaHashProvider, _synchroniser, _mempool, _mapperProvider, _hashProvider, _logger);
 
             _testScheduler.Start();
@@ -440,7 +440,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             // balance should be 500_000 0x7a120
             var balanceOf1 = "70a08231000000000000000000000000" +
                 _senderAddress.ToString(false, false);
-            var balanceOf1Tracer = new CallOutputTracer();
+            CallOutputTracer balanceOf1Tracer = new();
             var balanceOf1Delta =
                 EntryUtils.PrepareSingleContractEntryDelta(_senderPublicKey, _senderPublicKey, 0, balanceOf1, 5);
             balanceOf1Delta.PublicEntries[0].ReceiverAddress = contractAddress2.Bytes.ToByteString();
@@ -462,7 +462,7 @@ namespace Catalyst.Core.Modules.Ledger.Tests.IntegrationTests
             balanceOf2Delta.PublicEntries[0].ReceiverAddress = contractAddress2.Bytes.ToByteString();
             balanceOf2Delta.PublicEntries[0].Signature = balanceOf2Delta.PublicEntries[0]
                .GenerateSignature(_cryptoContext, _senderPrivateKey, _signingContext);
-            var balanceOf2Tracer = new CallOutputTracer();
+            CallOutputTracer balanceOf2Tracer = new();
             _deltaExecutor.CallAndReset(balanceOf2Delta, balanceOf2Tracer);
             balanceOf2Tracer.StatusCode.Should().Be(1);
             balanceOf2Tracer.ReturnValue.Should().Equal(Bytes.FromHexString("0x7a120").PadLeft(32));

@@ -125,7 +125,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var cid = _hashProvider.ComputeUtf8MultiHash("i'm a string").ToCid();
             var fakeBlock = Substitute.For<IFileSystemNode>();
             fakeBlock.Id.Returns(cid);
-            var cancellationToken = new CancellationToken();
+            CancellationToken cancellationToken = new();
 
             _dfsService.UnixFsApi.AddAsync(Arg.Any<Stream>(), Arg.Any<string>(), Arg.Any<AddFileOptions>(), cancel: cancellationToken).Returns(fakeBlock);
 
@@ -164,8 +164,8 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             var fakeBlock = Substitute.For<IFileSystemNode>();
             fakeBlock.Id.Returns(cid);
-            
-            var cancellationSource = new CancellationTokenSource();
+
+            CancellationTokenSource cancellationSource = new();
             var cancellationToken = cancellationSource.Token;
         
             var dfsResults = new SubstituteResults<IFileSystemNode>(() => throw new Exception("this one failed"))

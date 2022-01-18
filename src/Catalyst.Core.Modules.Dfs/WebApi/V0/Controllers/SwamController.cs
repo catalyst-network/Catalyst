@@ -47,7 +47,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
         public AddrsDto PeerAddresses()
         {
             var peers = DfsService.SwarmApi.GetSwarmKnownPeers(Cancel);
-            var dto = new AddrsDto();
+            AddrsDto dto = new();
             foreach (var peer in peers)
             {
                 dto.Addrs[peer.Id.ToString()] = peer.Addresses

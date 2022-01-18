@@ -31,7 +31,7 @@ namespace Catalyst.Modules.UPnP
     {
         public static List<Mapping> ParseJson(string tcp, string udp, string json)
         {
-            var mappings = new List<Mapping>();
+            List<Mapping> mappings = new();
             var jObject = JObject.Parse(json);
             
             mappings.AddRange(tcp.Split(',')

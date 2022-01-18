@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
-        <Title>James Kirby (nshcore@protonmail.com)</Title>
+        <TargetFramework>net6.0</TargetFramework>
+        <Title>Darren Priestnall (darren.op@catalystnet.org)</Title>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Catalyst.Modules.POA.Consensus.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>

@@ -65,7 +65,7 @@ namespace Catalyst.Core.Lib.Service
 
         public DeltaIndexDao LatestDeltaIndex()
         {
-            var pagingOptions = new PagingOptions<DeltaIndexDao, ulong>(1, 2, x => x.Height, isDescending: true);
+            PagingOptions<DeltaIndexDao, ulong> pagingOptions = new(1, 2, x => x.Height, isDescending: true);
             return _repository.GetAll(pagingOptions).FirstOrDefault();
         }
 

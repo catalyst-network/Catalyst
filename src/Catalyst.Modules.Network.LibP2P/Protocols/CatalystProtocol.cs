@@ -47,7 +47,7 @@ namespace Lib.P2P.Protocols
         public string Name { get; } = "ipfs/catalyst";
 
         /// <inheritdoc />
-        public SemVersion Version { get; } = new SemVersion(1);
+        public SemVersion Version { get; } = new(1);
 
         /// <summary>
         ///   Provides access to other peers.

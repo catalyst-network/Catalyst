@@ -120,7 +120,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.IntegrationTests.Rpc.IO.Transpo
             var correlationId = CorrelationId.GenerateCorrelationId();
 
             var protocolMessage = new GetPeerCountRequest().ToProtocolMessage(sender, correlationId);
-            var dto = new MessageDto(
+            MessageDto dto = new(
                 protocolMessage,
                 recipient
             );
@@ -147,7 +147,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.IntegrationTests.Rpc.IO.Transpo
 
             _authenticationStrategy.Authenticate(Arg.Any<MultiAddress>()).Returns(true);
 
-            var observer = new ProtocolMessageObserver<IObserverDto<ProtocolMessage>>(0, Substitute.For<ILogger>());
+            ProtocolMessageObserver<IObserverDto<ProtocolMessage>> observer = new(0, Substitute.For<ILogger>());
 
             var messageStream = _serverFactory.InheritedHandlers.OfType<RpcObservableServiceHandler>().Single().MessageStream;
 

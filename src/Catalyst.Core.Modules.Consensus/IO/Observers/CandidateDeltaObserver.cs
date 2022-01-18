@@ -58,7 +58,7 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
         {
             try
             {
-                var multiAddress = new MultiAddress(message.Address);
+                MultiAddress multiAddress = new(message.Address);
                 Logger.Verbose("received {message} from {port}", message.CorrelationId.ToCorrelationId(),
                     multiAddress.GetPort());
 

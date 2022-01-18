@@ -33,7 +33,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
     {
         private readonly ILogger _logger = Log.Logger.ForContext(typeof(Web3HandlerResolver));
 
-        private Dictionary<string, EthWeb3RequestHandlerBase> _handlers = new Dictionary<string, EthWeb3RequestHandlerBase>(StringComparer.InvariantCultureIgnoreCase);
+        private Dictionary<string, EthWeb3RequestHandlerBase> _handlers = new(StringComparer.InvariantCultureIgnoreCase);
 
         public Web3HandlerResolver()
         {

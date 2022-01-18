@@ -64,7 +64,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
         [SetUp]
         public void Init()
         {
-            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
+            HashProvider hashProvider = new(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
 
             _output = TestContext.CurrentContext;
             _testScheduler = new TestScheduler();
@@ -181,7 +181,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
             _testScheduler.AdvanceBy(secondProviderStartOffset.Ticks);
 
             var spy2 = Substitute.For<IObserver<IPhase>>();
-            using (var cycleProvider2 = new CycleEventsProvider(CycleConfiguration.Default, _dateTimeProvider,
+            using (CycleEventsProvider cycleProvider2 = new(CycleConfiguration.Default, _dateTimeProvider,
                 _schedulerProvider, _deltaHashProvider, _logger))
             {
                 cycleProvider2.StartAsync().Wait();

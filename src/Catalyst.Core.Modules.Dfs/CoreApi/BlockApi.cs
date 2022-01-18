@@ -339,7 +339,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             bool pin = false,
             CancellationToken cancel = default)
         {
-            await using (var ms = new MemoryStream())
+            await using (MemoryStream ms = new())
             {
                 await data.CopyToAsync(ms, cancel).ConfigureAwait(false);
                 return await PutAsync(ms.ToArray(), contentType, multiHash, encoding, pin, cancel)

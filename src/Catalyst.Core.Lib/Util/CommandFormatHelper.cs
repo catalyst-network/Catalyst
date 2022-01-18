@@ -39,7 +39,7 @@ namespace Catalyst.Core.Lib.Util
         /// <returns>String of the formatted response</returns>
         public static string FormatRepeatedPeerInfoResponse(RepeatedField<PeerInfo> repeatedPeerInfo)
         {
-            var stringBuilder = new StringBuilder();
+            StringBuilder stringBuilder = new();
             foreach (var peerInfo in repeatedPeerInfo)
             {
                 stringBuilder.AppendLine($"BlackListed={peerInfo.IsBlacklisted}");

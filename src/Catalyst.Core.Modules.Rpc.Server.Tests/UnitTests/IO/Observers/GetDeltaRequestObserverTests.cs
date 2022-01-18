@@ -55,7 +55,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests.IO.Observers
         [SetUp]
         public void Init()
         {
-            var builder = new ContainerBuilder();
+            ContainerBuilder builder = new();
             builder.RegisterModule<HashingModule>();
             var container = builder.Build();
             container.BeginLifetimeScope();

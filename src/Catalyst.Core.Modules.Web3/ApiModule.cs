@@ -73,14 +73,14 @@ namespace Catalyst.Core.Modules.Web3
             var buildPath = Path.GetDirectoryName(executingAssembly);
             var webDirectory = Directory.CreateDirectory(Path.Combine(buildPath, "wwwroot"));
 
-            async void BuildCallback(IContainer container)
+            builder.RegisterBuildCallback(c =>
             {
-                _container = container;
+//                _container = container;
                 var logger = _container.Resolve<ILogger>();
                 var certificateStore = _container.Resolve<ICertificateStore>();
                 try
                 {
-                    await Host.CreateDefaultBuilder()
+                    Host.CreateDefaultBuilder()
                        .UseServiceProviderFactory(new SharedContainerProviderFactory(_container))
                        .UseConsoleLifetime()
                        .ConfigureContainer<ContainerBuilder>(ConfigureContainer)
@@ -118,9 +118,7 @@ namespace Catalyst.Core.Modules.Web3
                 {
                     logger.Error(e, "Error loading API");
                 }
-            }
-
-            builder.RegisterBuildCallback(BuildCallback);
+            });
             base.Load(builder);
         }
 
@@ -208,7 +206,7 @@ namespace Catalyst.Core.Modules.Web3
 
             public ContainerBuilder CreateBuilder(IServiceCollection services)
             {
-                var builder = new ContainerBuilder();
+                ContainerBuilder builder = new();
                 builder.Populate(services);
                 return builder;
             }
@@ -216,7 +214,8 @@ namespace Catalyst.Core.Modules.Web3
             public IServiceProvider CreateServiceProvider(ContainerBuilder containerBuilder)
             {
                 // using an obsolete way of updating an already created container
-                containerBuilder.Update(_container);
+                // TODO: TheNewAutonomy
+                //   containerBuilder.Update(_container);
 
                 return new AutofacServiceProvider(_container);
             }

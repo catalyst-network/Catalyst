@@ -52,7 +52,7 @@ namespace Lib.P2P.Transports
             var ip = address.Protocols
                .Where(p => p.Name == "ip4" || p.Name == "ip6")
                .First();
-            var socket = new Socket(
+            Socket socket = new(
                 ip.Name == "ip4" ? AddressFamily.InterNetwork : AddressFamily.InterNetworkV6,
                 SocketType.Dgram,
                 ProtocolType.Udp);
@@ -103,8 +103,8 @@ namespace Lib.P2P.Transports
                .Where(p => p.Name == "ip4" || p.Name == "ip6")
                .First();
             var ipAddress = IPAddress.Parse(ip.Value);
-            var endPoint = new IPEndPoint(ipAddress, port);
-            var socket = new Socket(
+            IPEndPoint endPoint = new(ipAddress, port);
+            Socket socket = new(
                 endPoint.AddressFamily,
                 SocketType.Dgram,
                 ProtocolType.Udp);

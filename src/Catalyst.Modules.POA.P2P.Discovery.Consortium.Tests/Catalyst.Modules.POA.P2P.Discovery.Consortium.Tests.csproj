@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
-        <Authors>James Kirby (nshcore@protonmail.com)</Authors>
+        <TargetFramework>net6.0</TargetFramework>
+        <Authors>Darren Priestnall (darren.op@catalystnet.org)</Authors>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Catalyst.Modules.POA.P2P.Tests.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
@@ -14,8 +14,8 @@
     </PropertyGroup>
     <Import Project="../Common.TestProjects.props" />
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
-        <PackageReference Include="NUnit3TestAdapter" Version="3.16.1">
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+        <PackageReference Include="NUnit3TestAdapter" Version="4.2.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>

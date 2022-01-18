@@ -75,7 +75,7 @@ namespace Lib.P2P.Discovery
                 try
                 {
                     var profile = BuildProfile();
-                    var discovery = new ServiceDiscovery(MulticastService);
+                    ServiceDiscovery discovery = new(MulticastService);
                     OnServiceDiscovery(discovery);
                     discovery.ServiceInstanceDiscovered += OnServiceInstanceDiscovered;
 
@@ -113,7 +113,7 @@ namespace Lib.P2P.Discovery
                 var msg = e.Message;
 
                 // Is it our service?
-                var qsn = new DomainName(ServiceName + ".local");
+                DomainName qsn = new(ServiceName + ".local");
                 if (!e.ServiceInstanceName.BelongsTo(qsn))
                     return;
 

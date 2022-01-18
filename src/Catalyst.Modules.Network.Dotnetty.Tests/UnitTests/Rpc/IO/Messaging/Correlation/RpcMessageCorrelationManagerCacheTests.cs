@@ -49,14 +49,14 @@ namespace Catalyst.Modules.Network.Dotnetty.Tests.UnitTests.Rpc.IO.Messaging.Cor
         {
             _testScheduler = new TestScheduler();
 
-            var memoryCacheOptions = new MemoryCacheOptions();
-            var memoryCache = new MemoryCache(memoryCacheOptions);
+            MemoryCacheOptions memoryCacheOptions = new();
+            MemoryCache memoryCache = new(memoryCacheOptions);
 
             var logger = Substitute.For<ILogger>();
             var changeTokenProvider = Substitute.For<IChangeTokenProvider>();
 
             _cancellationTokenSource = new CancellationTokenSource();
-            var expirationToken = new CancellationChangeToken(_cancellationTokenSource.Token);
+            CancellationChangeToken expirationToken = new(_cancellationTokenSource.Token);
             changeTokenProvider.GetChangeToken().Returns(expirationToken);
 
             _rpcMessageCorrelationManager =

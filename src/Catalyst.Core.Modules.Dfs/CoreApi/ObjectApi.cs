@@ -48,7 +48,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             {
                 Type = DataType.Directory
             };
-            using var pb = new MemoryStream();
+            using MemoryStream pb = new();
             ProtoBuf.Serializer.Serialize(pb, dm);
             return new DagNode(pb.ToArray());
         }
@@ -81,7 +81,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             }
 
             var block = await _blockApi.GetAsync(id, cancel).ConfigureAwait(false);
-            var node = new DagNode(block.DataStream);
+            DagNode node = new(block.DataStream);
             return node.Links;
         }
 
@@ -107,7 +107,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             IEnumerable<IMerkleLink> links = null,
             CancellationToken cancel = default)
         {
-            var node = new DagNode(data, links);
+            DagNode node = new(data, links);
             return PutAsync(node, cancel);
         }
 
@@ -120,7 +120,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         public async Task<ObjectStat> StatAsync(Cid id, CancellationToken cancel = default)
         {
             var block = await _blockApi.GetAsync(id, cancel).ConfigureAwait(false);
-            var node = new DagNode(block.DataStream);
+            DagNode node = new(block.DataStream);
             return new ObjectStat
             {
                 BlockSize = block.Size,

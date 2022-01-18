@@ -39,7 +39,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
             return _multiplier * Comparer<UInt256?>.Default.Compare(x?.GasPrice.ToUInt256(), y?.GasPrice.ToUInt256());
         }
 
-        public static AveragePriceComparer InstanceDesc { get; } = new AveragePriceComparer(-1);
-        public static AveragePriceComparer InstanceAsc { get; } = new AveragePriceComparer(1);
+        public static AveragePriceComparer InstanceDesc { get; } = new(-1);
+        public static AveragePriceComparer InstanceAsc { get; } = new(1);
     }
 }

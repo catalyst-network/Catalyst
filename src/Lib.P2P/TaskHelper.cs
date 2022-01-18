@@ -58,7 +58,7 @@ namespace Lib.P2P
         public static async Task<T> WhenAnyResultAsync<T>(IEnumerable<Task<T>> tasks,
             CancellationToken cancel)
         {
-            var exceptions = new List<Exception>();
+            List<Exception> exceptions = new();
             var running = tasks.ToList();
             while (running.Count > 0)
             {

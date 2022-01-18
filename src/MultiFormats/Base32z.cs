@@ -40,6 +40,6 @@ namespace MultiFormats
         /// <summary>
         ///   The encoder/decoder for z-base-32.
         /// </summary>
-        public static readonly SimpleBase.Base32 Codec = new SimpleBase.Base32(Alphabet);
+        public static readonly SimpleBase.Base32 Codec = new(Alphabet);
     }
 }

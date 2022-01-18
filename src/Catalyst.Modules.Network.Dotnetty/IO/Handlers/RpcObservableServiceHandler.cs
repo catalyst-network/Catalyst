@@ -81,7 +81,7 @@ namespace Catalyst.Modules.Network.Dotnetty.IO.Handlers
         protected override void ChannelRead0(IChannelHandlerContext ctx, ProtocolMessage message)
         {
             Logger.Verbose("Received {message}", message);
-            var contextAny = new ObserverDto(ctx, message);
+            ObserverDto contextAny = new(ctx, message);
             _messageSubject.OnNext(contextAny);
             ctx.FireChannelRead(message);
         }

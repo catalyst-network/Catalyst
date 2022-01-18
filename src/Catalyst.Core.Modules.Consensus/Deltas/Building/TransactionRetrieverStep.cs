@@ -73,8 +73,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
             //lock time equals 0 or less than ledger cycle time
             //we assume all transactions are of type non-confidential for now
 
-            List<PublicEntry> validTransactionsForDelta = new List<PublicEntry>();
-            List<PublicEntry> rejectedTransactions = new List<PublicEntry>();
+            List<PublicEntry> validTransactionsForDelta = new();
+            List<PublicEntry> rejectedTransactions = new();
 
             int allTransactionsCount = allTransactions.Count;
             for (int i = 0; i < allTransactionsCount; i++)

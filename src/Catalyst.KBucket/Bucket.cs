@@ -38,7 +38,7 @@ namespace Catalyst.KBucket
         /// <summary>
         ///   The contacts in the bucket.
         /// </summary>
-        public List<T> Contacts = new List<T>();
+        public List<T> Contacts = new ();
 
         /// <summary>
         ///  Determines if the bucket can be split.

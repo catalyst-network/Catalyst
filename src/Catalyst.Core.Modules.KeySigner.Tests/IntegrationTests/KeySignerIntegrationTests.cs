@@ -54,16 +54,16 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
         {
             this.Setup(TestContext.CurrentContext);
 
-            var cryptoContext = new FfiWrapper();
+            FfiWrapper cryptoContext = new();
 
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.NetworkType.Returns(NetworkType.Devnet);
 
-            var keyRegistry = new KeyRegistry();
+            KeyRegistry keyRegistry = new();
 
-            var inMemoryStore = new InMemoryStore<string, EncryptedKey>();
-            var keyStoreService = new KeyStoreService(new KeyChainOptions { DefaultKeyType = "ed25519" }, inMemoryStore);
-            var keyApi = new KeyApi(keyStoreService);
+            InMemoryStore<string, EncryptedKey> inMemoryStore = new();
+            KeyStoreService keyStoreService = new(new KeyChainOptions { DefaultKeyType = "ed25519" }, inMemoryStore);
+            KeyApi keyApi = new(keyStoreService);
 
             var secureString = TestPasswordReader.BuildSecureStringPassword("password");
             keyApi.SetPassphraseAsync(secureString).GetAwaiter().GetResult();

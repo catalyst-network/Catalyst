@@ -68,7 +68,7 @@ namespace Catalyst.Core.Modules.Dfs
 
         private readonly DfsState _dfsState;
         private readonly IHashProvider _hashProvider;
-        private ConcurrentBag<Func<Task>> _stopTasks = new ConcurrentBag<Func<Task>>();
+        private ConcurrentBag<Func<Task>> _stopTasks = new();
         private readonly IPeerRepository _peerRepository;
 
         public DfsService(

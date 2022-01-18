@@ -62,7 +62,7 @@ namespace Catalyst.Core.Lib.IO.Observers
             try
             {
                 var correlationId = message.CorrelationId.ToCorrelationId();
-                var recipientAddress = new MultiAddress(message.Address);
+                MultiAddress recipientAddress = new(message.Address);
 
                 var response = HandleRequest(message.FromProtocolMessage<TProtoReq>(),
                     recipientAddress,

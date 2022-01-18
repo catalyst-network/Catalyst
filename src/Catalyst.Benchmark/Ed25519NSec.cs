@@ -32,7 +32,7 @@ namespace Catalyst.Benchmark
     [BenchmarkCategory("ed25519")]
     public class Ed25519NSec
     {
-        private static readonly SecureRandom Random = new SecureRandom();
+        private static readonly SecureRandom Random = new();
 
         private readonly SignatureAlgorithm _algorithm = SignatureAlgorithm.Ed25519;
         private byte[] _message;

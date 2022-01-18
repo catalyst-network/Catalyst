@@ -38,7 +38,7 @@ namespace Catalyst.TestUtils
 
         public static SecureString BuildSecureStringPassword(string expectedPassword)
         {
-            var secureString = new SecureString();
+            SecureString secureString = new();
             expectedPassword.ToList().ForEach(c => secureString.AppendChar(c));
             secureString.MakeReadOnly();
             return secureString;

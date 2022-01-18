@@ -81,12 +81,12 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests.IO.Observers
         [Test]
         public void HandlerCanSendErrorOnException()
         {
-            var testScheduler = new TestScheduler();
+            TestScheduler testScheduler = new();
 
             _downloadFileTransferFactory.DownloadChunk(Arg.Any<TransferFileBytesRequest>()).Returns(FileTransferResponseCodeTypes.Error);
 
             var sender = MultiAddressHelper.GetAddress("sender");
-            var requestDto = new MessageDto(new TransferFileBytesRequest().ToProtocolMessage(sender)
+            MessageDto requestDto = new(new TransferFileBytesRequest().ToProtocolMessage(sender)
               , MultiAddressHelper.GetAddress("recipient"));
 
             var messageStream = MessageStreamHelper.CreateStreamWithMessage(_context, testScheduler, requestDto.Content);

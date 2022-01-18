@@ -38,9 +38,9 @@ namespace Catalyst.KBucket
             {
                 Arbiter = (a, b) => a.Clock > b.Clock ? a : b
             };
-            var a3 = new Contact("a") {Clock = 3};
-            var a2 = new Contact("a") {Clock = 2};
-            var a4 = new Contact("a") {Clock = 4};
+            Contact a3 = new("a") {Clock = 3};
+            Contact a2 = new("a") {Clock = 2};
+            Contact a4 = new("a") {Clock = 4};
 
             kBucket.Add(a3);
             kBucket.Add(a2);

@@ -176,7 +176,7 @@ namespace MultiFormats
         /// <seealso cref="ToArray"/>
         public MultiHash(byte[] buffer)
         {
-            using (var ms = new MemoryStream(buffer, false))
+            using (MemoryStream ms = new(buffer, false))
             {
                 Read(ms);
             }
@@ -249,7 +249,7 @@ namespace MultiFormats
         /// <seealso cref="ToBase58"/>
         public MultiHash(string s)
         {
-            using (var ms = new MemoryStream(s.FromBase58(), false))
+            using (MemoryStream ms = new(s.FromBase58(), false))
             {
                 Read(ms);
             }
@@ -312,7 +312,7 @@ namespace MultiFormats
         /// </remarks>
         public void Write(Stream stream)
         {
-            using (var cos = new CodedOutputStream(stream, true))
+            using (CodedOutputStream cos = new(stream, true))
             {
                 Write(cos);
             }
@@ -342,7 +342,7 @@ namespace MultiFormats
 
         private void Read(Stream stream)
         {
-            using (var cis = new CodedInputStream(stream, true))
+            using (CodedInputStream cis = new(stream, true))
             {
                 Read(cis);
             }
@@ -421,7 +421,7 @@ namespace MultiFormats
                 return _b58String;
             }
 
-            using (var ms = new MemoryStream())
+            using (MemoryStream ms = new())
             {
                 Write(ms);
                 _b58String = ms.ToArray().ToBase58();
@@ -448,7 +448,7 @@ namespace MultiFormats
         /// </remarks>
         public byte[] ToArray()
         {
-            using (var ms = new MemoryStream())
+            using (MemoryStream ms = new())
             {
                 Write(ms);
                 return ms.ToArray();

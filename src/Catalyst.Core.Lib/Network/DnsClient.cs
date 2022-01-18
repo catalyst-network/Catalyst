@@ -77,7 +77,7 @@ namespace Catalyst.Core.Lib.Network
         /// <param name="seedServers"></param>
         public async Task<IEnumerable<MultiAddress>> GetSeedNodesFromDnsAsync(IEnumerable<string> seedServers)
         {
-            var peers = new List<MultiAddress>();
+            List<MultiAddress> peers = new();
 
             async Task Action(string seedServer)
             {

@@ -56,7 +56,7 @@ namespace Catalyst.TestUtils
                 publicKey = ((Ed25519PublicKeyParameters) keyPair.Public).GetEncoded();
             }
 
-            var address = new MultiAddress($"/ip4/{ipAddress ?? IPAddress.Loopback}/tcp/{port}/ipfs/{publicKey.ToPeerId()}");
+            MultiAddress address = new($"/ip4/{ipAddress ?? IPAddress.Loopback}/tcp/{port}/ipfs/{publicKey.ToPeerId()}");
             return address;
         }
 

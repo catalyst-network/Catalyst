@@ -35,8 +35,8 @@ namespace Catalyst.Core.Lib.Extensions
     {
         public static Stream ToMemoryStream(this string s)
         {
-            var stream = new MemoryStream();
-            var writer = new StreamWriter(stream);
+            MemoryStream stream = new();
+            StreamWriter writer = new(stream);
             writer.Write(s);
             writer.Flush();
             stream.Position = 0;
@@ -59,7 +59,7 @@ namespace Catalyst.Core.Lib.Extensions
 
         public static T ParseHexStringTo<T>(this string hex16Pid) where T : IMessage<T>, new()
         {
-            var parser = new MessageParser<T>(() => new T());
+            MessageParser<T> parser = new(() => new T());
             return parser.ParseFrom(Base16.Decode(hex16Pid));
         }
     }

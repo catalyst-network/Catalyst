@@ -137,7 +137,7 @@ namespace Catalyst.Core.Modules.Dfs
 
             // Get a random peer id.
             var x = new byte[32];
-            var rng = new Random();
+            Random rng = new();
             rng.NextBytes(x);
             var id = MultiHash.ComputeHash(x);
 

@@ -60,10 +60,10 @@ namespace Catalyst.Core.Modules.Kvm
 
         private void AddCatalystPrecompiledContracts()
         {
-            Blake2bPrecompiledContract blake2BPrecompiledContract = new Blake2bPrecompiledContract(new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256")));
+            Blake2bPrecompiledContract blake2BPrecompiledContract = new(new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256")));
             Precompiles[blake2BPrecompiledContract.Address] = blake2BPrecompiledContract;
 
-            Ed25519VerifyPrecompile ed25519VerifyPrecompile = new Ed25519VerifyPrecompile(_cryptoContext);
+            Ed25519VerifyPrecompile ed25519VerifyPrecompile = new(_cryptoContext);
             Precompiles[ed25519VerifyPrecompile.Address] = ed25519VerifyPrecompile;
         }
 

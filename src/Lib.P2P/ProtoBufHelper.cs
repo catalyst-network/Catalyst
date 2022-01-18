@@ -56,10 +56,8 @@ namespace Lib.P2P
             var bytes = new byte[length];
             await stream.ReadExactAsync(bytes, 0, length, cancel).ConfigureAwait(false);
 
-            await using (var ms = new MemoryStream(bytes, false))
-            {
-                return ProtoBuf.Serializer.Deserialize<T>(ms);
-            }
+            await using MemoryStream ms = new(bytes, false);
+            return ProtoBuf.Serializer.Deserialize<T>(ms);
         }
     }
 }

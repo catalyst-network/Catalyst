@@ -48,7 +48,7 @@ namespace Catalyst.KBucket
         [TestMethod]
         public void MaxContactsPerNodeDoesNotSplit()
         {
-            var kBucket = new KBucket<Contact>();
+            KBucket<Contact> kBucket = new();
             for (var i = 0; i < kBucket.ContactsPerBucket; ++i) kBucket.Add(new Contact(i));
 
             Assert.IsNull(kBucket.Root.Left);
@@ -59,7 +59,7 @@ namespace Catalyst.KBucket
         [TestMethod]
         public void MaxContactsPerNodePlusOneDoetSplit()
         {
-            var kBucket = new KBucket<Contact>();
+            KBucket<Contact> kBucket = new();
             for (var i = 0; i < kBucket.ContactsPerBucket + 1; ++i) kBucket.Add(new Contact(i));
 
             Assert.IsNotNull(kBucket.Root.Left);
@@ -74,10 +74,10 @@ namespace Catalyst.KBucket
             {
                 LocalContactId = new byte[] {0x00}
             };
-            var contacts = new List<Contact>();
+            List<Contact> contacts = new();
             for (var i = 0; i < kBucket.ContactsPerBucket + 1; ++i)
             {
-                var contact = new Contact((byte) i);
+                Contact contact = new((byte) i);
                 contacts.Add(contact);
                 kBucket.Add(contact);
             }

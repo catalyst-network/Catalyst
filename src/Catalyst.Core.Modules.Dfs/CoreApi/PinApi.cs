@@ -90,9 +90,9 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
         {
             var r = await _nameApi.ResolveAsync(path, cancel: cancel).ConfigureAwait(false);
             var id = Cid.Decode(r.Remove(0, 6));
-            var todos = new Stack<Cid>();
+            Stack<Cid> todos = new();
             todos.Push(id);
-            var dones = new List<Cid>();
+            List<Cid> dones = new();
 
             // The pin is added before the content is fetched, so that
             // garbage collection will not delete the newly pinned
@@ -137,9 +137,9 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
             bool recursive = true,
             CancellationToken cancel = default)
         {
-            var todos = new Stack<Cid>();
+            Stack<Cid> todos = new();
             todos.Push(id);
-            var dones = new List<Cid>();
+            List<Cid> dones = new();
 
             while (todos.Count > 0)
             {

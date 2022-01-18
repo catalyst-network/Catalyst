@@ -69,7 +69,7 @@ namespace Catalyst.Core.Modules.Ledger
         private readonly ILogger _logger;
         private readonly IDisposable _deltaUpdatesSubscription;
 
-        private readonly object _synchronisationLock = new object();
+        private readonly object _synchronisationLock = new();
         volatile Cid _latestKnownDelta;
         long _latestKnownDeltaNumber = -1;
 
@@ -224,7 +224,7 @@ namespace Catalyst.Core.Modules.Ledger
                     return;
                 }
 
-                ReceiptDeltaTracer tracer = new ReceiptDeltaTracer(nextDeltaInChain, deltaHash);
+                ReceiptDeltaTracer tracer = new(nextDeltaInChain, deltaHash);
 
                 // add here a receipts tracer or similar, depending on what data needs to be stored for each contract
 

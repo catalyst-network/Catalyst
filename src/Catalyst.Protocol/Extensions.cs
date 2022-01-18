@@ -44,7 +44,7 @@ namespace Catalyst.Protocol
             var messageSize = message.CalculateSize();
             var array = Pool.Rent(messageSize);
 
-            using (var output = new CodedOutputStream(array))
+            using (CodedOutputStream output = new(array))
             {
                 message.WriteTo(output);
             }

@@ -65,7 +65,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
             _mockSocketReplySubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1, _testScheduler);
             var mockChannel = Substitute.For<IChannel>();
             var mockEventStream = _mockSocketReplySubject.AsObservable();
-            var observableChannel = new RpcObservableChannel(mockEventStream, mockChannel);
+            RpcObservableChannel observableChannel = new(mockEventStream, mockChannel);
 
             _channelFactory.BuildChannelAsync(_clientEventLoopGroupFactory, Arg.Any<MultiAddress>(),
                 Arg.Any<X509Certificate2>()).Returns(observableChannel);
@@ -95,14 +95,14 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
         [Test]
         public async Task SubscribeToResponse_Should_Not_Return_Invalid_Response()
         {
-            var nodeRpcClientFactory = new RpcClientFactory(_channelFactory, _clientEventLoopGroupFactory,
+            RpcClientFactory nodeRpcClientFactory = new(_channelFactory, _clientEventLoopGroupFactory,
                 new List<IRpcResponseObserver> { new GetVersionResponseObserver(_logger) });
             var nodeRpcClient = await nodeRpcClientFactory.GetClientAsync(null, _rpcClientConfig);
             var receivedResponse = false;
             var targetVersionResponse = new VersionResponse { Version = "1.2.3.4" };
             var protocolMessage =
                 targetVersionResponse.ToProtocolMessage(_peerIdentifier, CorrelationId.GenerateCorrelationId());
-            var observerDto = new ObserverDto(_channelHandlerContext, protocolMessage);
+            ObserverDto observerDto = new(_channelHandlerContext, protocolMessage);
 
             _mockSocketReplySubject.OnNext(observerDto);
             nodeRpcClient.SubscribeToResponse<GetDeltaResponse>(response => receivedResponse = true);
@@ -114,14 +114,14 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
         [Test]
         public async Task SubscribeToResponse_Should_Return_Response()
         {
-            var nodeRpcClientFactory = new RpcClientFactory(_channelFactory, _clientEventLoopGroupFactory,
+            RpcClientFactory nodeRpcClientFactory = new(_channelFactory, _clientEventLoopGroupFactory,
                 new List<IRpcResponseObserver> { new GetVersionResponseObserver(_logger) });
             var nodeRpcClient = await nodeRpcClientFactory.GetClientAsync(null, _rpcClientConfig);
             VersionResponse returnedVersionResponse = null;
             var targetVersionResponse = new VersionResponse { Version = "1.2.3.4" };
             var protocolMessage =
                 targetVersionResponse.ToProtocolMessage(_peerIdentifier, CorrelationId.GenerateCorrelationId());
-            var observerDto = new ObserverDto(_channelHandlerContext, protocolMessage);
+            ObserverDto observerDto = new(_channelHandlerContext, protocolMessage);
 
             _mockSocketReplySubject.OnNext(observerDto);
             nodeRpcClient.SubscribeToResponse<VersionResponse>(response => returnedVersionResponse = response);
@@ -133,13 +133,13 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
         [Test]
         public async Task SubscribeToResponse_Without_Response_Handler_Should_Throw_Exception()
         {
-            var nodeRpcClientFactory = new RpcClientFactory(_channelFactory, _clientEventLoopGroupFactory,
+            RpcClientFactory nodeRpcClientFactory = new(_channelFactory, _clientEventLoopGroupFactory,
                 new List<IRpcResponseObserver>());
             var nodeRpcClient = await nodeRpcClientFactory.GetClientAsync(null, _rpcClientConfig);
             var targetVersionResponse = new VersionResponse { Version = "1.2.3.4" };
             var protocolMessage =
                 targetVersionResponse.ToProtocolMessage(_peerIdentifier, CorrelationId.GenerateCorrelationId());
-            var observerDto = new ObserverDto(_channelHandlerContext, protocolMessage);
+            ObserverDto observerDto = new(_channelHandlerContext, protocolMessage);
 
             Assert.Throws<ResponseHandlerDoesNotExistException>(() =>
             {

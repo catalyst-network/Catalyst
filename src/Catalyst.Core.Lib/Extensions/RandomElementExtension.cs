@@ -30,7 +30,7 @@ namespace Catalyst.Core.Lib.Extensions
 {
     public static class RandomElementExtension
     {
-        private static readonly Random Rng = new Random();
+        private static readonly Random Rng = new();
 
         /// <summary>
         ///     Takes a random sample from list, must have more than 3 items in list, to take a sample of at least 2

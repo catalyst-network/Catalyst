@@ -53,7 +53,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
         [SetUp]
         public void Init()
         {
-            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
+            HashProvider hashProvider = new(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _deltaVoter = Substitute.For<IDeltaVoter>();
             var logger = Substitute.For<ILogger>();
             _newHash = hashProvider.ComputeUtf8MultiHash("newHash").ToCid();

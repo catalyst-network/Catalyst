@@ -92,7 +92,7 @@ namespace Catalyst.Core.Modules.Ledger.Contract
 
             var newDelta = CreateOneOffDelta(latestDeltaCid, latestDelta, transaction);
 
-            CallOutputTracer callOutputTracer = new CallOutputTracer();
+            CallOutputTracer callOutputTracer = new();
 
             _stateProvider.StateRoot = root;
             _deltaExecutor.CallAndReset(newDelta, callOutputTracer);

@@ -31,11 +31,11 @@ namespace Catalyst.Abstractions.Kvm.Models
     [Todo(Improve.Refactor, "Can make it struct?")]
     public class BlockParameter : IEquatable<BlockParameter>
     {
-        public static BlockParameter Earliest = new BlockParameter(BlockParameterType.Earliest);
+        public static BlockParameter Earliest = new(BlockParameterType.Earliest);
 
-        public static BlockParameter Pending = new BlockParameter(BlockParameterType.Pending);
+        public static BlockParameter Pending = new(BlockParameterType.Pending);
 
-        public static BlockParameter Latest = new BlockParameter(BlockParameterType.Latest);
+        public static BlockParameter Latest = new(BlockParameterType.Latest);
 
         public BlockParameterType Type { get; set; }
         public long? BlockNumber { get; }

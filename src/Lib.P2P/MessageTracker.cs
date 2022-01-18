@@ -42,7 +42,7 @@ namespace Lib.P2P
         /// <remarks>
         ///   The key is the ID of a message.  The value is the expiry date.
         /// </remarks>
-        private ConcurrentDictionary<string, DateTime> _messages = new ConcurrentDictionary<string, DateTime>();
+        private ConcurrentDictionary<string, DateTime> _messages = new();
 
         /// <summary>
         ///   The definition of recent.

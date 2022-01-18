@@ -71,7 +71,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
 
             Guard.Argument(activePeersList).MinCount(1);
 
-            var peerNeighborsResponseMessage = new PeerNeighborsResponse();
+            PeerNeighborsResponse peerNeighborsResponseMessage = new();
 
             for (var i = 0; i < Constants.NumberOfRandomPeers; i++)
             {

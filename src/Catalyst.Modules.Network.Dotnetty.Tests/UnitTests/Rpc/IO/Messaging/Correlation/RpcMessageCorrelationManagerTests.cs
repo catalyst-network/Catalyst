@@ -37,7 +37,7 @@ namespace Catalyst.Modules.Network.Dotnetty.Tests.UnitTests.Rpc.IO.Messaging.Cor
     public sealed class
         RpcMessageCorrelationManagerTests : MessageCorrelationManagerTests<IRpcMessageCorrelationManager>
     {
-        private readonly TestScheduler _testScheduler = new TestScheduler();
+        private readonly TestScheduler _testScheduler = new();
 
         public RpcMessageCorrelationManagerTests()
         {

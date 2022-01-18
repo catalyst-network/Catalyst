@@ -36,13 +36,13 @@ namespace MultiFormats
     /// </summary>
     public static class ProtoBufHelper
     {
-        private static MethodInfo writeRawBytes = typeof(CodedOutputStream)
+        private static readonly MethodInfo writeRawBytes = typeof(CodedOutputStream)
            .GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
            .Single(m =>
                 m.Name == "WriteRawBytes" && m.GetParameters().Count() == 1
             );
 
-        private static MethodInfo readRawBytes = typeof(CodedInputStream)
+        private static readonly MethodInfo readRawBytes = typeof(CodedInputStream)
            .GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
            .Single(m =>
                 m.Name == "ReadRawBytes"
@@ -97,10 +97,8 @@ namespace MultiFormats
             var bytes = new byte[length];
             await stream.ReadExactAsync(bytes, 0, length, cancel).ConfigureAwait(false);
 
-            await using (var ms = new MemoryStream(bytes, false))
-            {
-                return Serializer.Deserialize<T>(ms);
-            }
+            await using MemoryStream ms = new(bytes, false);
+            return Serializer.Deserialize<T>(ms);
         }
     }
 }

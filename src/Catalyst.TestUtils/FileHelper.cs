@@ -50,7 +50,7 @@ namespace Catalyst.TestUtils
         /// <returns></returns>
         public static long GetCrcValue(string filePath)
         {
-            var crc32 = new Crc32();
+            Crc32 crc32 = new();
             crc32.Update(File.ReadAllBytes(filePath));
             return crc32.Value;
         }
@@ -75,7 +75,7 @@ namespace Catalyst.TestUtils
                 return filePath;
             }
             
-            using (var fs = new FileStream(filePath, FileMode.Open))
+            using (FileStream fs = new(filePath, FileMode.Open))
             {
                 fs.Write(bytes, 0, bytes.Length);
             }
@@ -88,7 +88,7 @@ namespace Catalyst.TestUtils
         /// <returns></returns>
         private static long GetCrcValue(this byte[] crcBytes)
         {
-            var crc32 = new Crc32();
+            Crc32 crc32 = new();
             crc32.Update(crcBytes);
             return crc32.Value;
         }

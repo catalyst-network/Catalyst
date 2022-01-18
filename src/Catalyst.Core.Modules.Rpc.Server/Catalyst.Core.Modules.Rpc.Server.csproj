@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <RootNamespace>Catalyst.Core.Modules.Rpc.Server</RootNamespace>
-        <Authors>James Kirby (nshcore@protonmail.com)</Authors>
+        <Authors>Darren Priestnall (darren.op@catalystnet.org)</Authors>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Catalyst.Core.Modules.Rpc.Server.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
@@ -13,7 +13,7 @@
     <Import Project="../Common.Packable.props" />
     <Import Project="../Common.Projects.props" />
     <ItemGroup>
-      <PackageReference Include="Microsoft.Reactive.Testing" Version="4.1.6" />
+      <PackageReference Include="Microsoft.Reactive.Testing" Version="5.0.0" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />

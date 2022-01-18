@@ -190,7 +190,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
                 case "protobuf":
                     await using (var stream = file.OpenReadStream())
                     {
-                        var dag = new DagNode(stream);
+                        DagNode dag = new(stream);
                         node = await DfsService.ObjectApi.PutAsync(dag, Cancel);
                     }
 

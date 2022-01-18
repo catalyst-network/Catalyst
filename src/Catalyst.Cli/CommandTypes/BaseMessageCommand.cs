@@ -85,7 +85,7 @@ namespace Catalyst.Cli.CommandTypes
 
             if (message == null) return;
 
-            var messageDto = new MessageDto(
+            MessageDto messageDto = new(
                 message.ToProtocolMessage(SenderAddress),
                 RecipientAddress);
             Target.SendMessage(messageDto);

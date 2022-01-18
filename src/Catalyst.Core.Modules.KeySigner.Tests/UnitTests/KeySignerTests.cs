@@ -53,7 +53,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
             _cryptoContext = new FfiWrapper();
 
             var g = GeneratorUtilities.GetKeyPairGenerator("Ed25519");
-            var random = new SecureRandom();
+            SecureRandom random = new();
             g.Init(new Ed25519KeyGenerationParameters(random));
             var keyPair = g.GenerateKeyPair();
 
@@ -70,7 +70,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
             _keyRegistry.RegistryContainsKey(default).ReturnsForAnyArgs(true);
             _keyRegistry.AddItemToRegistry(default, default).ReturnsForAnyArgs(true);
 
-            var keySigner = new KeySigner(_cryptoContext, Substitute.For<IKeyApi>(), _keyRegistry);
+            KeySigner keySigner = new(_cryptoContext, Substitute.For<IKeyApi>(), _keyRegistry);
 
             _keyRegistry.ReceivedWithAnyArgs(0).AddItemToRegistry(default, default);
             _keyRegistry.ClearReceivedCalls();
@@ -90,7 +90,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
         [Test]
         public void KeySigner_Can_Sign_If_Key_Doesnt_Exists_In_Registry_But_There_Is_A_Keystore_File()
         {
-            var keySigner = new KeySigner(_cryptoContext, _keyApi, _keyRegistry);
+            KeySigner keySigner = new(_cryptoContext, _keyApi, _keyRegistry);
             _keyRegistry.ClearReceivedCalls();
 
             _keyRegistry.RegistryContainsKey(default).ReturnsForAnyArgs(false);

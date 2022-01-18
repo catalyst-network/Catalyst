@@ -205,7 +205,7 @@ namespace Lib.P2P
             await EstablishProtocolAsync("/multistream/", cancel).ConfigureAwait(false);
 
             // Find the first security protocol that is also supported by the remote.
-            var exceptions = new List<Exception>();
+            List<Exception> exceptions = new();
             foreach (var protocol in securityProtocols)
             {
                 try

@@ -92,7 +92,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests.IO.Observers
         /// <param name="withPublicKey">if set to <c>true</c> [send message to handler with the public key].</param>
         private void ExecuteTestCase(IReadOnlyCollection<string> fakePeers, bool withPublicKey)
         {
-            var testScheduler = new TestScheduler();
+            TestScheduler testScheduler = new();
             IPeerRepository peerRepository = new PeerRepository(new InMemoryRepository<Peer, string>());
             var fakePeerList = fakePeers.ToList().Select(fakePeer =>
             {
@@ -121,7 +121,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests.IO.Observers
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler, protocolMessage);
 
             var peerSettings = peerId.ToSubstitutedPeerSettings();
-            var handler = new RemovePeerRequestObserver(peerSettings, peerRepository, _logger);
+            RemovePeerRequestObserver handler = new(peerSettings, peerRepository, _logger);
             handler.StartObserving(messageStream);
 
             testScheduler.Start();

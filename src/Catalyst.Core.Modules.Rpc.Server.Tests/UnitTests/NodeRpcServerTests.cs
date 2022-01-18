@@ -68,7 +68,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
             var certificateStore = Substitute.For<ICertificateStore>();
 
             // ReSharper disable once CollectionNeverUpdated.Local
-            var requestHandlers = new List<IRpcRequestObserver>();
+            List<IRpcRequestObserver> requestHandlers = new();
 
             _rpcServer = new RpcServer(_rpcServerSettings, logger, tcpServerChannelFactory, certificateStore,
                 requestHandlers, tcpServerEventLoopGroupFactory);

@@ -42,7 +42,7 @@ namespace Catalyst.Modules.Network.Dotnetty.IO.Transport.Channels
             IPAddress address,
             int port)
         {
-            var channelHandler = new ServerChannelInitializerBase<IChannel>(HandlerGenerationFunction, handlerEventLoopGroupFactory);
+            ServerChannelInitializerBase<IChannel> channelHandler = new(HandlerGenerationFunction, handlerEventLoopGroupFactory);
 
             return await new Bootstrap()
                .Group(handlerEventLoopGroupFactory.GetOrCreateSocketIoEventLoopGroup())

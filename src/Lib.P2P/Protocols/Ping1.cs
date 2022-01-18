@@ -46,7 +46,7 @@ namespace Lib.P2P.Protocols
         public string Name { get; } = "ipfs/ping";
 
         /// <inheritdoc />
-        public SemVersion Version { get; } = new SemVersion(1);
+        public SemVersion Version { get; } = new(1);
 
         /// <summary>
         ///   Provides access to other peers.
@@ -151,7 +151,7 @@ namespace Lib.P2P.Protocols
         private async Task<IEnumerable<PingResult>> PingAsync(Peer peer, int count, CancellationToken cancel)
         {
             var ping = new byte[PingSize];
-            var rng = new Random();
+            Random rng = new();
             var results = new List<PingResult>
             {
                 new PingResult {Success = true, Text = $"PING {peer}."}

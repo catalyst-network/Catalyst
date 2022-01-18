@@ -109,7 +109,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             _cache = Substitute.For<IDeltaCache>();
 
-            Delta previousDelta = new Delta();
+            Delta previousDelta = new();
             previousDelta.StateRoot = ByteString.CopyFrom(Keccak.EmptyTreeHash.Bytes);
             _cache.TryGetOrAddConfirmedDelta(Arg.Any<Cid>(), out Arg.Any<Delta>()).Returns(x =>
             {
@@ -125,7 +125,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             _cryptoContext = new FfiWrapper();
             _stateProvider = new StateProvider(stateDb, codeDb, LimboLogs.Instance);
             IStorageProvider storageProvider = new StorageProvider(stateDb, _stateProvider, LimboLogs.Instance);
-            KatVirtualMachine virtualMachine = new KatVirtualMachine(_stateProvider,
+            KatVirtualMachine virtualMachine = new(_stateProvider,
                 storageProvider,
                 new StateUpdateHashProvider(),
                 specProvider,
@@ -140,7 +140,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
                 _logger);
         }
 
-        private readonly Dictionary<int, IPublicKey> _publicKeys = new Dictionary<int, IPublicKey>();
+        private readonly Dictionary<int, IPublicKey> _publicKeys = new();
 
         private IPublicKey GetPublicKey(int index)
         {
@@ -160,7 +160,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             transactionRetriever.GetMempoolTransactionsByPriority()
                .Returns(new List<PublicEntry>());
 
-            var deltaBuilder = new DeltaBuilder(transactionRetriever, _randomFactory, _hashProvider, _peerSettings,
+            DeltaBuilder deltaBuilder = new(transactionRetriever, _randomFactory, _hashProvider, _peerSettings,
                 _cache, _dateTimeProvider, _stateProvider, _deltaExecutor, _deltaConfig, _transactionConfig, _logger);
 
             var candidate = deltaBuilder.BuildCandidateDelta(_previousDeltaHash);
@@ -185,7 +185,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var transactionRetriever = Substitute.For<IDeltaTransactionRetriever>();
             transactionRetriever.GetMempoolTransactionsByPriority().Returns(invalidTransactionList);
 
-            var deltaBuilder = new DeltaBuilder(transactionRetriever, _randomFactory, _hashProvider, _peerSettings,
+            DeltaBuilder deltaBuilder = new(transactionRetriever, _randomFactory, _hashProvider, _peerSettings,
                 _cache, _dateTimeProvider, _stateProvider, _deltaExecutor, _deltaConfig, _transactionConfig, _logger);
             var candidate = deltaBuilder.BuildCandidateDelta(_previousDeltaHash);
 
@@ -232,7 +232,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             var expectedBytesToHash = BuildExpectedBytesToHash(selectedTransactions, shuffledEntriesBytes);
 
-            var deltaBuilder = new DeltaBuilder(transactionRetriever, _randomFactory, _hashProvider, _peerSettings,
+            DeltaBuilder deltaBuilder = new(transactionRetriever, _randomFactory, _hashProvider, _peerSettings,
                 _cache, _dateTimeProvider, _stateProvider, _deltaExecutor, _deltaConfig, _transactionConfig, _logger);
             var candidate = deltaBuilder.BuildCandidateDelta(_previousDeltaHash);
 
@@ -288,7 +288,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             var expectedBytesToHash = BuildExpectedBytesToHash(selectedTransactions, shuffledEntriesBytes);
 
-            var deltaBuilder = new DeltaBuilder(transactionRetriever, _randomFactory, _hashProvider, _peerSettings,
+            DeltaBuilder deltaBuilder = new(transactionRetriever, _randomFactory, _hashProvider, _peerSettings,
                 _cache, _dateTimeProvider, _stateProvider, _deltaExecutor, _deltaConfig, _transactionConfig, _logger);
             var candidate = deltaBuilder.BuildCandidateDelta(_previousDeltaHash);
 
@@ -342,7 +342,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             var expectedBytesToHash = BuildExpectedBytesToHash(expectedSelectedTransactions, shuffledEntriesBytes);
 
-            var deltaBuilder = new DeltaBuilder(transactionRetriever, _randomFactory, _hashProvider, _peerSettings,
+            DeltaBuilder deltaBuilder = new(transactionRetriever, _randomFactory, _hashProvider, _peerSettings,
                 _cache, _dateTimeProvider, _stateProvider, _deltaExecutor, _deltaConfig, _transactionConfig, _logger);
             var candidate = deltaBuilder.BuildCandidateDelta(_previousDeltaHash);
 

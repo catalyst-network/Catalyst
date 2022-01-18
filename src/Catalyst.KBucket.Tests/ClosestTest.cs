@@ -35,10 +35,10 @@ namespace Catalyst.KBucket
         [TestMethod]
         public void ClosestNodes()
         {
-            var kBucket = new KBucket<Contact>();
+            KBucket<Contact> kBucket = new();
             for (var i = 0; i < 0x12; ++i) kBucket.Add(new Contact((byte) i));
 
-            var contact = new Contact((byte) 0x15); // 00010101
+            Contact contact = new((byte) 0x15); // 00010101
             var contacts = kBucket.Closest(contact).Take(3).ToArray();
             CollectionAssert.AreEqual(new byte[]
             {
@@ -63,7 +63,7 @@ namespace Catalyst.KBucket
             };
             for (var i = 0; i < 1000; ++i) kBucket.Add(new Contact((byte) (i / 256), (byte) (i % 256)));
 
-            var contact = new Contact((byte) 0x80, (byte) 0x80);
+            Contact contact = new((byte) 0x80, (byte) 0x80);
             var contacts = kBucket.Closest(contact);
             Assert.IsTrue(contacts.Count() > 100);
         }
@@ -71,10 +71,10 @@ namespace Catalyst.KBucket
         [TestMethod]
         public void ClosestNodes_ExactMatch()
         {
-            var kBucket = new KBucket<Contact>();
+            KBucket<Contact> kBucket = new();
             for (var i = 0; i < 0x12; ++i) kBucket.Add(new Contact((byte) i));
 
-            var contact = new Contact((byte) 0x11); // 00010001
+            Contact contact = new((byte) 0x11); // 00010001
             var contacts = kBucket.Closest(contact).Take(3).ToArray();
             CollectionAssert.AreEqual(new byte[] {0x11}, contacts[0].Id); // distance: 00000000
             CollectionAssert.AreEqual(new byte[] {0x10}, contacts[1].Id); // distance: 00000001
@@ -96,7 +96,7 @@ namespace Catalyst.KBucket
 
             kBucket.Add(new Contact((byte) 0x00, (byte) 0x01));
 
-            var contact = new Contact((byte) 0x00, (byte) 0x03);
+            Contact contact = new((byte) 0x00, (byte) 0x03);
             var contacts = kBucket.Closest(contact).Take(22).ToArray();
 
             CollectionAssert.AreEqual(contacts[0].Id, new byte[] {0x00, 0x01}); // distance: 0000000000000010

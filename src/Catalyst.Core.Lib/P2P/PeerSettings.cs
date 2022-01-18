@@ -62,7 +62,7 @@ namespace Catalyst.Core.Lib.P2P
 
         public IEnumerable<MultiAddress> GetAddresses(MultiAddress address, Peer localPeer)
         {
-            var result = new MultiAddress($"{address}/ipfs/{localPeer.Id}");
+            MultiAddress result = new($"{address}/ipfs/{localPeer.Id}");
 
             // Get the actual IP address(es).
             IList<MultiAddress> addresses = null;
@@ -131,7 +131,7 @@ namespace Catalyst.Core.Lib.P2P
             var publicIpAddress = IPAddress.Parse(section.GetSection("PublicIpAddress").Value);
 
             var json = configApi.GetAsync("Addresses.Swarm").ConfigureAwait(false).GetAwaiter().GetResult();
-            List<MultiAddress> addresses = new List<MultiAddress>();
+            List<MultiAddress> addresses = new();
             foreach (string a in json)
             {
                 addresses.AddRange(GetAddresses(a, localPeer));

@@ -33,7 +33,7 @@ namespace Catalyst.Abstractions.Kvm
 {
     public class CidJsonConverter : JsonConverter<Cid>
     {
-        static readonly KeccakConverter Converter = new KeccakConverter();
+        static readonly KeccakConverter Converter = new();
 
         public override void WriteJson(JsonWriter writer, Cid value, JsonSerializer serializer)
         {

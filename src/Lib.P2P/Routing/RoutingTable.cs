@@ -42,7 +42,7 @@ namespace Lib.P2P.Routing
     /// </summary>
     public class RoutingTable
     {
-        private KBucket<RoutingPeer> _peers = new KBucket<RoutingPeer>();
+        private KBucket<RoutingPeer> _peers = new();
 
         /// <summary>
         ///   Creates a new instance of the <see cref="RoutingTable"/> for

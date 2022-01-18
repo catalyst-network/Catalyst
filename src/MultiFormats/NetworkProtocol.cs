@@ -40,8 +40,8 @@ namespace MultiFormats
     /// <seealso cref="MultiFormats.MultiAddress" />
     public abstract class NetworkProtocol
     {
-        internal static Dictionary<string, Type> Names = new Dictionary<string, Type>();
-        internal static Dictionary<uint, Type> Codes = new Dictionary<uint, Type>();
+        internal static Dictionary<string, Type> Names = new();
+        internal static Dictionary<uint, Type> Codes = new();
 
         /// <summary>
         ///     Registers the standard network protocols for IPFS.
@@ -82,7 +82,7 @@ namespace MultiFormats
         /// </typeparam>
         public static void Register<T>() where T : NetworkProtocol, new()
         {
-            var protocol = new T();
+            T protocol = new();
 
             if (Names.ContainsKey(protocol.Name))
             {
@@ -108,7 +108,7 @@ namespace MultiFormats
         /// </typeparam>
         public static void RegisterAlias<T>() where T : NetworkProtocol, new()
         {
-            var protocol = new T();
+            T protocol = new();
 
             if (Names.ContainsKey(protocol.Name))
             {
@@ -206,7 +206,7 @@ namespace MultiFormats
         /// </summary>
         public override string ToString()
         {
-            using (var s = new StringWriter())
+            using (StringWriter s = new())
             {
                 s.Write('/');
                 s.Write(Name);

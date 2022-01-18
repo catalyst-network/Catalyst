@@ -38,7 +38,7 @@ namespace Lib.P2P
     public class MultiAddressBlackList : ICollection<MultiAddress>, IPolicy<MultiAddress>
     {
         private ConcurrentDictionary<MultiAddress, MultiAddress> _filters =
-            new ConcurrentDictionary<MultiAddress, MultiAddress>();
+            new();
 
         /// <inheritdoc />
         public bool IsAllowed(MultiAddress target) { return !_filters.Any(kvp => Matches(kvp.Key, target)); }

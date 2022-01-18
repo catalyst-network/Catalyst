@@ -164,7 +164,7 @@ namespace Catalyst.Core.Modules.Sync
 
             _deltaHeightWatcher.Start();
 
-            using (var WaitForPeersCancellationSource = new CancellationTokenSource())
+            using (CancellationTokenSource WaitForPeersCancellationSource = new())
             {
                 using var cts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, WaitForPeersCancellationSource.Token);
                 cts.CancelAfter(TimeSpan.FromSeconds(_peerDiscoveryDelay));

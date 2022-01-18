@@ -173,20 +173,20 @@ namespace Lib.P2P.Routing
             if (Id == null || Id.Length == 0)
                 return false;
 
-            var id = new MultiHash(Id);
+            MultiHash id = new(Id);
             peer = new Peer
             {
                 Id = id
             };
             if (Addresses != null)
             {
-                var x = new MultiAddress($"/ipfs/{id}");
+                MultiAddress x = new($"/ipfs/{id}");
                 peer.Addresses = Addresses
                    .Select(bytes =>
                     {
                         try
                         {
-                            var ma = new MultiAddress(bytes);
+                            MultiAddress ma = new(bytes);
                             ma.Protocols.AddRange(x.Protocols);
                             return ma;
                         }

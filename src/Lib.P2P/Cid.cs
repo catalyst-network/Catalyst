@@ -246,7 +246,7 @@ namespace Lib.P2P
                     return Encode();
 
                 case "L":
-                    var sb = new StringBuilder();
+                    StringBuilder sb = new();
                     sb.Append(Encoding);
                     sb.Append(' ');
                     sb.Append("cidv");
@@ -297,7 +297,7 @@ namespace Lib.P2P
                     break;
                 default:
                 {
-                    using (var ms = new MemoryStream())
+                    using (MemoryStream ms = new())
                     {
                         ms.WriteVarint(Version);
                         ms.WriteMultiCodec(ContentType);
@@ -336,7 +336,7 @@ namespace Lib.P2P
                     return new MultiHash(input);
                 }
 
-                using (var ms = new MemoryStream(MultiBase.Decode(input), false))
+                using (MemoryStream ms = new(MultiBase.Decode(input), false))
                 {
                     var v = ms.ReadVarint32();
                     if (v != 1)
@@ -370,7 +370,7 @@ namespace Lib.P2P
         /// </returns>
         public static Cid Read(Stream stream)
         {
-            var cid = new Cid();
+            Cid cid = new();
             var length = stream.ReadVarint32();
             if (length == 34)
             {
@@ -395,7 +395,7 @@ namespace Lib.P2P
         /// </param>
         public void Write(Stream stream)
         {
-            using (var ms = new MemoryStream())
+            using (MemoryStream ms = new())
             {
                 if (Version != 0)
                 {
@@ -422,7 +422,7 @@ namespace Lib.P2P
         /// </returns>
         public static Cid Read(CodedInputStream stream)
         {
-            var cid = new Cid();
+            Cid cid = new();
             var length = stream.ReadLength();
             if (length == 34)
             {
@@ -447,7 +447,7 @@ namespace Lib.P2P
         /// </param>
         public void Write(CodedOutputStream stream)
         {
-            using (var ms = new MemoryStream())
+            using (MemoryStream ms = new())
             {
                 if (Version != 0)
                 {
@@ -477,7 +477,7 @@ namespace Lib.P2P
         /// </remarks>
         public static Cid Read(byte[] buffer)
         {
-            var cid = new Cid();
+            Cid cid = new();
             if (buffer.Length == 34)
             {
                 cid.Version = 0;
@@ -485,7 +485,7 @@ namespace Lib.P2P
                 return cid;
             }
 
-            using (var ms = new MemoryStream(buffer, false))
+            using (MemoryStream ms = new(buffer, false))
             {
                 cid.Version = ms.ReadVarint32();
                 cid.ContentType = ms.ReadMultiCodec().Name;
@@ -510,7 +510,7 @@ namespace Lib.P2P
                 return Hash.ToArray();
             }
 
-            using (var ms = new MemoryStream())
+            using (MemoryStream ms = new())
             {
                 ms.WriteVarint(Version);
                 ms.WriteMultiCodec(ContentType);

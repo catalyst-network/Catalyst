@@ -49,8 +49,8 @@ namespace Catalyst.Abstractions.Types
         
         public static T RandomBytes()
         {
-            var newBytes = new T();
-            var random = new Random();
+            T newBytes = new();
+            Random random = new();
             random.NextBytes(newBytes.RawBytes);
             return newBytes;
         }

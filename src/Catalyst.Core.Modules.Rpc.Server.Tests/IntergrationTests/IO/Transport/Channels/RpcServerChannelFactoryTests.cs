@@ -76,7 +76,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.IntegrationTests.IO.Transport.C
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.NetworkType.Returns(NetworkType.Devnet);
 
-            var serverFactory = new TestRpcServerChannelFactory(
+            TestRpcServerChannelFactory serverFactory = new(
                 _serverCorrelationManager,
                 _serverKeySigner,
                 _authenticationStrategy,
@@ -117,7 +117,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.IntegrationTests.IO.Transport.C
             var correlationId = CorrelationId.GenerateCorrelationId();
 
             var protocolMessage = new GetPeerCountResponse().ToProtocolMessage(sender, correlationId);
-            var dto = new MessageDto(
+            MessageDto dto = new(
                 protocolMessage,
                 recipient
             );
@@ -140,7 +140,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.IntegrationTests.IO.Transport.C
 
             _authenticationStrategy.Authenticate(Arg.Any<MultiAddress>()).Returns(true);
 
-            var observer = new ProtocolMessageObserver<IObserverDto<ProtocolMessage>> (0, Substitute.For<ILogger>());
+            ProtocolMessageObserver<IObserverDto<ProtocolMessage>> observer = new(0, Substitute.For<ILogger>());
 
             var messageStream = _clientFactory.InheritedHandlers.OfType<RpcObservableServiceHandler>().Single().MessageStream;
 

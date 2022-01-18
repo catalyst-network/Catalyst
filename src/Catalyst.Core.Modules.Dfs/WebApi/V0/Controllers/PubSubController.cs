@@ -99,7 +99,7 @@ namespace Catalyst.Core.Modules.Dfs.WebApi.V0.Controllers
             await DfsService.PubSubApi.SubscribeAsync(arg, message =>
             {
                 // Send the published message to the caller.
-                var dto = new MessageDto(message);
+                MessageDto dto = new(message);
                 StreamJson(dto);
             }, Cancel);
 

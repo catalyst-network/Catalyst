@@ -67,7 +67,7 @@ namespace Lib.P2P
         /// <summary>
         ///   The peers that are reachable.
         /// </summary>
-        public ConcurrentDictionary<Peer, DeadPeer> DeadPeers = new ConcurrentDictionary<Peer, DeadPeer>();
+        public ConcurrentDictionary<Peer, DeadPeer> DeadPeers = new();
 
         /// <inheritdoc />
         public Task StartAsync()

@@ -49,7 +49,7 @@ namespace Catalyst.Core.Modules.Dfs.Migration
         public async Task DowngradeAsync(RepositoryOptions options, CancellationToken cancel = default)
         {
             var path = Path.Combine(options.Folder, "pins");
-            var folder = new DirectoryInfo(path);
+            DirectoryInfo folder = new(path);
             if (!folder.Exists)
             {
                 return;
@@ -82,7 +82,7 @@ namespace Catalyst.Core.Modules.Dfs.Migration
         public async Task UpgradeAsync(RepositoryOptions options, CancellationToken cancel = default)
         {
             var path = Path.Combine(options.Folder, "pins");
-            var folder = new DirectoryInfo(path);
+            DirectoryInfo folder = new(path);
             if (!folder.Exists)
             {
                 return;

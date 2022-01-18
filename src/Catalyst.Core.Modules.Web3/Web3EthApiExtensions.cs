@@ -184,7 +184,7 @@ namespace Catalyst.Core.Modules.Web3
 
             var newDelta = deltaWithCid.CreateOneOffDelta(publicEntry);
 
-            CallOutputTracer callOutputTracer = new CallOutputTracer();
+            CallOutputTracer callOutputTracer = new();
 
             api.StateProvider.StateRoot = root;
             api.Executor.CallAndReset(newDelta, callOutputTracer);

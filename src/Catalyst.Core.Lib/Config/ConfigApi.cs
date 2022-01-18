@@ -64,7 +64,7 @@ namespace Catalyst.Core.Lib.Config
             if (File.Exists(path))
             {
                 using var reader = File.OpenText(path);
-                using var jtr = new JsonTextReader(reader);
+                using JsonTextReader jtr = new(reader);
                 _configuration = await JObject.LoadAsync(jtr, cancel).ConfigureAwait(false);
             }
             else
@@ -127,8 +127,8 @@ namespace Catalyst.Core.Lib.Config
         {
             var path = Path.Combine(_dfsOptions.Repository.Folder, "config");
             await using var fs = File.OpenWrite(path);
-            await using var writer = new StreamWriter(fs);
-            using var jtw = new JsonTextWriter(writer)
+            await using StreamWriter writer = new(fs);
+            using JsonTextWriter jtw = new(writer)
             {
                 Formatting = Formatting.Indented
             };

@@ -33,7 +33,7 @@ namespace Catalyst.Core.Lib.Util
     {
         public override void WriteJson(JsonWriter writer, IMessage<T> value, JsonSerializer serializer)
         {
-            var formatter = new JsonFormatter(JsonFormatter.Settings.Default);
+            JsonFormatter formatter = new(JsonFormatter.Settings.Default);
             writer.WriteRawValue(formatter.Format(value));
         }
 
@@ -43,7 +43,7 @@ namespace Catalyst.Core.Lib.Util
             bool hasExistingValue,
             JsonSerializer serializer)
         {
-            var parser = new JsonParser(JsonParser.Settings.Default);
+            JsonParser parser = new(JsonParser.Settings.Default);
 
             // Load JObject from stream
             var jObject = JObject.Load(reader);

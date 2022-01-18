@@ -39,7 +39,7 @@ namespace Lib.P2P.PubSub
     /// </remarks>
     public class LoopbackRouter : IMessageRouter
     {
-        private MessageTracker _tracker = new MessageTracker();
+        private MessageTracker _tracker = new();
 
         /// <inheritdoc />
         public event EventHandler<PublishedMessage> MessageReceived;

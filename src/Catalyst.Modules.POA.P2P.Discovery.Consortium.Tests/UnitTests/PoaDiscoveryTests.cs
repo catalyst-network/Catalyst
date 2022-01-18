@@ -61,7 +61,7 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
 
             await FileSystem.WriteTextFileToCddAsync(PoaDiscovery.PoaPeerFile, JsonConvert.SerializeObject(peers));
 
-            var peerDiscovery = new PoaDiscovery(Substitute.For<IPeerSettings>(), peerRepository, FileSystem, Substitute.For<ILogger>());
+            PoaDiscovery peerDiscovery = new(Substitute.For<IPeerSettings>(), peerRepository, FileSystem, Substitute.For<ILogger>());
             await peerDiscovery.DiscoveryAsync().ConfigureAwait(false);
             peerRepository.Received(peers.Length).Add(Arg.Any<Peer>());
         }

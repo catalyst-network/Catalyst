@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2019 Catalyst Network
@@ -31,7 +31,7 @@ namespace Catalyst.Modules.UPnP
 {
     public sealed class PortMapper
     {
-        private readonly SemaphoreSlim _locker = new SemaphoreSlim(1, 1);
+        private readonly SemaphoreSlim _locker = new(1, 1);
         private readonly INatUtilityProvider _natUtilityProvider;
         private readonly ILogger _logger;
 

@@ -39,7 +39,7 @@ namespace Lib.P2P
     public class MultiAddressWhiteList : ICollection<MultiAddress>, IPolicy<MultiAddress>
     {
         private ConcurrentDictionary<MultiAddress, MultiAddress> _filters =
-            new ConcurrentDictionary<MultiAddress, MultiAddress>();
+            new();
 
         /// <inheritdoc />
         public bool IsAllowed(MultiAddress target)

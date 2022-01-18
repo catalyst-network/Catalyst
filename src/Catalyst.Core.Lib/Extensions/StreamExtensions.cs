@@ -37,7 +37,7 @@ namespace Catalyst.Core.Lib.Extensions
                 stream.Seek(0, SeekOrigin.Begin);
             }
 
-            using (var reader = new StreamReader(stream, Encoding.UTF8,
+            using (StreamReader reader = new(stream, Encoding.UTF8,
                 true, 4096, leaveOpen))
             {
                 return reader.ReadToEnd();
@@ -51,7 +51,7 @@ namespace Catalyst.Core.Lib.Extensions
                 stream.Seek(0, SeekOrigin.Begin);
             }
 
-            await using (var memoryStream = new MemoryStream())
+            await using (MemoryStream memoryStream = new())
             {
                 await stream.CopyToAsync(memoryStream, cancellationToken).ConfigureAwait(false);
                 var contentBytes = memoryStream.ToArray();

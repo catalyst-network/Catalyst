@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
 
         <RootNamespace>Catalyst.Core.Modules.Dfs</RootNamespace>
-        <Authors>James Kirby (nshcore@protonmail.com)</Authors>
+        <Authors>Darren Priestnall (darren.op@catalystnet.org)</Authors>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Catalyst.Core.Modules.Dfs.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
@@ -48,14 +48,14 @@
     </ItemGroup>
 
     <ItemGroup>
-        <PackageReference Include="Common.Logging.Serilog" Version="4.3.6" />
+        <PackageReference Include="Common.Logging.Serilog" Version="4.4.0" />
         <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
         <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
-        <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="2.2.0" />
-        <PackageReference Include="PeterO.Cbor" Version="4.0.0" />
+        <PackageReference Include="Microsoft.Extensions.FileProviders.Embedded" Version="6.0.1" />
+        <PackageReference Include="PeterO.Cbor" Version="4.5.1" />
         <PackageReference Include="SharpRepository.InMemoryRepository" Version="2.0.3.1" />
-        <PackageReference Include="SharpZipLib" Version="1.2.0" />
+        <PackageReference Include="SharpZipLib" Version="1.3.3" />
     </ItemGroup>
 
 </Project>

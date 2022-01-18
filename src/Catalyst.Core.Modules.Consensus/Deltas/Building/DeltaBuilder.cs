@@ -101,7 +101,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
         ///<inheritdoc />
         public CandidateDeltaBroadcast BuildCandidateDelta(Cid previousDeltaHash)
         {
-            DeltaBuilderContext context = new DeltaBuilderContext(previousDeltaHash);
+            DeltaBuilderContext context = new(previousDeltaHash);
             foreach (IDeltaBuilderStep step in _steps)
             {
                 step.Execute(context);

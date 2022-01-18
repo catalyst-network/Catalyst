@@ -54,11 +54,11 @@ namespace Catalyst.TestUtils
         public static IDfsService GetTestDfs(IFileSystem fileSystem = default, string hashName = "keccak-256", string keyType = null)
         {
             var nodeGuid = Guid.NewGuid();
-            var containerBuilder = new ContainerBuilder();
+            ContainerBuilder containerBuilder = new();
 
             if (fileSystem == null)
             {
-                var testFileSystem = new TestDfsFileSystem();
+                TestDfsFileSystem testFileSystem = new();
                 testFileSystem.Setup(TestContext.CurrentContext);
                 fileSystem = testFileSystem.FileSystem;
             }

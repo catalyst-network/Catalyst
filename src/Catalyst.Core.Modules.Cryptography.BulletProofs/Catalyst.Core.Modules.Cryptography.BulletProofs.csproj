@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <RootNamespace>Catalyst.Core.Modules.Cryptography.BulletProofs</RootNamespace>
-        <Authors>James Kirby (nshcore@protonmail.com)</Authors>
+        <Authors>Darren Priestnall (darren.op@catalystnet.org)</Authors>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Catalyst.Core.Modules.Cryptography.BulletProofs.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
@@ -18,8 +18,8 @@
         <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="4.8.1" />
-        <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+        <PackageReference Include="Autofac" Version="6.3.0" />
+        <PackageReference Include="Newtonsoft.Json" Version="13.0.1" />
         <PackageReference Include="Catalyst.Crypto.rs.Natives" Version="0.0.2.3251" />
     </ItemGroup>
 </Project>

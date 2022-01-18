@@ -87,8 +87,8 @@ namespace Lib.P2P.Cryptography
             var hmacKeySize = 20;
             var need = 2 * (ivSize + cipherKeySize + hmacKeySize);
 
-            var hmac = new HMac(DigestUtilities.GetDigest(hashName));
-            var kp = new KeyParameter(secret);
+            HMac hmac = new(DigestUtilities.GetDigest(hashName));
+            KeyParameter kp = new(secret);
             var seed = Encoding.ASCII.GetBytes("key expansion");
             hmac.Init(kp);
             var a = new byte[hmac.GetMacSize()];

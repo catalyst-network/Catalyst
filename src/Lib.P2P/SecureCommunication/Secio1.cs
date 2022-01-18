@@ -47,7 +47,7 @@ namespace Lib.P2P.SecureCommunication
         public string Name { get; } = "secio";
 
         /// <inheritdoc />
-        public SemVersion Version { get; } = new SemVersion(1);
+        public SemVersion Version { get; } = new(1);
 
         /// <inheritdoc />
         public override string ToString() { return $"/{Name}/{Version}"; }
@@ -72,7 +72,7 @@ namespace Lib.P2P.SecureCommunication
 
             // =============================================================================
             // step 1. Propose -- propose cipher suite + send pubkey + nonce
-            var rng = new SecureRandom();
+            SecureRandom rng = new();
             var localNonce = new byte[16];
             rng.NextBytes(localNonce);
             var localProposal = new Secio1Propose
@@ -112,7 +112,7 @@ namespace Lib.P2P.SecureCommunication
             byte[] oh1;
             byte[] oh2;
             using (var hasher = MultiHash.GetHashAlgorithm())
-            await using (var ms = new MemoryStream())
+            await using (MemoryStream ms = new())
             {
                 ms.Write(remoteProposal.PublicKey, 0, remoteProposal.PublicKey.Length);
                 ms.Write(localProposal.Nonce, 0, localProposal.Nonce.Length);
@@ -121,7 +121,7 @@ namespace Lib.P2P.SecureCommunication
             }
 
             using (var hasher = MultiHash.GetHashAlgorithm())
-            await using (var ms = new MemoryStream())
+            await using (MemoryStream ms = new())
             {
                 ms.Write(localProposal.PublicKey, 0, localProposal.PublicKey.Length);
                 ms.Write(remoteProposal.Nonce, 0, remoteProposal.Nonce.Length);
@@ -162,8 +162,8 @@ namespace Lib.P2P.SecureCommunication
             var localEphemeralPublicKey = localEphemeralKey.PublicKeyBytes();
 
             // Send Exchange packet
-            var localExchange = new Secio1Exchange();
-            await using (var ms = new MemoryStream())
+            Secio1Exchange localExchange = new();
+            await using (MemoryStream ms = new())
             {
                 Serializer.Serialize(ms, localProposal);
                 Serializer.Serialize(ms, remoteProposal);
@@ -187,7 +187,7 @@ namespace Lib.P2P.SecureCommunication
             // =============================================================================
             // step 2.1. Verify -- verify their exchange packet is good.
             var remotePeerKey = Key.CreatePublicKeyFromIpfs(remoteProposal.PublicKey);
-            await using (var ms = new MemoryStream())
+            await using (MemoryStream ms = new())
             {
                 Serializer.Serialize(ms, remoteProposal);
                 Serializer.Serialize(ms, localProposal);
@@ -210,7 +210,7 @@ namespace Lib.P2P.SecureCommunication
 
             // =============================================================================
             // step 2.3. MAC + Cipher -- prepare MAC + cipher
-            var secureStream = new Secio1Stream(stream, cipherName, hashName, k1, k2);
+            Secio1Stream secureStream = new(stream, cipherName, hashName, k1, k2);
 
             // =============================================================================
             // step 3. Finish -- send expected message to verify encryption works (send local nonce)

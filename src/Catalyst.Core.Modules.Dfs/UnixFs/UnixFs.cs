@@ -96,7 +96,7 @@ namespace Catalyst.Core.Modules.Dfs.UnixFs
             CancellationToken cancel)
         {
             var block = await blockService.GetAsync(id, cancel).ConfigureAwait(false);
-            var dag = new DagNode(block.DataStream);
+            DagNode dag = new(block.DataStream);
             var dm = Serializer.Deserialize<DataMessage>(dag.DataStream);
 
             if (dm.Type != DataType.File)

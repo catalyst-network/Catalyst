@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <RootNamespace>Catalyst.Core.Modules.Consensus</RootNamespace>
-        <Authors>James Kirby (nshcore@protonmail.com)</Authors>
+        <Authors>Darren Priestnall (darren.op@catalystnet.org)</Authors>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Catalyst.Core.Modules.Consensus.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
@@ -23,7 +23,7 @@
         <ProjectReference Include="..\Catalyst.Core.Modules.Kvm\Catalyst.Core.Modules.Kvm.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="4.8.1" />
-        <PackageReference Include="Nito.Comparers.Core" Version="6.0.0" />
+        <PackageReference Include="Autofac" Version="6.3.0" />
+        <PackageReference Include="Nito.Comparers.Core" Version="6.2.2" />
     </ItemGroup>
 </Project>

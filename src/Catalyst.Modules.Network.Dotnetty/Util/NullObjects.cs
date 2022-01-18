@@ -28,6 +28,6 @@ namespace Catalyst.Modules.Network.Dotnetty.Util
 {
     public static class NullObjects
     {
-        public static readonly ObserverDto ObserverDto = new ObserverDto(null, new ProtocolMessage());
+        public static readonly ObserverDto ObserverDto = new(null, new ProtocolMessage());
     }
 }

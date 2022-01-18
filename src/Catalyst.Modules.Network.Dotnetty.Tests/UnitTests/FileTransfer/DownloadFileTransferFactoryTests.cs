@@ -52,7 +52,7 @@ namespace Catalyst.Modules.Network.Dotnetty.Tests.UnitTests.FileTransfer
         [Test]
         public async Task Can_Cancel_Download()
         {
-            using (var cancellationTokenSource = new CancellationTokenSource())
+            using (CancellationTokenSource cancellationTokenSource = new())
             {
                 var token = cancellationTokenSource.Token;
                 SetupDownload(token);

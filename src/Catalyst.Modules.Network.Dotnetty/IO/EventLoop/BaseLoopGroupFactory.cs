@@ -64,7 +64,7 @@ namespace Catalyst.Modules.Network.Dotnetty.IO.EventLoop
         internal IEventLoopGroup NewEventLoopGroup(int nEventLoop)
         {
             Guard.Argument(nEventLoop).Positive();
-            var eventLoopGroup = new MultithreadEventLoopGroup(nEventLoop);
+            MultithreadEventLoopGroup eventLoopGroup = new(nEventLoop);
             _eventLoopGroupList.Add(eventLoopGroup);
             return eventLoopGroup;
         }
@@ -73,7 +73,7 @@ namespace Catalyst.Modules.Network.Dotnetty.IO.EventLoop
         /// <returns></returns>
         internal IEventLoopGroup NewEventLoopGroup()
         {
-            var eventLoopGroup = new MultithreadEventLoopGroup();
+            MultithreadEventLoopGroup eventLoopGroup = new();
             _eventLoopGroupList.Add(eventLoopGroup);
             return eventLoopGroup;
         }

@@ -125,7 +125,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests.IO.Transport.Channels
         [Test]
         public void RpcServerChannelFactory_should_put_the_correct_inbound_handlers_on_the_pipeline()
         {
-            var testingChannel = new EmbeddedChannel("test".ToChannelId(),
+            EmbeddedChannel testingChannel = new("test".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());
 
             var senderId = MultiAddressHelper.GetAddress("sender");
@@ -135,7 +135,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests.IO.Transport.Channels
                .Returns(true);
             var protocolMessage = new PingRequest().ToSignedProtocolMessage(senderId, signatureBytes, correlationId: correlationId);
 
-            var observer = new ProtocolMessageObserver<IObserverDto<ProtocolMessage>>(0, Substitute.For<ILogger>());
+            ProtocolMessageObserver<IObserverDto<ProtocolMessage>> observer = new(0, Substitute.For<ILogger>());
 
             var messageStream = _factory.InheritedHandlers.OfType<RpcObservableServiceHandler>()
                .Single().MessageStream;
@@ -154,7 +154,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests.IO.Transport.Channels
         [Test]
         public void RpcServerChannelFactory_should_put_the_correct_outbound_handlers_on_the_pipeline()
         {
-            var testingChannel = new EmbeddedChannel("test".ToChannelId(),
+            EmbeddedChannel testingChannel = new("test".ToChannelId(),
                 true, _factory.InheritedHandlers.ToArray());
             
             var senderId = MultiAddressHelper.GetAddress("sender");

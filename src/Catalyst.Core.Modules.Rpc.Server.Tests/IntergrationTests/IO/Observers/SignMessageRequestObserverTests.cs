@@ -113,8 +113,8 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.IntegrationTests.IO.Observers
 
             var messageStream =
                 MessageStreamHelper.CreateStreamWithMessage(_fakeContext, _testScheduler, protocolMessage);
-            var handler =
-                new SignMessageRequestObserver(peerSettings, _logger, _keySigner);
+            SignMessageRequestObserver handler =
+                new(peerSettings, _logger, _keySigner);
 
             handler.StartObserving(messageStream);
 

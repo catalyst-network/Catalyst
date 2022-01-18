@@ -74,7 +74,7 @@ namespace MultiFormats
         /// <returns>
         ///   An array of 8-bit unsigned integers that is equivalent to <paramref name="s"/>.
         /// </returns>
-        public static byte[] Decode(string s) { return SimpleBase.Base58.Bitcoin.Decode(s); }
+        public static byte[] Decode(string s) { return SimpleBase.Base58.Bitcoin.Decode(s).ToArray(); }
 
         /// <summary>
         ///   Converts the specified <see cref="string"/>, which encodes binary data as base 58 digits, 

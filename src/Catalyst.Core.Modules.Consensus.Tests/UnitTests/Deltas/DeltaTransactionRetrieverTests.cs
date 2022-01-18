@@ -44,9 +44,9 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
         public DeltaTransactionRetrieverTests()
         {
-            var mapperProvider = new TestMapperProvider();
+            TestMapperProvider mapperProvider = new();
 
-            var random = new Random();
+            Random random = new();
 
             var mempool = Substitute.For<IMempool<PublicEntryDao>>();
             _transactions = Enumerable.Range(0, 20).Select(i =>

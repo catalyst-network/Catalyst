@@ -68,7 +68,7 @@ namespace Catalyst.Cli.Commands
             }
 
             var protocolMessage = request.ToProtocolMessage(SenderAddress);
-            var requestMessage = new MessageDto(
+            MessageDto requestMessage = new(
                 protocolMessage,
                 RecipientAddress
             );

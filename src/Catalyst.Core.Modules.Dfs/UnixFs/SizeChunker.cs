@@ -72,7 +72,7 @@ namespace Catalyst.Core.Modules.Dfs.UnixFs
             CancellationToken cancel)
         {
             var protecting = !string.IsNullOrWhiteSpace(options.ProtectionKey);
-            var nodes = new List<UnixFsNode>();
+            List<UnixFsNode> nodes = new();
             var chunkSize = options.ChunkSize;
             var chunk = new byte[chunkSize];
             var chunking = true;
@@ -163,9 +163,9 @@ namespace Catalyst.Core.Modules.Dfs.UnixFs
                             dm.Data = data;
                         }
 
-                        var pb = new MemoryStream();
+                        MemoryStream pb = new();
                         Serializer.Serialize(pb, dm);
-                        var dag = new DagNode(pb.ToArray(), null, options.Hash);
+                        DagNode dag = new(pb.ToArray(), null, options.Hash);
 
                         // Save it.
                         dag.Id = await blockService.PutAsync(

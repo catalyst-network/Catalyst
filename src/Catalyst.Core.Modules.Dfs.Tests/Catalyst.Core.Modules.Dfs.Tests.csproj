@@ -1,9 +1,9 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net6.0</TargetFramework>
         <RootNamespace>Catalyst.Core.Modules.Dfs.Tests</RootNamespace>
-        <Authors>James Kirby (nshcore@protonmail.com)</Authors>
+        <Authors>Darren Priestnall (darren.op@catalystnet.org)</Authors>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Catalyst.Core.Modules.Dfs.Tests.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
@@ -25,14 +25,14 @@
       </Content>
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
-        <PackageReference Include="Microsoft.Reactive.Testing" Version="4.4.1" />
-        <PackageReference Include="NUnit3TestAdapter" Version="3.16.1">
+        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.0.0" />
+        <PackageReference Include="Microsoft.Reactive.Testing" Version="5.0.0" />
+        <PackageReference Include="NUnit3TestAdapter" Version="4.2.0">
             <PrivateAssets>all</PrivateAssets>
             <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
         </PackageReference>
-        <PackageReference Include="System.Reactive" Version="4.4.1" />
-        <PackageReference Include="System.Reactive.Linq" Version="4.4.1" />
+        <PackageReference Include="System.Reactive" Version="5.0.0" />
+        <PackageReference Include="System.Reactive.Linq" Version="5.0.0" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\Catalyst.Core.Modules.Dfs\Catalyst.Core.Modules.Dfs.csproj" />

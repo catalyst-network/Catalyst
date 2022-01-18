@@ -38,7 +38,7 @@ namespace Catalyst.TestUtils
         {
             var mockChannel = Substitute.For<IChannel>();
             var mockEventStream = replaySubject.AsObservable();
-            var observableChannel = new RpcObservableChannel(mockEventStream, mockChannel);
+            RpcObservableChannel observableChannel = new(mockEventStream, mockChannel);
             return observableChannel;
         }
 
@@ -46,7 +46,7 @@ namespace Catalyst.TestUtils
         {
             var mockChannel = Substitute.For<IChannel>();
             var mockEventStream = replaySubject.AsObservable();
-            var observableChannel = new P2PObservableChannel(mockEventStream, mockChannel);
+            P2PObservableChannel observableChannel = new(mockEventStream, mockChannel);
             return observableChannel;
         }
     }

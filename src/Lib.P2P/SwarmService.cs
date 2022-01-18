@@ -73,7 +73,7 @@ namespace Lib.P2P
         /// <summary>
         ///   Added to connection protocols when needed.
         /// </summary>
-        private readonly Plaintext1 _plaintext1 = new Plaintext1();
+        private readonly Plaintext1 _plaintext1 = new();
 
         private Peer _localPeer;
 
@@ -163,7 +163,7 @@ namespace Lib.P2P
         /// <summary>
         ///   Other nodes. Key is the bae58 hash of the peer ID.
         /// </summary>
-        private readonly ConcurrentDictionary<string, Peer> _otherPeers = new ConcurrentDictionary<string, Peer>();
+        private readonly ConcurrentDictionary<string, Peer> _otherPeers = new();
 
         /// <summary>
         ///   Used to cancel any task when the swarm is stopped.
@@ -174,13 +174,13 @@ namespace Lib.P2P
         ///  Outstanding connection tasks initiated by the local peer.
         /// </summary>
         private readonly ConcurrentDictionary<Peer, AsyncLazy<PeerConnection>> _pendingConnections =
-            new ConcurrentDictionary<Peer, AsyncLazy<PeerConnection>>();
+            new();
 
         /// <summary>
         ///  Outstanding connection tasks initiated by a remote peer.
         /// </summary>
         private readonly ConcurrentDictionary<MultiAddress, object> _pendingRemoteConnections =
-            new ConcurrentDictionary<MultiAddress, object>();
+            new();
 
         /// <summary>
         ///   Manages the swarm's peer connections.
@@ -211,7 +211,7 @@ namespace Lib.P2P
         ///   Cancellation tokens for the listeners.
         /// </summary>
         private ConcurrentDictionary<MultiAddress, CancellationTokenSource> _listeners =
-            new ConcurrentDictionary<MultiAddress, CancellationTokenSource>();
+            new();
 
         /// <summary>
         ///   Get the sequence of all known peer addresses.
@@ -319,7 +319,7 @@ namespace Lib.P2P
                 throw new Exception($"Communication with '{peer}' is not allowed.");
             }
 
-            var isNew = false;
+            bool isNew = false;
             var p = _otherPeers.AddOrUpdate(peer.Id.ToBase58(),
                 id =>
                 {
@@ -399,12 +399,12 @@ namespace Lib.P2P
         /// <summary>
         ///   The addresses that cannot be used.
         /// </summary>
-        public MultiAddressBlackList BlackList { get; set; } = new MultiAddressBlackList();
+        public MultiAddressBlackList BlackList { get; set; } = new();
 
         /// <summary>
         ///   The addresses that can be used.
         /// </summary>
-        public MultiAddressWhiteList WhiteList { get; set; } = new MultiAddressWhiteList();
+        public MultiAddressWhiteList WhiteList { get; set; } = new();
 
         /// <summary>
         /// 
@@ -834,7 +834,7 @@ namespace Lib.P2P
         /// </remarks>
         public Task<MultiAddress> StartListeningAsync(MultiAddress address)
         {
-            var cancel = new CancellationTokenSource();
+            CancellationTokenSource cancel = new();
 
             if (!_listeners.TryAdd(address, cancel))
             {
@@ -857,7 +857,7 @@ namespace Lib.P2P
                 throw new ArgumentException($"Missing a transport protocol name '{address}'.", nameof(address));
             }
 
-            var result = new MultiAddress($"{address}/ipfs/{LocalPeer.Id}");
+            MultiAddress result = new($"{address}/ipfs/{LocalPeer.Id}");
 
             // Get the actual IP address(es).
             IEnumerable<MultiAddress> addresses = new List<MultiAddress>();

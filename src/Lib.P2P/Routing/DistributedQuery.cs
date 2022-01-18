@@ -48,7 +48,7 @@ namespace Lib.P2P.Routing
         ///   The maximum number of peers that can be queried at one time
         ///   for all distributed queries.
         /// </summary>
-        private static readonly SemaphoreSlim AskCount = new SemaphoreSlim(128);
+        private static readonly SemaphoreSlim AskCount = new(128);
 
         /// <summary>
         ///   The maximum time spent on waiting for an answer from a peer.
@@ -65,8 +65,8 @@ namespace Lib.P2P.Routing
         /// </remarks>
         private CancellationTokenSource _runningQuery;
 
-        private readonly ConcurrentDictionary<Peer, Peer> _visited = new ConcurrentDictionary<Peer, Peer>();
-        private readonly ConcurrentDictionary<T, T> _answers = new ConcurrentDictionary<T, T>();
+        private readonly ConcurrentDictionary<Peer, Peer> _visited = new();
+        private readonly ConcurrentDictionary<T, T> _answers = new();
         private DhtMessage _queryMessage;
         private int _failedConnects;
 
@@ -199,7 +199,7 @@ namespace Lib.P2P.Routing
                 Log.Debug($"Q{Id}.{taskId}.{pass} ask {peer}");
                 try
                 {
-                    using (var timeout = new CancellationTokenSource(AskTime))
+                    using (CancellationTokenSource timeout = new(AskTime))
                     using (var cts = CancellationTokenSource.CreateLinkedTokenSource(timeout.Token, _runningQuery.Token))
                     using (var stream = await Dht.SwarmService.DialAsync(peer, Dht.ToString(), cts.Token).ConfigureAwait(false))
                     {

@@ -47,9 +47,9 @@ namespace Catalyst.Core.Modules.Dfs.LinkedData
         /// <inheritdoc />
         public CBORObject Deserialise(byte[] data)
         {
-            using (var ms = new MemoryStream(data, false))
+            using (MemoryStream ms = new(data, false))
             {
-                var node = new DagNode(ms);
+                DagNode node = new(ms);
                 var links = node.Links
                    .Select(link => CBORObject.NewMap()
                        .Add("Cid", CBORObject.NewMap()
@@ -73,8 +73,8 @@ namespace Catalyst.Core.Modules.Dfs.LinkedData
                     link["Name"].AsString(),
                     Cid.Decode(link["Cid"]["/"].AsString()),
                     link["Size"].AsInt64()));
-            var node = new DagNode(data["data"].GetByteString(), links);
-            using (var ms = new MemoryStream())
+            DagNode node = new(data["data"].GetByteString(), links);
+            using (MemoryStream ms = new())
             {
                 node.Write(ms);
                 return ms.ToArray();

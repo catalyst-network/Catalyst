@@ -89,7 +89,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers
             lock (Lock)
             {
                 object result = handler.Handle(request.Params, _web3EthApi, _jsonSerializer);
-                JsonRpcResponse response = new JsonRpcResponse(request, result);
+                JsonRpcResponse response = new(request, result);
                 _logger.Information("ETH JSON RPC request {id} {method} {params} returned {result}", request.Id, request.Method, request.Params, result);
                 return response;
             }

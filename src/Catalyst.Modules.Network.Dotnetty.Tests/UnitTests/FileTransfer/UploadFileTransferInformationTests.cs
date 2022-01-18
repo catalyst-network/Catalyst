@@ -44,9 +44,9 @@ namespace Catalyst.Modules.Network.Dotnetty.Tests.UnitTests.FileTransfer
             byte[] expectedBytes =
                 Enumerable.Range(0, byteLengthForChunks).Select(i => (byte) i).ToArray();
 
-            using (MemoryStream ms = new MemoryStream(expectedBytes))
+            using (MemoryStream ms = new(expectedBytes))
             {
-                var uploadFileInformation = new UploadFileTransferInformation(
+                UploadFileTransferInformation uploadFileInformation = new(
                     ms,
                     MultiAddressHelper.GetAddress("test1"),
                     MultiAddressHelper.GetAddress("test2"),
@@ -69,9 +69,9 @@ namespace Catalyst.Modules.Network.Dotnetty.Tests.UnitTests.FileTransfer
         [Test]
         public void Should_Not_Be_Able_To_Retry_After_Max_Retry()
         {
-            using (var memoryStream = new MemoryStream())
+            using (MemoryStream memoryStream = new())
             {
-                var uploadFileInformation = new UploadFileTransferInformation(
+                UploadFileTransferInformation uploadFileInformation = new(
                     memoryStream,
                     MultiAddressHelper.GetAddress("test1"),
                     MultiAddressHelper.GetAddress("test2"),
