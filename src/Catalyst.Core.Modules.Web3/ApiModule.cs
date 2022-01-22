@@ -73,7 +73,7 @@ namespace Catalyst.Core.Modules.Web3
             var buildPath = Path.GetDirectoryName(executingAssembly);
             var webDirectory = Directory.CreateDirectory(Path.Combine(buildPath, "wwwroot"));
 
-            builder.RegisterBuildCallback(c =>
+            builder.RegisterBuildCallback(_container =>
             {
 //                _container = container;
                 var logger = _container.Resolve<ILogger>();
@@ -81,7 +81,7 @@ namespace Catalyst.Core.Modules.Web3
                 try
                 {
                     Host.CreateDefaultBuilder()
-                       .UseServiceProviderFactory(new SharedContainerProviderFactory(_container))
+                       .UseServiceProviderFactory(new AutofacServiceProviderFactory())
                        .UseConsoleLifetime()
                        .ConfigureContainer<ContainerBuilder>(ConfigureContainer)
                        .ConfigureWebHostDefaults(
@@ -112,7 +112,7 @@ namespace Catalyst.Core.Modules.Web3
                             }).RunConsoleAsync();
 
                     //SIGINT is caught from kestrel because we are using RunConsoleAsync in HostBuilder, the SIGINT will not be received in the main console so we need to exit the process manually, to prevent needing to use two SIGINT's
-                    Environment.Exit(2);
+                //    Environment.Exit(2);
                 }
                 catch (Exception e)
                 {
