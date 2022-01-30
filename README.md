@@ -151,4 +151,4 @@ Please note that we have a [Code of Conduct](CODE_OF_CONDUCT.md), and that all a
 
 ## License
 
-[GPL](LICENSE) © 2019 Catalyst Network
+[GPL](LICENSE) © 2022 Catalyst Network
