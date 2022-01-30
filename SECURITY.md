@@ -10,5 +10,5 @@ Currently supported versions
 
 ## Reporting a Vulnerability
 
-To report security issues send an email to info@catalystnet.org (not for support) or [darrenop@atlascity.io](mailto:darrenop@atlascity.io), which goes to @Switch1983.
+To report security issues send an email to info@catalystnet.org (not for support) or [darren.op@catalystnet.org](mailto:darren.op@catalystnet.org), which goes to @TheNewAutonomy.
 

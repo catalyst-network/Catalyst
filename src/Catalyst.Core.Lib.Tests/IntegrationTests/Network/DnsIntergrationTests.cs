@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2019 Catalyst Network
+* Copyright (c) 2022 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -42,7 +42,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Network
             var trueClient = new LookupClient(new IPEndPoint(IPAddress.Parse("9.9.9.9"), 53));
             var dns = new Lib.Network.DnsClient(trueClient);
             var dnsQueryResponse =
-                await dns.GetTxtRecordsAsync("seed1.network.atlascity.io");
+                await dns.GetTxtRecordsAsync("seed1.network.catalystnet.org");
             var answerSection = (TxtRecord) dnsQueryResponse.Answers.FirstOrDefault();
             var seedIp = answerSection?.EscapedText.FirstOrDefault();
             seedIp.Should().Be("0x41437c30317c39322e3230372e3137382e3139387c34323036397c3031323334353637383930313233343536373839");

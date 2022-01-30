@@ -3,7 +3,7 @@
         <TargetFramework>net6.0</TargetFramework>
         <Title>UPnP CLI</Title>
         <PackageDescription>CLI tool to set up port forwarding</PackageDescription>
-        <AssemblyCopyrightAttribute>Copyright © 2020 AtlasCity.io</AssemblyCopyrightAttribute>
+        <AssemblyCopyrightAttribute>Copyright © 2022 catalystnet.org</AssemblyCopyrightAttribute>
         <OutputType>Exe</OutputType>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Catalyst.Modules.UPnP.snk</AssemblyOriginatorKeyFile>

@@ -4,7 +4,7 @@
         <Title>Catalyst POA Node</Title>
         <Authors>Darren Priestnall (darren.op@catalystnet.org)</Authors>
         <PackageDescription>Catalyst POA Node</PackageDescription>
-        <AssemblyCopyrightAttribute>Copyright © 2019 AtlasCity.io</AssemblyCopyrightAttribute>
+        <AssemblyCopyrightAttribute>Copyright © 2022 catalystnet.org</AssemblyCopyrightAttribute>
         <OutputType>Exe</OutputType>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Catalyst.Node.POA.CE.snk</AssemblyOriginatorKeyFile>

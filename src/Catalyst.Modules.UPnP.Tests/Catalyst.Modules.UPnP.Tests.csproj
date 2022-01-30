@@ -2,7 +2,7 @@
     <PropertyGroup>
         <TargetFramework>net6.0</TargetFramework>
         <RootNamespace>Catalyst.UPnP.Tests</RootNamespace>
-        <Authors>Fran (fran.sl@atlascity.io)</Authors>
+        <Authors>Fran (fran.sl@catalystnet.org)</Authors>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Catalyst.Modules.UPnP.Tests.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
