@@ -10,5 +10,5 @@ Currently supported versions
 
 ## Reporting a Vulnerability
 
-To report security issues send an email to operations@symmetric.finance (not for support) or [darren.op@symmetric.finance](mailto:darren.op@symmetric.finance), which goes to @TheNewAutonomy.
+To report security issues send an email to contact@catalystnet.org (not for support) or [darren.op@catalystnet.org](mailto:darren.op@catalystnet.org), which goes to @TheNewAutonomy.
 
