@@ -37,7 +37,7 @@ using Nethermind.Core.Extensions;
 namespace Catalyst.Benchmark.Catalyst.Abstractions
 {
     [MemoryDiagnoser]
-    [SimpleJob(RuntimeMoniker.CoreRt30)]
+    [SimpleJob(RuntimeMoniker.Net80)]
     public class HashingBenchmark
     {
         public HashingBenchmark()

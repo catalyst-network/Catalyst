@@ -29,9 +29,9 @@ using Nethermind.Core.Crypto;
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers 
 {
     [EthWeb3RequestHandler("eth", "getBlockTransactionCountByHash")]
-    public class EthGetBlockTransactionCountByHash : EthWeb3RequestHandler<Keccak, long?>
+    public class EthGetBlockTransactionCountByHash : EthWeb3RequestHandler<Hash256, long?>
     {
-        protected override long? Handle(Keccak deltaHash, IWeb3EthApi api)
+        protected override long? Handle(Hash256 deltaHash, IWeb3EthApi api)
         {
             if (api.DeltaCache.TryGetOrAddConfirmedDelta(deltaHash.ToCid(), out var delta))
             {

@@ -40,7 +40,7 @@ namespace Catalyst.Abstractions.Kvm.Models
         public BlockParameterType Type { get; set; }
         public long? BlockNumber { get; }
         
-        public Keccak BlockHash { get; }
+        public Hash256 BlockHash { get; }
 
         public bool RequireCanonical { get; }
 
@@ -57,13 +57,13 @@ namespace Catalyst.Abstractions.Kvm.Models
             BlockNumber = number;
         }
         
-        public BlockParameter(Keccak blockHash)
+        public BlockParameter(Hash256 blockHash)
         {
             Type = BlockParameterType.BlockHash;
             BlockHash = blockHash;
         }
         
-        public BlockParameter(Keccak blockHash, bool requireCanonical)
+        public BlockParameter(Hash256 blockHash, bool requireCanonical)
         {
             Type = BlockParameterType.BlockHash;
             BlockHash = blockHash;

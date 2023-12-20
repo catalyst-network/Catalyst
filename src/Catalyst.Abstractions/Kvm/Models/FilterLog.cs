@@ -32,12 +32,12 @@ namespace Catalyst.Abstractions.Kvm.Models
         public bool Removed { get; }
         public UInt256 LogIndex { get; }
         public long BlockNumber { get; }
-        public Keccak BlockHash { get; }
-        public Keccak TransactionHash { get; }
+        public Hash256 BlockHash { get; }
+        public Hash256 TransactionHash { get; }
         public UInt256 TransactionIndex { get; }
         public Address Address { get; }
         public byte[] Data { get; }
-        public Keccak[] Topics { get; }
+        public Hash256[] Topics { get; }
 
         public FilterLog(long logIndex, TxReceipt txReceipt, LogEntry logEntry)
             : this((UInt256) logIndex, txReceipt, logEntry) { }
@@ -53,7 +53,7 @@ namespace Catalyst.Abstractions.Kvm.Models
                 logEntry.Data,
                 logEntry.Topics) { }
 
-        public FilterLog(UInt256 logIndex, long blockNumber, Keccak blockHash, UInt256 transactionIndex, Keccak transactionHash, Address address, byte[] data, Keccak[] topics, bool removed = false)
+        public FilterLog(UInt256 logIndex, long blockNumber, Hash256 blockHash, UInt256 transactionIndex, Hash256 transactionHash, Address address, byte[] data, Hash256[] topics, bool removed = false)
         {
             Removed = removed;
             LogIndex = logIndex;

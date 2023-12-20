@@ -60,7 +60,7 @@ namespace Catalyst.Abstractions.Kvm.Models
         public Address Miner { get; set; }
         
         [JsonConverter(typeof(KeccakConverter))]
-        public Keccak MixHash { get; set; }
+        public Hash256 MixHash { get; set; }
         
         [JsonConverter(typeof(ByteArrayConverter))]
         public byte[] Nonce { get; set; }
@@ -72,10 +72,10 @@ namespace Catalyst.Abstractions.Kvm.Models
         public Cid ParentHash { get; set; }
         
         [JsonConverter(typeof(KeccakConverter))]
-        public Keccak ReceiptsRoot { get; set; }
+        public Hash256 ReceiptsRoot { get; set; }
         
         [JsonConverter(typeof(KeccakConverter))]
-        public Keccak Sha3Uncles { get; set; }
+        public Hash256 Sha3Uncles { get; set; }
         
         [JsonConverter(typeof(ByteArrayConverter))]
         public byte[] Signature { get; set; }
@@ -84,7 +84,7 @@ namespace Catalyst.Abstractions.Kvm.Models
         public long Size { get; set; }
         
         [JsonConverter(typeof(KeccakConverter))]
-        public Keccak StateRoot { get; set; }
+        public Hash256 StateRoot { get; set; }
         
         [JsonConverter(typeof(NullableLongConverter))]
         public long? Step { get; set; }
@@ -98,9 +98,9 @@ namespace Catalyst.Abstractions.Kvm.Models
         public IEnumerable<object> Transactions { get; set; }
         
         [JsonConverter(typeof(KeccakConverter))]
-        public Keccak TransactionsRoot { get; set; }
+        public Hash256 TransactionsRoot { get; set; }
         
         [JsonProperty(ItemConverterType = typeof(KeccakConverter))]
-        public IEnumerable<Keccak> Uncles { get; set; }
+        public IEnumerable<Hash256> Uncles { get; set; }
     }
 }

@@ -23,6 +23,7 @@
 
 using Nethermind.Core.Crypto;
 using Nethermind.Dirichlet.Numerics;
+using Org.BouncyCastle.Utilities;
 
 namespace Catalyst.Abstractions.Kvm.Models 
 {
@@ -32,11 +33,11 @@ namespace Catalyst.Abstractions.Kvm.Models
 
         public UInt256 Balance { get; set; }
 
-        public Keccak CodeHash { get; set; }
+        public Bytes CodeHash { get; set; }
 
         public UInt256 Nonce { get; set; }
 
-        public Keccak StorageRoot { get; set; }
+        public Bytes StorageRoot { get; set; }
 
         public StorageProof[] StorageProofs { get; set; }
     }

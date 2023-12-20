@@ -28,7 +28,7 @@ namespace Catalyst.Abstractions.Kvm.Models
     public class StorageProof
     {
         public byte[][] Proof { get; set; }
-        public Keccak Key { get; set; }
+        public Hash256 Key { get; set; }
         public byte[] Value { get; set; }
     }
 }

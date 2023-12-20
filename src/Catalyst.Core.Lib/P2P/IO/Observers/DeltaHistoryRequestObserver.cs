@@ -77,7 +77,8 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             var range = rangeDao.Select(x => DeltaIndexDao.ToProtoBuff<DeltaIndex>(x, _mapperProvider)).ToList();
 
             var response = new DeltaHistoryResponse();
-            response.DeltaIndex.Add(range);
+            // TODO
+            response.Result.Add(range);
             return response;
         }
     }

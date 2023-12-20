@@ -28,7 +28,8 @@ using Catalyst.Core.Lib.Extensions;
 using Nethermind.Dirichlet.Numerics;
 using Nethermind.State;
 using Address = Nethermind.Core.Address;
-
+// TODO
+/*
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
     [EthWeb3RequestHandler("eth", "getStorageAt")]
@@ -53,3 +54,4 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
         }
     }
 }
+*/

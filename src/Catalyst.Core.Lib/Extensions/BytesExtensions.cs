@@ -39,24 +39,24 @@ namespace Catalyst.Core.Lib.Extensions
 {
     public static class KeccakExtensions
     {
-        public static ByteString ToByteString(this Keccak keccak)
+        public static ByteString ToByteString(this Hash256 keccak)
         {
             return keccak == null ? ByteString.Empty : ByteString.CopyFrom(keccak.Bytes);
         }
         
-        public static Keccak ToKeccak(this ByteString byteString)
+        public static Hash256 ToKeccak(this ByteString byteString)
         {
-            return (byteString == null || byteString.IsEmpty) ? null : new Keccak(byteString.ToByteArray());
+            return (byteString == null || byteString.IsEmpty) ? null : new Hash256(byteString.ToByteArray());
         }
 
-        public static Cid ToCid(this Keccak keccak)
+        public static Cid ToCid(this Hash256 keccak)
         {
             Cid cid = new Cid
             {
                 Version = 1,
                 Encoding = "base32",
                 ContentType = "dag-pb",
-                Hash = new MultiHash("keccak-256", keccak.Bytes)
+                Hash = new MultiHash("keccak-256", keccak.BytesToArray())
             };
 
             return cid;

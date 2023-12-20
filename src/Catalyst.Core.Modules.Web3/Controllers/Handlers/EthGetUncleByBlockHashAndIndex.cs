@@ -29,8 +29,8 @@ using Nethermind.Dirichlet.Numerics;
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers 
 {
     [EthWeb3RequestHandler("eth", "getUncleByBlockHashAndIndex")]
-    public class EthGetUncleByBlockHashAndIndex : EthWeb3RequestHandler<Keccak, UInt256, BlockForRpc>
+    public class EthGetUncleByBlockHashAndIndex : EthWeb3RequestHandler<Hash256, UInt256, BlockForRpc>
     {
-        protected override BlockForRpc Handle(Keccak blockHashData, UInt256 positionIndex, IWeb3EthApi api) => null;
+        protected override BlockForRpc Handle(Hash256 blockHashData, UInt256 positionIndex, IWeb3EthApi api) => null;
     }
 }

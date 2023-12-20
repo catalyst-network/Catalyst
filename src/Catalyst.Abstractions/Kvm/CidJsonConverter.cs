@@ -25,7 +25,7 @@ using System;
 using Lib.P2P;
 using MultiFormats;
 using Nethermind.Core.Crypto;
-
+using Nethermind.Evm.Tracing.GethStyle.JavaScript;
 using Nethermind.Serialization.Json;
 using Newtonsoft.Json;
 
@@ -42,8 +42,8 @@ namespace Catalyst.Abstractions.Kvm
 
         public override Cid ReadJson(JsonReader reader, Type objectType, Cid existingValue, bool hasExistingValue, JsonSerializer serializer)
         {
-            var keccak = Converter.ReadJson(reader, typeof(Keccak), ToKeccak(existingValue), hasExistingValue, serializer);
-            if (keccak == null)
+            var hash256 = Converter.ReadJson(reader, typeof(Hash256), ToKeccak(existingValue), hasExistingValue, serializer);
+            if (hash256 == null)
             {
                 return null;
             }
@@ -53,10 +53,10 @@ namespace Catalyst.Abstractions.Kvm
                 Version = 1,
                 Encoding = "base32",
                 ContentType = "dag-pb",
-                Hash = new MultiHash("blake2b-256", keccak.Bytes)
+                Hash = new MultiHash("blake2b-256", hash256.ToBytes())
             };
         }
 
-        static Keccak ToKeccak(Cid value) { return value == null ? null : new Keccak(value.Hash.Digest); }
+        static Hash256 ToKeccak(Cid value) { return value == null ? null : new Hash256(value.Hash.Digest); }
     }
 }

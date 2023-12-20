@@ -62,6 +62,9 @@ namespace Catalyst.Core.Lib.Network
         // ReSharper disable once UnassignedGetOnlyAutoProperty
         public NameServer NameServer { get; }
 
+        // ReSharper disable once UnassignedGetOnlyAutoProperty
+        public DnsQuerySettings Settings { get; }
+
         /// <summary>
         ///     Builds a mocked TXT resource record from a ILookup DNS query.
         /// </summary>

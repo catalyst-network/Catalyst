@@ -30,9 +30,9 @@ using Nethermind.Core.Crypto;
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers 
 {
     [EthWeb3RequestHandler("eth", "getTransactionByBlockHashAndIndex")]
-    public class EthGetTransactionByBlockHashAndIndex : EthWeb3RequestHandler<Keccak, int, TransactionForRpc>
+    public class EthGetTransactionByBlockHashAndIndex : EthWeb3RequestHandler<Hash256, int, TransactionForRpc>
     {
-        protected override TransactionForRpc Handle(Keccak deltaHash, int positionIndex, IWeb3EthApi api)
+        protected override TransactionForRpc Handle(Hash256 deltaHash, int positionIndex, IWeb3EthApi api)
         {
             var delta = api.GetDeltaWithCid(deltaHash.ToCid());
 

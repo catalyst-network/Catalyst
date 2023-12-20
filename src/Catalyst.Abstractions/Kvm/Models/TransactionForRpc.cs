@@ -34,7 +34,7 @@ namespace Catalyst.Abstractions.Kvm.Models
     public class TransactionForRpc
     {
         [JsonConverter(typeof(KeccakConverter))]
-        public Keccak Hash { get; set; }
+        public Hash256 Hash { get; set; }
 
         [JsonConverter(typeof(NullableUInt256Converter))]
         public UInt256? Nonce { get; set; }

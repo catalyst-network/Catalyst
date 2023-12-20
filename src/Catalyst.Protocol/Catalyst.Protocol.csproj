@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <RootNamespace>Catalyst.Protocol</RootNamespace>
         <Authors>James Kirby (nshcore@protonmail.com)</Authors>
         <SignAssembly>true</SignAssembly>
@@ -13,10 +13,10 @@
     <Import Project="../Common.Packable.props" />
     <Import Project="../Common.Projects.props" />
     <ItemGroup>
-        <PackageReference Include="Dawn.Guard" Version="1.11.0" />
-        <PackageReference Include="Google.Protobuf" Version="3.9.1" />
-        <PackageReference Include="Grpc.Tools" Version="1.22.0" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
-        <PackageReference Include="Serilog" Version="2.8.0" />
+        <PackageReference Include="Dawn.Guard" Version="1.12.0" />
+        <PackageReference Include="Google.Protobuf" Version="3.25.1" />
+        <PackageReference Include="Grpc.Tools" Version="2.60.0" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
+        <PackageReference Include="Serilog" Version="3.1.1" />
     </ItemGroup>
     <ItemGroup>
         <ProtoBuf Include="..\..\submodules\Protocol\src\*.proto" Link="Protobuffs\%(Filename)%(Extension)" />

@@ -79,8 +79,9 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
 
             return new LatestDeltaHashResponse
             {
-                IsSync = _syncState.IsSynchronized,
-                DeltaIndex = deltaIndex
+                // TODO
+                // IsSync = _syncState.IsSynchronized,
+                // DeltaIndex = deltaIndex
             };
         }
     }

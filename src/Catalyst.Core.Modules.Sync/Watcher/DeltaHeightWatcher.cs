@@ -99,7 +99,7 @@ namespace Catalyst.Core.Modules.Sync.Watcher
         public async Task<DeltaIndex> GetHighestDeltaIndexAsync()
         {
             _manualResetEventSlim.Wait();
-            var highestDeltaIndex = GetMostPopularMessage()?.Item.DeltaIndex;
+            var highestDeltaIndex = GetMostPopularMessage()?.Item.Result;
             return highestDeltaIndex;
         }
 
@@ -107,7 +107,7 @@ namespace Catalyst.Core.Modules.Sync.Watcher
         {
             //Responses that have fully sync
             var rankedResponses = DeltaHeightRanker.GetMessagesByMostPopular();
-            var highestRankedSyncResponse = rankedResponses.Where(x => x.Item.IsSync).FirstOrDefault();
+            var highestRankedSyncResponse = rankedResponses.FirstOrDefault();
             if (highestRankedSyncResponse != null)
             {
                 return highestRankedSyncResponse;

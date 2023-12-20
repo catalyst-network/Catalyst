@@ -29,7 +29,8 @@ using System.Security.Cryptography;
 using Common.Logging;
 using Google.Protobuf;
 using MultiFormats.Registry;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace MultiFormats
 {

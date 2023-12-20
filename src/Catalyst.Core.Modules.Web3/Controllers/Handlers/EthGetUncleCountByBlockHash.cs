@@ -28,8 +28,8 @@ using Nethermind.Dirichlet.Numerics;
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers 
 {
     [EthWeb3RequestHandler("eth", "getUncleCountByBlockHash")]
-    public class EthGetUncleCountByBlockHash : EthWeb3RequestHandler<Keccak, UInt256?>
+    public class EthGetUncleCountByBlockHash : EthWeb3RequestHandler<Hash256, UInt256?>
     {
-        protected override UInt256? Handle(Keccak keccak, IWeb3EthApi api) => UInt256.Zero;
+        protected override UInt256? Handle(Hash256 keccak, IWeb3EthApi api) => UInt256.Zero;
     }
 }

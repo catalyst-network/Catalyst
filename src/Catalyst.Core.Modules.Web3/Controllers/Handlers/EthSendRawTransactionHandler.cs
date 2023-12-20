@@ -34,6 +34,7 @@ using Nethermind.Core;
 using Nethermind.Core.Crypto;
 using Nethermind.Crypto;
 using Nethermind.Dirichlet.Numerics;
+using Nethermind.Evm.Tracing.GethStyle.JavaScript;
 using Nethermind.Logging;
 using Nethermind.Serialization.Rlp;
 using Nethermind.Specs;
@@ -41,26 +42,26 @@ using Nethermind.Specs;
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
     [EthWeb3RequestHandler("eth", "sendRawTransaction")]
-    public class EthSendRawTransactionHandler : EthWeb3RequestHandler<byte[], Keccak>
+    public class EthSendRawTransactionHandler : EthWeb3RequestHandler<byte[], Hash256>
     {
-        protected override Keccak Handle(byte[] transaction, IWeb3EthApi api)
+        protected override Hash256 Handle(byte[] transaction, IWeb3EthApi api)
         {
             PublicEntry publicEntry;
             try
             {
                 Transaction tx = Rlp.Decode<Transaction>(transaction);
-                EthereumEcdsa ecdsa = new EthereumEcdsa(MainnetSpecProvider.Instance, LimboLogs.Instance);
-                tx.SenderAddress = ecdsa.RecoverAddress(tx, MainnetSpecProvider.IstanbulBlockNumber);
-                tx.Timestamp = (UInt256) DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                EthereumEcdsa ecdsa = new EthereumEcdsa(MainnetSpecProvider.Instance.ChainId, LimboLogs.Instance);
+                tx.SenderAddress = ecdsa.RecoverAddress(tx, false);
+                tx.Timestamp = (Nethermind.Int256.UInt256) DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                 publicEntry = new PublicEntry
                 {
-                    Data = (tx.Data ?? tx.Init).ToByteString(),
+                    Data = ByteString.CopyFrom(tx.Data.ToBytes()),
                     GasLimit = (ulong) tx.GasLimit,
-                    GasPrice = tx.GasPrice.ToUint256ByteString(),
+                    GasPrice = ByteString.CopyFrom(tx.GasPrice.ToBytes()),
                     Nonce = (ulong) tx.Nonce,
                     SenderAddress = tx.SenderAddress.Bytes.ToByteString(),
                     ReceiverAddress = tx.To?.Bytes.ToByteString() ?? ByteString.Empty,
-                    Amount = tx.Value.ToUint256ByteString(),
+                    Amount = ByteString.CopyFrom(tx.Value.ToBytes()),
                     Signature = new Protocol.Cryptography.Signature
                     {
                         RawBytes = ByteString.CopyFrom((byte) 1)

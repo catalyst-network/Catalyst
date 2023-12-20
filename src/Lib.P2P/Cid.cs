@@ -26,7 +26,8 @@ using System.IO;
 using System.Text;
 using Google.Protobuf;
 using MultiFormats;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Lib.P2P
 {
