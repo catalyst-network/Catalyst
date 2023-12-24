@@ -27,7 +27,7 @@ using Nethermind.Evm;
 namespace Catalyst.Core.Modules.Kvm
 {
     /// <inheritdoc />
-    public sealed class StateUpdateHashProvider : IStateUpdateHashProvider
+    public sealed class StateUpdateHashProvider : IBlockhashProvider
     {
         /// <inheritdoc />
         public byte[] GetHash(StateUpdate stateUpdate, in long number) { throw new NotImplementedException(); }

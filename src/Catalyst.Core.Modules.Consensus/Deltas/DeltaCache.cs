@@ -64,9 +64,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             IMemoryCache memoryCache,
             IDeltaDfsReader dfsReader,
             IDeltaCacheChangeTokenProvider changeTokenProvider,
-            IStorageProvider storageProvider,
-            IStateProvider stateProvider,
-            ISnapshotableDb stateDb,
+            IWorldState stateProvider,
             IDeltaIndexService deltaIndexService,
             ILogger logger)
         {
@@ -75,13 +73,10 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             stateProvider.CreateAccount(TruffleTestAccount, 1_000_000_000.Kat());
             stateProvider.CreateAccount(CatalystTruffleTestAccount, 1_000_000_000.Kat());
             
-            storageProvider.Commit();
             stateProvider.Commit(CatalystGenesisSpec.Instance);
 
-            storageProvider.CommitTrees();
-            stateProvider.CommitTree();
-
-            stateDb.Commit();
+            // TODO
+            stateProvider.CommitTree((long)deltaIndexService.LatestDeltaIndex().Height);
 
             var genesisDelta = new Delta
             {

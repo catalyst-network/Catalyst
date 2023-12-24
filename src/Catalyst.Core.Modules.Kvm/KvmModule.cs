@@ -44,7 +44,7 @@ namespace Catalyst.Core.Modules.Kvm
         {
             builder.RegisterType<CatalystSpecProvider>().As<ISpecProvider>();
 
-            builder.RegisterType<StateUpdateHashProvider>().As<IStateUpdateHashProvider>().SingleInstance(); 
+            builder.RegisterType<StateUpdateHashProvider>().As<IBlockhashProvider>().SingleInstance(); 
             
             // builder.RegisterInstance(new OneLoggerLogManager(new SimpleConsoleLogger())).As<ILogManager>();
             builder.RegisterInstance(LimboLogs.Instance).As<ILogManager>();
@@ -73,19 +73,15 @@ namespace Catalyst.Core.Modules.Kvm
             var serviceName = Guid.NewGuid().ToString();
 
             var stateProvider = new ByTypeNamedParameter<IStateProvider>(serviceName);
-            var storageProvider = new ByTypeNamedParameter<IStorageProvider>(serviceName);
             var kvm = new ByTypeNamedParameter<IKvm>(serviceName); 
             var executor = new ByTypeNamedParameter<IDeltaExecutor>(serviceName); 
 
             builder.RegisterType<StateProvider>().Named<IStateProvider>(serviceName).SingleInstance();
-            builder.RegisterType<StorageProvider>().Named<IStorageProvider>(serviceName).SingleInstance()
                .WithParameter(stateProvider);
             builder.RegisterType<KatVirtualMachine>().Named<IKvm>(serviceName).SingleInstance()
-               .WithParameter(stateProvider)
-               .WithParameter(storageProvider);
+               .WithParameter(stateProvider);
             builder.RegisterType<DeltaExecutor>().Named<IDeltaExecutor>(serviceName).SingleInstance()
                .WithParameter(stateProvider)
-               .WithParameter(storageProvider)
                .WithParameter(kvm);
 
             // parameter registration

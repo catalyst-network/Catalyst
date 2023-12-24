@@ -21,7 +21,7 @@
 
 #endregion
 
-using Nethermind.Dirichlet.Numerics;
+using Nethermind.Int256;
 
 namespace Catalyst.Core.Modules.Kvm
 {

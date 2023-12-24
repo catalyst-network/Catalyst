@@ -33,7 +33,7 @@ using Nethermind.Evm.Precompiles;
 
 namespace Catalyst.Core.Modules.Kvm
 {
-    public sealed class Blake2bPrecompiledContract : IPrecompiledContract
+    public sealed class Blake2bPrecompiledContract : IPrecompile
     {
         private readonly IHashProvider _hashProvider;
         
@@ -46,11 +46,11 @@ namespace Catalyst.Core.Modules.Kvm
 
         public long BaseGasCost(IReleaseSpec releaseSpec) { return 20L; }
 
-        public long DataGasCost(byte[] inputData, IReleaseSpec releaseSpec) { return 12L * EvmPooledMemory.Div32Ceiling((ulong) inputData.Length); }
+        public long DataGasCost(in ReadOnlyMemory<byte> inputData, IReleaseSpec releaseSpec) { return 12L * EvmPooledMemory.Div32Ceiling((ulong) inputData.Length); }
 
-        public (byte[], bool) Run(byte[] inputData)
+        public (ReadOnlyMemory<byte>, bool) Run(in ReadOnlyMemory<byte> inputData, IReleaseSpec releaseSpec)
         {
-            return (_hashProvider.ComputeMultiHash(inputData).Digest, true);
+            return (_hashProvider.ComputeMultiHash(inputData.ToArray()).Digest, true);
         }
     }
 }

@@ -24,7 +24,6 @@
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
 using System.Reflection;
-using Nethermind.Dirichlet.Numerics;
 using System;
 using Google.Protobuf;
 using MultiFormats;
