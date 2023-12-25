@@ -44,14 +44,13 @@ namespace Catalyst.Core.Modules.Kvm
         {
             builder.RegisterType<CatalystSpecProvider>().As<ISpecProvider>();
 
-            builder.RegisterType<StateUpdateHashProvider>().As<IBlockhashProvider>().SingleInstance(); 
-            
             // builder.RegisterInstance(new OneLoggerLogManager(new SimpleConsoleLogger())).As<ILogManager>();
             builder.RegisterInstance(LimboLogs.Instance).As<ILogManager>();
 
             var catDir = new FileSystem().GetCatalystDataDir().FullName;
-            builder.RegisterInstance(new StateDb(new CodeRocksDb(catDir, DbConfig.Default))).As<IDb>().SingleInstance();
-            builder.RegisterInstance(new StateDb(new StateRocksDb(catDir, DbConfig.Default))).As<ISnapshotableDb>().SingleInstance();
+            // TODO
+            //  builder.RegisterInstance(new StateDb(new CodeRocksDb(catDir, DbConfig.Default))).As<IDb>().SingleInstance();
+            //  builder.RegisterInstance(new StateDb(new StateRocksDb(catDir, DbConfig.Default))).As<ISnapshotableDb>().SingleInstance();
             //builder.RegisterInstance(new MemDb()).As<IDb>().SingleInstance();               // code db
             //builder.RegisterInstance(new StateDb()).As<ISnapshotableDb>().SingleInstance(); // state db
 
@@ -72,11 +71,11 @@ namespace Catalyst.Core.Modules.Kvm
         {
             var serviceName = Guid.NewGuid().ToString();
 
-            var stateProvider = new ByTypeNamedParameter<IStateProvider>(serviceName);
+            var stateProvider = new ByTypeNamedParameter<IWorldState>(serviceName);
             var kvm = new ByTypeNamedParameter<IKvm>(serviceName); 
             var executor = new ByTypeNamedParameter<IDeltaExecutor>(serviceName); 
 
-            builder.RegisterType<StateProvider>().Named<IStateProvider>(serviceName).SingleInstance();
+            builder.RegisterType<WorldState>().Named<IWorldState>(serviceName).SingleInstance()
                .WithParameter(stateProvider);
             builder.RegisterType<KatVirtualMachine>().Named<IKvm>(serviceName).SingleInstance()
                .WithParameter(stateProvider);
@@ -87,7 +86,6 @@ namespace Catalyst.Core.Modules.Kvm
             // parameter registration
             registration
                .WithParameter(stateProvider)
-               .WithParameter(storageProvider)
                .WithParameter(kvm)
                .WithParameter(executor);
 
