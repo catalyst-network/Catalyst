@@ -233,7 +233,6 @@ namespace Catalyst.TestUtils
 
             builder.RegisterInstance(_deltaByNumber).As<IDeltaByNumberRepository>();
             builder.RegisterInstance(new MemDb()).As<IDb>().SingleInstance();
-            builder.RegisterInstance(new StateDb()).As<ISnapshotableDb>().SingleInstance();
             builder.RegisterInstance(new InMemoryRepository<Account, string>()).As<IRepository<Account, string>>().SingleInstance();
             builder.RegisterType<InMemoryRepository<DeltaIndexDao, string>>().As<IRepository<DeltaIndexDao, string>>().SingleInstance();
             builder.RegisterInstance(new InMemoryRepository<TransactionReceipts, string>())

@@ -44,7 +44,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
         private readonly PeerId _producerUniqueId;
         private readonly IDeltaCache _deltaCache;
         private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly IStateProvider _stateProvider;
+        private readonly IWorldState _stateProvider;
         private readonly IDeltaExecutor _deltaExecutor;
         private readonly ILogger _logger;
 
@@ -54,7 +54,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
             IPeerSettings peerSettings,
             IDeltaCache deltaCache,
             IDateTimeProvider dateTimeProvider,
-            IStateProvider stateProvider,
+            IWorldState stateProvider,
             IDeltaExecutor deltaExecutor,
             ILogger logger)
         {

@@ -44,7 +44,7 @@ namespace Catalyst.TestUtils
                 if (match != null)
                 {
                     if (expectedMessage != null)
-                        Assert.AreEqual(expectedMessage, match.Message);
+                        Assert.Equals(expectedMessage, match.Message);
                     return match;
                 }
 
@@ -53,7 +53,7 @@ namespace Catalyst.TestUtils
             catch (T e)
             {
                 if (expectedMessage != null)
-                    Assert.AreEqual(expectedMessage, e.Message);
+                    Assert.Equals(expectedMessage, e.Message);
                 return e;
             }
 

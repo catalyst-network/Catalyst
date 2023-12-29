@@ -68,9 +68,9 @@ namespace Catalyst.Core.Modules.Kvm
             // Precompiles[ed25519VerifyPrecompile.Address] = ed25519VerifyPrecompile;
         }
 
-        protected bool IsPrecompile(Address address, IReleaseSpec releaseSpec)
+        protected bool IsPrecompile(IWorldState state, Address address, IReleaseSpec releaseSpec)
         {
-            return base.GetCachedCodeInfo().IsPrecompile(address, releaseSpec) || IsCatalystPrecompiled(address);
+            return base.GetCachedCodeInfo(state, address, releaseSpec).IsPrecompile || IsCatalystPrecompiled(address);
         }
 
         private static bool IsCatalystPrecompiled(Address address)

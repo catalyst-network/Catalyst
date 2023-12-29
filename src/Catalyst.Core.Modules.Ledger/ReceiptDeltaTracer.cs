@@ -59,11 +59,11 @@ namespace Catalyst.Core.Modules.Ledger
         public bool IsTracingReceipt => true;
 
         public bool IsTracingBlockHash => false;
-        public void MarkAsSuccess(Address recipient, long gasSpent, byte[] output, LogEntry[] logs, Keccak _) { _txReceipts.Add(BuildReceipt(recipient, gasSpent, StatusCode.Success, logs)); }
+        public void MarkAsSuccess(Address recipient, long gasSpent, byte[] output, LogEntry[] logs, Hash256 _) { _txReceipts.Add(BuildReceipt(recipient, gasSpent, StatusCode.Success, logs)); }
 
-        public void MarkAsFailed(Address recipient, long gasSpent, byte[] output, string error, Keccak _) { _txReceipts.Add(BuildFailedReceipt(recipient, gasSpent)); }
+        public void MarkAsFailed(Address recipient, long gasSpent, byte[] output, string error, Hash256 _) { _txReceipts.Add(BuildFailedReceipt(recipient, gasSpent)); }
 
-        private TransactionReceipt BuildFailedReceipt(Address recipient, long gasSpent) { return BuildReceipt(recipient, gasSpent, StatusCode.Failure, LogEntry.EmptyLogs); }
+        private TransactionReceipt BuildFailedReceipt(Address recipient, long gasSpent) { return BuildReceipt(recipient, gasSpent, StatusCode.Failure, new LogEntry[1]); }
 
         private TransactionReceipt BuildReceipt(Address recipient, long spentGas, byte statusCode, LogEntry[] logEntries)
         {
@@ -72,7 +72,6 @@ namespace Catalyst.Core.Modules.Ledger
             TransactionReceipt txReceipt = new TransactionReceipt
             {
                 Logs = logEntries,
-                GasUsedTotal = _delta.GasUsed,
                 StatusCode = statusCode,
                 Recipient = entry.IsContractDeployment ? null :  recipient.ToString(),
                 DeltaHash = _deltaHash,
@@ -106,41 +105,89 @@ namespace Catalyst.Core.Modules.Ledger
         public bool IsTracingCode => false;
         public bool IsTracingStack => false;
         public bool IsTracingState => false;
-        public void ReportBalanceChange(Address address, UInt256? before, UInt256? after) { throw new NotImplementedException(); }
+        public bool IsTracingAccess => false;
+        public bool IsTracingFees => false;
+
+        public bool IsTracingStorage => throw new NotImplementedException();
+
         public void ReportCodeChange(Address address, byte[] before, byte[] after) { throw new NotImplementedException(); }
-        public void ReportNonceChange(Address address, UInt256? before, UInt256? after) { throw new NotImplementedException(); }
         public void ReportAccountRead(Address address) { throw new NotImplementedException(); }
-        public void ReportStorageChange(StorageCell storageAddress, byte[] before, byte[] after) { throw new NotImplementedException(); }
-        public void StartOperation(int depth, long gas, Instruction opcode, int pc) { throw new NotImplementedException(); }
+        public void StartOperation(int depth, long gas, Instruction opcode, int pc, bool isPostMerge) { throw new NotImplementedException(); }
         public void ReportOperationError(EvmExceptionType error) { throw new NotImplementedException(); }
         public void ReportOperationRemainingGas(long gas) { throw new NotImplementedException(); }
-        public void SetOperationStack(List<string> stackTrace) { throw new NotImplementedException(); }
-        public void ReportStackPush(Span<byte> stackItem) { throw new NotImplementedException(); }
-        public void SetOperationMemory(List<string> memoryTrace) { throw new NotImplementedException(); }
+        public void SetOperationStack(TraceStack stackTrace) { throw new NotImplementedException(); }
+        public void ReportStackPush(in ReadOnlySpan<byte> stackItem) { throw new NotImplementedException(); }
+        public void SetOperationMemory(TraceMemory memoryTrace) { throw new NotImplementedException(); }
         public void SetOperationMemorySize(ulong newSize) { throw new NotImplementedException(); }
-        public void ReportMemoryChange(long offset, Span<byte> data) { throw new NotImplementedException(); }
-        public void ReportStorageChange(Span<byte> key, Span<byte> value) { throw new NotImplementedException(); }
-        public void SetOperationStorage(Address address, UInt256 storageIndex, byte[] newValue, byte[] currentValue) { throw new NotImplementedException(); }
-        public void ReportSelfDestruct(Address address, UInt256 balance, Address refundAddress) { throw new NotImplementedException(); }
+        public void ReportMemoryChange(long offset, in ReadOnlySpan<byte> data) { throw new NotImplementedException(); }
 
-        public void ReportAction(long gas,
-            UInt256 value,
-            Address @from,
-            Address to,
-            byte[] input,
-            ExecutionType callType,
-            bool isPrecompileCall = false)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ReportActionEnd(long gas, byte[] output) { throw new NotImplementedException(); }
+        public void ReportActionEnd(long gas, ReadOnlyMemory<byte> output) { throw new NotImplementedException(); }
         public void ReportActionError(EvmExceptionType evmExceptionType) { throw new NotImplementedException(); }
-        public void ReportActionEnd(long gas, Address deploymentAddress, byte[] deployedCode) { throw new NotImplementedException(); }
-        public void ReportBlockHash(Keccak blockHash) { throw new NotImplementedException(); }
+        public void ReportActionEnd(long gas, Address deploymentAddress, ReadOnlyMemory<byte> deployedCode) { throw new NotImplementedException(); }
+        public void ReportBlockHash(Hash256 blockHash) { throw new NotImplementedException(); }
         public void ReportByteCode(byte[] byteCode) { throw new NotImplementedException(); }
         public void ReportGasUpdateForVmTrace(long refund, long gasAvailable) { throw new NotImplementedException(); }
         public void ReportRefund(long gasAvailable) { throw new NotImplementedException(); }
         public void ReportExtraGasPressure(long extraGasPressure) { throw new NotImplementedException(); }
+
+        public void SetOperationStorage(Address address, Nethermind.Int256.UInt256 storageIndex, ReadOnlySpan<byte> newValue, ReadOnlySpan<byte> currentValue)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void LoadOperationStorage(Address address, Nethermind.Int256.UInt256 storageIndex, ReadOnlySpan<byte> value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ReportSelfDestruct(Address address, Nethermind.Int256.UInt256 balance, Address refundAddress)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ReportAction(long gas, Nethermind.Int256.UInt256 value, Address from, Address to, ReadOnlyMemory<byte> input, ExecutionType callType, bool isPrecompileCall = false)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ReportAccess(IReadOnlySet<Address> accessedAddresses, IReadOnlySet<StorageCell> accessedStorageCells)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ReportFees(Nethermind.Int256.UInt256 fees, Nethermind.Int256.UInt256 burntFees)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ReportBalanceChange(Address address, Nethermind.Int256.UInt256? before, Nethermind.Int256.UInt256? after)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ReportNonceChange(Address address, Nethermind.Int256.UInt256? before, Nethermind.Int256.UInt256? after)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ReportStorageChange(in ReadOnlySpan<byte> key, in ReadOnlySpan<byte> value)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ReportStorageChange(in StorageCell storageCell, byte[] before, byte[] after)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void ReportStorageRead(in StorageCell storageCell)
+        {
+            throw new NotImplementedException();
+        }
+
+        public void Dispose()
+        {
+            throw new NotImplementedException();
+        }
     }
 }

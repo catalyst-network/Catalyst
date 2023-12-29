@@ -270,7 +270,7 @@ namespace Catalyst.Core.Modules.Kvm
                 return;
             }
 
-            InitEntryExecution(env, gasLimit, spec, sender, fa, txTracer);
+            InitEntryExecution(env, gasLimit, spec, sender, fa, entry, txTracer);
 
             // we prepare two fields to track the amount of gas spent / left
             var unspentGas = gasLimit - intrinsicGas;
@@ -289,7 +289,7 @@ namespace Catalyst.Core.Modules.Kvm
 
             try
             {
-                if (entry.IsValidDeploymentEntry) PrepareContractAccount(env.CodeSource);
+                if (entry.IsValidDeploymentEntry) PrepareContractAccount(env.CodeSource, spec);
 
                 var executionType = entry.IsValidDeploymentEntry ? ExecutionType.CREATE : ExecutionType.CALL;
                 using (var state = new EvmState((long) unspentGas, env, executionType, true, stateSnapshot, false))
@@ -318,7 +318,7 @@ namespace Catalyst.Core.Modules.Kvm
                     statusCode = StatusCode.Success;
                 }
 
-                spentGas = Refund(gasLimit, unspentGas, substate, env, spec, sender);
+                spentGas = Refund(gasLimit, unspentGas, substate, env, spec, sender, entry);
             }
             catch (Exception ex) when (ex is EvmException || ex is OverflowException)
             {
@@ -405,8 +405,7 @@ namespace Catalyst.Core.Modules.Kvm
                 return;
             }
 
-            var codeHash = _stateProvider.InsertCode(sender, substate.Output, spec, false);
-            _stateProvider.UpdateCodeHash(env.CodeSource, codeHash, spec);
+            _stateProvider.InsertCode(sender, substate.Output, spec, false);
             unspentGas -= codeDepositGasCost;
         }
 
@@ -523,7 +522,7 @@ namespace Catalyst.Core.Modules.Kvm
             ITxTracer txTracer)
         {
             var senderBalance = _stateProvider.GetBalance(entry.SenderAddress.ToAddress());
-            if (intrinsicGas * env.GasPrice + env.Value <= senderBalance)
+            if (intrinsicGas * (ulong)entry.GasPrice.ToUInt256() + env.Value <= senderBalance)
             {
                 return true;
             }
@@ -539,11 +538,11 @@ namespace Catalyst.Core.Modules.Kvm
         /// </summary>
         /// <param name="recipient">Contract address.</param>
         /// <exception cref="TransactionCollisionException">Thrown when the address is already in use</exception>
-        private void PrepareContractAccount(Address recipient)
+        private void PrepareContractAccount(Address recipient, IReleaseSpec spec)
         {
             if (!_stateProvider.AccountExists(recipient)) return;
 
-            var addressHasCode = (_virtualMachine.GetCachedCodeInfo(recipient)?.MachineCode?.Length ?? 0) != 0;
+            var addressHasCode = (_virtualMachine.GetCachedCodeInfo(_stateProvider, recipient, spec)?.MachineCode?.Length ?? 0) != 0;
             var addressWasUsed = _stateProvider.GetNonce(recipient) != 0;
             if (addressHasCode || addressWasUsed)
             {
@@ -558,14 +557,14 @@ namespace Catalyst.Core.Modules.Kvm
             _stateProvider.UpdateStorageRoot(recipient, Keccak.EmptyTreeHash);
         }
 
-        private void InitEntryExecution(ExecutionEnvironment env, ulong gasLimit, IReleaseSpec spec, Address sender, ForkActivation fa, ITxTracer txTracer)
+        private void InitEntryExecution(ExecutionEnvironment env, ulong gasLimit, IReleaseSpec spec, Address sender, ForkActivation fa, PublicEntry entry, ITxTracer txTracer)
         {
             // first we increment nonce on the executing account
             _stateProvider.IncrementNonce(sender);
 
             // then we subtract money from the sender's account to pay for gas - this will be paid
             // even if the entry execution fails
-            _stateProvider.SubtractFromBalance(sender, gasLimit * env.GasPrice, spec);
+            _stateProvider.SubtractFromBalance(sender, gasLimit * (ulong)entry.GasPrice.ToUInt256(), spec);
 
             // we commit the nonce and gas payment
             _stateProvider.Commit(_specProvider.GetSpec(fa),
@@ -593,7 +592,8 @@ namespace Catalyst.Core.Modules.Kvm
             TransactionSubstate substate,
             ExecutionEnvironment env,
             IReleaseSpec spec,
-            Address sender)
+            Address sender,
+            PublicEntry entry)
         {
             var spentGas = gasLimit;
             if (substate.IsError)
@@ -611,7 +611,7 @@ namespace Catalyst.Core.Modules.Kvm
                 _logger.Verbose("Refunding unused gas of {unspent} and refund of {refund}", unspentGas, refund);
             }
 
-            var refundValue = (unspentGas + refund) * env.GasPrice;
+            var refundValue = (unspentGas + refund) * (ulong)entry.GasPrice.ToUInt256();
             _stateProvider.AddToBalance(sender, refundValue, spec);
             spentGas -= refund;
 

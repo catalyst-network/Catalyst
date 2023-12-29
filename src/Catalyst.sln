@@ -167,49 +167,49 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.KeyStore", "..\s
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Network.Contract", "..\submodules\nethermind\src\Nethermind\Nethermind.Network.Contract\Nethermind.Network.Contract.csproj", "{2834BE9E-00EB-436C-8FCE-12F2D478E84E}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Core.Lib.Tests", "Catalyst.Core.Lib.Tests\Catalyst.Core.Lib.Tests.csproj", "{D73ABC61-C83C-4B0F-A799-6C8FF4803876}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Lib.Tests", "Catalyst.Core.Lib.Tests\Catalyst.Core.Lib.Tests.csproj", "{D73ABC61-C83C-4B0F-A799-6C8FF4803876}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Core.Modules.Authentication.Tests", "Catalyst.Core.Modules.Authentication.Tests\Catalyst.Core.Modules.Authentication.Tests.csproj", "{6AC2B41D-27CE-4519-BF51-5905BA51D7EC}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Authentication.Tests", "Catalyst.Core.Modules.Authentication.Tests\Catalyst.Core.Modules.Authentication.Tests.csproj", "{6AC2B41D-27CE-4519-BF51-5905BA51D7EC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Core.Modules.Consensus.Tests", "Catalyst.Core.Modules.Consensus.Tests\Catalyst.Core.Modules.Consensus.Tests.csproj", "{0BB499FF-7DF6-4877-A7A0-FEDBB4FFF8E4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Consensus.Tests", "Catalyst.Core.Modules.Consensus.Tests\Catalyst.Core.Modules.Consensus.Tests.csproj", "{0BB499FF-7DF6-4877-A7A0-FEDBB4FFF8E4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Core.Modules.Cryptography.BulletProofs.Tests", "Catalyst.Core.Modules.Cryptography.BulletProofs.Tests\Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.csproj", "{94F44C96-8914-4DA3-8D75-FCF7208AA6A1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Cryptography.BulletProofs.Tests", "Catalyst.Core.Modules.Cryptography.BulletProofs.Tests\Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.csproj", "{94F44C96-8914-4DA3-8D75-FCF7208AA6A1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Core.Modules.Dfs.Tests", "Catalyst.Core.Modules.Dfs.Tests\Catalyst.Core.Modules.Dfs.Tests.csproj", "{1CE79E31-121E-47F3-9AA4-939EEE14A644}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Dfs.Tests", "Catalyst.Core.Modules.Dfs.Tests\Catalyst.Core.Modules.Dfs.Tests.csproj", "{1CE79E31-121E-47F3-9AA4-939EEE14A644}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Core.Modules.Hashing.Tests", "Catalyst.Core.Modules.Hashing.Tests\Catalyst.Core.Modules.Hashing.Tests.csproj", "{DC64C262-130F-4AEC-B28C-327386DDE3D2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Hashing.Tests", "Catalyst.Core.Modules.Hashing.Tests\Catalyst.Core.Modules.Hashing.Tests.csproj", "{DC64C262-130F-4AEC-B28C-327386DDE3D2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Core.Modules.KeySigner.Tests", "Catalyst.Core.Modules.KeySigner.Tests\Catalyst.Core.Modules.KeySigner.Tests.csproj", "{0394187F-8C66-496A-9582-C9DC2AEFB048}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.KeySigner.Tests", "Catalyst.Core.Modules.KeySigner.Tests\Catalyst.Core.Modules.KeySigner.Tests.csproj", "{0394187F-8C66-496A-9582-C9DC2AEFB048}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Core.Modules.Keystore.Tests", "Catalyst.Core.Modules.Keystore.Tests\Catalyst.Core.Modules.Keystore.Tests.csproj", "{6DD3F855-23B4-454E-A391-E51D4F6CDE13}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Keystore.Tests", "Catalyst.Core.Modules.Keystore.Tests\Catalyst.Core.Modules.Keystore.Tests.csproj", "{6DD3F855-23B4-454E-A391-E51D4F6CDE13}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Core.Modules.Kvm.Tests", "Catalyst.Core.Modules.Kvm.Tests\Catalyst.Core.Modules.Kvm.Tests.csproj", "{81C0306B-9DA7-4C27-9CB3-E76B004B31B2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Kvm.Tests", "Catalyst.Core.Modules.Kvm.Tests\Catalyst.Core.Modules.Kvm.Tests.csproj", "{81C0306B-9DA7-4C27-9CB3-E76B004B31B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Core.Modules.Ledger.Tests", "Catalyst.Core.Modules.Ledger.Tests\Catalyst.Core.Modules.Ledger.Tests.csproj", "{03056193-0381-43E2-95B7-5777ADDDD87C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Ledger.Tests", "Catalyst.Core.Modules.Ledger.Tests\Catalyst.Core.Modules.Ledger.Tests.csproj", "{03056193-0381-43E2-95B7-5777ADDDD87C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Core.Modules.Mempool.Tests", "Catalyst.Core.Modules.Mempool.Tests\Catalyst.Core.Modules.Mempool.Tests.csproj", "{757C536D-1F5B-4919-8933-E2695A6F56B6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Mempool.Tests", "Catalyst.Core.Modules.Mempool.Tests\Catalyst.Core.Modules.Mempool.Tests.csproj", "{757C536D-1F5B-4919-8933-E2695A6F56B6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests", "Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests\Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.csproj", "{454D69B2-1C98-41BC-8A55-4B8FD5169665}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests", "Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests\Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.csproj", "{454D69B2-1C98-41BC-8A55-4B8FD5169665}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Core.Modules.Rpc.Client.Tests", "Catalyst.Core.Modules.Rpc.Client.Tests\Catalyst.Core.Modules.Rpc.Client.Tests.csproj", "{BACBBEE1-C56A-486E-A1C2-10A7C51209BD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Rpc.Client.Tests", "Catalyst.Core.Modules.Rpc.Client.Tests\Catalyst.Core.Modules.Rpc.Client.Tests.csproj", "{BACBBEE1-C56A-486E-A1C2-10A7C51209BD}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Core.Modules.Rpc.Server.Tests", "Catalyst.Core.Modules.Rpc.Server.Tests\Catalyst.Core.Modules.Rpc.Server.Tests.csproj", "{5B86946A-5D5B-432B-A325-D8C735413443}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Rpc.Server.Tests", "Catalyst.Core.Modules.Rpc.Server.Tests\Catalyst.Core.Modules.Rpc.Server.Tests.csproj", "{5B86946A-5D5B-432B-A325-D8C735413443}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Core.Modules.Sync.Tests", "Catalyst.Core.Modules.Sync.Tests\Catalyst.Core.Modules.Sync.Tests.csproj", "{7EA516AF-6222-4AA2-B733-0FFB8B8B83DA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Sync.Tests", "Catalyst.Core.Modules.Sync.Tests\Catalyst.Core.Modules.Sync.Tests.csproj", "{7EA516AF-6222-4AA2-B733-0FFB8B8B83DA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Core.Modules.Web3.Tests", "Catalyst.Core.Modules.Web3.Tests\Catalyst.Core.Modules.Web3.Tests.csproj", "{B47E30A9-2B76-48F4-B446-2BB3CAED40D9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Web3.Tests", "Catalyst.Core.Modules.Web3.Tests\Catalyst.Core.Modules.Web3.Tests.csproj", "{B47E30A9-2B76-48F4-B446-2BB3CAED40D9}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.KBucket.Tests", "Catalyst.KBucket.Tests\Catalyst.KBucket.Tests.csproj", "{65A16C8A-3059-4B1C-94EC-ACF26169C070}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.KBucket.Tests", "Catalyst.KBucket.Tests\Catalyst.KBucket.Tests.csproj", "{65A16C8A-3059-4B1C-94EC-ACF26169C070}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Modules.POA.Consensus.Tests", "Catalyst.Modules.POA.Consensus.Tests\Catalyst.Modules.POA.Consensus.Tests.csproj", "{EDBBD9FB-39D2-4B93-B9F6-5CB60E2F1C70}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Modules.POA.Consensus.Tests", "Catalyst.Modules.POA.Consensus.Tests\Catalyst.Modules.POA.Consensus.Tests.csproj", "{EDBBD9FB-39D2-4B93-B9F6-5CB60E2F1C70}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Modules.POA.P2P.Discovery.Consortium.Tests", "Catalyst.Modules.POA.P2P.Discovery.Consortium.Tests\Catalyst.Modules.POA.P2P.Discovery.Consortium.Tests.csproj", "{8582530D-AD12-4AC1-80A7-54E6C41B99FA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Modules.POA.P2P.Discovery.Consortium.Tests", "Catalyst.Modules.POA.P2P.Discovery.Consortium.Tests\Catalyst.Modules.POA.P2P.Discovery.Consortium.Tests.csproj", "{8582530D-AD12-4AC1-80A7-54E6C41B99FA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Node.POA.CE.Tests", "Catalyst.Node.POA.CE.Tests\Catalyst.Node.POA.CE.Tests.csproj", "{71C2C608-E0A2-4257-97B5-24F14509D628}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.POA.CE.Tests", "Catalyst.Node.POA.CE.Tests\Catalyst.Node.POA.CE.Tests.csproj", "{71C2C608-E0A2-4257-97B5-24F14509D628}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Protocol.Tests", "Catalyst.Protocol.Tests\Catalyst.Protocol.Tests.csproj", "{78CF6466-2275-4CBC-B590-099785628769}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Protocol.Tests", "Catalyst.Protocol.Tests\Catalyst.Protocol.Tests.csproj", "{78CF6466-2275-4CBC-B590-099785628769}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.TestUtils", "Catalyst.TestUtils\Catalyst.TestUtils.csproj", "{AB76EC86-3031-4386-A517-D63AC43D116F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.TestUtils", "Catalyst.TestUtils\Catalyst.TestUtils.csproj", "{AB76EC86-3031-4386-A517-D63AC43D116F}"
 	ProjectSection(ProjectDependencies) = postProject
 		{3750275D-F73D-4078-80C4-734BBD830A4E} = {3750275D-F73D-4078-80C4-734BBD830A4E}
 		{4DE47B8A-A0C3-42C4-B00B-FFC3293D169F} = {4DE47B8A-A0C3-42C4-B00B-FFC3293D169F}
@@ -225,11 +225,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.TestUtils", "Catal
 		{F6972358-F1CB-48AA-AD13-C03EEDBBE91F} = {F6972358-F1CB-48AA-AD13-C03EEDBBE91F}
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lib.P2P.Tests", "Lib.P2P.Tests\Lib.P2P.Tests.csproj", "{299F4D02-7D8B-4C1C-98C6-DDD560D62661}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Lib.P2P.Tests", "Lib.P2P.Tests\Lib.P2P.Tests.csproj", "{299F4D02-7D8B-4C1C-98C6-DDD560D62661}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MultiFormats.Tests", "MultiFormats.Tests\MultiFormats.Tests.csproj", "{35AF99B0-B4B8-4D86-93EE-C73168345E76}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiFormats.Tests", "MultiFormats.Tests\MultiFormats.Tests.csproj", "{35AF99B0-B4B8-4D86-93EE-C73168345E76}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Catalyst.Cli.Tests", "Catalyst.Cli.Tests\Catalyst.Cli.Tests.csproj", "{2CA7690B-F019-4403-9A70-547323D9CF1E}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Cli.Tests", "Catalyst.Cli.Tests\Catalyst.Cli.Tests.csproj", "{2CA7690B-F019-4403-9A70-547323D9CF1E}"
 	ProjectSection(ProjectDependencies) = postProject
 		{8B9E2D74-AD77-4B43-B7A5-5557428CC8C8} = {8B9E2D74-AD77-4B43-B7A5-5557428CC8C8}
 		{91A5F73C-5FE6-4BF3-B437-10FA9DF785E9} = {91A5F73C-5FE6-4BF3-B437-10FA9DF785E9}
