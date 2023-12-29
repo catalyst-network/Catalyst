@@ -2,7 +2,7 @@
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <RootNamespace>Catalyst.Protocol</RootNamespace>
-        <Authors>James Kirby (nshcore@protonmail.com)</Authors>
+        <Authors>Darren Oliveiro-Priestnall (darren.op@catalystnet.org)</Authors>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Catalyst.Protocol.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>

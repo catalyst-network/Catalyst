@@ -2,7 +2,7 @@
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <Title>Catalyst POA P2P Module</Title>
-        <Authors>James Kirby (nshcore@protonmail.com)</Authors>
+        <Authors>Darren Oliveiro-Priestnall (darren.op@catalystnet.org)</Authors>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Catalyst.Modules.POA.P2P.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>

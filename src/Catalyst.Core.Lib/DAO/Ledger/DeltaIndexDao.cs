@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2019 Catalyst Network
+* Copyright (c) 2024 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -35,7 +35,7 @@ namespace Catalyst.Core.Lib.DAO.Ledger
     {
         [RepositoryPrimaryKey(Order = 1)]
         [JsonProperty("id")]
-        public new string Id => BuildDocumentId(Height);
+        public string Id => BuildDocumentId(Height);
         public ulong Height { set; get; }
         public string Cid { set; get; }
 

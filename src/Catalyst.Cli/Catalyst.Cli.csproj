@@ -2,9 +2,9 @@
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <Title>Catalyst CLI</Title>
-        <Authors>James Kirby (nshcore@protonmail.com)</Authors>
+        <Authors>Darren Oliveiro-Priestnall (darren.op@catalystnet.org)</Authors>
         <PackageDescription>CLI tool to interact with Catalyst Nodes via RPC</PackageDescription>
-        <AssemblyCopyrightAttribute>Copyright © 2019 AtlasCity.io</AssemblyCopyrightAttribute>
+        <AssemblyCopyrightAttribute>Copyright © 2024 Catalyst Network</AssemblyCopyrightAttribute>
         <OutputType>Exe</OutputType>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Ctalyst.Cli.snk</AssemblyOriginatorKeyFile>

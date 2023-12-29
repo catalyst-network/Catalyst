@@ -1,7 +1,7 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
-        <Title>James Kirby (nshcore@protonmail.com)</Title>
+        <Title>Darren Oliveiro-Priestnall (darren.op@catalystnet.org)</Title>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Catalyst.Modules.POA.Consensus.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>

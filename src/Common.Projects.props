@@ -1,7 +1,7 @@
 ﻿<Project>
     <PropertyGroup>
         <Company>catalystnet.org</Company>
-        <Copyright>Copyright © 2019 Catalyst Network</Copyright>
+        <Copyright>Copyright © 2024 Catalyst Network</Copyright>
         <PackageIconUrl>https://github.com/organizations/catalyst-network/settings/profile</PackageIconUrl>
         <PackageLicenseUrl>http://opensource.org/licenses/GPL-3.0</PackageLicenseUrl>
         <RepositoryUrl>https://github.com/Catalyst-network/Catalyst.Node</RepositoryUrl>

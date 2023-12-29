@@ -2,7 +2,7 @@
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <RootNamespace>Catalyst.Simulator</RootNamespace>
-        <Authors>James Kirby (nshcore@protonmail.com)</Authors>
+        <Authors>Darren Oliveiro-Priestnall (darren.op@catalystnet.org)</Authors>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Catalyst.Simulator.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
