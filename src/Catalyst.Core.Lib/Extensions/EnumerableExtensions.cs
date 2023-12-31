@@ -24,7 +24,7 @@
 using System;
 using System.Collections.Generic;
 using Dawn;
-using Nethermind.Dirichlet.Numerics;
+using Nethermind.Int256;
 
 namespace Catalyst.Core.Lib.Extensions
 {

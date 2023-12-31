@@ -22,7 +22,7 @@
 #endregion
 
 using Nethermind.Core.Crypto;
-using Nethermind.Dirichlet.Numerics;
+using Nethermind.Int256;
 using Org.BouncyCastle.Utilities;
 
 namespace Catalyst.Abstractions.Kvm.Models 

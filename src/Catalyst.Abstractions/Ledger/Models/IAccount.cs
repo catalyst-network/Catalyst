@@ -23,7 +23,7 @@
 
 using Catalyst.Abstractions.Repository;
 using Catalyst.Abstractions.Types;
-using Nethermind.Dirichlet.Numerics;
+using Nethermind.Int256;
 
 namespace Catalyst.Abstractions.Ledger.Models
 {

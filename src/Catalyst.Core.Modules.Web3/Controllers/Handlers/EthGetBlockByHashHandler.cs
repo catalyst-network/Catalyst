@@ -37,7 +37,7 @@ using Lib.P2P;
 using MultiFormats.Registry;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
-using Nethermind.Dirichlet.Numerics;
+using Nethermind.Int256;
 using Address = Nethermind.Core.Address;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
@@ -78,7 +78,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
                 GasLimit = (long) delta.GasLimit,
                 // TODO
                 GasUsed = (long)delta.GasLimit,
-                Timestamp = new UInt256(delta.TimeStamp.Seconds),
+                Timestamp = (UInt256)delta.TimeStamp.Seconds,
                 ParentHash = blockNumber == 0 ? null : Cid.Read(delta.PreviousDeltaDfsHash.ToByteArray()),
                 StateRoot = delta.StateRoot.ToKeccak(),
                 ReceiptsRoot = Keccak.EmptyTreeHash,

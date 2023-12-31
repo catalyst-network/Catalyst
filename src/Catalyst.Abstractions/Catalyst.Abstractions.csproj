@@ -29,7 +29,6 @@
     <PackageReference Include="System.Reactive" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\submodules\nethermind\src\Dirichlet\Nethermind.Dirichlet.Numerics\Nethermind.Dirichlet.Numerics.csproj" />
     <ProjectReference Include="..\..\submodules\nethermind\src\Nethermind\Nethermind.Evm\Nethermind.Evm.csproj" />
     <ProjectReference Include="..\Catalyst.Protocol\Catalyst.Protocol.csproj" />
     <ProjectReference Include="..\Lib.P2P\Lib.P2P.csproj" />

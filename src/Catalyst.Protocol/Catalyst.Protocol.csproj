@@ -22,7 +22,6 @@
         <ProtoBuf Include="..\..\submodules\Protocol\src\*.proto" Link="Protobuffs\%(Filename)%(Extension)" />
     </ItemGroup>
     <ItemGroup>
-      <ProjectReference Include="..\..\submodules\nethermind\src\Dirichlet\Nethermind.Dirichlet.Numerics\Nethermind.Dirichlet.Numerics.csproj" />
       <ProjectReference Include="..\MultiFormats\MultiFormats.csproj" />
     </ItemGroup>
 </Project>

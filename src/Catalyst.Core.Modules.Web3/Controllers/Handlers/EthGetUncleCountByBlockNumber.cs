@@ -22,7 +22,7 @@
 #endregion
 
 using Catalyst.Abstractions.Ledger;
-using Nethermind.Dirichlet.Numerics;
+using Nethermind.Int256;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers 
 {

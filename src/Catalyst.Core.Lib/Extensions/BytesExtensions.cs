@@ -33,7 +33,7 @@ using Google.Protobuf;
 using Lib.P2P;
 using MultiFormats;
 using Nethermind.Core.Crypto;
-using Nethermind.Dirichlet.Numerics;
+using Nethermind.Int256;
 
 namespace Catalyst.Core.Lib.Extensions
 {
@@ -81,8 +81,7 @@ namespace Catalyst.Core.Lib.Extensions
 
         public static UInt256 ToUInt256(this ByteString byteString)
         {
-            var bytes = byteString.ToArray();
-            return new UInt256(new BigInteger(bytes));
+            return byteString.ToUInt256();
         }
 
         public static ByteString ToUint256ByteString(this UInt256 uInt256)

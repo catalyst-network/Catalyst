@@ -35,7 +35,7 @@ using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Lib.P2P;
 using MultiFormats;
-using Nethermind.Dirichlet.Numerics;
+using Nethermind.Int256;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas.Building

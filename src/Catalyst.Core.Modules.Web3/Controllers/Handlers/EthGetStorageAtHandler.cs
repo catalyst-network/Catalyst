@@ -25,7 +25,6 @@ using System;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Core.Lib.Extensions;
-using Nethermind.Dirichlet.Numerics;
 using Nethermind.State;
 using Address = Nethermind.Core.Address;
 // TODO

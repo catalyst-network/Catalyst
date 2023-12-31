@@ -21,12 +21,12 @@
 
 #endregion
 
+using Nethermind.Int256;
 using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading;
-using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.KBucket
 {

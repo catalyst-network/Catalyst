@@ -24,7 +24,7 @@
 using System.Collections.Generic;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Transaction;
-using Nethermind.Dirichlet.Numerics;
+using Nethermind.Int256;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas.Building
 {

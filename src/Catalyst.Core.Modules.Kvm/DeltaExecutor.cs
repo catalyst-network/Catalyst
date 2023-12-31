@@ -254,7 +254,7 @@ namespace Catalyst.Core.Modules.Kvm
 
             if (!_stateProvider.AccountExists(sender))
             {
-                if (entry.GasPrice.ToUInt256() == Nethermind.Dirichlet.Numerics.UInt256.Zero)
+                if (entry.GasPrice.ToUInt256() == UInt256.Zero)
                 {
                     _stateProvider.CreateAccount(sender, UInt256.Zero);
                 }

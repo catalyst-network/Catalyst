@@ -24,7 +24,7 @@
 using AutoMapper;
 using Catalyst.Core.Lib.Extensions;
 using Google.Protobuf;
-using Nethermind.Dirichlet.Numerics;
+using Nethermind.Int256;
 
 namespace Catalyst.Core.Lib.DAO.Converters
 {

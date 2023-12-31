@@ -31,7 +31,6 @@ using Google.Protobuf;
 using Lib.P2P;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
-using Nethermind.Dirichlet.Numerics;
 using Nethermind.Evm;
 using Nethermind.Evm.Tracing;
 using Nethermind.State;

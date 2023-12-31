@@ -24,7 +24,7 @@
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
 using Nethermind.Core.Crypto;
-using Nethermind.Dirichlet.Numerics;
+using Nethermind.Int256;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers 
 {

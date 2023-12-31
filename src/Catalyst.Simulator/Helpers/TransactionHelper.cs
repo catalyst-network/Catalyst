@@ -32,7 +32,7 @@ using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
-using Nethermind.Dirichlet.Numerics;
+using Nethermind.Int256;
 
 namespace Catalyst.Simulator.Helpers
 {

@@ -26,7 +26,7 @@ using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Repository;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Transaction;
-using Nethermind.Dirichlet.Numerics;
+using Nethermind.Int256;
 using System.Collections.Generic;
 using System.Linq;
 
