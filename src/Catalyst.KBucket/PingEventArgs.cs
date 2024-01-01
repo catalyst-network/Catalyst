@@ -1,9 +1,9 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2019 Catalyst Network
+* Copyright (c) 2024 Catalyst Network
 *
-* This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
+* This file is part of Catalyst.Node href="https://github.com/catalyst-network/Catalyst.Node"
 *
 * Catalyst.Node is free software: you can redistribute it and/or modify
 * it under the terms of the GNU General Public License as published by
@@ -16,7 +16,7 @@
 * GNU General Public License for more details.
 *
 * You should have received a copy of the GNU General Public License
-* along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
+* along with Catalyst.Node. If not, see href="https://www.gnu.org/licenses/".
 */
 
 #endregion

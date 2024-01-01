@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2019 Catalyst Network
+* Copyright (c) 2024 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -29,7 +29,8 @@ using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using Google.Protobuf;
-using Newtonsoft.Json;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace MultiFormats
 {
@@ -540,26 +541,21 @@ namespace MultiFormats
         /// <remarks>
         ///   The JSON is just a single string value.
         /// </remarks>
-        private sealed class Json : JsonConverter
+        private sealed class Json : JsonConverter<object>
         {
-            public override bool CanConvert(Type objectType) { return true; }
+            public override object Read(
+           ref Utf8JsonReader reader,
+           Type typeToConvert,
+           JsonSerializerOptions options) =>
+           reader.TokenType == JsonTokenType.Null
+               ? default
+               : new MultiAddress(reader.GetBytesFromBase64());
 
-            public override bool CanRead => true;
-            public override bool CanWrite => true;
-
-            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
-            {
-                var ma = value as MultiAddress;
-                writer.WriteValue(ma?.ToString());
-            }
-
-            public override object ReadJson(JsonReader reader,
-                Type objectType,
-                object existingValue,
-                JsonSerializer serializer)
-            {
-                return !(reader.Value is string s) ? null : new MultiAddress(s);
-            }
+            public override void Write(
+                Utf8JsonWriter writer,
+                object value,
+                JsonSerializerOptions options) =>
+                writer.WriteStringValue((value as MultiAddress)?.ToString());
         }
     }
 }

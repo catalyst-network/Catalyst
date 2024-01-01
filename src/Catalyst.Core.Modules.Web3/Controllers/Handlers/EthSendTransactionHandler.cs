@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2019 Catalyst Network
+* Copyright (c) 2024 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -29,13 +29,13 @@ using Nethermind.Core.Crypto;
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
     [EthWeb3RequestHandler("eth", "sendTransaction")]
-    public class EthSendTransactionHandler : EthWeb3RequestHandler<TransactionForRpc, Keccak>
+    public class EthSendTransactionHandler : EthWeb3RequestHandler<TransactionForRpc, Hash256>
     {
-        protected override Keccak Handle(TransactionForRpc transaction, IWeb3EthApi api)
+        protected override Hash256 Handle(TransactionForRpc transaction, IWeb3EthApi api)
         {
             var deltaWithCid = api.GetLatestDeltaWithCid();
             var parentDelta = deltaWithCid.Delta;
-            Keccak root = parentDelta.StateRoot.ToKeccak();
+            Hash256 root = parentDelta.StateRoot.ToKeccak();
             var publicEntry = api.ToPublicEntry(transaction, root);
 
             return api.SendTransaction(publicEntry);

@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2019 Catalyst Network
+* Copyright (c) 2024 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -37,7 +37,7 @@ using Lib.P2P;
 using MultiFormats.Registry;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
-using Nethermind.Dirichlet.Numerics;
+using Nethermind.Int256;
 using Address = Nethermind.Core.Address;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
@@ -109,8 +109,9 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
                 Hash = deltaHash,
                 Number = blockNumber,
                 GasLimit = (long)delta.GasLimit,
-                GasUsed = delta.GasUsed,
-                Timestamp = new UInt256(delta.TimeStamp.Seconds),
+                // TODO
+                // GasUsed = delta.GasUsed,
+                Timestamp = (UInt256)delta.TimeStamp.Seconds,
                 ParentHash = blockNumber == 0 ? null : Cid.Read(delta.PreviousDeltaDfsHash.ToByteArray()),
                 StateRoot = delta.StateRoot.ToKeccak(),
                 ReceiptsRoot = Keccak.EmptyTreeHash,
@@ -118,7 +119,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
                 LogsBloom = Bloom.Empty,
                 MixHash = Keccak.Zero,
                 Nonce = nonce,
-                Uncles = new Keccak[0],
+                Uncles = new Hash256[0],
                 Transactions = delta.PublicEntries.Select(x => x.GetHash(hashProvider))
             };
             blockForRpc.TotalDifficulty = (UInt256) ((long) blockForRpc.Difficulty * (blockNumber + 1));

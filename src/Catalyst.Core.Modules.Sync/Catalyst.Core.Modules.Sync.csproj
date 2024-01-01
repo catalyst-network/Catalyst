@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <RootNamespace>Catalyst.Core.Modules.Sync</RootNamespace>
-        <Authors>James Kirby (nshcore@protonmail.com)</Authors>
+        <Authors>Darren Oliveiro-Priestnall (darren.op@catalystnet.org)</Authors>
     </PropertyGroup>
     <Import Project="../Common.Packable.props" />
     <Import Project="../Common.Projects.props" />

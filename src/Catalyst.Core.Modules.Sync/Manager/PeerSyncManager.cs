@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2019 Catalyst Network
+* Copyright (c) 2024 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -149,7 +149,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
         private void DeltaHistoryOnNext(DeltaHistoryResponse deltaHistoryResponse)
         {
             //First block is always previous block
-            if (deltaHistoryResponse.DeltaIndex.Count <= 1)
+            if (deltaHistoryResponse.Result.Count <= 1)
             {
                 return;
             }
@@ -160,10 +160,10 @@ namespace Catalyst.Core.Modules.Sync.Manager
                 return;
             }
 
-            var startHeight = (int)deltaHistoryResponse.DeltaIndex.FirstOrDefault()?.Height;
+            var startHeight = (int)deltaHistoryResponse.Result.FirstOrDefault()?.Height;
             if (startHeight == deltaHistoryRanker.Height)
             {
-                deltaHistoryRanker.Add(deltaHistoryResponse.DeltaIndex);
+                deltaHistoryRanker.Add(deltaHistoryResponse.Result);
             }
         }
 

@@ -1,8 +1,8 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <RootNamespace>Catalyst.Core.Modules.Rpc.Client</RootNamespace>
-        <Authors>James Kirby (nshcore@protonmail.com)</Authors>
+        <Authors>Darren Oliveiro-Priestnall (darren.op@catalystnet.org)</Authors>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Catalyst.Core.Modules.Rpc.Client.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
@@ -16,6 +16,6 @@
       <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="Serilog" Version="2.8.0" />
+      <PackageReference Include="Serilog" Version="3.1.1" />
     </ItemGroup>
 </Project>

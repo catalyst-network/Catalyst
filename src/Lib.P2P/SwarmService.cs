@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2019 Catalyst Network
+* Copyright (c) 2024 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -656,15 +656,13 @@ namespace Lib.P2P
             PeerConnection connection = null;
             try
             {
-                using (var timeout = new CancellationTokenSource(TransportConnectionTimeout))
+                using var timeout = new CancellationTokenSource(TransportConnectionTimeout);
+                using (var cts = CancellationTokenSource.CreateLinkedTokenSource(timeout.Token, cancel))
                 {
-                    using (var cts = CancellationTokenSource.CreateLinkedTokenSource(timeout.Token, cancel))
-                    {
-                        var attempts = possibleAddresses
-                           .Select(a => DialAsync(remote, a, cts.Token));
-                        connection = await TaskHelper.WhenAnyResultAsync(attempts, cts.Token).ConfigureAwait(false);
-                        cts.Cancel(); // stop other dialing tasks.
-                    }
+                    var attempts = possibleAddresses
+                       .Select(a => DialAsync(remote, a, cts.Token));
+                    connection = await TaskHelper.WhenAnyResultAsync(attempts, cts.Token).ConfigureAwait(false);
+                    await cts.CancelAsync(); // stop other dialing tasks.
                 }
             }
             catch (Exception e)

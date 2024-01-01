@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2019 Catalyst Network
+* Copyright (c) 2024 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -67,9 +67,9 @@ namespace Catalyst.Core.Modules.Sync
             ClearPeersOutOfRange(mostPopularMessages);
 
             var minimumScore = GetAvaliablePeerCount() * _threshold;
-            if (mostPopularMessages.Where(x => x.Item.IsSync).Count() >= minimumScore || mostPopularMessages.Count() >= _peerRepository.Count())
+            if (mostPopularMessages.Count() >= minimumScore || mostPopularMessages.Count() >= _peerRepository.Count())
             {
-                _foundDeltaHeightSubject.OnNext(mostPopularMessages.First().Item.DeltaIndex);
+                _foundDeltaHeightSubject.OnNext(mostPopularMessages.First().Item.Result);
             }
         }
 
@@ -88,7 +88,7 @@ namespace Catalyst.Core.Modules.Sync
 
         public IOrderedEnumerable<IRankedItem<LatestDeltaHashResponse>> GetMessagesByMostPopular(Func<KeyValuePair<PeerId, LatestDeltaHashResponse>, bool> filter = null)
         {
-            return _messages.GroupBy(x => x.Value).Select(x => new RankedItem<LatestDeltaHashResponse> { Item = x.Key, Score = x.Count() }).OrderByDescending(x => x.Score).ThenByDescending(x => x.Item.DeltaIndex.Height);
+            return _messages.GroupBy(x => x.Value).Select(x => new RankedItem<LatestDeltaHashResponse> { Item = x.Key, Score = x.Count() }).OrderByDescending(x => x.Score).ThenByDescending(x => x.Item.Result.Height);
         }
 
         public void Dispose()

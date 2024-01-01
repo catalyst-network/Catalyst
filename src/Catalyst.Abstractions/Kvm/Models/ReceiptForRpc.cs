@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2019 Catalyst Network
+* Copyright (c) 2024 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -36,7 +36,7 @@ namespace Catalyst.Abstractions.Kvm.Models
     {
         public ReceiptForRpc() { }
 
-        public ReceiptForRpc(Keccak txHash, TransactionReceipt receipt)
+        public ReceiptForRpc(Hash256 txHash, TransactionReceipt receipt)
         {
             TransactionHash = txHash;
             TransactionIndex = receipt.Index;
@@ -52,7 +52,7 @@ namespace Catalyst.Abstractions.Kvm.Models
         }
 
         [JsonConverter(typeof(KeccakConverter))]
-        public Keccak TransactionHash { get; set; }
+        public Hash256 TransactionHash { get; set; }
         
         [JsonConverter(typeof(LongConverter))]
         public long TransactionIndex { get; set; }

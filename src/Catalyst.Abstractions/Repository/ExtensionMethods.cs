@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2019 Catalyst Network
+* Copyright (c) 2024 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -40,14 +40,14 @@ namespace Catalyst.Abstractions.Repository
         /// <param name="entry">The entry.</param>
         /// <param name="hashProvider">The hash provider.</param>
         /// <returns>The hash value.</returns>
-        public static Keccak GetHash(this PublicEntry entry, IHashProvider hashProvider)
+        public static Hash256 GetHash(this PublicEntry entry, IHashProvider hashProvider)
         {
-            return new Keccak(hashProvider.ComputeMultiHash(entry).Digest);
+            return new Hash256(hashProvider.ComputeMultiHash(entry).Digest);
         }
 
         /// <summary>
         /// Transforms <paramref name="keccak"/> to a unified document id.
         /// </summary>
-        public static string AsDocumentId(this Keccak keccak) => keccak.ToString(false);
+        public static string AsDocumentId(this Hash256 keccak) => keccak.ToString(false);
     }
 }

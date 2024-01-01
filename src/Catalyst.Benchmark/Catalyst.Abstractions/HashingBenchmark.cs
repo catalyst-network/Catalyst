@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2019 Catalyst Network
+* Copyright (c) 2024 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -37,7 +37,7 @@ using Nethermind.Core.Extensions;
 namespace Catalyst.Benchmark.Catalyst.Abstractions
 {
     [MemoryDiagnoser]
-    [SimpleJob(RuntimeMoniker.CoreRt30)]
+    [SimpleJob(RuntimeMoniker.Net80)]
     public class HashingBenchmark
     {
         public HashingBenchmark()

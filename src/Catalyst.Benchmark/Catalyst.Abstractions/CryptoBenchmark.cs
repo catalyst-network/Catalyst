@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2019 Catalyst Network
+* Copyright (c) 2024 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -36,7 +36,7 @@ using Google.Protobuf.WellKnownTypes;
 namespace Catalyst.Benchmark.Catalyst.Abstractions
 {
     [MemoryDiagnoser]
-    [SimpleJob(RuntimeMoniker.CoreRt30)]
+    [SimpleJob(RuntimeMoniker.Net80)]
     public class CryptoBenchmark
     {
         public CryptoBenchmark()

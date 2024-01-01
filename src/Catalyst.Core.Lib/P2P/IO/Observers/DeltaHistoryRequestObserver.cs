@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2019 Catalyst Network
+* Copyright (c) 2024 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -77,7 +77,8 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             var range = rangeDao.Select(x => DeltaIndexDao.ToProtoBuff<DeltaIndex>(x, _mapperProvider)).ToList();
 
             var response = new DeltaHistoryResponse();
-            response.DeltaIndex.Add(range);
+            // TODO
+            response.Result.Add(range);
             return response;
         }
     }

@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2019 Catalyst Network
+* Copyright (c) 2024 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -80,8 +80,8 @@ namespace Catalyst.Core.Modules.Web3
                                    .ConfigureServices(ConfigureServices)
                                    .Configure(Configure)
                                    .UseUrls(_apiBindingAddress)
-                                   .UseWebRoot(webDirectory.FullName)
-                                   .UseSerilog();
+                                   .UseWebRoot(webDirectory.FullName);
+                                   //.UseSerilog();
                             }).RunConsoleAsync();
 
                     //SIGINT is caught from kestrel because we are using RunConsoleAsync in HostBuilder, the SIGINT will not be received in the main console so we need to exit the process manually, to prevent needing to use two SIGINT's

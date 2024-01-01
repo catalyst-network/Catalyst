@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2019 Catalyst Network
+* Copyright (c) 2024 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -38,9 +38,9 @@ namespace Catalyst.TestUtils
     public static class DeltaHelper
     {
         public static Delta GetDelta(IHashProvider hashProvider,
-            Cid previousDeltaHash = null,
-            byte[] merkleRoot = default,
-            byte[] merklePoda = default,
+            Cid? previousDeltaHash = null,
+            byte[]? merkleRoot = default,
+            byte[]? merklePoda = default,
             DateTime? timestamp = default)
         {
             var previousHash = previousDeltaHash ??
@@ -62,9 +62,9 @@ namespace Catalyst.TestUtils
         }
 
         public static CandidateDeltaBroadcast GetCandidateDelta(IHashProvider hashProvider,
-            Cid previousDeltaHash = null,
-            Cid hash = null,
-            PeerId producerId = null)
+            Cid? previousDeltaHash = null,
+            Cid? hash = null,
+            PeerId? producerId = null)
         {
             var candidateHash = hash ??
                 hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).ToCid();
@@ -82,10 +82,10 @@ namespace Catalyst.TestUtils
         }
 
         public static FavouriteDeltaBroadcast GetFavouriteDelta(IHashProvider hashProvider,
-            Cid previousDeltaHash = null,
-            Cid hash = null,
-            PeerId producerId = null,
-            PeerId voterId = null)
+            Cid? previousDeltaHash = null,
+            Cid? hash = null,
+            PeerId? producerId = null,
+            PeerId? voterId = null)
         {
             var candidate = GetCandidateDelta(hashProvider, previousDeltaHash, hash, producerId);
             var voter = voterId ?? PeerIdHelper.GetPeerId();

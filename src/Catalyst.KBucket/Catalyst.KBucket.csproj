@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
     <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
+        <TargetFramework>net8.0</TargetFramework>
         <AssemblyName>Catalyst.KBucket</AssemblyName>
         <RootNamespace>Catalyst.KBucket</RootNamespace>
         <DocumentationFile>bin\$(Configuration)\$(TargetFramework)\$(AssemblyName).xml</DocumentationFile>
@@ -26,6 +26,6 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\submodules\nethermind\src\Dirichlet\Nethermind.Dirichlet.Numerics\Nethermind.Dirichlet.Numerics.csproj" />
+      <ProjectReference Include="..\..\submodules\nethermind\src\Nethermind\Nethermind.Core\Nethermind.Core.csproj" />
     </ItemGroup>
 </Project>

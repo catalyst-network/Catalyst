@@ -1,20 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
-        <RootNamespace>Lib.P2P.Tests</RootNamespace>
-        <Authors>James Kirby (nshcore@protonmail.com)</Authors>
-        <SignAssembly>true</SignAssembly>
-        <AssemblyOriginatorKeyFile>Lib.P2P.Tests.snk</AssemblyOriginatorKeyFile>
-        <PublicSign>true</PublicSign>
-        <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    </PropertyGroup>
-    <ItemGroup>
-        <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.4.0" PrivateAssets="all" />
-        <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" PrivateAssets="all" />
-        <PackageReference Include="MSTest.TestFramework" Version="2.1.0" PrivateAssets="all" />
-        <PackageReference Include="coverlet.msbuild" Version="2.8.0" PrivateAssets="all" />
-    </ItemGroup>
-    <ItemGroup>
-      <ProjectReference Include="..\Lib.P2P\Lib.P2P.csproj" />
-    </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
+    <PackageReference Include="NUnit.Analyzers" Version="3.6.1" />
+    <PackageReference Include="coverlet.collector" Version="6.0.0" />
+  </ItemGroup>
+
 </Project>

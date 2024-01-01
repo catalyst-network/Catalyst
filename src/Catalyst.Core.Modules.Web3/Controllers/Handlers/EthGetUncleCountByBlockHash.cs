@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2019 Catalyst Network
+* Copyright (c) 2024 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -23,13 +23,13 @@
 
 using Catalyst.Abstractions.Ledger;
 using Nethermind.Core.Crypto;
-using Nethermind.Dirichlet.Numerics;
+using Nethermind.Int256;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers 
 {
     [EthWeb3RequestHandler("eth", "getUncleCountByBlockHash")]
-    public class EthGetUncleCountByBlockHash : EthWeb3RequestHandler<Keccak, UInt256?>
+    public class EthGetUncleCountByBlockHash : EthWeb3RequestHandler<Hash256, UInt256?>
     {
-        protected override UInt256? Handle(Keccak keccak, IWeb3EthApi api) => UInt256.Zero;
+        protected override UInt256? Handle(Hash256 keccak, IWeb3EthApi api) => UInt256.Zero;
     }
 }

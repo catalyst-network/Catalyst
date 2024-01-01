@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2019 Catalyst Network
+* Copyright (c) 2024 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -27,6 +27,7 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 using FluentAssertions;
+using Nito.AsyncEx.Synchronous;
 using NUnit.Framework;
 
 namespace Catalyst.TestUtils
@@ -142,7 +143,7 @@ namespace Catalyst.TestUtils
             new Func<Task>(async () => await TaskHelper.WaitForAsyncOrThrowAsync(
                         () => IncreaseAndCheckIfAboveLimit(ref attempts,
                             (int) (timeout.TotalMilliseconds / waitDelay.TotalMilliseconds) + 1), timeout, waitDelay)
-                   .ConfigureAwait(false)).Should().Throw<Exception>()
+                   .ConfigureAwait(false)).Should().ThrowAsync<Exception>().WaitAndUnwrapException()
                .And.Message.Should().Contain(nameof(IncreaseAndCheckIfAboveLimit));
             watch.Stop();
 

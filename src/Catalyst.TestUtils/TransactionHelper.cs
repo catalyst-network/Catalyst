@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2019 Catalyst Network
+* Copyright (c) 2024 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -28,7 +28,7 @@ using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
-using Nethermind.Dirichlet.Numerics;
+using Nethermind.Int256;
 
 namespace Catalyst.TestUtils
 {
@@ -48,11 +48,11 @@ namespace Catalyst.TestUtils
             {
                 PublicEntry = new PublicEntry
                 {
-                    Amount = ((UInt256) amount).ToUint256ByteString(),
+                    Amount = amount.ToUint256ByteString(),
                     Nonce = nonce,
                     ReceiverAddress = receiverPublicKey.ToUtf8ByteString(),
                     SenderAddress = senderPublicKey.ToUtf8ByteString(),
-                    GasPrice = ((UInt256) gasPrice).ToUint256ByteString(),
+                    GasPrice = gasPrice.ToUint256ByteString(),
                     Signature = new Signature
                     {
                         SigningContext = new SigningContext

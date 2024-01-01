@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2019 Catalyst Network
+* Copyright (c) 2024 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -33,7 +33,7 @@ namespace Catalyst.Core.Modules.Ledger.Repository
     {
         void Put(Cid deltaHash, TransactionReceipt[] receipts, PublicEntry[] deltaPublicEntries);
         bool TryFind(Cid deltaHash, out TransactionReceipt[] receipts);
-        bool TryFind(Keccak transactionHash, out TransactionReceipt receipts);
-        bool TryFind(Keccak transactionHash, out Cid deltaHash, out Delta delta, out int index);
+        bool TryFind(Cid transactionHash, out TransactionReceipt receipts);
+        bool TryFind(Cid transactionHash, out Cid deltaHash, out Delta delta, out int index);
     }
 }

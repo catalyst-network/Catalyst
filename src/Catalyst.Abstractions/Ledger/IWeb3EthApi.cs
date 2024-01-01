@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2019 Catalyst Network
+* Copyright (c) 2024 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -44,17 +44,18 @@ namespace Catalyst.Abstractions.Ledger
         IDeltaCache DeltaCache { get; }
 
         IDeltaExecutor Executor { get; }
-        IStorageProvider StorageProvider { get; }
-        IStateProvider StateProvider { get; }
+        // TODO
+        //IStorageProvider StorageProvider { get; }
+        IWorldState StateProvider { get; }
         IHashProvider HashProvider { get; }
         IPeerRepository PeerRepository { get; }
         IDfsService DfsService { get; }
         SyncState SyncState { get; }
 
-        Keccak SendTransaction(PublicEntry publicEntry);
+        Hash256 SendTransaction(PublicEntry publicEntry);
         
-        TransactionReceipt FindReceipt(Keccak transactionHash);
-        bool FindTransactionData(Keccak transactionHash, out Cid deltaHash, out Delta delta, out int index);
+        TransactionReceipt FindReceipt(Cid transactionHash);
+        bool FindTransactionData(Cid transactionHash, out Cid deltaHash, out Delta delta, out int index);
         IEnumerable<PublicEntry> GetPendingTransactions();
     }
 }

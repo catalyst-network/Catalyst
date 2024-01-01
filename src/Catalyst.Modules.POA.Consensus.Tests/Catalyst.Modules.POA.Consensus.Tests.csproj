@@ -1,28 +1,20 @@
 <Project Sdk="Microsoft.NET.Sdk">
-    <PropertyGroup>
-        <TargetFramework>netcoreapp3.1</TargetFramework>
-        <Title>Catalyst POA Consensus Module Tests</Title>
-        <Authors>James Kirby (nshcore@protonmail.com)</Authors>
-        <SignAssembly>true</SignAssembly>
-        <AssemblyOriginatorKeyFile>Catalyst.Modules.POA.Consensus.Tests.snk</AssemblyOriginatorKeyFile>
-        <PublicSign>true</PublicSign>
-    </PropertyGroup>
-    <PropertyGroup>
-        <RootNamespace>Catalyst.Modules.POA.Consensus.Tests</RootNamespace>
-    </PropertyGroup>
-    <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
-      <NoWarn>1701;1702;VSTHRD200;CS8002</NoWarn>
-    </PropertyGroup>
-    <Import Project="../Common.TestProjects.props" />
-    <ItemGroup>
-      <ProjectReference Include="..\Catalyst.Core.Lib\Catalyst.Core.Lib.csproj" />
-      <ProjectReference Include="..\Catalyst.Core.Modules.Dfs\Catalyst.Core.Modules.Dfs.csproj" />
-      <ProjectReference Include="..\Catalyst.Core.Modules.Mempool\Catalyst.Core.Modules.Mempool.csproj" />
-      <ProjectReference Include="..\Catalyst.Protocol\Catalyst.Protocol.csproj" />
-      <ProjectReference Include="..\Catalyst.TestUtils\Catalyst.TestUtils.csproj" />
-      <ProjectReference Include="..\Catalyst.Modules.POA.Consensus\Catalyst.Modules.POA.Consensus.csproj" />
-    </ItemGroup>
-    <ItemGroup>
-      <PackageReference Include="SharpRepository.InMemoryRepository" Version="2.0.3.1" />
-    </ItemGroup>
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.6.0" />
+    <PackageReference Include="NUnit" Version="3.13.3" />
+    <PackageReference Include="NUnit3TestAdapter" Version="4.2.1" />
+    <PackageReference Include="NUnit.Analyzers" Version="3.6.1" />
+    <PackageReference Include="coverlet.collector" Version="6.0.0" />
+  </ItemGroup>
+
 </Project>

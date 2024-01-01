@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2019 Catalyst Network
+* Copyright (c) 2024 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -73,8 +73,7 @@ namespace Catalyst.Core.Lib.IO.Events
                 {
                     return ResponseCode.Error;
                 }
-                
-                byte[] kvmAddressBytes = Keccak.Compute(publicEntry.SenderAddress.ToByteArray()).Bytes.AsSpan(12).ToArray();
+                byte[] kvmAddressBytes = Keccak.Compute(publicEntry.SenderAddress.ToByteArray()).Bytes.ToArray();
                 string hex = kvmAddressBytes.ToHexString() ?? throw new ArgumentNullException("kvmAddressBytes.ToHexString()");
                 publicEntry.SenderAddress = kvmAddressBytes.ToByteString();
                 
