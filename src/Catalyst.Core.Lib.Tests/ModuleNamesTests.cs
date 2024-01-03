@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -21,30 +21,28 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.Keystore;
-using Catalyst.Abstractions.Registry;
+using Catalyst.Abstractions.Enumerator;
 using Catalyst.Abstractions.Types;
+using FluentAssertions;
+using NUnit.Framework;
 
-namespace Catalyst.Core.Lib.Cryptography
+namespace Catalyst.Core.Lib.Tests
 {
-    public sealed class KeyRegistry : RegistryBase<KeyRegistryTypes, IPrivateKey>, IKeyRegistry, IDisposable
+    public static class ModuleNamesTests
     {
-        private static bool _disposeWasCalled;
-
-        public KeyRegistry()
+        [Test]
+        public static void All_should_return_all_declared_names()
         {
-            Registry = new Dictionary<KeyRegistryTypes, IPrivateKey>();
-        }
-        
-        public bool Contains(byte[] publicKeyBytes)
-        {
-            return Registry.Values.Any(privateKey => privateKey.GetPublicKey().Bytes.SequenceEqual(publicKeyBytes));
-        }
+            var allModuleNames = Enumeration.GetAll<ModuleTypes>().Select(m => m.Name);
 
-        public void Dispose() => _disposeWasCalled = true;
+            var expectedList = new List<string>
+            {
+                "Consensus", "Contract", "Dfs", "DfsHttp", "Ledger", "Mempool", "KeySigner"
+            };
+
+            allModuleNames.Should().BeEquivalentTo(expectedList);
+        }
     }
 }
