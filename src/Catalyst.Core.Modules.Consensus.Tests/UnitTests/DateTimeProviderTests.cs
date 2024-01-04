@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -22,23 +22,20 @@
 #endregion
 
 using System;
-using Catalyst.Abstractions.P2P.Repository;
-using Catalyst.Abstractions.P2P.ReputationSystem;
+using FluentAssertions;
+using NUnit.Framework;
 
-namespace Catalyst.Core.Lib.P2P.ReputationSystem
+namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
 {
-    public interface IReputationManager
+    public class DateTimeProviderTests
     {
-        IPeerRepository PeerRepository { get; }
+        [Test]
+        public void UtcNow_should_return_utc_DateTimeKind()
+        {
+            var provider = new DateTimeProvider();
+            var now = provider.UtcNow;
 
-        IObservable<IPeerReputationChange> ReputationEventStream { get; }
-
-        IObservable<IPeerReputationChange> MergedEventStream { get; set; }
-
-        void MergeReputationStream(IObservable<IPeerReputationChange> reputationChangeStream);
-
-        void OnNext(IPeerReputationChange peerReputationChange);
-
-        void Dispose();
+            now.Kind.Should().Be(DateTimeKind.Utc);
+        }
     }
 }

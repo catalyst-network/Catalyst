@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -21,24 +21,20 @@
 
 #endregion
 
-using System;
-using Catalyst.Abstractions.P2P.Repository;
-using Catalyst.Abstractions.P2P.ReputationSystem;
+using System.Reactive.Concurrency;
+using Catalyst.Core.Modules.Consensus.Cycle;
+using FluentAssertions;
+using NUnit.Framework;
 
-namespace Catalyst.Core.Lib.P2P.ReputationSystem
+namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Cycle
 {
-    public interface IReputationManager
+    public sealed class CycleSchedulerProviderTests
     {
-        IPeerRepository PeerRepository { get; }
-
-        IObservable<IPeerReputationChange> ReputationEventStream { get; }
-
-        IObservable<IPeerReputationChange> MergedEventStream { get; set; }
-
-        void MergeReputationStream(IObservable<IPeerReputationChange> reputationChangeStream);
-
-        void OnNext(IPeerReputationChange peerReputationChange);
-
-        void Dispose();
+        [Test]
+        public void Scheduler_Should_Be_The_Default_TaskPoolScheduler()
+        {
+            var provider = new CycleSchedulerProvider();
+            provider.Scheduler.Should().Be(TaskPoolScheduler.Default);
+        }
     }
 }
