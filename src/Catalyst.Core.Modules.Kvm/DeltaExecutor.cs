@@ -542,7 +542,7 @@ namespace Catalyst.Core.Modules.Kvm
         {
             if (!_stateProvider.AccountExists(recipient)) return;
 
-            var addressHasCode = (_virtualMachine.GetCachedCodeInfo(_stateProvider, recipient, spec)?.MachineCode?.Length ?? 0) != 0;
+            var addressHasCode = (_virtualMachine.GetCachedCodeInfo(_stateProvider, recipient, spec)?.MachineCode.Length ?? 0) != 0;
             var addressWasUsed = _stateProvider.GetNonce(recipient) != 0;
             if (addressHasCode || addressWasUsed)
             {

@@ -51,7 +51,7 @@ namespace Catalyst.Abstractions.Kvm.Models
             Status = receipt.StatusCode;
         }
 
-        [JsonConverter(typeof(KeccakConverter))]
+        [JsonConverter(typeof(CidJsonConverter))]
         public Hash256 TransactionHash { get; set; }
         
         [JsonConverter(typeof(LongConverter))]

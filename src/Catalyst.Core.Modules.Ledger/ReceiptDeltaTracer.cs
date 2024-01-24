@@ -188,5 +188,10 @@ namespace Catalyst.Core.Modules.Ledger
         {
             throw new NotImplementedException();
         }
+
+        public void ReportByteCode(ReadOnlyMemory<byte> byteCode)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

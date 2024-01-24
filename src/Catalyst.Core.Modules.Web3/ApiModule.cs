@@ -113,17 +113,16 @@ namespace Catalyst.Core.Modules.Web3
                        .AllowAnyHeader());
             });
 
-            services.AddMvcCore().AddNewtonsoftJson(options =>
+            services.AddMvc().AddJsonOptions(options =>
             {
-                var converters = options.SerializerSettings.Converters;
-                
+                var converters = options.JsonSerializerOptions.Converters;
+
                 converters.Add(new UInt256Converter());
                 converters.Add(new NullableUInt256Converter());
-                converters.Add(new KeccakConverter());
                 converters.Add(new AddressConverter());
                 converters.Add(new ByteArrayConverter());
                 converters.Add(new CidJsonConverter());
-            }).AddApiExplorer();
+            });//.AddApiExplorer();
 
             var mvcBuilder = services.AddRazorPages();
 

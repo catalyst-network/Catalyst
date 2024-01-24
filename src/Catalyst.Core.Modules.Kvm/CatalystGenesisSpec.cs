@@ -228,6 +228,12 @@ namespace Catalyst.Core.Modules.Kvm
         /// <inheritdoc />
         public long Eip1559TransitionBlock { get; } = Istanbul.Instance.Eip1559TransitionBlock;
 
+        public UInt256 ForkBaseFee => throw new System.NotImplementedException();
+
+        public UInt256 BaseFeeMaxChangeDenominator => throw new System.NotImplementedException();
+
+        public long ElasticityMultiplier => throw new System.NotImplementedException();
+
         /// <inheritdoc />
         public bool IsEip158IgnoredAccount(Address address) { return address == Address.SystemUser; }
     }
