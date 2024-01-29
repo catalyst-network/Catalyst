@@ -34,6 +34,7 @@ using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.UnitTests.Commands
 {
+    [TestFixture]
     public sealed class DisconnectTests
     {
         private readonly TestScheduler _testScheduler = new TestScheduler();

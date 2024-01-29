@@ -34,6 +34,7 @@ using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.UnitTests.Commands.Request
 {
+    [TestFixture]
     public sealed class GetDeltaRequestTests
     {
         private readonly ILogger _logger;

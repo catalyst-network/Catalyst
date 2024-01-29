@@ -35,6 +35,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands.Response
     /// <summary>
     ///     Tests the CLI for peer reputation response
     /// </summary>
+    /// [TestFixture]
     public sealed class GetPeerReputationResponseTests
     {
         private readonly TestScheduler _testScheduler = new TestScheduler();

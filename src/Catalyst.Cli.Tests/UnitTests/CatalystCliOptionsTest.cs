@@ -30,6 +30,7 @@ using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.UnitTests
 {
+    [TestFixture]
     public sealed class CatalystCliOptionsTest
     {
         private ChangeDataFolderOptions _changeDataFolderOptions;

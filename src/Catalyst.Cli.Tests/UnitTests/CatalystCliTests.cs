@@ -38,6 +38,7 @@ using Serilog;
 
 namespace Catalyst.Cli.Tests.UnitTests
 {
+    [TestFixture]
     public sealed class CatalystCliTests
     {
         public CatalystCliTests()
