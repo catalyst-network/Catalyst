@@ -38,9 +38,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         public void Creating()
         {
             var link = new DagLink("abc", "QmXg9Pp2ytZ14xgmQjYEiHjVjMFXzCVVEcRTWJBmLgR39V", 5);
-            Assert.Equals("abc", link.Name);
-            Assert.Equals("QmXg9Pp2ytZ14xgmQjYEiHjVjMFXzCVVEcRTWJBmLgR39V", link.Id.ToString());
-            Assert.Equals(5, link.Size);
+            Assert.That("abc", Is.EqualTo(link.Name));
+            Assert.That("QmXg9Pp2ytZ14xgmQjYEiHjVjMFXzCVVEcRTWJBmLgR39V", Is.EqualTo(link.Id.ToString()));
+            Assert.That(5, Is.EqualTo(link.Size));
         }
 
         [Test]
@@ -49,9 +49,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             var link = new DagLink("abc", "QmXg9Pp2ytZ14xgmQjYEiHjVjMFXzCVVEcRTWJBmLgR39V", 5);
             var clone = new DagLink(link);
 
-            Assert.Equals("abc", clone.Name);
-            Assert.Equals("QmXg9Pp2ytZ14xgmQjYEiHjVjMFXzCVVEcRTWJBmLgR39V", clone.Id.ToString());
-            Assert.Equals(5, clone.Size);
+            Assert.That("abc", Is.EqualTo(clone.Name));
+            Assert.That("QmXg9Pp2ytZ14xgmQjYEiHjVjMFXzCVVEcRTWJBmLgR39V", Is.EqualTo(clone.Id.ToString()));
+            Assert.That(5, Is.EqualTo(clone.Size));
         }
 
         [Test]
@@ -60,7 +60,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             const string encoded = "0a22122023dca2a7429612378554b0bb5b85012dec00a17cc2c673f17d2b76a50b839cd51201611803";
             var link = new DagLink("a", "QmQke7LGtfu3GjFP3AnrP8vpEepQ6C5aJSALKAq653bkRi", 3);
             link.ToArray();
-            Assert.Equals(encoded, link.ToArray().ToHexString());
+            Assert.That(encoded, Is.EqualTo(link.ToArray().ToHexString()));
         }
 
         [Test]
@@ -69,7 +69,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             var encoded = "0a22122023dca2a7429612378554b0bb5b85012dec00a17cc2c673f17d2b76a50b839cd512001803";
             var link = new DagLink("", "QmQke7LGtfu3GjFP3AnrP8vpEepQ6C5aJSALKAq653bkRi", 3);
             link.ToArray();
-            Assert.Equals(encoded, link.ToArray().ToHexString());
+            Assert.That(encoded, Is.EqualTo(link.ToArray().ToHexString()));
         }
 
         [Test]
@@ -78,7 +78,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             const string encoded = "0a22122023dca2a7429612378554b0bb5b85012dec00a17cc2c673f17d2b76a50b839cd51803";
             var link = new DagLink(null, "QmQke7LGtfu3GjFP3AnrP8vpEepQ6C5aJSALKAq653bkRi", 3);
             link.ToArray();
-            Assert.Equals(encoded, link.ToArray().ToHexString());
+            Assert.That(encoded, Is.EqualTo(link.ToArray().ToHexString()));
         }
 
         [Test]
@@ -93,11 +93,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         {
             var link = new DagLink("hello",
                 "zB7NCdng5WffuNCgHu4PhDj7nbtuVrhPc2pMhanNxYKRsECdjX9nd44g6CRu2xNrj2bG2NNaTsveL5zDGWhbfiug3VekW", 11);
-            Assert.Equals("hello", link.Name);
-            Assert.Equals(1, link.Id.Version);
-            Assert.Equals("raw", link.Id.ContentType);
-            Assert.Equals("sha2-512", link.Id.Hash.Algorithm.Name);
-            Assert.Equals(11, link.Size);
+            Assert.That("hello", Is.EqualTo(link.Name));
+            Assert.That(1, Is.EqualTo(link.Id.Version));
+            Assert.That("raw", Is.EqualTo(link.Id.ContentType));
+            Assert.That("sha2-512", Is.EqualTo(link.Id.Hash.Algorithm.Name));
+            Assert.That(11, Is.EqualTo(link.Size));
         }
     }
 }
