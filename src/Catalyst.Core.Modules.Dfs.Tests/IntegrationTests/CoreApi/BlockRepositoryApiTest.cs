@@ -47,7 +47,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         }
         
         [Test]
-        public void Exists() { Assert.That(ipfs.BlockRepositoryApi, Is.Null); }
+        public void Exists() { Assert.That(ipfs.BlockRepositoryApi, Is.Not.Null); }
 
         [Test]
         public async Task Stats()

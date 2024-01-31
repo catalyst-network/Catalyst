@@ -133,7 +133,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             // ISnapshotableDb stateDb = new StateDb();
             var patriciaTree = new PatriciaTree();
             _stateProvider = new WorldState(patriciaTree.TrieStore, codeDb, LimboLogs.Instance);
-            _stateProvider.StateRoot.Returns(Keccak.Zero);
+            Assert.That(_stateProvider.StateRoot, Is.Not.EqualTo(Keccak.Zero));
 
             BlockhashProvider blockHashProvider = new BlockhashProvider(null, LimboLogs.Instance);
 

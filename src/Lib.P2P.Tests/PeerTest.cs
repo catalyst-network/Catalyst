@@ -53,7 +53,7 @@ namespace Lib.P2P.Tests
             Assert.That(0, Is.EqualTo(peer.Addresses.Count()));
             Assert.That("unknown/0.0", Is.EqualTo(peer.ProtocolVersion));
             Assert.That("unknown/0.0", Is.EqualTo(peer.AgentVersion));
-            Assert.That(null, peer.PublicKey);
+            Assert.That(peer.PublicKey, Is.Null);
             Assert.That(false, Is.EqualTo(peer.IsValid())); // missing peer ID
             Assert.That(peer.ConnectedAddress, Is.Null);
             Assert.That(peer.Latency.HasValue, Is.False);

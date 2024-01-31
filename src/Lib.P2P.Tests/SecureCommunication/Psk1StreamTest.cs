@@ -24,6 +24,7 @@
 using System;
 using System.IO;
 using Lib.P2P.Cryptography;
+using Lib.P2P.PubSub;
 using Lib.P2P.SecureCommunication;
 
 namespace Lib.P2P.Tests.SecureCommunication
@@ -34,7 +35,7 @@ namespace Lib.P2P.Tests.SecureCommunication
         public void BadKeyLength()
         {
             var psk = new PreSharedKey();
-            var _ = new Psk1Stream(Stream.Null, psk);
+            Assert.That(() => new Psk1Stream(Stream.Null, psk), Throws.Exception);
         }
 
         [Test]
@@ -87,7 +88,7 @@ namespace Lib.P2P.Tests.SecureCommunication
         {
             var psk = new PreSharedKey().Generate();
             var secure = new Psk1Stream(Stream.Null, psk);
-            secure.ReadByte();
+            Assert.That(() => secure.ReadByte(), Throws.TypeOf<EndOfStreamException>());
         }
     }
 }

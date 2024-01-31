@@ -353,7 +353,7 @@ MC4CAQAwBQYDK2VwBCIEIGJnyy3U4ksTQoRBz3mf1dxeFDPXZBrwh7gD7SqMg+/i
             Assert.That("18n3naE9kBZoVvgYMV6saMZe3jn87dZiNbQ22BhxKTwU5yUoGfvBL1R3eScjokDGBk7i", Is.EqualTo(key.Id.ToString()));
 
             var privateKey = await _keyStoreService.GetPrivateKeyAsync("oed1");
-            Assert.That(privateKey.GetType(), Is.TypeOf(typeof(Ed25519PrivateKeyParameters)));
+            Assert.That(privateKey, Is.TypeOf< Ed25519PrivateKeyParameters>());
         }
     }
 }

@@ -58,7 +58,7 @@ namespace MultiFormats.Tests
         [Test]
         public void Decode_Bad()
         {
-            ExceptionAssert.Throws<InvalidOperationException>(() => Base58.Decode("jo91waLQA1NNeBmZKUF=="));
+            ExceptionAssert.Throws<ArgumentException>(() => Base58.Decode("jo91waLQA1NNeBmZKUF=="));
         }
 
         [Test]

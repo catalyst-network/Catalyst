@@ -25,6 +25,7 @@ using System;
 using System.IO;
 using System.Linq;
 using Lib.P2P.PubSub;
+using Lib.P2P.SecureCommunication;
 using ProtoBuf;
 
 namespace Lib.P2P.Tests.PubSub
@@ -81,7 +82,7 @@ namespace Lib.P2P.Tests.PubSub
         [Test]
         public void CidNotSupported()
         {
-            var _ = new PublishedMessage().Id;
+            Assert.That(() => new PublishedMessage().Id, Throws.TypeOf<NotSupportedException>());
         }
 
         [Test]

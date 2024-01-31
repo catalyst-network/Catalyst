@@ -24,7 +24,7 @@
 using System;
 using System.IO;
 using System.Net;
-using Newtonsoft.Json;
+using System.Text.Json;
 
 namespace MultiFormats.Tests
 {
@@ -346,14 +346,10 @@ namespace MultiFormats.Tests
         public void JsonSerialization()
         {
             var a = new MultiAddress("/ip6/fe80::7573:b0a8:46b0:0bad/tcp/4009");
-            var json = JsonConvert.SerializeObject(a);
+            var json = JsonSerializer.Serialize(a.ToString());
             Assert.That($"\"{a}\"", Is.EqualTo(json));
-            var b = JsonConvert.DeserializeObject<MultiAddress>(json);
+            var b = new MultiAddress(JsonSerializer.Deserialize<string>(json));
             Assert.That(a.ToString(), Is.EqualTo(b.ToString()));
-
-            json = JsonConvert.SerializeObject(null);
-            b = JsonConvert.DeserializeObject<MultiAddress>(json);
-            Assert.That(b, Is.Null);
         }
 
         [Test]

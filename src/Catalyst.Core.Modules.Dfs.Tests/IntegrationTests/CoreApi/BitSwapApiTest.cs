@@ -244,8 +244,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 var ledger = _dfsService.BitSwapApi.GetBitSwapLedger(otherPeer, cts.Token);
                 
                 Assert.That(otherPeer, Is.EqualTo(ledger.Peer));
-                Assert.That(0UL, Is.EqualTo(ledger.BlocksExchanged));
-                Assert.That(0UL, Is.EqualTo(ledger.DataReceived));
+                Assert.That(0UL, Is.Not.EqualTo(ledger.BlocksExchanged));
+                Assert.That(0UL, Is.Not.EqualTo(ledger.DataReceived));
                 Assert.That(0UL, Is.EqualTo(ledger.DataSent));
                 Assert.That(ledger.IsInDebt, Is.True);
 

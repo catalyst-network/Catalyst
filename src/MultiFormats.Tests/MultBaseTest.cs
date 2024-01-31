@@ -243,7 +243,7 @@ namespace MultiFormats.Tests
             {
                 var bytes = Encoding.UTF8.GetBytes(v.Input);
                 var s = MultiBase.Encode(bytes, v.Algorithm);
-                Assert.Equals(v.Output, s);
+                Assert.That(v.Output, Is.EqualTo(s));
                 Assert.That(bytes, Is.EquivalentTo(MultiBase.Decode(s)));
             }
         }

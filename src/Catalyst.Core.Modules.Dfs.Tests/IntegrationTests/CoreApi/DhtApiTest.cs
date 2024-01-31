@@ -52,7 +52,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         public void Local_Info()
         {
             var peer = ipfs.DhtApi.FindPeerAsync(_locaId).GetAwaiter().GetResult();
-            Assert.That(peer.GetType(), Is.TypeOf(typeof(Peer)));
+            Assert.That(peer, Is.TypeOf<Peer>());
             Assert.That(peer.Addresses, Is.Not.Null);
             Assert.That(peer.AgentVersion, Does.StartWith("net-ipfs/"));
             Assert.That(peer.Id, Is.Not.Null);
