@@ -70,8 +70,8 @@ namespace Lib.P2P.Tests.PubSub
                 await ns.PublishAsync("topic", "foo");
                 await ns.PublishAsync("topic", new byte[] {1, 2, 3});
                 await ns.PublishAsync("topic", new MemoryStream(new byte[] {1, 2, 3}));
-                Assert.Equals(3ul, ns.MesssagesPublished);
-                Assert.Equals(3ul, ns.MesssagesReceived);
+                Assert.That(3ul, Is.EqualTo(ns.MesssagesPublished));
+                Assert.That(3ul, Is.EqualTo(ns.MesssagesReceived));
             }
             finally
             {
@@ -96,18 +96,18 @@ namespace Lib.P2P.Tests.PubSub
                 await ns.SubscribeAsync(topicB, msg => { }, csB.Token);
 
                 var topics = (await ns.SubscribedTopicsAsync(csA.Token)).ToArray();
-                Assert.Equals(2, topics.Length);
+                Assert.That(2, Is.EqualTo(topics.Length));
                 Assert.That(topics, Contains.Item(topicA));
                 Assert.That(topics, Contains.Item(topicB));
 
                 csA.Cancel();
                 topics = (await ns.SubscribedTopicsAsync(csA.Token)).ToArray();
-                Assert.Equals(1, topics.Length);
+                Assert.That(1, Is.EqualTo(topics.Length));
                 Assert.That(topics, Contains.Item(topicB));
 
                 csB.Cancel();
                 topics = (await ns.SubscribedTopicsAsync(csA.Token)).ToArray();
-                Assert.Equals(0, topics.Length);
+                Assert.That(0, Is.EqualTo(topics.Length));
             }
             finally
             {
@@ -129,7 +129,7 @@ namespace Lib.P2P.Tests.PubSub
                 await ns.SubscribeAsync(topic, msg => { ++messageCount; }, cs.Token);
 
                 await ns.PublishAsync(topic, "", cs.Token);
-                Assert.Equals(2, messageCount);
+                Assert.That(2, Is.EqualTo(messageCount));
             }
             finally
             {
@@ -154,7 +154,7 @@ namespace Lib.P2P.Tests.PubSub
                 }, cs.Token);
 
                 await ns.PublishAsync(topic, "", cs.Token);
-                Assert.Equals(1, messageCount);
+                Assert.That(1, Is.EqualTo(messageCount));
             }
             finally
             {
@@ -176,9 +176,9 @@ namespace Lib.P2P.Tests.PubSub
                 await ns.SubscribeAsync(topic, msg => { ++messageCount; }, cs.Token);
 
                 await ns.PublishAsync(topic, "", cs.Token);
-                Assert.Equals(1, messageCount);
-                Assert.Equals(2ul, ns.MesssagesReceived);
-                Assert.Equals(1ul, ns.DuplicateMesssagesReceived);
+                Assert.That(1, Is.EqualTo(messageCount));
+                Assert.That(2ul, Is.EqualTo(ns.MesssagesReceived));
+                Assert.That(1ul, Is.EqualTo(ns.DuplicateMesssagesReceived));
             }
             finally
             {
@@ -200,12 +200,12 @@ namespace Lib.P2P.Tests.PubSub
             try
             {
                 var peers = (await ns.PeersAsync(topic1)).ToArray();
-                Assert.Equals(1, peers.Length);
-                Assert.Equals(other1, peers[0]);
+                Assert.That(1, Is.EqualTo(peers.Length));
+                Assert.That(other1, Is.EqualTo(peers[0]));
 
                 peers = (await ns.PeersAsync(topic2)).ToArray();
-                Assert.Equals(1, peers.Length);
-                Assert.Equals(other2, peers[0]);
+                Assert.That(1, Is.EqualTo(peers.Length));
+                Assert.That(other2, Is.EqualTo(peers[0]));
             }
             finally
             {
@@ -227,7 +227,7 @@ namespace Lib.P2P.Tests.PubSub
             try
             {
                 var peers = (await ns.PeersAsync()).ToArray();
-                Assert.Equals(2, peers.Length);
+                Assert.That(2, Is.EqualTo(peers.Length));
             }
             finally
             {

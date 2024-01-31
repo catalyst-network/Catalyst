@@ -58,9 +58,9 @@ namespace MultiFormats.Tests.Registry
         {
             var info = HashingAlgorithm.GetAlgorithmMetadata("sha3-256");
             Assert.That(info, Is.Not.Null);
-            Assert.Equals("sha3-256", info.Name);
-            Assert.Equals(0x16, info.Code);
-            Assert.Equals(256 / 8, info.DigestSize);
+            Assert.That("sha3-256", Is.EqualTo(info.Name));
+            Assert.That(0x16, Is.EqualTo(info.Code));
+            Assert.That(256 / 8, Is.EqualTo(info.DigestSize));
             Assert.That(info.Hasher, Is.Not.Null);
         }
 
@@ -75,9 +75,9 @@ namespace MultiFormats.Tests.Registry
         {
             var info = HashingAlgorithm.GetAlgorithmMetadata("id");
             Assert.That(info, Is.Not.Null);
-            Assert.Equals("identity", info.Name);
-            Assert.Equals(0, info.Code);
-            Assert.Equals(0, info.DigestSize);
+            Assert.That("identity", Is.EqualTo(info.Name));
+            Assert.That(0, Is.EqualTo(info.Code));
+            Assert.That(0, Is.EqualTo(info.DigestSize));
             Assert.That(info.Hasher, Is.Not.Null);
         }
 

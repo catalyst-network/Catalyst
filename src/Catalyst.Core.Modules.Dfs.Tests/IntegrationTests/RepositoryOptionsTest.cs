@@ -53,11 +53,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 
                 Environment.SetEnvironmentVariable("HOME", $"{sep}home1");
                 var options = new RepositoryOptions();
-                Assert.Equals($"{sep}home1{sep}.catalyst", options.Folder);
+                Assert.That($"{sep}home1{sep}.catalyst", Is.EqualTo(options.Folder));
 
                 Environment.SetEnvironmentVariable("HOME", $"{sep}home2{sep}");
                 options = new RepositoryOptions();
-                Assert.Equals($"{sep}home2{sep}.catalyst", options.Folder);
+                Assert.That($"{sep}home2{sep}.catalyst", Is.EqualTo(options.Folder));
             }
             finally
             {
@@ -84,11 +84,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 
                 Environment.SetEnvironmentVariable("HOMEPATH", $"{sep}home1");
                 var options = new RepositoryOptions();
-                Assert.Equals($"{sep}home1{sep}.catalyst", options.Folder);
+                Assert.That($"{sep}home1{sep}.catalyst", Is.EqualTo(options.Folder));
 
                 Environment.SetEnvironmentVariable("HOMEPATH", $"{sep}home2{sep}");
                 options = new RepositoryOptions();
-                Assert.Equals($"{sep}home2{sep}.catalyst", options.Folder);
+                Assert.That($"{sep}home2{sep}.catalyst", Is.EqualTo(options.Folder));
             }
             finally
             {
@@ -115,11 +115,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 
                 Environment.SetEnvironmentVariable("IPFS_PATH", $"{sep}x1");
                 var options = new RepositoryOptions();
-                Assert.Equals($"{sep}x1", options.Folder);
+                Assert.That($"{sep}x1", Is.EqualTo(options.Folder));
 
                 Environment.SetEnvironmentVariable("IPFS_PATH", $"{sep}x2{sep}");
                 options = new RepositoryOptions();
-                Assert.Equals($"{sep}x2{sep}", options.Folder);
+                Assert.That($"{sep}x2{sep}", Is.EqualTo(options.Folder));
             }
             finally
             {

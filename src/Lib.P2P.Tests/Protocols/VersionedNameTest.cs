@@ -33,19 +33,19 @@ namespace Lib.P2P.Tests.Protocols
         public void Parsing()
         {
             var vn = VersionedName.Parse("/multistream/1.0.0");
-            Assert.Equals("multistream", vn.Name);
-            Assert.Equals("1.0.0", vn.Version.ToString());
+            Assert.That("multistream", Is.EqualTo(vn.Name));
+            Assert.That("1.0.0", Is.EqualTo(vn.Version.ToString()));
 
             vn = VersionedName.Parse("/ipfs/id/1.0.0");
-            Assert.Equals("ipfs/id", vn.Name);
-            Assert.Equals("1.0.0", vn.Version.ToString());
+            Assert.That("ipfs/id", Is.EqualTo(vn.Name));
+            Assert.That("1.0.0", Is.EqualTo(vn.Version.ToString()));
         }
 
         [Test]
         public void Stringing()
         {
             var vn = new VersionedName {Name = "x", Version = new Semver.SemVersion(0, 42)};
-            Assert.Equals("/x/0.42.0", vn.ToString());
+            Assert.That("/x/0.42.0", Is.EqualTo(vn.ToString()));
         }
 
         [Test]
@@ -79,16 +79,16 @@ namespace Lib.P2P.Tests.Protocols
             Assert.That(a0.Equals(a1), Is.True);
             Assert.That(a0.Equals(b), Is.False);
 
-            Assert.Equals(a0, a0);
-            Assert.Equals(a0, a1);
+            Assert.That(a0, Is.EqualTo(a0));
+            Assert.That(a0, Is.EqualTo(a1));
             Assert.That(a0, Is.Not.EqualTo(b));
 
-            Assert.Equals(a0, a0);
-            Assert.Equals(a0, a1);
+            Assert.That(a0, Is.EqualTo(a0));
+            Assert.That(a0, Is.EqualTo(a1));
             Assert.That(a0, Is.Not.EqualTo(b));
 
-            Assert.Equals(a0.GetHashCode(), a0.GetHashCode());
-            Assert.Equals(a0.GetHashCode(), a1.GetHashCode());
+            Assert.That(a0.GetHashCode(), Is.EqualTo(a0.GetHashCode()));
+            Assert.That(a0.GetHashCode(), Is.EqualTo(a1.GetHashCode()));
             Assert.That(a0.GetHashCode(), Is.Not.EqualTo(b.GetHashCode()));
         }
 
@@ -100,14 +100,14 @@ namespace Lib.P2P.Tests.Protocols
             var b = VersionedName.Parse("/x/1.1.0");
             var c = VersionedName.Parse("/y/0.42.0");
 
-            Assert.Equals(0, a0.CompareTo(a1));
-            Assert.Equals(0, a1.CompareTo(a0));
+            Assert.That(0, Is.EqualTo(a0.CompareTo(a1)));
+            Assert.That(0, Is.EqualTo(a1.CompareTo(a0)));
 
-            Assert.Equals(1, b.CompareTo(a0));
-            Assert.Equals(-1, a0.CompareTo(b));
+            Assert.That(1, Is.EqualTo(b.CompareTo(a0)));
+            Assert.That(-1, Is.EqualTo(a0.CompareTo(b)));
 
-            Assert.Equals(1, c.CompareTo(b));
-            Assert.Equals(-1, b.CompareTo(c));
+            Assert.That(1, Is.EqualTo(c.CompareTo(b)));
+            Assert.That(-1, Is.EqualTo(b.CompareTo(c)));
         }
 
         [Test]
@@ -120,9 +120,9 @@ namespace Lib.P2P.Tests.Protocols
                 VersionedName.Parse("/y/0.42.0"),
             };
             var ordered = names.OrderByDescending(n => n).ToArray();
-            Assert.Equals("/y/0.42.0", ordered[0].ToString());
-            Assert.Equals("/x/1.1.0", ordered[1].ToString());
-            Assert.Equals("/x/1.0.0", ordered[2].ToString());
+            Assert.That("/y/0.42.0", Is.EqualTo(ordered[0].ToString()));
+            Assert.That("/x/1.1.0", Is.EqualTo(ordered[1].ToString()));
+            Assert.That("/x/1.0.0", Is.EqualTo(ordered[2].ToString()));
         }
     }
 }

@@ -34,7 +34,7 @@ namespace Catalyst.KBucket
             var bucket = new KBucket<Contact>();
             var x = new Contact("1");
             bucket.Add(x);
-            Assert.Equals(1, bucket.Count);
+            Assert.That(1, Is.EqualTo(bucket.Count));
             Assert.That(bucket.Contains(x), Is.True);
         }
 
@@ -45,7 +45,7 @@ namespace Catalyst.KBucket
             var x = new Contact("1");
             bucket.Add(x);
             bucket.Add(x);
-            Assert.Equals(1, bucket.Count);
+            Assert.That(1, Is.EqualTo(bucket.Count));
             Assert.That(bucket.Contains(x), Is.True);
         }
 
@@ -68,7 +68,7 @@ namespace Catalyst.KBucket
 
             var q = bucket.TryGet(alpha.Id, out var found);
             Assert.That(q, Is.True);
-            Assert.Equals(alpha, found);
+            Assert.That(alpha, Is.EqualTo(found));
 
             q = bucket.TryGet(beta.Id, out var notfound);
             Assert.That(q, Is.False);
@@ -79,7 +79,7 @@ namespace Catalyst.KBucket
         public void Count()
         {
             var bucket = new KBucket<Contact>();
-            Assert.Equals(0, bucket.Count);
+            Assert.That(0, Is.EqualTo(bucket.Count));
 
             bucket.Add(new Contact("a"));
             bucket.Add(new Contact("a"));
@@ -93,37 +93,37 @@ namespace Catalyst.KBucket
             bucket.Add(new Contact("e"));
             bucket.Add(new Contact("f"));
             bucket.Add(new Contact("a"));
-            Assert.Equals(6, bucket.Count);
+            Assert.That(6, Is.EqualTo(bucket.Count));
         }
 
         [Test]
         public void Clear()
         {
             var bucket = new KBucket<Contact>();
-            Assert.Equals(0, bucket.Count);
+            Assert.That(0, Is.EqualTo(bucket.Count));
 
             bucket.Add(new Contact("a"));
             bucket.Add(new Contact("b"));
             bucket.Add(new Contact("c"));
-            Assert.Equals(3, bucket.Count);
+            Assert.That(3, Is.EqualTo(bucket.Count));
 
             bucket.Clear();
-            Assert.Equals(0, bucket.Count);
+            Assert.That(0, Is.EqualTo(bucket.Count));
         }
 
         [Test]
         public void Remove()
         {
             var bucket = new KBucket<Contact>();
-            Assert.Equals(0, bucket.Count);
+            Assert.That(0, Is.EqualTo(bucket.Count));
 
             bucket.Add(new Contact("a"));
             bucket.Add(new Contact("b"));
             bucket.Add(new Contact("c"));
-            Assert.Equals(3, bucket.Count);
+            Assert.That(3, Is.EqualTo(bucket.Count));
 
             bucket.Remove(new Contact("b"));
-            Assert.Equals(2, bucket.Count);
+            Assert.That(2, Is.EqualTo(bucket.Count));
 
             Assert.That(bucket.Contains(new Contact("a")), Is.True);
             Assert.That(bucket.Contains(new Contact("b")), Is.False);
@@ -134,12 +134,12 @@ namespace Catalyst.KBucket
         public void CopyTo()
         {
             var bucket = new KBucket<Contact>();
-            Assert.Equals(0, bucket.Count);
+            Assert.That(0, Is.EqualTo(bucket.Count));
 
             bucket.Add(new Contact("a"));
             bucket.Add(new Contact("b"));
             bucket.Add(new Contact("c"));
-            Assert.Equals(3, bucket.Count);
+            Assert.That(3, Is.EqualTo(bucket.Count));
 
             var array = new Contact[bucket.Count + 2];
             bucket.CopyTo(array, 1);
@@ -160,7 +160,7 @@ namespace Catalyst.KBucket
                 bucket.Add(new Contact(i));
             }
 
-            Assert.Equals(nContacts, bucket.Count);
+            Assert.That(nContacts, Is.EqualTo(bucket.Count));
 
             var n = 0;
             
@@ -169,7 +169,7 @@ namespace Catalyst.KBucket
                 ++n;
             }
             
-            Assert.Equals(nContacts, n);
+            Assert.That(nContacts, Is.EqualTo(n));
         }
 
         [Test]

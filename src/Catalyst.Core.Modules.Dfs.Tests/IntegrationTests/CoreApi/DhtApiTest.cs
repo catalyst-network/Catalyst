@@ -58,7 +58,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             Assert.That(peer.Id, Is.Not.Null);
             Assert.That(peer.ProtocolVersion, Does.StartWith("ipfs/"));
             Assert.That(peer.PublicKey, Is.Not.Null);
-            Assert.Equals(_locaId, peer.Id);
+            Assert.That(_locaId, Is.EqualTo(peer.Id));
             Assert.That(peer.IsValid(), Is.True);
         }
 
@@ -71,8 +71,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             var mars = swarm.RegisterPeerAddress(marsAddr);
 
             var peer = ipfs.DhtApi.FindPeerAsync(marsId).GetAwaiter().GetResult();
-            Assert.Equals(mars.Id, peer.Id);
-            Assert.Equals(mars.Addresses.First(), peer.Addresses.First());
+            Assert.That(mars.Id, Is.EqualTo(peer.Id));
+            Assert.That(mars.Addresses.First(), Is.EqualTo(peer.Addresses.First()));
         }
 
         // [Test]

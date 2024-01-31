@@ -45,17 +45,17 @@ namespace Lib.P2P.Tests.SecureCommunication
             var insecure = new MemoryStream();
             var secure = new Psk1Stream(insecure, psk);
             secure.WriteByte(0x10);
-            Assert.Equals(24 + 1, insecure.Length);
+            Assert.That(24 + 1, Is.EqualTo(insecure.Length));
 
             insecure = new MemoryStream();
             secure = new Psk1Stream(insecure, psk);
             secure.Write(new byte[10], 0, 10);
-            Assert.Equals(24 + 10, insecure.Length);
+            Assert.That(24 + 10, Is.EqualTo(insecure.Length));
 
             insecure = new MemoryStream();
             secure = new Psk1Stream(insecure, psk);
             secure.WriteAsync(new byte[12], 0, 12).Wait();
-            Assert.Equals(24 + 12, insecure.Length);
+            Assert.That(24 + 12, Is.EqualTo(insecure.Length));
         }
 
         [Test]

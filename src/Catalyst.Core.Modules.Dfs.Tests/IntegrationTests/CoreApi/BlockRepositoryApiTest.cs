@@ -54,7 +54,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         {
             var stats = await ipfs.BlockRepositoryApi.StatisticsAsync();
             var version = await ipfs.BlockRepositoryApi.VersionAsync();
-            Assert.Equals(stats.Version, version);
+            Assert.That(stats.Version, Is.EqualTo(version));
         }
 
         [Test]
@@ -94,7 +94,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                     File.Move(versionPath, versionBackupPath);
                 }
 
-                Assert.Equals("0", await ipfs.BlockRepositoryApi.VersionAsync());
+                Assert.That("0", Is.EqualTo(await ipfs.BlockRepositoryApi.VersionAsync()));
             }
             finally
             {

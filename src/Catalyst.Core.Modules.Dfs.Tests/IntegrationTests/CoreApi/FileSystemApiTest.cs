@@ -62,36 +62,36 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         public async Task AddText()
         {
             var node = (UnixFsNode) await ipfs.UnixFsApi.AddTextAsync("hello world");
-            Assert.Equals("Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD", node.Id.ToString());
-            Assert.Equals("", node.Name);
-            Assert.Equals(0, node.Links.Count());
+            Assert.That("Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD", Is.EqualTo(node.Id.ToString()));
+            Assert.That("", Is.EqualTo(node.Name));
+            Assert.That(0, Is.EqualTo(node.Links.Count()));
 
             var text = await ipfs.UnixFsApi.ReadAllTextAsync(node.Id);
-            Assert.Equals("hello world", text);
+            Assert.That("hello world", Is.EqualTo(text));
 
             var actual = await ipfs.UnixFsApi.ListFileAsync(node.Id);
-            Assert.Equals(node.Id, actual.Id);
-            Assert.Equals(node.IsDirectory, actual.IsDirectory);
-            Assert.Equals(node.Links.Count(), actual.Links.Count());
-            Assert.Equals(node.Size, actual.Size);
+            Assert.That(node.Id, Is.EqualTo(actual.Id));
+            Assert.That(node.IsDirectory, Is.EqualTo(actual.IsDirectory));
+            Assert.That(node.Links.Count(), Is.EqualTo(actual.Links.Count()));
+            Assert.That(node.Size, Is.EqualTo(actual.Size));
         }
 
         [Test]
         public async Task AddEmptyText()
         {
             var node = (UnixFsNode) await ipfs.UnixFsApi.AddTextAsync("");
-            Assert.Equals("QmbFMke1KXqnYyBBWxB74N4c5SBnJMVAiMNRcGu6x1AwQH", node.Id.ToString());
-            Assert.Equals("", node.Name);
-            Assert.Equals(0, node.Links.Count());
+            Assert.That("QmbFMke1KXqnYyBBWxB74N4c5SBnJMVAiMNRcGu6x1AwQH", Is.EqualTo(node.Id.ToString()));
+            Assert.That("", Is.EqualTo(node.Name));
+            Assert.That(0, Is.EqualTo(node.Links.Count()));
 
             var text = await ipfs.UnixFsApi.ReadAllTextAsync(node.Id);
-            Assert.Equals("", text);
+            Assert.That("", Is.EqualTo(text));
 
             var actual = await ipfs.UnixFsApi.ListFileAsync(node.Id);
-            Assert.Equals(node.Id, actual.Id);
-            Assert.Equals(node.IsDirectory, actual.IsDirectory);
-            Assert.Equals(node.Links.Count(), actual.Links.Count());
-            Assert.Equals(node.Size, actual.Size);
+            Assert.That(node.Id, Is.EqualTo(actual.Id));
+            Assert.That(node.IsDirectory, Is.EqualTo(actual.IsDirectory));
+            Assert.That(node.Links.Count(), Is.EqualTo(actual.Links.Count()));
+            Assert.That(node.Size, Is.EqualTo(actual.Size));
         }
 
         [Test]
@@ -101,8 +101,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             var node = await ipfs.UnixFsApi.AddTextAsync("");
             var block = await ipfs.ObjectApi.GetAsync(node.Id);
             var expected = new byte[] {0x08, 0x02, 0x18, 0x00};
-            Assert.Equals(node.Id, block.Id);
-            Assert.Equals(expected, block.DataBytes);
+            Assert.That(node.Id, Is.EqualTo(block.Id));
+            Assert.That(expected, Is.EqualTo(block.DataBytes));
         }
 
         [Test]
@@ -113,14 +113,14 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 Pin = true
             };
             var node = await ipfs.UnixFsApi.AddTextAsync("hello world", options);
-            Assert.Equals("Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD", node.Id.ToString());
+            Assert.That("Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD", Is.EqualTo(node.Id.ToString()));
             var pins = await ipfs.PinApi.ListAsync();
             pins.ToArray().Should().Contain(node.Id);
 
             options.Pin = false;
             node = await ipfs.UnixFsApi.AddTextAsync("hello world", options);
-            Assert.Equals("Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD", node.Id.ToString());
-            Assert.Equals(0, node.Links.Count());
+            Assert.That("Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD", Is.EqualTo(node.Id.ToString()));
+            Assert.That(0, Is.EqualTo(node.Links.Count()));
             pins = await ipfs.PinApi.ListAsync();
             pins.ToArray().Should().NotContain(node.Id);
         }
@@ -131,16 +131,16 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             var options = new AddFileOptions {ChunkSize = 3, Pin = true};
             var node = await ipfs.UnixFsApi.AddTextAsync("hello world", options);
             var links = node.Links.ToArray();
-            Assert.Equals("QmVVZXWrYzATQdsKWM4knbuH5dgHFmrRqW3nJfDgdWrBjn", node.Id.ToString());
-            Assert.Equals(false, node.IsDirectory);
-            Assert.Equals(4, links.Length);
-            Assert.Equals("QmevnC4UDUWzJYAQtUSQw4ekUdqDqwcKothjcobE7byeb6", links[0].Id.ToString());
-            Assert.Equals("QmTdBogNFkzUTSnEBQkWzJfQoiWbckLrTFVDHFRKFf6dcN", links[1].Id.ToString());
-            Assert.Equals("QmPdmF1n4di6UwsLgW96qtTXUsPkCLN4LycjEUdH9977d6", links[2].Id.ToString());
-            Assert.Equals("QmXh5UucsqF8XXM8UYQK9fHXsthSEfi78kewr8ttpPaLRE", links[3].Id.ToString());
+            Assert.That("QmVVZXWrYzATQdsKWM4knbuH5dgHFmrRqW3nJfDgdWrBjn", Is.EqualTo(node.Id.ToString()));
+            Assert.That(false, Is.EqualTo(node.IsDirectory));
+            Assert.That(4, Is.EqualTo(links.Length));
+            Assert.That("QmevnC4UDUWzJYAQtUSQw4ekUdqDqwcKothjcobE7byeb6", Is.EqualTo(links[0].Id.ToString()));
+            Assert.That("QmTdBogNFkzUTSnEBQkWzJfQoiWbckLrTFVDHFRKFf6dcN", Is.EqualTo(links[1].Id.ToString()));
+            Assert.That("QmPdmF1n4di6UwsLgW96qtTXUsPkCLN4LycjEUdH9977d6", Is.EqualTo(links[2].Id.ToString()));
+            Assert.That("QmXh5UucsqF8XXM8UYQK9fHXsthSEfi78kewr8ttpPaLRE", Is.EqualTo(links[3].Id.ToString()));
 
             var text = await ipfs.UnixFsApi.ReadAllTextAsync(node.Id);
-            Assert.Equals("hello world", text);
+            Assert.That("hello world", Is.EqualTo(text));
         }
 
         [Test]
@@ -153,7 +153,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             };
             var node = await ipfs.UnixFsApi.AddTextAsync("hello world", options);
             var stream = await ipfs.UnixFsApi.ReadFileAsync(node.Id);
-            Assert.Equals(11, stream.Length);
+            Assert.That(11, Is.EqualTo(stream.Length));
             Assert.That(stream.CanRead, Is.True);
             Assert.That(stream.CanWrite, Is.False);
             Assert.That(stream.CanSeek, Is.True);
@@ -168,10 +168,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 RawLeaves = true
             };
             var node = await ipfs.UnixFsApi.AddTextAsync("hello world", options);
-            Assert.Equals("bafk2bzaceaswza5ss4iu2ia3galz6pyo6dfm5f4dmiw2lf2de22dmf4k533ba", node.Id.ToString());
+            Assert.That("bafk2bzaceaswza5ss4iu2ia3galz6pyo6dfm5f4dmiw2lf2de22dmf4k533ba", Is.EqualTo(node.Id.ToString()));
 
             var text = await ipfs.UnixFsApi.ReadAllTextAsync(node.Id);
-            Assert.Equals("hello world", text);
+            Assert.That("hello world", Is.EqualTo(text));
         }
 
         [Test]
@@ -182,9 +182,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             try
             {
                 var node = (UnixFsNode) ipfs.UnixFsApi.AddFileAsync(path).Result;
-                Assert.Equals("Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD", node.Id.ToString());
-                Assert.Equals(0, node.Links.Count());
-                Assert.Equals(Path.GetFileName(path), node.Name);
+                Assert.That("Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD", Is.EqualTo(node.Id.ToString()));
+                Assert.That(0, Is.EqualTo(node.Links.Count()));
+                Assert.That(Path.GetFileName(path), Is.EqualTo(node.Name));
             }
             finally
             {
@@ -204,12 +204,12 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                     Encoding = "base32"
                 };
                 var node = ipfs.UnixFsApi.AddFileAsync(path, options).Result;
-                Assert.Equals("base32", node.Id.Encoding);
-                Assert.Equals(1, node.Id.Version);
-                Assert.Equals(0, node.Links.Count());
+                Assert.That("base32", Is.EqualTo(node.Id.Encoding));
+                Assert.That(1, Is.EqualTo(node.Id.Version));
+                Assert.That(0, Is.EqualTo(node.Links.Count()));
 
                 var text = ipfs.UnixFsApi.ReadAllTextAsync(node.Id).Result;
-                Assert.Equals("hello world", text);
+                Assert.That("hello world", Is.EqualTo(text));
             }
             finally
             {
@@ -230,7 +230,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             
             // _testOutputHelper.WriteLine("Add file took {0} seconds.", stopWatch.Elapsed.TotalSeconds);
 
-            Assert.Equals("QmeZkAUfUFPq5YWGBan2ZYNd9k59DD1xW62pGJrU3C6JRo", node.Id.ToString());
+            Assert.That("QmeZkAUfUFPq5YWGBan2ZYNd9k59DD1xW62pGJrU3C6JRo", Is.EqualTo(node.Id.ToString()));
 
             var k = 8 * 1024;
             var buffer1 = new byte[k];
@@ -243,7 +243,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 {
                     var n1 = localStream.Read(buffer1, 0, k);
                     var n2 = ipfsStream.Read(buffer2, 0, k);
-                    Assert.Equals(n1, n2);
+                    Assert.That(n1, Is.EqualTo(n2));
                     if (n1 == 0)
                     {
                         break;
@@ -277,7 +277,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             stopWatch.Stop();
             TestContext.WriteLine("Add file took {0} seconds.", stopWatch.Elapsed.TotalSeconds);
 
-            Assert.Equals("QmeFhfB4g2GFbxYb7usApWzq8uC1vmuxJajFpiJiT5zLoy", node.Id.ToString());
+            Assert.That("QmeFhfB4g2GFbxYb7usApWzq8uC1vmuxJajFpiJiT5zLoy", Is.EqualTo(node.Id.ToString()));
 
             const int k = 8 * 1024;
             var buffer1 = new byte[k];
@@ -290,7 +290,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 {
                     var n1 = localStream.Read(buffer1, 0, k);
                     var n2 = ipfsStream.Read(buffer2, 0, k);
-                    Assert.Equals(n1, n2);
+                    Assert.That(n1, Is.EqualTo(n2));
                     if (n1 == 0)
                     {
                         break;
@@ -322,12 +322,12 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                     Wrap = true
                 };
                 var node = await ipfs.UnixFsApi.AddFileAsync(path, options);
-                Assert.Equals("QmNxvA5bwvPGgMXbmtyhxA1cKFdvQXnsGnZLCGor3AzYxJ", node.Id.ToString());
-                Assert.Equals(true, node.IsDirectory);
-                Assert.Equals(1, node.Links.Count());
-                Assert.Equals("hello.txt", node.Links.First().Name);
-                Assert.Equals("Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD", node.Links.First().Id.ToString());
-                Assert.Equals(19, node.Links.First().Size);
+                Assert.That("QmNxvA5bwvPGgMXbmtyhxA1cKFdvQXnsGnZLCGor3AzYxJ", Is.EqualTo(node.Id.ToString()));
+                Assert.That(true, Is.EqualTo(node.IsDirectory));
+                Assert.That(1, Is.EqualTo(node.Links.Count()));
+                Assert.That("hello.txt", Is.EqualTo(node.Links.First().Name));
+                Assert.That("Qmf412jQZiuVUtdgnB36FXFX7xg5V6KEbSJ4dpQuhkLyfD", Is.EqualTo(node.Links.First().Id.ToString()));
+                Assert.That(19, Is.EqualTo(node.Links.First().Size));
             }
             finally
             {
@@ -343,13 +343,13 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 RawLeaves = true
             };
             var node = await ipfs.UnixFsApi.AddTextAsync("hello world", options);
-            Assert.Equals("bafkreifzjut3te2nhyekklss27nh3k72ysco7y32koao5eei66wof36n5e", node.Id.ToString());
-            Assert.Equals(11, node.Size);
-            Assert.Equals(0, node.Links.Count());
-            Assert.Equals(false, node.IsDirectory);
+            Assert.That("bafkreifzjut3te2nhyekklss27nh3k72ysco7y32koao5eei66wof36n5e", Is.EqualTo(node.Id.ToString()));
+            Assert.That(11, Is.EqualTo(node.Size));
+            Assert.That(0, Is.EqualTo(node.Links.Count()));
+            Assert.That(false, Is.EqualTo(node.IsDirectory));
 
             var text = await ipfs.UnixFsApi.ReadAllTextAsync(node.Id);
-            Assert.Equals("hello world", text);
+            Assert.That("hello world", Is.EqualTo(text));
         }
 
         [Test]
@@ -361,14 +361,14 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 ipfs.Options.Block.AllowInlineCid = true;
 
                 var node = await ipfs.UnixFsApi.AddTextAsync("hiya");
-                Assert.Equals(1, node.Id.Version);
+                Assert.That(1, Is.EqualTo(node.Id.Version));
                 Assert.That(node.Id.Hash.IsIdentityHash, Is.True);
-                Assert.Equals(4, node.Size);
-                Assert.Equals(0, node.Links.Count());
-                Assert.Equals(false, node.IsDirectory);
-                Assert.Equals("bafyaadakbieaeeqenbuxsyiyaq", node.Id.Encode());
+                Assert.That(4, Is.EqualTo(node.Size));
+                Assert.That(0, Is.EqualTo(node.Links.Count()));
+                Assert.That(false, Is.EqualTo(node.IsDirectory));
+                Assert.That("bafyaadakbieaeeqenbuxsyiyaq", Is.EqualTo(node.Id.Encode()));
                 var text = await ipfs.UnixFsApi.ReadAllTextAsync(node.Id);
-                Assert.Equals("hiya", text);
+                Assert.That("hiya", Is.EqualTo(text));
             }
             finally
             {
@@ -386,16 +386,16 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             };
             var node = await ipfs.UnixFsApi.AddTextAsync("hello world", options);
             var links = node.Links.ToArray();
-            Assert.Equals("QmUuooB6zEhMmMaBvMhsMaUzar5gs5KwtVSFqG4C1Qhyhs", node.Id.ToString());
-            Assert.Equals(false, node.IsDirectory);
-            Assert.Equals(4, links.Length);
-            Assert.Equals("bafkreigwvapses57f56cfow5xvoua4yowigpwcz5otqqzk3bpcbbjswowe", links[0].Id.ToString());
-            Assert.Equals("bafkreiew3cvfrp2ijn4qokcp5fqtoknnmr6azhzxovn6b3ruguhoubkm54", links[1].Id.ToString());
-            Assert.Equals("bafkreibsybcn72tquh2l5zpim2bba4d2kfwcbpzuspdyv2breaq5efo7tq", links[2].Id.ToString());
-            Assert.Equals("bafkreihfuch72plvbhdg46lef3n5zwhnrcjgtjywjryyv7ffieyedccchu", links[3].Id.ToString());
+            Assert.That("QmUuooB6zEhMmMaBvMhsMaUzar5gs5KwtVSFqG4C1Qhyhs", Is.EqualTo(node.Id.ToString()));
+            Assert.That(false, Is.EqualTo(node.IsDirectory));
+            Assert.That(4, Is.EqualTo(links.Length));
+            Assert.That("bafkreigwvapses57f56cfow5xvoua4yowigpwcz5otqqzk3bpcbbjswowe", Is.EqualTo(links[0].Id.ToString()));
+            Assert.That("bafkreiew3cvfrp2ijn4qokcp5fqtoknnmr6azhzxovn6b3ruguhoubkm54", Is.EqualTo(links[1].Id.ToString()));
+            Assert.That("bafkreibsybcn72tquh2l5zpim2bba4d2kfwcbpzuspdyv2breaq5efo7tq", Is.EqualTo(links[2].Id.ToString()));
+            Assert.That("bafkreihfuch72plvbhdg46lef3n5zwhnrcjgtjywjryyv7ffieyedccchu", Is.EqualTo(links[3].Id.ToString()));
 
             var text = await ipfs.UnixFsApi.ReadAllTextAsync(node.Id);
-            Assert.Equals("hello world", text);
+            Assert.That("hello world", Is.EqualTo(text));
         }
 
         [Test]
@@ -406,12 +406,12 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 ProtectionKey = "self"
             };
             var node = await ipfs.UnixFsApi.AddTextAsync("hello world", options);
-            Assert.Equals("cms", node.Id.ContentType);
-            Assert.Equals(0, node.Links.Count());
-            Assert.Equals(false, node.IsDirectory);
+            Assert.That("cms", Is.EqualTo(node.Id.ContentType));
+            Assert.That(0, Is.EqualTo(node.Links.Count()));
+            Assert.That(false, Is.EqualTo(node.IsDirectory));
 
             var text = await ipfs.UnixFsApi.ReadAllTextAsync(node.Id);
-            Assert.Equals("hello world", text);
+            Assert.That("hello world", Is.EqualTo(text));
         }
 
         [Test]
@@ -423,11 +423,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 ChunkSize = 3
             };
             var node = await ipfs.UnixFsApi.AddTextAsync("hello world", options);
-            Assert.Equals(4, node.Links.Count());
-            Assert.Equals(false, node.IsDirectory);
+            Assert.That(4, Is.EqualTo(node.Links.Count()));
+            Assert.That(false, Is.EqualTo(node.IsDirectory));
 
             var text = await ipfs.UnixFsApi.ReadAllTextAsync(node.Id);
-            Assert.Equals("hello world", text);
+            Assert.That("hello world", Is.EqualTo(text));
         }
 
         [Test]
@@ -453,11 +453,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             };
             var node = await ipfs.UnixFsApi.AddTextAsync("hello world", options);
             var links = node.Links.ToArray();
-            Assert.Equals(nodes[0], node.Id.ToString());
-            Assert.Equals(nodes.Length - 1, links.Length);
+            Assert.That(nodes[0], Is.EqualTo(node.Id.ToString()));
+            Assert.That(nodes.Length - 1, Is.EqualTo(links.Length));
             for (var i = 0; i < links.Length; ++i)
             {
-                Assert.Equals(nodes[i + 1], links[i].Id.ToString());
+                Assert.That(nodes[i + 1], Is.EqualTo(links[i].Id.ToString()));
             }
 
             // TODO: Need a method to test that the CId is not held locally.
@@ -484,7 +484,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                     using var reader = new StreamReader(data);
                     {
                         var readData = reader.ReadToEnd();
-                        Assert.Equals(text.Substring(offset), readData);
+                        Assert.That(text.Substring(offset), Is.EqualTo(readData));
                     }
                 }
             }
@@ -509,7 +509,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                         using var reader = new StreamReader(data);
                         {
                             var readData = reader.ReadToEnd();
-                            Assert.Equals(text.Substring(offset, Math.Min(11 - offset, length)), readData);
+                            Assert.That(text.Substring(offset, Math.Min(11 - offset, length)), Is.EqualTo(readData));
                         }
                     }
                 }
@@ -533,7 +533,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                     using var reader = new StreamReader(data);
                     {
                         var readData = reader.ReadToEnd();
-                        Assert.Equals(text.Substring(0, Math.Min(11, length)), readData);
+                        Assert.That(text.Substring(0, Math.Min(11, length)), Is.EqualTo(readData));
                     }
                 }
             }
@@ -558,7 +558,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                         using (var reader = new StreamReader(data))
                         {
                             var readData = reader.ReadToEnd();
-                            Assert.Equals(text.Substring(offset, Math.Min(11 - offset, length)), readData);
+                            Assert.That(text.Substring(offset, Math.Min(11 - offset, length)), Is.EqualTo(readData));
                         }
                     }
                 }
@@ -585,7 +585,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                         using (var reader = new StreamReader(data))
                         {
                             var readData = reader.ReadToEnd();
-                            Assert.Equals(text.Substring(offset, Math.Min(11 - offset, length)), readData);
+                            Assert.That(text.Substring(offset, Math.Min(11 - offset, length)), Is.EqualTo(readData));
                         }
                     }
                 }
@@ -601,7 +601,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             {
                 var options = new AddFileOptions {ProtectionKey = key.Name};
                 var node = await ipfs.UnixFsApi.AddTextAsync(text, options);
-                Assert.Equals(text, await ipfs.UnixFsApi.ReadAllTextAsync(node.Id));
+                Assert.That(text, Is.EqualTo(await ipfs.UnixFsApi.ReadAllTextAsync(node.Id)));
 
                 await ipfs.KeyApi.RemoveAsync(key.Name);
                 ExceptionAssert.Throws<KeyNotFoundException>(() =>
@@ -640,8 +640,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                     await Task.Delay(10);
                 }
 
-                Assert.Equals(11UL, lastProgress.Bytes);
-                Assert.Equals(Path.GetFileName(path), lastProgress.Name);
+                Assert.That(11UL, Is.EqualTo(lastProgress.Bytes));
+                Assert.That(Path.GetFileName(path), Is.EqualTo(lastProgress.Name));
             }
             finally
             {
@@ -659,15 +659,15 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 Assert.That(dir.IsDirectory, Is.True);
 
                 var files = dir.Links.ToArray();
-                Assert.Equals(2, files.Length);
-                Assert.Equals("alpha.txt", files[0].Name);
-                Assert.Equals("beta.txt", files[1].Name);
+                Assert.That(2, Is.EqualTo(files.Length));
+                Assert.That("alpha.txt", Is.EqualTo(files[0].Name));
+                Assert.That("beta.txt", Is.EqualTo(files[1].Name));
 
-                Assert.Equals("alpha", ipfs.UnixFsApi.ReadAllTextAsync(files[0].Id).Result);
-                Assert.Equals("beta", ipfs.UnixFsApi.ReadAllTextAsync(files[1].Id).Result);
+                Assert.That("alpha", Is.EqualTo(ipfs.UnixFsApi.ReadAllTextAsync(files[0].Id).Result));
+                Assert.That("beta", Is.EqualTo(ipfs.UnixFsApi.ReadAllTextAsync(files[1].Id).Result));
 
-                Assert.Equals("alpha", ipfs.UnixFsApi.ReadAllTextAsync(dir.Id + "/alpha.txt").Result);
-                Assert.Equals("beta", ipfs.UnixFsApi.ReadAllTextAsync(dir.Id + "/beta.txt").Result);
+                Assert.That("alpha", Is.EqualTo(ipfs.UnixFsApi.ReadAllTextAsync(dir.Id + "/alpha.txt").Result));
+                Assert.That("beta", Is.EqualTo(ipfs.UnixFsApi.ReadAllTextAsync(dir.Id + "/beta.txt").Result));
             }
             finally
             {
@@ -685,30 +685,30 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 Assert.That(dir.IsDirectory, Is.True);
 
                 var files = dir.Links.ToArray();
-                Assert.Equals(3, files.Length);
-                Assert.Equals("alpha.txt", files[0].Name);
-                Assert.Equals("beta.txt", files[1].Name);
-                Assert.Equals("x", files[2].Name);
+                Assert.That(3, Is.EqualTo(files.Length));
+                Assert.That("alpha.txt", Is.EqualTo(files[0].Name));
+                Assert.That("beta.txt", Is.EqualTo(files[1].Name));
+                Assert.That("x", Is.EqualTo(files[2].Name));
                 Assert.That(0, Is.Not.EqualTo(files[0].Size));
                 Assert.That(0, Is.Not.EqualTo(files[1].Size));
 
                 var rootFiles = ipfs.UnixFsApi.ListFileAsync(dir.Id).Result.Links.ToArray();
-                Assert.Equals(3, rootFiles.Length);
-                Assert.Equals("alpha.txt", rootFiles[0].Name);
-                Assert.Equals("beta.txt", rootFiles[1].Name);
-                Assert.Equals("x", rootFiles[2].Name);
+                Assert.That(3, Is.EqualTo(rootFiles.Length));
+                Assert.That("alpha.txt", Is.EqualTo(rootFiles[0].Name));
+                Assert.That("beta.txt", Is.EqualTo(rootFiles[1].Name));
+                Assert.That("x", Is.EqualTo(rootFiles[2].Name));
 
                 var xfiles = ipfs.UnixFsApi.ListFileAsync(rootFiles[2].Id).Result.Links.ToArray();
-                Assert.Equals(2, xfiles.Length);
-                Assert.Equals("x.txt", xfiles[0].Name);
-                Assert.Equals("y", xfiles[1].Name);
+                Assert.That(2, Is.EqualTo(xfiles.Length));
+                Assert.That("x.txt", Is.EqualTo(xfiles[0].Name));
+                Assert.That("y", Is.EqualTo(xfiles[1].Name));
 
                 var yfiles = ipfs.UnixFsApi.ListFileAsync(xfiles[1].Id).Result.Links.ToArray();
-                Assert.Equals(1, yfiles.Length);
-                Assert.Equals("y.txt", yfiles[0].Name);
+                Assert.That(1, Is.EqualTo(yfiles.Length));
+                Assert.That("y.txt", Is.EqualTo(yfiles[0].Name));
 
-                Assert.Equals("x", ipfs.UnixFsApi.ReadAllTextAsync(dir.Id + "/x/x.txt").Result);
-                Assert.Equals("y", ipfs.UnixFsApi.ReadAllTextAsync(dir.Id + "/x/y/y.txt").Result);
+                Assert.That("x", Is.EqualTo(ipfs.UnixFsApi.ReadAllTextAsync(dir.Id + "/x/x.txt").Result));
+                Assert.That("y", Is.EqualTo(ipfs.UnixFsApi.ReadAllTextAsync(dir.Id + "/x/y/y.txt").Result));
             }
             finally
             {
@@ -726,11 +726,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             {
                 var dir = ipfs.UnixFsApi.AddDirectoryAsync(temp, false, options).Result;
                 Assert.That(dir.IsDirectory, Is.True);
-                Assert.Equals(alg, dir.Id.Hash.Algorithm.Name);
+                Assert.That(alg, Is.EqualTo(dir.Id.Hash.Algorithm.Name));
 
                 foreach (var link in dir.Links)
                 {
-                    Assert.Equals(alg, link.Id.Hash.Algorithm.Name);
+                    Assert.That(alg, Is.EqualTo(link.Id.Hash.Algorithm.Name));
                 }
             }
             finally
@@ -749,11 +749,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             {
                 var dir = ipfs.UnixFsApi.AddDirectoryAsync(temp, false, options).Result;
                 Assert.That(dir.IsDirectory, Is.True);
-                Assert.Equals(encoding, dir.Id.Encoding);
+                Assert.That(encoding, Is.EqualTo(dir.Id.Encoding));
 
                 foreach (var link in dir.Links)
                 {
-                    Assert.Equals(encoding, link.Id.Encoding);
+                    Assert.That(encoding, Is.EqualTo(link.Id.Encoding));
                 }
             }
             finally
@@ -781,13 +781,13 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                     cid = i < allLinks.Count ? allLinks[i++].Id : null;
                 }
 
-                Assert.Equals(6, allLinks.Count);
-                Assert.Equals("alpha.txt", allLinks[0].Name);
-                Assert.Equals("beta.txt", allLinks[1].Name);
-                Assert.Equals("x", allLinks[2].Name);
-                Assert.Equals("x.txt", allLinks[3].Name);
-                Assert.Equals("y", allLinks[4].Name);
-                Assert.Equals("y.txt", allLinks[5].Name);
+                Assert.That(6, Is.EqualTo(allLinks.Count));
+                Assert.That("alpha.txt", Is.EqualTo(allLinks[0].Name));
+                Assert.That("beta.txt", Is.EqualTo(allLinks[1].Name));
+                Assert.That("x", Is.EqualTo(allLinks[2].Name));
+                Assert.That("x.txt", Is.EqualTo(allLinks[3].Name));
+                Assert.That("y", Is.EqualTo(allLinks[4].Name));
+                Assert.That("y.txt", Is.EqualTo(allLinks[5].Name));
             }
             finally
             {
@@ -861,7 +861,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                         TestContext.WriteLine($"A is {a.LocalPeer}");
                         var cts = new CancellationTokenSource(TimeSpan.FromSeconds(30));
                         var content = await a.UnixFsApi.ReadAllTextAsync(cid, cts.Token);
-                        Assert.Equals("some content", content);
+                        Assert.That("some content", Is.EqualTo(content));
                     }
                 }
             }
@@ -882,13 +882,13 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 archive.ProgressMessageEvent += (a, e, m) => { files.Add(e.Name); };
                 archive.ListContents();
 
-                Assert.Equals($"{dirid}", files[0]);
-                Assert.Equals($"{dirid}/alpha.txt", files[1]);
-                Assert.Equals($"{dirid}/beta.txt", files[2]);
-                Assert.Equals($"{dirid}/x", files[3]);
-                Assert.Equals($"{dirid}/x/x.txt", files[4]);
-                Assert.Equals($"{dirid}/x/y", files[5]);
-                Assert.Equals($"{dirid}/x/y/y.txt", files[6]);
+                Assert.That($"{dirid}", Is.EqualTo(files[0]));
+                Assert.That($"{dirid}/alpha.txt", Is.EqualTo(files[1]));
+                Assert.That($"{dirid}/beta.txt", Is.EqualTo(files[2]));
+                Assert.That($"{dirid}/x", Is.EqualTo(files[3]));
+                Assert.That($"{dirid}/x/x.txt", Is.EqualTo(files[4]));
+                Assert.That($"{dirid}/x/y", Is.EqualTo(files[5]));
+                Assert.That($"{dirid}/x/y/y.txt", Is.EqualTo(files[6]));
             }
             finally
             {
@@ -915,13 +915,13 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 archive.ProgressMessageEvent += (a, e, m) => { files.Add(e.Name); };
                 archive.ListContents();
 
-                Assert.Equals($"{dirid}", files[0]);
-                Assert.Equals($"{dirid}/alpha.txt", files[1]);
-                Assert.Equals($"{dirid}/beta.txt", files[2]);
-                Assert.Equals($"{dirid}/x", files[3]);
-                Assert.Equals($"{dirid}/x/x.txt", files[4]);
-                Assert.Equals($"{dirid}/x/y", files[5]);
-                Assert.Equals($"{dirid}/x/y/y.txt", files[6]);
+                Assert.That($"{dirid}", Is.EqualTo(files[0]));
+                Assert.That($"{dirid}/alpha.txt", Is.EqualTo(files[1]));
+                Assert.That($"{dirid}/beta.txt", Is.EqualTo(files[2]));
+                Assert.That($"{dirid}/x", Is.EqualTo(files[3]));
+                Assert.That($"{dirid}/x/x.txt", Is.EqualTo(files[4]));
+                Assert.That($"{dirid}/x/y", Is.EqualTo(files[5]));
+                Assert.That($"{dirid}/x/y/y.txt", Is.EqualTo(files[6]));
             }
             finally
             {
@@ -940,7 +940,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 var _ = dir.Id.Encode();
 
                 var tar = await ipfs.UnixFsApi.GetAsync(dir.Id);
-                Assert.Equals(3 * 512, tar.Length);
+                Assert.That(3 * 512, Is.EqualTo(tar.Length));
             }
             finally
             {
@@ -958,9 +958,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             };
             var node = await ipfs.UnixFsApi.AddTextAsync("hello world", options);
             var other = await ipfs.UnixFsApi.ListFileAsync(node.Id);
-            Assert.Equals(node.Id, other.Id);
-            Assert.Equals(node.IsDirectory, other.IsDirectory);
-            Assert.Equals(node.Size, other.Size);
+            Assert.That(node.Id, Is.EqualTo(other.Id));
+            Assert.That(node.IsDirectory, Is.EqualTo(other.IsDirectory));
+            Assert.That(node.Size, Is.EqualTo(other.Size));
         }
 
         [Test]
@@ -991,7 +991,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 using (var cts = new CancellationTokenSource(3000))
                 {
                     var got = await ipfs.UnixFsApi.ReadAllTextAsync(cid, cts.Token);
-                    Assert.Equals(text, got);
+                    Assert.That(text, Is.EqualTo(got));
                 }
             }
         }

@@ -37,9 +37,9 @@ namespace MultiFormats.Tests
             {
                 0
             };
-            Assert.Equals(1, Varint.RequiredBytes(0));
+            Assert.That(1, Is.EqualTo(Varint.RequiredBytes(0)));
             Assert.That(x, Is.EquivalentTo(Varint.Encode(0)));
-            Assert.Equals(0, Varint.DecodeInt32(x));
+            Assert.That(0, Is.EqualTo(Varint.DecodeInt32(x)));
         }
 
         [Test]
@@ -49,9 +49,9 @@ namespace MultiFormats.Tests
             {
                 0xAC, 0x02
             };
-            Assert.Equals(2, Varint.RequiredBytes(300));
+            Assert.That(2, Is.EqualTo(Varint.RequiredBytes(300)));
             Assert.That(x, Is.EquivalentTo(Varint.Encode(300)));
-            Assert.Equals(300, Varint.DecodeInt32(x));
+            Assert.That(300, Is.EqualTo(Varint.DecodeInt32(x)));
         }
 
         [Test]
@@ -61,16 +61,16 @@ namespace MultiFormats.Tests
             {
                 0x00, 0xAC, 0x02
             };
-            Assert.Equals(300, Varint.DecodeInt32(x, 1));
+            Assert.That(300, Is.EqualTo(Varint.DecodeInt32(x, 1)));
         }
 
         [Test]
         public void MaxLong()
         {
             var x = "ffffffffffffffff7f".ToHexBuffer();
-            Assert.Equals(9, Varint.RequiredBytes(long.MaxValue));
+            Assert.That(9, Is.EqualTo(Varint.RequiredBytes(long.MaxValue)));
             Assert.That(x, Is.EquivalentTo(Varint.Encode(long.MaxValue)));
-            Assert.Equals(long.MaxValue, Varint.DecodeInt64(x));
+            Assert.That(long.MaxValue, Is.EqualTo(Varint.DecodeInt64(x)));
         }
 
         [Test]
@@ -111,7 +111,7 @@ namespace MultiFormats.Tests
             {
                 await ms.WriteVarintAsync(long.MaxValue);
                 ms.Position = 0;
-                Assert.Equals(long.MaxValue, ms.ReadVarint64());
+                Assert.That(long.MaxValue, Is.EqualTo(ms.ReadVarint64()));
             }
         }
 
@@ -137,7 +137,7 @@ namespace MultiFormats.Tests
             await using (var ms = new MemoryStream("ffffffffffffffff7f".ToHexBuffer()))
             {
                 var v = await ms.ReadVarint64Async();
-                Assert.Equals(long.MaxValue, v);
+                Assert.That(long.MaxValue, Is.EqualTo(v));
             }
         }
 

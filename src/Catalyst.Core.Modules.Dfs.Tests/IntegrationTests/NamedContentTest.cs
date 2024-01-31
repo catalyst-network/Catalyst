@@ -36,8 +36,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
                 ContentPath = "/ipfs/...",
                 NamePath = "/ipns/..."
             };
-            Assert.Equals("/ipfs/...", nc.ContentPath);
-            Assert.Equals("/ipns/...", nc.NamePath);
+            Assert.That("/ipfs/...", Is.EqualTo(nc.ContentPath));
+            Assert.That("/ipns/...", Is.EqualTo(nc.NamePath));
         }
     }
 }

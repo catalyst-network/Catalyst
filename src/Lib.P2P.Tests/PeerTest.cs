@@ -41,21 +41,21 @@ namespace Lib.P2P.Tests
         [Test]
         public new void ToString()
         {
-            Assert.Equals("", new Peer().ToString());
-            Assert.Equals(MarsId, new Peer {Id = MarsId}.ToString());
+            Assert.That("", Is.EqualTo(new Peer().ToString()));
+            Assert.That(MarsId, Is.EqualTo(new Peer {Id = MarsId}.ToString()));
         }
 
         [Test]
         public void DefaultValues()
         {
             var peer = new Peer();
-            Assert.Equals(null, peer.Id);
-            Assert.Equals(0, peer.Addresses.Count());
-            Assert.Equals("unknown/0.0", peer.ProtocolVersion);
-            Assert.Equals("unknown/0.0", peer.AgentVersion);
-            Assert.Equals(null, peer.PublicKey);
-            Assert.Equals(false, peer.IsValid()); // missing peer ID
-            Assert.Equals(null, peer.ConnectedAddress);
+            Assert.That(peer.Id, Is.Null);
+            Assert.That(0, Is.EqualTo(peer.Addresses.Count()));
+            Assert.That("unknown/0.0", Is.EqualTo(peer.ProtocolVersion));
+            Assert.That("unknown/0.0", Is.EqualTo(peer.AgentVersion));
+            Assert.That(null, peer.PublicKey);
+            Assert.That(false, Is.EqualTo(peer.IsValid())); // missing peer ID
+            Assert.That(peer.ConnectedAddress, Is.Null);
             Assert.That(peer.Latency.HasValue, Is.False);
         }
 
@@ -67,22 +67,22 @@ namespace Lib.P2P.Tests
                 ConnectedAddress = new MultiAddress(marsAddress),
                 Latency = TimeSpan.FromHours(3.03 * 2)
             };
-            Assert.Equals(marsAddress, peer.ConnectedAddress.ToString());
-            Assert.Equals(3.03 * 2, peer.Latency.Value.TotalHours);
+            Assert.That(marsAddress, Is.EqualTo(peer.ConnectedAddress.ToString()));
+            Assert.That(3.03 * 2, Is.EqualTo(peer.Latency.Value.TotalHours));
         }
 
         [Test]
         public void Validation_No_Id()
         {
             var peer = new Peer();
-            Assert.Equals(false, peer.IsValid());
+            Assert.That(false, Is.EqualTo(peer.IsValid()));
         }
 
         [Test]
         public void Validation_With_Id()
         {
             Peer peer = MarsId;
-            Assert.Equals(true, peer.IsValid());
+            Assert.That(true, Is.EqualTo(peer.IsValid()));
         }
 
         [Test]
@@ -93,7 +93,7 @@ namespace Lib.P2P.Tests
                 Id = MarsId,
                 PublicKey = MarsPublicKey
             };
-            Assert.Equals(true, peer.IsValid());
+            Assert.That(true, Is.EqualTo(peer.IsValid()));
         }
 
         [Test]
@@ -104,7 +104,7 @@ namespace Lib.P2P.Tests
                 Id = PlutoId,
                 PublicKey = MarsPublicKey
             };
-            Assert.Equals(false, peer.IsValid());
+            Assert.That(false, Is.EqualTo(peer.IsValid()));
         }
 
         [Test]
@@ -138,16 +138,16 @@ namespace Lib.P2P.Tests
             Assert.That(a0.Equals(a1), Is.True);
             Assert.That(a0.Equals(b), Is.False);
 
-            Assert.Equals(a0, a0);
-            Assert.Equals(a0, a1);
+            Assert.That(a0, Is.EqualTo(a0));
+            Assert.That(a0, Is.EqualTo(a1));
             Assert.That(a0, Is.Not.EqualTo(b));
 
-            Assert.Equals(a0, a0);
-            Assert.Equals(a0, a1);
+            Assert.That(a0, Is.EqualTo(a0));
+            Assert.That(a0, Is.EqualTo(a1));
             Assert.That(a0, Is.Not.EqualTo(b));
 
-            Assert.Equals(a0.GetHashCode(), a0.GetHashCode());
-            Assert.Equals(a0.GetHashCode(), a1.GetHashCode());
+            Assert.That(a0.GetHashCode(), Is.EqualTo(a0.GetHashCode()));
+            Assert.That(a0.GetHashCode(), Is.EqualTo(a1.GetHashCode()));
             Assert.That(a0.GetHashCode(), Is.Not.EqualTo(b.GetHashCode()));
         }
 

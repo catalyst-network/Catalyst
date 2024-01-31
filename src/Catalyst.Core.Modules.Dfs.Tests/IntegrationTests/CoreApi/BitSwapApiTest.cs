@@ -236,17 +236,17 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 Assert.That(getTask.IsCanceled, Is.False, "task cancelled");
                 Assert.That(getTask.IsFaulted, Is.False, "task faulted");
                 Assert.That(getTask.IsCompleted, Is.True, "task not completed");
-                Assert.Equals(cid, block.Id);
+                Assert.That(cid, Is.EqualTo(block.Id));
                 
                 data.Should().BeEquivalentTo(block.DataBytes);
 
                 var otherPeer = _dfsServiceOther.LocalPeer;
                 var ledger = _dfsService.BitSwapApi.GetBitSwapLedger(otherPeer, cts.Token);
                 
-                Assert.Equals(otherPeer, ledger.Peer);
-                Assert.Equals(0UL, ledger.BlocksExchanged);
-                Assert.Equals(0UL, ledger.DataReceived);
-                Assert.Equals(0UL, ledger.DataSent);
+                Assert.That(otherPeer, Is.EqualTo(ledger.Peer));
+                Assert.That(0UL, Is.EqualTo(ledger.BlocksExchanged));
+                Assert.That(0UL, Is.EqualTo(ledger.DataReceived));
+                Assert.That(0UL, Is.EqualTo(ledger.DataSent));
                 Assert.That(ledger.IsInDebt, Is.True);
 
                 // TODO: Timing issue here.  ipfsOther could have sent the block
@@ -254,9 +254,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 #if false
                 var localPeer = await ipfs.LocalPeer;
                 ledger = await ipfsOther.Bitswap.LedgerAsync(localPeer);
-                Assert.Equals(localPeer, ledger.Peer);
+                Assert.That(localPeer, Is.EqualTo(ledger.Peer));
                 Assert.AreNotEqual(0UL, ledger.BlocksExchanged);
-                Assert.Equals(0UL, ledger.DataReceived);
+                Assert.That(0UL, Is.EqualTo(ledger.DataReceived));
                 Assert.AreNotEqual(0UL, ledger.DataSent);
                 Assert.False(ledger.IsInDebt);
 #endif
@@ -395,15 +395,15 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 Assert.That(getTask.IsCanceled, Is.False, "task cancelled");
                 Assert.That(getTask.IsFaulted, Is.False, "task faulted");
                 Assert.That(getTask.IsCompleted, Is.True, "task not completed");
-                Assert.Equals(cid, block.Id);
-                Assert.Equals(data, block.DataBytes);
+                Assert.That(cid, Is.EqualTo(block.Id));
+                Assert.That(data, Is.EqualTo(block.DataBytes));
 
                 var otherPeer = _dfsServiceOther.LocalPeer;
                 var ledger = _dfsService.BitSwapApi.GetBitSwapLedger(otherPeer, cts.Token);
-                Assert.Equals(otherPeer, ledger.Peer);
+                Assert.That(otherPeer, Is.EqualTo(ledger.Peer));
                 Assert.That(0UL, Is.Not.EqualTo(ledger.BlocksExchanged));
                 Assert.That(0UL, Is.Not.EqualTo(ledger.DataReceived));
-                Assert.Equals(0UL, ledger.DataSent);
+                Assert.That(0UL, Is.EqualTo(ledger.DataSent));
                 Assert.That(ledger.IsInDebt, Is.True);
 
                 // TODO: Timing issue here.  ipfsOther could have sent the block
@@ -411,9 +411,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 #if false
                 var localPeer = await ipfs.LocalPeer;
                 ledger = await ipfsOther.Bitswap.LedgerAsync(localPeer);
-                Assert.Equals(localPeer, ledger.Peer);
+                Assert.That(localPeer, Is.EqualTo(ledger.Peer));
                 Assert.That(0UL, Is.Not.EqualTo(ledger.BlocksExchanged));
-                Assert.Equals(0UL, ledger.DataReceived);
+                Assert.That(0UL, Is.EqualTo(ledger.DataReceived));
                 Assert.That(0UL, Is.Not.EqualTo(ledger.DataSent));
                 Assert.False(ledger.IsInDebt);
 #endif
@@ -453,8 +453,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
 
                 var block = await _dfsService.BlockApi.GetAsync(cid, cts.Token);
 
-                Assert.Equals(cid, block.Id);
-                Assert.Equals(data, block.DataBytes);
+                Assert.That(cid, Is.EqualTo(block.Id));
+                Assert.That(data, Is.EqualTo(block.DataBytes));
             }
             finally
             {
@@ -482,8 +482,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 var cts = new CancellationTokenSource(3000);
                 var block = await _dfsService.BlockApi.GetAsync(cid, cts.Token);
  
-                Assert.Equals(cid, block.Id);
-                Assert.Equals(data, block.DataBytes);
+                Assert.That(cid, Is.EqualTo(block.Id));
+                Assert.That(data, Is.EqualTo(block.DataBytes));
             }
             finally
             {
@@ -506,7 +506,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                     var _ = _dfsService.BitSwapApi.GetAsync(block.Id, cts.Token).Result;
                 });
 
-                Assert.Equals(0, (await _dfsService.BitSwapApi.WantsAsync(cancel: cts.Token)).Count());
+                Assert.That(0, Is.EqualTo((await _dfsService.BitSwapApi.WantsAsync(cancel: cts.Token)).Count()));
             }
             finally
             {

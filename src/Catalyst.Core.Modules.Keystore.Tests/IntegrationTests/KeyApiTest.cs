@@ -66,8 +66,8 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
             var self = keys.Single(k => k.Name == "self");
 
             var me = await _keyStoreService.FindKeyByNameAsync("self");
-            Assert.Equals("self", self.Name);
-            Assert.Equals(me.Id, self.Id);
+            Assert.That("self", Is.EqualTo(self.Name));
+            Assert.That(me.Id, Is.EqualTo(self.Id));
         }
 
         [Test]
@@ -84,8 +84,8 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
 
             await _keyStoreService.RemoveAsync("clone");
             var clone = await _keyStoreService.ImportAsync("clone", pem, password);
-            Assert.Equals("clone", clone.Name);
-            Assert.Equals(self.Id, clone.Id);
+            Assert.That("clone", Is.EqualTo(clone.Name));
+            Assert.That(self.Id, Is.EqualTo(clone.Id));
         }
 
         [Test]
@@ -153,11 +153,11 @@ Rw==
 
             await _keyStoreService.RemoveAsync("jsipfs");
             var key = await _keyStoreService.ImportAsync("jsipfs", pem, password);
-            Assert.Equals("jsipfs", key.Name);
-            Assert.Equals("QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb", key.Id.ToString());
+            Assert.That("jsipfs", Is.EqualTo(key.Name));
+            Assert.That("QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb", Is.EqualTo(key.Id.ToString()));
 
             var pubKey = await _keyStoreService.GetPublicKeyAsync("jsipfs");
-            Assert.Equals(spki, pubKey);
+            Assert.That(spki, Is.EqualTo(pubKey));
         }
 
         [Test]
@@ -194,12 +194,12 @@ MIIFDTA/BgkqhkiG9w0BBQ0wMjAaBgkqhkiG9w0BBQwwDQQILdGJynKmkrMCAWQw
             {
                 Assert.That(key, Is.Not.Null);
                 Assert.That(key.Id, Is.Not.Null);
-                Assert.Equals(name, key.Name);
+                Assert.That(name, Is.EqualTo(key.Name));
 
                 var keys = await _keyStoreService.ListAsync();
                 var clone = keys.Single(k => k.Name == name);
-                Assert.Equals(key.Name, clone.Name);
-                Assert.Equals(key.Id, clone.Id);
+                Assert.That(key.Name, Is.EqualTo(clone.Name));
+                Assert.That(key.Id, Is.EqualTo(clone.Id));
             }
             finally
             {
@@ -218,8 +218,8 @@ MIIFDTA/BgkqhkiG9w0BBQ0wMjAaBgkqhkiG9w0BBQwwDQQILdGJynKmkrMCAWQw
 
             var removed = await _keyStoreService.RemoveAsync(name);
             Assert.That(removed, Is.Not.Null);
-            Assert.Equals(key.Name, removed.Name);
-            Assert.Equals(key.Id, removed.Id);
+            Assert.That(key.Name, Is.EqualTo(removed.Name));
+            Assert.That(key.Id, Is.EqualTo(removed.Id));
 
             keys = await _keyStoreService.ListAsync();
             Assert.That(keys.Any(k => k.Name == name), Is.False);
@@ -235,8 +235,8 @@ MIIFDTA/BgkqhkiG9w0BBQ0wMjAaBgkqhkiG9w0BBQwwDQQILdGJynKmkrMCAWQw
             await _keyStoreService.RemoveAsync(newName);
             var key = await _keyStoreService.CreateAsync(name, "ed25519", 0);
             var renamed = await _keyStoreService.RenameAsync(name, newName);
-            Assert.Equals(key.Id, renamed.Id);
-            Assert.Equals(newName, renamed.Name);
+            Assert.That(key.Id, Is.EqualTo(renamed.Id));
+            Assert.That(newName, Is.EqualTo(renamed.Name));
 
             var keys = await _keyStoreService.ListAsync();
             var enumerable = keys as IKey[] ?? keys.ToArray();
@@ -280,12 +280,12 @@ MIIFDTA/BgkqhkiG9w0BBQ0wMjAaBgkqhkiG9w0BBQwwDQQILdGJynKmkrMCAWQw
             {
                 Assert.That(key, Is.Not.Null);
                 Assert.That(key.Id, Is.Not.Null);
-                Assert.Equals(name, key.Name);
+                Assert.That(name, Is.EqualTo(key.Name));
 
                 var keys = await _keyStoreService.ListAsync();
                 var clone = keys.Single(k => k.Name == name);
-                Assert.Equals(key.Name, clone.Name);
-                Assert.Equals(key.Id, clone.Id);
+                Assert.That(key.Name, Is.EqualTo(clone.Name));
+                Assert.That(key.Id, Is.EqualTo(clone.Id));
             }
             finally
             {
@@ -302,12 +302,12 @@ MIIFDTA/BgkqhkiG9w0BBQ0wMjAaBgkqhkiG9w0BBQwwDQQILdGJynKmkrMCAWQw
             {
                 Assert.That(key, Is.Not.Null);
                 Assert.That(key.Id, Is.Not.Null);
-                Assert.Equals(name, key.Name);
+                Assert.That(name, Is.EqualTo(key.Name));
 
                 var keys = await _keyStoreService.ListAsync();
                 var clone = keys.Single(k => k.Name == name);
-                Assert.Equals(key.Name, clone.Name);
-                Assert.Equals(key.Id, clone.Id);
+                Assert.That(key.Name, Is.EqualTo(clone.Name));
+                Assert.That(key.Id, Is.EqualTo(clone.Id));
 
                 var priv = await _keyStoreService.GetPrivateKeyAsync(name);
                 Assert.That(priv, Is.Not.Null);
@@ -333,7 +333,7 @@ MIIFDTA/BgkqhkiG9w0BBQ0wMjAaBgkqhkiG9w0BBQwwDQQILdGJynKmkrMCAWQw
         {
             const string name = "test-ed25519-id-hash";
             var key = await _keyStoreService.CreateAsync(name, "ed25519", 0);
-            Assert.Equals("identity", key.Id.Algorithm.Name);
+            Assert.That("identity", Is.EqualTo(key.Id.Algorithm.Name));
         }
 
         [Test]
@@ -349,8 +349,8 @@ MC4CAQAwBQYDK2VwBCIEIGJnyy3U4ksTQoRBz3mf1dxeFDPXZBrwh7gD7SqMg+/i
 
             await _keyStoreService.RemoveAsync("oed1");
             var key = await _keyStoreService.ImportAsync("oed1", pem);
-            Assert.Equals("oed1", key.Name);
-            Assert.Equals("18n3naE9kBZoVvgYMV6saMZe3jn87dZiNbQ22BhxKTwU5yUoGfvBL1R3eScjokDGBk7i", key.Id.ToString());
+            Assert.That("oed1", Is.EqualTo(key.Name));
+            Assert.That("18n3naE9kBZoVvgYMV6saMZe3jn87dZiNbQ22BhxKTwU5yUoGfvBL1R3eScjokDGBk7i", Is.EqualTo(key.Id.ToString()));
 
             var privateKey = await _keyStoreService.GetPrivateKeyAsync("oed1");
             Assert.That(privateKey.GetType(), Is.TypeOf(typeof(Ed25519PrivateKeyParameters)));

@@ -121,7 +121,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             };
             var node = await _dfs.UnixFsApi.AddTextAsync("hello world", options);
             var cids = await _dfs.PinApi.AddAsync(node.Id);
-            Assert.Equals(6, cids.Count());
+            Assert.That(6, Is.EqualTo(cids.Count()));
         }
 
         [Test]
@@ -136,10 +136,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             };
             var node = await _dfs.UnixFsApi.AddTextAsync("hello world", options);
             var cids = await _dfs.PinApi.AddAsync(node.Id);
-            Assert.Equals(6, cids.Count());
+            Assert.That(6, Is.EqualTo(cids.Count()));
 
             var removedCids = await _dfs.PinApi.RemoveAsync(node.Id);
-            Assert.Equals(cids.ToArray(), removedCids.ToArray());
+            Assert.That(cids.ToArray(), Is.EqualTo(removedCids.ToArray()));
         }
     }
 }

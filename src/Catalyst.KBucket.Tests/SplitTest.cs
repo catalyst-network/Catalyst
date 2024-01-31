@@ -107,7 +107,7 @@ namespace Catalyst.KBucket
             }
             else
             {
-                Assert.Equals(dontSplit, node.DontSplit);
+                Assert.That(dontSplit, Is.EqualTo(node.DontSplit));
             }
         }
 

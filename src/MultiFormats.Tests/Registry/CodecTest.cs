@@ -55,9 +55,9 @@ namespace MultiFormats.Tests.Registry
             var codec = Codec.Register("something-new", 0x0bad);
             try
             {
-                Assert.Equals("something-new", codec.Name);
-                Assert.Equals("something-new", codec.ToString());
-                Assert.Equals(0x0bad, codec.Code);
+                Assert.That("something-new", Is.EqualTo(codec.Name));
+                Assert.That("something-new", Is.EqualTo(codec.ToString()));
+                Assert.That(0x0bad, Is.EqualTo(codec.Code));
             }
             finally
             {

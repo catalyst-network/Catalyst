@@ -39,11 +39,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.LinkedData
             var node = new DagNode(data);
 
             var cbor = formatter.Deserialise(node.ToArray());
-            Assert.Equals(data, cbor["data"].GetByteString());
-            Assert.Equals(0, cbor["links"].Values.Count);
+            Assert.That(data, Is.EqualTo(cbor["data"].GetByteString()));
+            Assert.That(0, Is.EqualTo(cbor["links"].Values.Count));
 
             var node1 = formatter.Serialize(cbor);
-            Assert.Equals(node.ToArray(), node1);
+            Assert.That(node.ToArray(), Is.EqualTo(node1));
         }
 
         [Test]
@@ -53,11 +53,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.LinkedData
             var node = new DagNode(data);
 
             var cbor = formatter.Deserialise(node.ToArray());
-            Assert.Equals(data, cbor["data"].GetByteString());
-            Assert.Equals(0, cbor["links"].Values.Count);
+            Assert.That(data, Is.EqualTo(cbor["data"].GetByteString()));
+            Assert.That(0, Is.EqualTo(cbor["links"].Values.Count));
 
             var node1 = formatter.Serialize(cbor);
-            Assert.Equals(node.ToArray(), node1);
+            Assert.That(node.ToArray(), Is.EqualTo(node1));
         }
 
         [Test]
@@ -74,20 +74,20 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.LinkedData
             var node = new DagNode(null, new[] {alink, blink});
             var cbor = formatter.Deserialise(node.ToArray());
 
-            Assert.Equals(2, cbor["links"].Values.Count);
+            Assert.That(2, Is.EqualTo(cbor["links"].Values.Count));
 
             var link = cbor["links"][0];
-            Assert.Equals("QmYpoNmG5SWACYfXsDztDNHs29WiJdmP7yfcMd7oVa75Qv", link["Cid"]["/"].AsString());
-            Assert.Equals("", link["Name"].AsString());
-            Assert.Equals(3, link["Size"].AsInt32());
+            Assert.That("QmYpoNmG5SWACYfXsDztDNHs29WiJdmP7yfcMd7oVa75Qv", Is.EqualTo(link["Cid"]["/"].AsString()));
+            Assert.That("", Is.EqualTo(link["Name"].AsString()));
+            Assert.That(3, Is.EqualTo(link["Size"].AsInt32()));
 
             link = cbor["links"][1];
-            Assert.Equals("QmQke7LGtfu3GjFP3AnrP8vpEepQ6C5aJSALKAq653bkRi", link["Cid"]["/"].AsString());
-            Assert.Equals("a", link["Name"].AsString());
-            Assert.Equals(3, link["Size"].AsInt32());
+            Assert.That("QmQke7LGtfu3GjFP3AnrP8vpEepQ6C5aJSALKAq653bkRi", Is.EqualTo(link["Cid"]["/"].AsString()));
+            Assert.That("a", Is.EqualTo(link["Name"].AsString()));
+            Assert.That(3, Is.EqualTo(link["Size"].AsInt32()));
 
             var node1 = formatter.Serialize(cbor);
-            Assert.Equals(node.ToArray(), node1);
+            Assert.That(node.ToArray(), Is.EqualTo(node1));
         }
     }
 }

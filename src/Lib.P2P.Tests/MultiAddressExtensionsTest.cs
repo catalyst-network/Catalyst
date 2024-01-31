@@ -35,8 +35,8 @@ namespace Lib.P2P.Tests
         {
             var a = new MultiAddress("/dns/libp2p.io/tcp/5001");
             var b = a.Clone();
-            Assert.Equals(a, b);
-            Assert.That(a.Protocols, Is.Not.EqualTo(b.Protocols));
+            Assert.That(a, Is.EqualTo(b));
+            Assert.That(a.Protocols, Is.EqualTo(b.Protocols));
         }
 
         [Test]
@@ -44,8 +44,8 @@ namespace Lib.P2P.Tests
         {
             var local = new MultiAddress("/ip4/127.0.0.1/tcp/5001");
             var r0 = await local.ResolveAsync();
-            Assert.Equals(1, r0.Count);
-            Assert.Equals(local, r0[0]);
+            Assert.That(1, Is.EqualTo(r0.Count));
+            Assert.That(local, Is.EqualTo(r0[0]));
         }
 
         [Test]
@@ -55,27 +55,27 @@ namespace Lib.P2P.Tests
             Assert.That(0, Is.Not.EqualTo(dns.Count));
             var dns4 = await new MultiAddress("/dns4/libp2p.io/tcp/5001").ResolveAsync();
             var dns6 = await new MultiAddress("/dns6/libp2p.io/tcp/5001").ResolveAsync();
-            Assert.Equals(dns.Count, dns4.Count + dns6.Count);
+            Assert.That(dns.Count, Is.EqualTo(dns4.Count + dns6.Count));
         }
 
         [Test]
         public async Task Resolving_HTTP()
         {
             var r = await new MultiAddress("/ip4/127.0.0.1/http").ResolveAsync();
-            Assert.Equals("/ip4/127.0.0.1/http/tcp/80", r.First());
+            Assert.That("/ip4/127.0.0.1/http/tcp/80", Is.EqualTo(r.First().ToString()));
 
             r = await new MultiAddress("/ip4/127.0.0.1/http/tcp/8080").ResolveAsync();
-            Assert.Equals("/ip4/127.0.0.1/http/tcp/8080", r.First());
+            Assert.That("/ip4/127.0.0.1/http/tcp/8080", Is.EqualTo(r.First().ToString()));
         }
 
         [Test]
         public async Task Resolving_HTTPS()
         {
             var r = await new MultiAddress("/ip4/127.0.0.1/https").ResolveAsync();
-            Assert.Equals("/ip4/127.0.0.1/https/tcp/443", r.First());
+            Assert.That("/ip4/127.0.0.1/https/tcp/443", Is.EqualTo(r.First().ToString()));
 
             r = await new MultiAddress("/ip4/127.0.0.1/https/tcp/4433").ResolveAsync();
-            Assert.Equals("/ip4/127.0.0.1/https/tcp/4433", r.First());
+            Assert.That("/ip4/127.0.0.1/https/tcp/4433", Is.EqualTo(r.First().ToString()));
         }
 
         [Test]

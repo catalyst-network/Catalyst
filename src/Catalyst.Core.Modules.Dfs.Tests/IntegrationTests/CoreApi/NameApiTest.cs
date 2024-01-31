@@ -49,10 +49,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         public async Task Resolve_Cid()
         {
             var actual = await ipfs.NameApi.ResolveAsync("QmYNQJoKGNHTpPxCBPh9KkDpaExgd2duMa3aF6ytMpHdao");
-            Assert.Equals("/ipfs/QmYNQJoKGNHTpPxCBPh9KkDpaExgd2duMa3aF6ytMpHdao", actual);
+            Assert.That("/ipfs/QmYNQJoKGNHTpPxCBPh9KkDpaExgd2duMa3aF6ytMpHdao", Is.EqualTo(actual));
 
             actual = await ipfs.NameApi.ResolveAsync("/ipfs/QmYNQJoKGNHTpPxCBPh9KkDpaExgd2duMa3aF6ytMpHdao");
-            Assert.Equals("/ipfs/QmYNQJoKGNHTpPxCBPh9KkDpaExgd2duMa3aF6ytMpHdao", actual);
+            Assert.That("/ipfs/QmYNQJoKGNHTpPxCBPh9KkDpaExgd2duMa3aF6ytMpHdao", Is.EqualTo(actual));
         }
 
         [Test]
@@ -63,8 +63,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             {
                 var dir = await ipfs.UnixFsApi.AddDirectoryAsync(temp);
                 var name = "/ipfs/" + dir.Id.Encode() + "/x/y/y.txt";
-                Assert.Equals("/ipfs/QmTwEE2eSyzcvUctxP2negypGDtj7DQDKVy8s3Rvp6y6Pc",
-                    await ipfs.NameApi.ResolveAsync(name));
+                Assert.That("/ipfs/QmTwEE2eSyzcvUctxP2negypGDtj7DQDKVy8s3Rvp6y6Pc",
+                    Is.EqualTo(await ipfs.NameApi.ResolveAsync(name)));
             }
             finally
             {
@@ -88,7 +88,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             Assert.That(iopath, Is.Not.Null);
 
             var path = await ipfs.NameApi.ResolveAsync("/ipns/ipfs.io");
-            Assert.Equals(iopath, path);
+            Assert.That(iopath, Is.EqualTo(path));
         }
 
         [Test]

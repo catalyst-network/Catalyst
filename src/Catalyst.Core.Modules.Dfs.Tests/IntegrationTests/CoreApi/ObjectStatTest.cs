@@ -39,11 +39,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 LinkCount = 4,
                 LinkSize = 5
             };
-            Assert.Equals(1, stat.BlockSize);
-            Assert.Equals(2, stat.CumulativeSize);
-            Assert.Equals(3, stat.DataSize);
-            Assert.Equals(4, stat.LinkCount);
-            Assert.Equals(5, stat.LinkSize);
+            Assert.That(1, Is.EqualTo(stat.BlockSize));
+            Assert.That(2, Is.EqualTo(stat.CumulativeSize));
+            Assert.That(3, Is.EqualTo(stat.DataSize));
+            Assert.That(4, Is.EqualTo(stat.LinkCount));
+            Assert.That(5, Is.EqualTo(stat.LinkSize));
         }
     }
 }

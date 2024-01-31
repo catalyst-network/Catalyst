@@ -53,13 +53,13 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         {
             var addr = await ipfs.BootstrapApi.AddAsync(somewhere);
             Assert.That(addr, Is.Not.Null);
-            Assert.Equals(somewhere, addr);
+            Assert.That(somewhere, Is.EqualTo(addr));
             var addrs = await ipfs.BootstrapApi.ListAsync();
             Assert.That(addrs.Any(a => a == somewhere), Is.True);
 
             addr = await ipfs.BootstrapApi.RemoveAsync(somewhere);
             Assert.That(addr, Is.Not.Null);
-            Assert.Equals(somewhere, addr);
+            Assert.That(somewhere, Is.EqualTo(addr));
             addrs = await ipfs.BootstrapApi.ListAsync();
             Assert.That(addrs.Any(a => a == somewhere), Is.False);
         }
@@ -78,7 +78,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             var original = await ipfs.BootstrapApi.ListAsync();
             await ipfs.BootstrapApi.RemoveAllAsync();
             var addrs = await ipfs.BootstrapApi.ListAsync();
-            Assert.Equals(0, addrs.Count());
+            Assert.That(0, Is.EqualTo(addrs.Count()));
             foreach (var addr in original)
             {
                 await ipfs.BootstrapApi.AddAsync(addr);
@@ -114,13 +114,13 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             {
                 ipfs.Options.Discovery.BootstrapPeers = new MultiAddress[0];
                 var addrs = await ipfs.BootstrapApi.ListAsync();
-                Assert.Equals(0, addrs.Count());
+                Assert.That(0, Is.EqualTo(addrs.Count()));
 
                 ipfs.Options.Discovery.BootstrapPeers = new[]
                     {somewhere};
                 addrs = await ipfs.BootstrapApi.ListAsync();
-                Assert.Equals(1, addrs.Count());
-                Assert.Equals(somewhere, addrs.First());
+                Assert.That(1, Is.EqualTo(addrs.Count()));
+                Assert.That(somewhere, Is.EqualTo(addrs.First()));
             }
             finally
             {

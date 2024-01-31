@@ -116,7 +116,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
             _keystore.Received(0)?.KeyStoreGenerateAsync(Arg.Any<NetworkType>(), Arg.Any<KeyRegistryTypes>());
             _keyRegistry.ReceivedWithAnyArgs(0).AddItemToRegistry(default, default);
             
-            Assert.Equals(_signature, actualSignature);
+            Assert.That(_signature, Is.EqualTo(actualSignature));
         }
 
         [Test] 
@@ -134,7 +134,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.UnitTests
 
             _keystore.Received(1).KeyStoreDecrypt(Arg.Any<KeyRegistryTypes>());
 
-            Assert.Equals(_signature, actualSignature);
+            Assert.That(_signature, Is.EqualTo(actualSignature));
         }
 
         private sealed class CryptoContext : ICryptoContext

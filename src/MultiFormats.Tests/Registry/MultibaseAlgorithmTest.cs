@@ -70,7 +70,7 @@ namespace MultiFormats.Tests.Registry
         [Test]
         public void Name_Is_Also_ToString()
         {
-            foreach (var alg in MultiBaseAlgorithm.All) Assert.Equals(alg.Name, alg.ToString());
+            foreach (var alg in MultiBaseAlgorithm.All) Assert.That(alg.Name, Is.EqualTo(alg.ToString()));
         }
 
         [Test]

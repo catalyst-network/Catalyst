@@ -50,11 +50,11 @@ namespace Lib.P2P.Tests.PubSub
             var b = Serializer.Deserialize<PublishedMessage>(ms);
 
             Assert.That(a.Topics.ToArray(), Is.EquivalentTo(b.Topics.ToArray()));
-            Assert.Equals(a.Sender, b.Sender);
+            Assert.That(a.Sender, Is.EqualTo(b.Sender));
             Assert.That(a.SequenceNumber, Is.EquivalentTo(b.SequenceNumber));
             Assert.That(a.DataBytes, Is.EquivalentTo(b.DataBytes));
-            Assert.Equals(a.DataBytes.Length, a.Size);
-            Assert.Equals(b.DataBytes.Length, b.Size);
+            Assert.That(a.DataBytes.Length, Is.EqualTo(a.Size));
+            Assert.That(b.DataBytes.Length, Is.EqualTo(b.Size));
         }
 
         [Test]
@@ -88,7 +88,7 @@ namespace Lib.P2P.Tests.PubSub
         public void DataStream()
         {
             var msg = new PublishedMessage {DataBytes = new byte[] {1}};
-            Assert.Equals(1, msg.DataStream.ReadByte());
+            Assert.That(1, Is.EqualTo(msg.DataStream.ReadByte()));
         }
     }
 }

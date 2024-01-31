@@ -42,19 +42,19 @@ namespace Lib.P2P.Tests
         {
             var peer = new Peer {Id = "QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb"};
             var manager = new PeerManager {SwarmService = new SwarmService()};
-            Assert.Equals(0, manager.DeadPeers.Count);
+            Assert.That(0, Is.EqualTo(manager.DeadPeers.Count));
 
             manager.SetNotReachable(peer);
             Assert.That(manager.DeadPeers.ContainsKey(peer), Is.True);
-            Assert.Equals(1, manager.DeadPeers.Count);
+            Assert.That(1, Is.EqualTo(manager.DeadPeers.Count));
 
             manager.SetNotReachable(peer);
             Assert.That(manager.DeadPeers.ContainsKey(peer), Is.True);
-            Assert.Equals(1, manager.DeadPeers.Count);
+            Assert.That(1, Is.EqualTo(manager.DeadPeers.Count));
 
             manager.SetReachable(peer);
             Assert.That(manager.DeadPeers.ContainsKey(peer), Is.False);
-            Assert.Equals(0, manager.DeadPeers.Count);
+            Assert.That(0, Is.EqualTo(manager.DeadPeers.Count));
         }
 
         [Test]
@@ -62,7 +62,7 @@ namespace Lib.P2P.Tests
         {
             var peer = new Peer {Id = "QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb"};
             var manager = new PeerManager {SwarmService = new SwarmService()};
-            Assert.Equals(0, manager.DeadPeers.Count);
+            Assert.That(0, Is.EqualTo(manager.DeadPeers.Count));
 
             manager.SetNotReachable(peer);
             Assert.That(
@@ -90,7 +90,7 @@ namespace Lib.P2P.Tests
                 SwarmService = swarm,
                 InitialBackoff = TimeSpan.FromMilliseconds(100),
             };
-            Assert.Equals(0, manager.DeadPeers.Count);
+            Assert.That(0, Is.EqualTo(manager.DeadPeers.Count));
 
             try
             {
@@ -105,7 +105,7 @@ namespace Lib.P2P.Tests
                     // ignored
                 }
 
-                Assert.Equals(1, manager.DeadPeers.Count);
+                Assert.That(1, Is.EqualTo(manager.DeadPeers.Count));
 
                 var end = DateTime.Now + TimeSpan.FromSeconds(4);
                 while (DateTime.Now <= end)
@@ -138,7 +138,7 @@ namespace Lib.P2P.Tests
                 InitialBackoff = TimeSpan.FromMilliseconds(100),
                 MaxBackoff = TimeSpan.FromMilliseconds(200),
             };
-            Assert.Equals(0, manager.DeadPeers.Count);
+            Assert.That(0, Is.EqualTo(manager.DeadPeers.Count));
 
             try
             {
@@ -153,7 +153,7 @@ namespace Lib.P2P.Tests
                     // ignored
                 }
 
-                Assert.Equals(1, manager.DeadPeers.Count);
+                Assert.That(1, Is.EqualTo(manager.DeadPeers.Count));
 
                 var end = DateTime.Now + TimeSpan.FromSeconds(6);
                 while (DateTime.Now <= end)

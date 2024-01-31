@@ -64,10 +64,10 @@ namespace Lib.P2P.Tests.Protocols
             ms.Position = 0;
             await identify.UpdateRemotePeerAsync(peerB, ms, CancellationToken.None);
 
-            Assert.Equals(peerA.AgentVersion, peerB.AgentVersion);
-            Assert.Equals(peerA.Id, peerB.Id);
-            Assert.Equals(peerA.ProtocolVersion, peerB.ProtocolVersion);
-            Assert.Equals(peerA.PublicKey, peerB.PublicKey);
+            Assert.That(peerA.AgentVersion, Is.EqualTo(peerB.AgentVersion));
+            Assert.That(peerA.Id, Is.EqualTo(peerB.Id));
+            Assert.That(peerA.ProtocolVersion, Is.EqualTo(peerB.ProtocolVersion));
+            Assert.That(peerA.PublicKey, Is.EqualTo(peerB.PublicKey));
             Assert.That(peerA.Addresses.ToArray(), Is.EquivalentTo(peerB.Addresses.ToArray()));
         }
 

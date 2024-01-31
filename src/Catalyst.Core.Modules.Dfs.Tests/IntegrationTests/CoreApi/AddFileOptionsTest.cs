@@ -36,13 +36,13 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         {
             var options = new AddFileOptions();
 
-            Assert.Equals(true, options.Pin);
-            Assert.Equals(256 * 1024, options.ChunkSize);
-            Assert.Equals(MultiHash.DefaultAlgorithmName, options.Hash);
-            Assert.Equals(false, options.OnlyHash);
-            Assert.Equals(false, options.RawLeaves);
-            Assert.Equals(false, options.Trickle);
-            Assert.Equals(false, options.Wrap);
+            Assert.That(true, Is.EqualTo(options.Pin));
+            Assert.That(256 * 1024, Is.EqualTo(options.ChunkSize));
+            Assert.That(MultiHash.DefaultAlgorithmName, Is.EqualTo(options.Hash));
+            Assert.That(false, Is.EqualTo(options.OnlyHash));
+            Assert.That(false, Is.EqualTo(options.RawLeaves));
+            Assert.That(false, Is.EqualTo(options.Trickle));
+            Assert.That(false, Is.EqualTo(options.Wrap));
             Assert.That(options.Progress, Is.Null);
             Assert.That(options.ProtectionKey, Is.Null);
         }
@@ -63,15 +63,15 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 ProtectionKey = "secret"
             };
 
-            Assert.Equals(false, options.Pin);
-            Assert.Equals(2 * 1024, options.ChunkSize);
-            Assert.Equals("sha2-512", options.Hash);
-            Assert.Equals(true, options.OnlyHash);
-            Assert.Equals(true, options.RawLeaves);
-            Assert.Equals(true, options.Trickle);
-            Assert.Equals(true, options.Wrap);
+            Assert.That(false, Is.EqualTo(options.Pin));
+            Assert.That(2 * 1024, Is.EqualTo(options.ChunkSize));
+            Assert.That("sha2-512", Is.EqualTo(options.Hash));
+            Assert.That(true, Is.EqualTo(options.OnlyHash));
+            Assert.That(true, Is.EqualTo(options.RawLeaves));
+            Assert.That(true, Is.EqualTo(options.Trickle));
+            Assert.That(true, Is.EqualTo(options.Wrap));
             Assert.That(options.Progress, Is.Not.Null);
-            Assert.Equals("secret", options.ProtectionKey);
+            Assert.That("secret", Is.EqualTo(options.ProtectionKey));
         }
     }
 }

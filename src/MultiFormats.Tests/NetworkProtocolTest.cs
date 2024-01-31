@@ -30,7 +30,7 @@ namespace MultiFormats.Tests
     public class NetworkProtocolTest
     {
         [Test]
-        public void Stringing() { Assert.Equals("/tcp/8080", new MultiAddress("/tcp/8080").Protocols[0].ToString()); }
+        public void Stringing() { Assert.That("/tcp/8080", Is.EqualTo(new MultiAddress("/tcp/8080").Protocols[0].ToString())); }
 
         [Test]
         public void Register_Name_Already_Exists()

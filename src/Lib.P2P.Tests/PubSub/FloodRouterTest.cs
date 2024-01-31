@@ -59,7 +59,7 @@ namespace Lib.P2P.Tests.PubSub
         public void Defaults()
         {
             var router = new FloodRouter();
-            Assert.Equals("/floodsub/1.0.0", router.ToString());
+            Assert.That("/floodsub/1.0.0", Is.EqualTo(router.ToString()));
         }
 
         [Test]
@@ -69,11 +69,11 @@ namespace Lib.P2P.Tests.PubSub
 
             var sub = new Subscription {Topic = "topic", Subscribe = true};
             router.ProcessSubscription(sub, other);
-            Assert.Equals(1, router.RemoteTopics.GetPeers("topic").Count());
+            Assert.That(1, Is.EqualTo(router.RemoteTopics.GetPeers("topic").Count()));
 
             var can = new Subscription {Topic = "topic", Subscribe = false};
             router.ProcessSubscription(can, other);
-            Assert.Equals(0, router.RemoteTopics.GetPeers("topic").Count());
+            Assert.That(0, Is.EqualTo(router.RemoteTopics.GetPeers("topic").Count()));
         }
 
         [Test]
@@ -317,12 +317,12 @@ namespace Lib.P2P.Tests.PubSub
                 }
 
                 Assert.That(lastMessage2, Is.Not.Null);
-                Assert.Equals(self, lastMessage2.Sender);
+                Assert.That(self, Is.EqualTo(lastMessage2.Sender));
                 Assert.That(new byte[] {1}, Is.EquivalentTo(lastMessage2.DataBytes));
                 Assert.That(lastMessage2.Topics.ToArray(), Contains.Item(topic));
 
                 Assert.That(lastMessage3, Is.Not.Null);
-                Assert.Equals(self, lastMessage3.Sender);
+                Assert.That(self, Is.EqualTo(lastMessage3.Sender));
                 Assert.That(new byte[] {1}, Is.EquivalentTo(lastMessage3.DataBytes));
                 Assert.That(lastMessage3.Topics.ToArray(), Contains.Item(topic));
             }

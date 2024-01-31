@@ -131,10 +131,10 @@ namespace Lib.P2P.Tests.Routing
                     Key = self.Id.ToArray()
                 };
                 var response = dht.ProcessFindNode(request, new DhtMessage());
-                Assert.Equals(1, response.CloserPeers.Length);
+                Assert.That(1, Is.EqualTo(response.CloserPeers.Length));
                 var ok = response.CloserPeers[0].TryToPeer(out var found);
                 Assert.That(ok, Is.True);
-                Assert.Equals(self, found);
+                Assert.That(self, Is.EqualTo(found));
             }
             finally
             {
@@ -157,10 +157,10 @@ namespace Lib.P2P.Tests.Routing
                     Key = other.Id.ToArray()
                 };
                 var response = dht.ProcessFindNode(request, new DhtMessage());
-                Assert.Equals(1, response.CloserPeers.Length);
+                Assert.That(1, Is.EqualTo(response.CloserPeers.Length));
                 var ok = response.CloserPeers[0].TryToPeer(out var found);
                 Assert.That(ok, Is.True);
-                Assert.Equals(other, found);
+                Assert.That(other, Is.EqualTo(found));
                 Assert.That(other.Addresses.ToArray(),
                     Is.EquivalentTo(found.Addresses.Select(a => a.WithoutPeerId()).ToArray()));
             }
@@ -187,10 +187,10 @@ namespace Lib.P2P.Tests.Routing
                     Key = swarmB.Id.ToArray()
                 };
                 var response = dht.ProcessFindNode(request, new DhtMessage());
-                Assert.Equals(1, response.CloserPeers.Length);
+                Assert.That(1, Is.EqualTo(response.CloserPeers.Length));
                 var ok = response.CloserPeers[0].TryToPeer(out var found);
                 Assert.That(ok, Is.True);
-                Assert.Equals(swarmB, found);
+                Assert.That(swarmB, Is.EqualTo(found));
                 Assert.That(
                     swarmB.Addresses.Select(a => a.WithoutPeerId()).ToArray(),
                     Is.EquivalentTo(found.Addresses.Select(a => a.WithoutPeerId()).ToArray()));
@@ -221,7 +221,7 @@ namespace Lib.P2P.Tests.Routing
                     Key = other.Id.ToArray()
                 };
                 var response = dht.ProcessFindNode(request, new DhtMessage());
-                Assert.Equals(3, response.CloserPeers.Length);
+                Assert.That(3, Is.EqualTo(response.CloserPeers.Length));
             }
             finally
             {
@@ -249,7 +249,7 @@ namespace Lib.P2P.Tests.Routing
                     Key = new byte[] {0xFF, 1, 2, 3}
                 };
                 var response = dht.ProcessFindNode(request, new DhtMessage());
-                Assert.Equals(3, response.CloserPeers.Length);
+                Assert.That(3, Is.EqualTo(response.CloserPeers.Length));
             }
             finally
             {
@@ -271,7 +271,7 @@ namespace Lib.P2P.Tests.Routing
                     Key = new MultiHash("QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCM1h").ToArray()
                 };
                 var response = dht.ProcessFindNode(request, new DhtMessage());
-                Assert.Equals(0, response.CloserPeers.Length);
+                Assert.That(0, Is.EqualTo(response.CloserPeers.Length));
             }
             finally
             {
@@ -322,9 +322,9 @@ namespace Lib.P2P.Tests.Routing
                     Key = cid.Hash.ToArray()
                 };
                 var response = dht.ProcessGetProviders(request, new DhtMessage());
-                Assert.Equals(1, response.ProviderPeers.Length);
+                Assert.That(1, Is.EqualTo(response.ProviderPeers.Length));
                 response.ProviderPeers[0].TryToPeer(out var found);
-                Assert.Equals(other, found);
+                Assert.That(other, Is.EqualTo(found));
                 Assert.That(0, Is.Not.EqualTo(found.Addresses.Count()));
             }
             finally
@@ -359,8 +359,8 @@ namespace Lib.P2P.Tests.Routing
                 var response = dht.ProcessAddProvider(other, request, new DhtMessage());
                 Assert.That(response, Is.Null);
                 var providers = dht.ContentRouter.Get(cid).ToArray();
-                Assert.Equals(1, providers.Length);
-                Assert.Equals(other.Id, providers[0]);
+                Assert.That(1, Is.EqualTo(providers.Length));
+                Assert.That(other.Id, Is.EqualTo(providers[0]));
 
                 var provider = swarm.KnownPeers.Single(p => p == other);
                 Assert.That(0, Is.Not.EqualTo(provider.Addresses.Count()));
@@ -418,7 +418,7 @@ namespace Lib.P2P.Tests.Routing
             try
             {
                 var peer = await dht.FindPeerAsync(unknownPeer);
-                Assert.Equals(other, peer);
+                Assert.That(other, Is.EqualTo(peer));
             }
             finally
             {
@@ -439,8 +439,8 @@ namespace Lib.P2P.Tests.Routing
             {
                 dht.ContentRouter.Add(cid, other.Id);
                 var peers = (await dht.FindProvidersAsync(cid, 1)).ToArray();
-                Assert.Equals(1, peers.Length);
-                Assert.Equals(other, peers[0]);
+                Assert.That(1, Is.EqualTo(peers.Length));
+                Assert.That(other, Is.EqualTo(peers[0]));
             }
             finally
             {
@@ -463,8 +463,8 @@ namespace Lib.P2P.Tests.Routing
 
                 await dht.ProvideAsync(cid);
                 var peers = (await dht.FindProvidersAsync(cid, 1)).ToArray();
-                Assert.Equals(1, peers.Length);
-                Assert.Equals(self, peers[0]);
+                Assert.That(1, Is.EqualTo(peers.Length));
+                Assert.That(self, Is.EqualTo(peers[0]));
             }
             finally
             {

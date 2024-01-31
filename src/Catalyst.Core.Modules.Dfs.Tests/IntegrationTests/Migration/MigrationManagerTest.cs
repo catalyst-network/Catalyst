@@ -70,10 +70,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.Migration
         {
             var migrator = new MigrationManager(_dfs.Options.Repository);
             await migrator.MirgrateToVersionAsync(0);
-            Assert.Equals(0, migrator.CurrentVersion);
+            Assert.That(0, Is.EqualTo(migrator.CurrentVersion));
 
             await migrator.MirgrateToVersionAsync(migrator.LatestVersion);
-            Assert.Equals(migrator.LatestVersion, migrator.CurrentVersion);
+            Assert.That(migrator.LatestVersion, Is.EqualTo(migrator.CurrentVersion));
         }
     }
 }

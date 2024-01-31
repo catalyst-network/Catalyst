@@ -35,10 +35,10 @@ namespace Lib.P2P.Tests.Protocols
             var ms = new MemoryStream();
             await Message.WriteAsync("a", ms);
             var buf = ms.ToArray();
-            Assert.Equals(3, buf.Length);
-            Assert.Equals(2, buf[0]);
-            Assert.Equals((byte) 'a', buf[1]);
-            Assert.Equals((byte) '\n', buf[2]);
+            Assert.That(3, Is.EqualTo(buf.Length));
+            Assert.That(2, Is.EqualTo(buf[0]));
+            Assert.That((byte) 'a', Is.EqualTo(buf[1]));
+            Assert.That((byte) '\n', Is.EqualTo(buf[2]));
         }
 
         [Test]
@@ -49,7 +49,7 @@ namespace Lib.P2P.Tests.Protocols
             await Message.WriteAsync(msg, ms);
             ms.Position = 0;
             var result = await Message.ReadStringAsync(ms);
-            Assert.Equals(msg, result);
+            Assert.That(msg, Is.EqualTo(result));
         }
     }
 }

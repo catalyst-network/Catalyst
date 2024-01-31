@@ -39,17 +39,17 @@ namespace MultiFormats.Tests
         public void Parsing()
         {
             var a = new MultiAddress(Somewhere);
-            Assert.Equals(3, a.Protocols.Count);
-            Assert.Equals("ip4", a.Protocols[0].Name);
-            Assert.Equals("10.1.10.10", a.Protocols[0].Value);
-            Assert.Equals("tcp", a.Protocols[1].Name);
-            Assert.Equals("29087", a.Protocols[1].Value);
-            Assert.Equals("ipfs", a.Protocols[2].Name);
-            Assert.Equals("QmVcSqVEsvm5RR9mBLjwpb2XjFVn5bPdPL69mL8PH45pPC", a.Protocols[2].Value);
+            Assert.That(3, Is.EqualTo(a.Protocols.Count));
+            Assert.That("ip4", Is.EqualTo(a.Protocols[0].Name));
+            Assert.That("10.1.10.10", Is.EqualTo(a.Protocols[0].Value));
+            Assert.That("tcp", Is.EqualTo(a.Protocols[1].Name));
+            Assert.That("29087", Is.EqualTo(a.Protocols[1].Value));
+            Assert.That("ipfs", Is.EqualTo(a.Protocols[2].Name));
+            Assert.That("QmVcSqVEsvm5RR9mBLjwpb2XjFVn5bPdPL69mL8PH45pPC", Is.EqualTo(a.Protocols[2].Value));
 
-            Assert.Equals(0, new MultiAddress((string)null).Protocols.Count);
-            Assert.Equals(0, new MultiAddress("").Protocols.Count);
-            Assert.Equals(0, new MultiAddress("  ").Protocols.Count);
+            Assert.That(0, Is.EqualTo(new MultiAddress((string)null).Protocols.Count));
+            Assert.That(0, Is.EqualTo(new MultiAddress("").Protocols.Count));
+            Assert.That(0, Is.EqualTo(new MultiAddress("  ").Protocols.Count));
         }
 
         [Test]
@@ -62,7 +62,7 @@ namespace MultiFormats.Tests
         public void Missing_Protocol_Name() { ExceptionAssert.Throws<FormatException>(() => new MultiAddress("/")); }
 
         [Test]
-        public new void ToString() { Assert.Equals(Somewhere, new MultiAddress(Somewhere).ToString()); }
+        public new void ToString() { Assert.That(Somewhere, Is.EqualTo(new MultiAddress(Somewhere).ToString())); }
 
         [Test]
         public void Value_Equality()
@@ -95,16 +95,16 @@ namespace MultiFormats.Tests
             Assert.That(a0.Equals(a1), Is.True);
             Assert.That(a0.Equals(b), Is.False);
 
-            Assert.Equals(a0, a0);
-            Assert.Equals(a0, a1);
+            Assert.That(a0, Is.EqualTo(a0));
+            Assert.That(a0, Is.EqualTo(a1));
             Assert.That(a0, Is.Not.EqualTo(b));
 
-            Assert.Equals(a0, a0);
-            Assert.Equals(a0, a1);
+            Assert.That(a0, Is.EqualTo(a0));
+            Assert.That(a0, Is.EqualTo(a1));
             Assert.That(a0, Is.Not.EqualTo(b));
 
-            Assert.Equals(a0.GetHashCode(), a0.GetHashCode());
-            Assert.Equals(a0.GetHashCode(), a1.GetHashCode());
+            Assert.That(a0.GetHashCode(), Is.EqualTo(a0.GetHashCode()));
+            Assert.That(a0.GetHashCode(), Is.EqualTo(a1.GetHashCode()));
             Assert.That(a0.GetHashCode(), Is.Not.EqualTo(b.GetHashCode()));
         }
 
@@ -187,13 +187,13 @@ namespace MultiFormats.Tests
                 ma0.Write(ms);
                 ms.Position = 0;
                 var ma1 = new MultiAddress(ms);
-                Assert.Equals(ma0, ma1);
+                Assert.That(ma0, Is.EqualTo(ma1));
 
                 var ma2 = new MultiAddress(ma0.ToString());
-                Assert.Equals(ma0, ma2);
+                Assert.That(ma0, Is.EqualTo(ma2));
 
                 var ma3 = new MultiAddress(ma0.ToArray());
-                Assert.Equals(ma0, ma3);
+                Assert.That(ma0, Is.EqualTo(ma3));
             }
         }
 
@@ -222,38 +222,38 @@ namespace MultiFormats.Tests
         [Test]
         public void Wire_Formats()
         {
-            Assert.Equals(
+            Assert.That(
                 new MultiAddress("/ip4/127.0.0.1/udp/1234").ToArray().ToHexString(),
-                "047f000001910204d2");
-            Assert.Equals(
+                Is.EqualTo("047f000001910204d2"));
+            Assert.That(
                 new MultiAddress("/ip4/127.0.0.1/udp/1234/ip4/127.0.0.1/tcp/4321").ToArray().ToHexString(),
-                "047f000001910204d2047f0000010610e1");
-            Assert.Equals(
+                Is.EqualTo("047f000001910204d2047f0000010610e1"));
+            Assert.That(
                 new MultiAddress("/ip6/2001:8a0:7ac5:4201:3ac9:86ff:fe31:7095").ToArray().ToHexString(),
-                "29200108a07ac542013ac986fffe317095");
-            Assert.Equals(
+                Is.EqualTo("29200108a07ac542013ac986fffe317095"));
+            Assert.That(
                 new MultiAddress("/ipfs/QmcgpsyWgH8Y8ajJz1Cu72KnS5uo2Aa2LpzU7kinSupNKC").ToArray().ToHexString(),
-                "a503221220d52ebb89d85b02a284948203a62ff28389c57c9f42beec4ec20db76a68911c0b");
-            Assert.Equals(
+                Is.EqualTo("a503221220d52ebb89d85b02a284948203a62ff28389c57c9f42beec4ec20db76a68911c0b"));
+            Assert.That(
                 new MultiAddress("/ip4/127.0.0.1/udp/1234/utp").ToArray().ToHexString(),
-                "047f000001910204d2ae02");
-            Assert.Equals(
+                Is.EqualTo("047f000001910204d2ae02"));
+            Assert.That(
                 new MultiAddress("/onion/aaimaq4ygg2iegci:80").ToArray().ToHexString(),
-                "bc030010c0439831b48218480050");
+                Is.EqualTo("bc030010c0439831b48218480050"));
         }
 
         [Test]
         public void PeerID_With_ipfs()
         {
             var ma = new MultiAddress("/ip4/10.1.10.10/tcp/29087/ipfs/QmVcSqVEsvm5RR9mBLjwpb2XjFVn5bPdPL69mL8PH45pPC");
-            Assert.Equals("QmVcSqVEsvm5RR9mBLjwpb2XjFVn5bPdPL69mL8PH45pPC", ma.PeerId.ToBase58());
+            Assert.That("QmVcSqVEsvm5RR9mBLjwpb2XjFVn5bPdPL69mL8PH45pPC", Is.EqualTo(ma.PeerId.ToBase58()));
         }
 
         [Test]
         public void PeerID_With_p2p()
         {
             var ma = new MultiAddress("/ip4/10.1.10.10/tcp/29087/p2p/QmVcSqVEsvm5RR9mBLjwpb2XjFVn5bPdPL69mL8PH45pPC");
-            Assert.Equals("QmVcSqVEsvm5RR9mBLjwpb2XjFVn5bPdPL69mL8PH45pPC", ma.PeerId.ToBase58());
+            Assert.That("QmVcSqVEsvm5RR9mBLjwpb2XjFVn5bPdPL69mL8PH45pPC", Is.EqualTo(ma.PeerId.ToBase58()));
         }
 
         [Test]
@@ -262,7 +262,7 @@ namespace MultiFormats.Tests
             var ipfs = new MultiAddress(
                 "/ip4/10.1.10.10/tcp/29087/ipfs/QmVcSqVEsvm5RR9mBLjwpb2XjFVn5bPdPL69mL8PH45pPC");
             var p2P = new MultiAddress("/ip4/10.1.10.10/tcp/29087/p2p/QmVcSqVEsvm5RR9mBLjwpb2XjFVn5bPdPL69mL8PH45pPC");
-            Assert.Equals(ipfs, p2P);
+            Assert.That(ipfs, Is.EqualTo(p2P));
 
             var p2P1 = new MultiAddress("/ip4/10.1.10.10/tcp/29087/p2p/QmVCSqVEsvm5RR9mBLjwpb2XjFVn5bPdPL69mL8PH45pPC");
             Assert.That(p2P, Is.Not.EqualTo(p2P1));
@@ -298,17 +298,17 @@ namespace MultiFormats.Tests
         {
             var ma1 = new MultiAddress("/ip4/10.1.10.10/tcp/29087");
             var ma2 = ma1.Clone();
-            Assert.Equals(ma1, ma2);
-            Assert.That(ma1, Is.Not.EqualTo(ma2));
-            Assert.That(ma1.Protocols, Is.Not.EqualTo(ma2.Protocols));
+            Assert.That(ma1, Is.EqualTo(ma2));
+            Assert.That(ma1, Is.EqualTo(ma2));
+            Assert.That(ma1.Protocols, Is.EqualTo(ma2.Protocols));
             for (var i = 0; i < ma1.Protocols.Count; ++i)
             {
                 var p1 = ma1.Protocols[i];
                 var p2 = ma2.Protocols[i];
-                Assert.Equals(p1.Code, p2.Code);
-                Assert.Equals(p1.Name, p2.Name);
-                Assert.Equals(p1.Value, p2.Value);
-                Assert.That(p1, Is.Not.EqualTo(p2));
+                Assert.That(p1.Code, Is.EqualTo(p2.Code));
+                Assert.That(p1.Name, Is.EqualTo(p2.Name));
+                Assert.That(p1.Value, Is.EqualTo(p2.Value));
+                Assert.That(p1, Is.EqualTo(p2));
             }
         }
 
@@ -317,8 +317,8 @@ namespace MultiFormats.Tests
         {
             var ma1 = new MultiAddress("/ip6/fe80::7573:b0a8:46b0:0bad%17/tcp/4009");
             var ma2 = new MultiAddress("/ip6/fe80::7573:b0a8:46b0:0bad/tcp/4009");
-            Assert.Equals(ma2, ma1);
-            Assert.Equals(ma2.ToString(), ma1.ToString());
+            Assert.That(ma2, Is.EqualTo(ma1));
+            Assert.That(ma2.ToString(), Is.EqualTo(ma1.ToString()));
         }
 
         [Test]
@@ -334,7 +334,7 @@ namespace MultiFormats.Tests
         {
             var good = MultiAddress.TryCreate("/ip4/1.2.3.4/tcp/80");
             var good1 = MultiAddress.TryCreate(good.ToArray());
-            Assert.Equals(good, good1);
+            Assert.That(good, Is.EqualTo(good1));
 
             Assert.That(MultiAddress.TryCreate(new byte[]
             {
@@ -347,9 +347,9 @@ namespace MultiFormats.Tests
         {
             var a = new MultiAddress("/ip6/fe80::7573:b0a8:46b0:0bad/tcp/4009");
             var json = JsonConvert.SerializeObject(a);
-            Assert.Equals($"\"{a}\"", json);
+            Assert.That($"\"{a}\"", Is.EqualTo(json));
             var b = JsonConvert.DeserializeObject<MultiAddress>(json);
-            Assert.Equals(a.ToString(), b.ToString());
+            Assert.That(a.ToString(), Is.EqualTo(b.ToString()));
 
             json = JsonConvert.SerializeObject(null);
             b = JsonConvert.DeserializeObject<MultiAddress>(json);
@@ -363,18 +363,18 @@ namespace MultiFormats.Tests
             const string id3 = "QmQusTXc1Z9C1mzxsqC9ZTFXCgSkpBRGgW4Jk2QYHxKE33";
 
             var ma1 = new MultiAddress("/ip4/127.0.0.1/tcp/4001");
-            Assert.Equals($"{ma1}/p2p/{id}", ma1.WithPeerId(id));
+            Assert.That($"{ma1}/p2p/{id}", Is.EqualTo(ma1.WithPeerId(id).ToString()));
 
             ma1 = new MultiAddress($"/ip4/127.0.0.1/tcp/4001/ipfs/{id}");
-            Assert.Equals(ma1, ma1.WithPeerId(id));
+            Assert.That(ma1, Is.EqualTo(ma1.WithPeerId(id)));
 
             ma1 = new MultiAddress($"/ip4/127.0.0.1/tcp/4001/p2p/{id}");
-            Assert.Equals(ma1, ma1.WithPeerId(id));
+            Assert.That(ma1, Is.EqualTo(ma1.WithPeerId(id)));
 
             ExceptionAssert.Throws<Exception>(() =>
             {
                 ma1 = new MultiAddress($"/ip4/127.0.0.1/tcp/4001/ipfs/{id3}");
-                Assert.Equals(ma1, ma1.WithPeerId(id));
+                Assert.That(ma1, Is.EqualTo(ma1.WithPeerId(id)));
             });
         }
 
@@ -384,13 +384,13 @@ namespace MultiFormats.Tests
             var id = "QmQusTXc1Z9C1mzxsqC9ZTFXCgSkpBRGgW4Jk2QYHxKE22";
 
             var ma1 = new MultiAddress("/ip4/127.0.0.1/tcp/4001");
-            Assert.Equals(ma1, ma1.WithoutPeerId());
+            Assert.That(ma1, Is.EqualTo(ma1.WithoutPeerId()));
 
             ma1 = new MultiAddress($"/ip4/127.0.0.1/tcp/4001/ipfs/{id}");
-            Assert.Equals("/ip4/127.0.0.1/tcp/4001", ma1.WithoutPeerId());
+            Assert.That("/ip4/127.0.0.1/tcp/4001", Is.EqualTo(ma1.WithoutPeerId().ToString()));
 
             ma1 = new MultiAddress($"/ip4/127.0.0.1/tcp/4001/p2p/{id}");
-            Assert.Equals("/ip4/127.0.0.1/tcp/4001", ma1.WithoutPeerId());
+            Assert.That("/ip4/127.0.0.1/tcp/4001", Is.EqualTo(ma1.WithoutPeerId().ToString()));
         }
 
         [Test]
@@ -399,9 +399,9 @@ namespace MultiFormats.Tests
             var a = new MultiAddress("/ipfs/QmQusTXc1Z9C1mzxsqC9ZTFXCgSkpBRGgW4Jk2QYHxKE22");
             var b = new MultiAddress("/p2p/QmQusTXc1Z9C1mzxsqC9ZTFXCgSkpBRGgW4Jk2QYHxKE22");
 
-            Assert.Equals(a, b);
+            Assert.That(a, Is.EqualTo(b));
             Assert.That(a == b, Is.True);
-            Assert.Equals(a.GetHashCode(), b.GetHashCode());
+            Assert.That(a.GetHashCode(), Is.EqualTo(b.GetHashCode()));
         }
 
         [Test]
@@ -416,20 +416,20 @@ namespace MultiFormats.Tests
         public void FromIpAddress()
         {
             var ma = new MultiAddress(IPAddress.Loopback);
-            Assert.Equals("/ip4/127.0.0.1", ma.ToString());
+            Assert.That("/ip4/127.0.0.1", Is.EqualTo(ma.ToString()));
 
             ma = new MultiAddress(IPAddress.IPv6Loopback);
-            Assert.Equals("/ip6/::1", ma.ToString());
+            Assert.That("/ip6/::1", Is.EqualTo(ma.ToString()));
         }
 
         [Test]
         public void FromIpEndpoint()
         {
             var ma = new MultiAddress(new IPEndPoint(IPAddress.Loopback, 4001));
-            Assert.Equals("/ip4/127.0.0.1/tcp/4001", ma.ToString());
+            Assert.That("/ip4/127.0.0.1/tcp/4001", Is.EqualTo(ma.ToString()));
 
             ma = new MultiAddress(new IPEndPoint(IPAddress.IPv6Loopback, 4002));
-            Assert.Equals("/ip6/::1/tcp/4002", ma.ToString());
+            Assert.That("/ip6/::1/tcp/4002", Is.EqualTo(ma.ToString()));
         }
     }
 }

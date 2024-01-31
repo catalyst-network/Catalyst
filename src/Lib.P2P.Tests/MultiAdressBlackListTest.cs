@@ -70,41 +70,41 @@ namespace Lib.P2P.Tests
 
             var policy = new MultiAddressBlackList();
             Assert.That(policy.IsReadOnly, Is.False);
-            Assert.Equals(0, policy.Count);
+            Assert.That(0, Is.EqualTo(policy.Count));
             Assert.That(policy.Contains(addressA), Is.False);
             Assert.That(policy.Contains(addressB), Is.False);
 
             policy.Add(addressA);
-            Assert.Equals(1, policy.Count);
+            Assert.That(1, Is.EqualTo(policy.Count));
             Assert.That(policy.Contains(addressA), Is.True);
             Assert.That(policy.Contains(addressB), Is.False);
 
             policy.Add(addressA);
-            Assert.Equals(1, policy.Count);
+            Assert.That(1, Is.EqualTo(policy.Count));
             Assert.That(policy.Contains(addressA), Is.True);
             Assert.That(policy.Contains(addressB), Is.False);
 
             policy.Add(addressB);
-            Assert.Equals(2, policy.Count);
+            Assert.That(2, Is.EqualTo(policy.Count));
             Assert.That(policy.Contains(addressA), Is.True);
             Assert.That(policy.Contains(addressB), Is.True);
 
             policy.Remove(addressB);
-            Assert.Equals(1, policy.Count);
+            Assert.That(1, Is.EqualTo(policy.Count));
             Assert.That(policy.Contains(addressA), Is.True);
             Assert.That(policy.Contains(addressB), Is.False);
 
             var array = new MultiAddress[1];
             policy.CopyTo(array, 0);
-            Assert.Equals(addressA, array[0]);
+            Assert.That(addressA, Is.EqualTo(array[0]));
 
             foreach (var filter in policy)
             {
-                Assert.Equals(addressA, filter);
+                Assert.That(addressA, Is.EqualTo(filter));
             }
 
             policy.Clear();
-            Assert.Equals(0, policy.Count);
+            Assert.That(0, Is.EqualTo(policy.Count));
             Assert.That(policy.Contains(addressA), Is.False);
             Assert.That(policy.Contains(addressB), Is.False);
         }

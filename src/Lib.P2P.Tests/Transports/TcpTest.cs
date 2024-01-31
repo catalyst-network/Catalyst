@@ -134,7 +134,7 @@ namespace Lib.P2P.Tests.Transports
             void Handler(Stream stream, MultiAddress local, MultiAddress remote)
             {
                 Assert.That(stream, Is.Not.Null);
-                Assert.Equals(listenerAddress, local);
+                Assert.That(listenerAddress, Is.EqualTo(local));
                 Assert.That(remote, Is.Not.Null);
                 Assert.That(local, Is.Not.EqualTo(remote));
                 connected = true;
@@ -199,7 +199,7 @@ namespace Lib.P2P.Tests.Transports
                 {
                     var bytes = new byte[5];
                     await stream.ReadAsync(bytes, 0, bytes.Length, cs.Token);
-                    Assert.Equals("hello", Encoding.UTF8.GetString(bytes));
+                    Assert.That("hello", Is.EqualTo(Encoding.UTF8.GetString(bytes)));
                 }
             }
         }

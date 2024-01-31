@@ -35,10 +35,10 @@ namespace Lib.P2P.Tests.PubSub
         public void Adding()
         {
             var topics = new TopicManager();
-            Assert.Equals(0, topics.GetPeers("alpha").Count());
+            Assert.That(0, Is.EqualTo(topics.GetPeers("alpha").Count()));
 
             topics.AddInterest("alpha", a);
-            Assert.Equals(a, topics.GetPeers("alpha").First());
+            Assert.That(a, Is.EqualTo(topics.GetPeers("alpha").First()));
 
             topics.AddInterest("alpha", b);
             var peers = topics.GetPeers("alpha").ToArray();
@@ -50,76 +50,76 @@ namespace Lib.P2P.Tests.PubSub
         public void Adding_Duplicate()
         {
             var topics = new TopicManager();
-            Assert.Equals(0, topics.GetPeers("alpha").Count());
+            Assert.That(0, Is.EqualTo(topics.GetPeers("alpha").Count()));
 
             topics.AddInterest("alpha", a);
-            Assert.Equals(1, topics.GetPeers("alpha").Count());
+            Assert.That(1, Is.EqualTo(topics.GetPeers("alpha").Count()));
 
             topics.AddInterest("alpha", a);
-            Assert.Equals(1, topics.GetPeers("alpha").Count());
+            Assert.That(1, Is.EqualTo(topics.GetPeers("alpha").Count()));
 
             topics.AddInterest("alpha", b);
-            Assert.Equals(2, topics.GetPeers("alpha").Count());
+            Assert.That(2, Is.EqualTo(topics.GetPeers("alpha").Count()));
         }
 
         [Test]
         public void Removing()
         {
             var topics = new TopicManager();
-            Assert.Equals(0, topics.GetPeers("alpha").Count());
+            Assert.That(0, Is.EqualTo(topics.GetPeers("alpha").Count()));
 
             topics.AddInterest("alpha", a);
             topics.AddInterest("alpha", b);
-            Assert.Equals(2, topics.GetPeers("alpha").Count());
+            Assert.That(2, Is.EqualTo(topics.GetPeers("alpha").Count()));
 
             topics.RemoveInterest("alpha", a);
-            Assert.Equals(b, topics.GetPeers("alpha").First());
-            Assert.Equals(1, topics.GetPeers("alpha").Count());
+            Assert.That(b, Is.EqualTo(topics.GetPeers("alpha").First()));
+            Assert.That(1, Is.EqualTo(topics.GetPeers("alpha").Count()));
 
             topics.RemoveInterest("alpha", a);
-            Assert.Equals(b, topics.GetPeers("alpha").First());
-            Assert.Equals(1, topics.GetPeers("alpha").Count());
+            Assert.That(b, Is.EqualTo(topics.GetPeers("alpha").First()));
+            Assert.That(1, Is.EqualTo(topics.GetPeers("alpha").Count()));
 
             topics.RemoveInterest("alpha", b);
-            Assert.Equals(0, topics.GetPeers("alpha").Count());
+            Assert.That(0, Is.EqualTo(topics.GetPeers("alpha").Count()));
 
             topics.RemoveInterest("beta", b);
-            Assert.Equals(0, topics.GetPeers("beta").Count());
+            Assert.That(0, Is.EqualTo(topics.GetPeers("beta").Count()));
         }
 
         [Test]
         public void Clearing_Peers()
         {
             var topics = new TopicManager();
-            Assert.Equals(0, topics.GetPeers("alpha").Count());
-            Assert.Equals(0, topics.GetPeers("beta").Count());
+            Assert.That(0, Is.EqualTo(topics.GetPeers("alpha").Count()));
+            Assert.That(0, Is.EqualTo(topics.GetPeers("beta").Count()));
 
             topics.AddInterest("alpha", a);
             topics.AddInterest("beta", a);
             topics.AddInterest("beta", b);
-            Assert.Equals(1, topics.GetPeers("alpha").Count());
-            Assert.Equals(2, topics.GetPeers("beta").Count());
+            Assert.That(1, Is.EqualTo(topics.GetPeers("alpha").Count()));
+            Assert.That(2, Is.EqualTo(topics.GetPeers("beta").Count()));
 
             topics.Clear(a);
-            Assert.Equals(0, topics.GetPeers("alpha").Count());
-            Assert.Equals(1, topics.GetPeers("beta").Count());
+            Assert.That(0, Is.EqualTo(topics.GetPeers("alph)").Count()));
+            Assert.That(1, Is.EqualTo(topics.GetPeers("beta").Count()));
         }
 
         [Test]
         public void Clearing()
         {
             var topics = new TopicManager();
-            Assert.Equals(0, topics.GetPeers("alpha").Count());
-            Assert.Equals(0, topics.GetPeers("beta").Count());
+            Assert.That(0, Is.EqualTo(topics.GetPeers("alpha").Count()));
+            Assert.That(0, Is.EqualTo(topics.GetPeers("beta").Count()));
 
             topics.AddInterest("alpha", a);
             topics.AddInterest("beta", b);
-            Assert.Equals(1, topics.GetPeers("alpha").Count());
-            Assert.Equals(1, topics.GetPeers("beta").Count());
+            Assert.That(1, Is.EqualTo(topics.GetPeers("alpha").Count()));
+            Assert.That(1, Is.EqualTo(topics.GetPeers("beta").Count()));
 
             topics.Clear();
-            Assert.Equals(0, topics.GetPeers("alpha").Count());
-            Assert.Equals(0, topics.GetPeers("beta").Count());
+            Assert.That(0, Is.EqualTo(topics.GetPeers("alpha").Count()));
+            Assert.That(0, Is.EqualTo(topics.GetPeers("beta").Count()));
         }
 
         [Test]

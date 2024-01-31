@@ -147,7 +147,7 @@ namespace Lib.P2P.Tests
             {
                 var _ = swarm.RegisterPeerAddress("/ip4/10.1.10.10/tcp/29087");
             });
-            Assert.Equals(0, swarm.KnownPeerAddresses.Count());
+            Assert.That(0, Is.EqualTo(swarm.KnownPeerAddresses.Count()));
         }
 
         [Test]
@@ -155,30 +155,30 @@ namespace Lib.P2P.Tests
         {
             var swarm = new SwarmService {LocalPeer = _self};
             swarm.RegisterPeerAddress(_mars);
-            Assert.Equals(1, swarm.KnownPeerAddresses.Count());
+            Assert.That(1, Is.EqualTo(swarm.KnownPeerAddresses.Count()));
 
             swarm.RegisterPeerAddress(_mars);
-            Assert.Equals(1, swarm.KnownPeerAddresses.Count());
+            Assert.That(1, Is.EqualTo(swarm.KnownPeerAddresses.Count()));
         }
 
         [Test]
         public void KnownPeers()
         {
             var swarm = new SwarmService {LocalPeer = _self};
-            Assert.Equals(0, swarm.KnownPeers.Count());
-            Assert.Equals(0, swarm.KnownPeerAddresses.Count());
+            Assert.That(0, Is.EqualTo(swarm.KnownPeers.Count()));
+            Assert.That(0, Is.EqualTo(swarm.KnownPeerAddresses.Count()));
 
             swarm.RegisterPeerAddress("/ip4/10.1.10.10/tcp/29087/ipfs/QmSoLMeWqB7YGVLJN3pNLQpmmEk35v6wYtsMGLzSr5QBU3");
-            Assert.Equals(1, swarm.KnownPeers.Count());
-            Assert.Equals(1, swarm.KnownPeerAddresses.Count());
+            Assert.That(1, Is.EqualTo(swarm.KnownPeers.Count()));
+            Assert.That(1, Is.EqualTo(swarm.KnownPeerAddresses.Count()));
 
             swarm.RegisterPeerAddress("/ip4/10.1.10.11/tcp/29087/p2p/QmSoLMeWqB7YGVLJN3pNLQpmmEk35v6wYtsMGLzSr5QBU3");
-            Assert.Equals(1, swarm.KnownPeers.Count());
-            Assert.Equals(2, swarm.KnownPeerAddresses.Count());
+            Assert.That(1, Is.EqualTo(swarm.KnownPeers.Count()));
+            Assert.That(2, Is.EqualTo(swarm.KnownPeerAddresses.Count()));
 
             swarm.RegisterPeerAddress(_venus);
-            Assert.Equals(2, swarm.KnownPeers.Count());
-            Assert.Equals(3, swarm.KnownPeerAddresses.Count());
+            Assert.That(2, Is.EqualTo(swarm.KnownPeers.Count()));
+            Assert.That(3, Is.EqualTo(swarm.KnownPeerAddresses.Count()));
         }
 
         [Test]
@@ -202,7 +202,7 @@ namespace Lib.P2P.Tests
             {
                 var remotePeer = (await swarm.ConnectAsync(peerBAddress)).RemotePeer;
                 Assert.That(remotePeer.ConnectedAddress, Is.Not.Null);
-                Assert.Equals(peerB.PublicKey, remotePeer.PublicKey);
+                Assert.That(peerB.PublicKey, Is.EqualTo(remotePeer.PublicKey));
                 Assert.That(remotePeer.IsValid(), Is.True);
                 Assert.That(swarm.KnownPeers.Contains(peerB), Is.True);
 
@@ -224,8 +224,8 @@ namespace Lib.P2P.Tests
                 }
 
                 var me = swarmB.KnownPeers.First(p => p == _self);
-                Assert.Equals(_self.Id, me.Id);
-                Assert.Equals(_self.PublicKey, me.PublicKey);
+                Assert.That(_self.Id, Is.EqualTo(me.Id));
+                Assert.That(_self.PublicKey, Is.EqualTo(me.PublicKey));
                 Assert.That(me.ConnectedAddress, Is.Not.Null);
 
                 // Check disconnect
@@ -280,7 +280,7 @@ namespace Lib.P2P.Tests
             {
                 var remotePeer = (await swarm.ConnectAsync(peerBAddress)).RemotePeer;
                 Assert.That(remotePeer.ConnectedAddress, Is.Not.Null);
-                Assert.Equals(peerB.PublicKey, remotePeer.PublicKey);
+                Assert.That(peerB.PublicKey, Is.EqualTo(remotePeer.PublicKey));
                 Assert.That(remotePeer.IsValid(), Is.True);
                 Assert.That(swarm.KnownPeers.Contains(peerB), Is.True);
 
@@ -302,8 +302,8 @@ namespace Lib.P2P.Tests
                 }
 
                 var me = swarmB.KnownPeers.First(p => p == _self);
-                Assert.Equals(_self.Id, me.Id);
-                Assert.Equals(_self.PublicKey, me.PublicKey);
+                Assert.That(_self.Id, Is.EqualTo(me.Id));
+                Assert.That(_self.PublicKey, Is.EqualTo(me.PublicKey));
                 Assert.That(me.ConnectedAddress, Is.Not.Null);
 
                 // Check disconnect
@@ -332,7 +332,7 @@ namespace Lib.P2P.Tests
                 // Reconnect
                 remotePeer = (await swarm.ConnectAsync(peerBAddress)).RemotePeer;
                 Assert.That(remotePeer.ConnectedAddress, Is.Not.Null);
-                Assert.Equals(peerB.PublicKey, remotePeer.PublicKey);
+                Assert.That(peerB.PublicKey, Is.EqualTo(remotePeer.PublicKey));
                 Assert.That(remotePeer.IsValid(), Is.True);
                 Assert.That(swarm.KnownPeers.Contains(peerB), Is.True);
             }
@@ -363,7 +363,7 @@ namespace Lib.P2P.Tests
             {
                 var connection = await swarm.ConnectAsync(peerBAddress);
                 var remote = connection.RemotePeer;
-                Assert.Equals(remote.ConnectedAddress, peerBAddress);
+                Assert.That(remote.ConnectedAddress, Is.EqualTo(peerBAddress));
                 Assert.That(remote.Addresses.ToArray(), Contains.Item(peerBAddress));
             }
             finally
@@ -400,7 +400,7 @@ namespace Lib.P2P.Tests
                 MultiAddress ma = $"/ip4/127.0.0.100/tcp/{peerBPort}/ipfs/{peerB.Id}";
                 var connection = await swarm.ConnectAsync(ma);
                 var remote = connection.RemotePeer;
-                Assert.Equals(remote.ConnectedAddress, ma);
+                Assert.That(remote.ConnectedAddress, Is.EqualTo(ma));
                 Assert.That(remote.Addresses.ToArray(), Contains.Item(ma));
             }
             finally
@@ -496,7 +496,7 @@ namespace Lib.P2P.Tests
             {
                 var remotePeer = (await swarm.ConnectAsync(peerB)).RemotePeer;
                 Assert.That(remotePeer.ConnectedAddress, Is.Not.Null);
-                Assert.Equals(peerB.PublicKey, remotePeer.PublicKey);
+                Assert.That(peerB.PublicKey, Is.EqualTo(remotePeer.PublicKey));
                 Assert.That(remotePeer.IsValid(), Is.True);
                 Assert.That(swarm.KnownPeers.Contains(peerB), Is.True);
             }
@@ -530,7 +530,7 @@ namespace Lib.P2P.Tests
             try
             {
                 var _ = await swarm.ConnectAsync(peerBAddress);
-                Assert.Equals(1, swarmConnections);
+                Assert.That(1, Is.EqualTo(swarmConnections));
 
                 // wait for swarmB to settle
                 var endTime = DateTime.Now.AddSeconds(3);
@@ -618,7 +618,7 @@ namespace Lib.P2P.Tests
             }
 
             Assert.That(unreachable, Is.Not.Null);
-            Assert.Equals(remoteId, unreachable.Id.ToBase58());
+            Assert.That(remoteId, Is.EqualTo(unreachable.Id.ToBase58()));
         }
 
         [Test]
@@ -740,10 +740,10 @@ namespace Lib.P2P.Tests
             try
             {
                 var _ = await swarm.ConnectAsync(peerBAddress);
-                Assert.Equals(1, swarmConnections);
+                Assert.That(1, Is.EqualTo(swarmConnections));
 
                 await swarm.StopAsync();
-                Assert.Equals(0, swarmConnections);
+                Assert.That(0, Is.EqualTo(swarmConnections));
             }
             finally
             {
@@ -781,7 +781,7 @@ namespace Lib.P2P.Tests
                 Assert.That(swarmB.KnownPeers.Contains(peerA), Is.True);
 
                 await swarmA.StopListeningAsync(addr);
-                Assert.Equals(0, peerA.Addresses.Count());
+                Assert.That(0, Is.EqualTo(peerA.Addresses.Count()));
             }
             finally
             {
@@ -809,13 +809,13 @@ namespace Lib.P2P.Tests
                 Assert.That(peer.Addresses.Any(), Is.True);
 
                 await swarm.StopListeningAsync(addr);
-                Assert.Equals(0, peer.Addresses.Count());
+                Assert.That(0, Is.EqualTo(peer.Addresses.Count()));
 
                 await swarm.StartListeningAsync(addr);
                 Assert.That(peer.Addresses.Any(), Is.True);
 
                 await swarm.StopListeningAsync(addr);
-                Assert.Equals(0, peer.Addresses.Count());
+                Assert.That(0, Is.EqualTo(peer.Addresses.Count()));
             }
             finally
             {
@@ -841,13 +841,13 @@ namespace Lib.P2P.Tests
                 await swarm.StartListeningAsync(addr);
                 Assert.That(peer.Addresses.Any(), Is.True);
                 await swarm.StopAsync();
-                Assert.Equals(0, peer.Addresses.Count());
+                Assert.That(0, Is.EqualTo(peer.Addresses.Count()));
 
                 await swarm.StartAsync();
                 await swarm.StartListeningAsync(addr);
                 Assert.That(peer.Addresses.Any(), Is.True);
                 await swarm.StopAsync();
-                Assert.Equals(0, peer.Addresses.Count());
+                Assert.That(0, Is.EqualTo(peer.Addresses.Count()));
             }
             catch (Exception)
             {
@@ -872,7 +872,7 @@ namespace Lib.P2P.Tests
             try
             {
                 await swarm.StartListeningAsync(addr);
-                Assert.Equals(peer, listeningPeer);
+                Assert.That(peer, Is.EqualTo(listeningPeer));
                 Assert.That(0, Is.Not.EqualTo(peer.Addresses.Count()));
             }
             finally
@@ -953,7 +953,7 @@ namespace Lib.P2P.Tests
                 // TODO: Assert.IsTrue(swarmA.KnownPeers.Contains(peerB));
 
                 await swarmA.StopListeningAsync(addr);
-                Assert.Equals(0, peerA.Addresses.Count());
+                Assert.That(0, Is.EqualTo(peerA.Addresses.Count()));
             }
             finally
             {
@@ -995,7 +995,7 @@ namespace Lib.P2P.Tests
                 // TODO: Assert.IsTrue(swarmA.KnownPeers.Contains(peerB));
 
                 await swarmA.StopListeningAsync(addr);
-                Assert.Equals(0, peerA.Addresses.Count());
+                Assert.That(0, Is.EqualTo(peerA.Addresses.Count()));
             }
             finally
             {
@@ -1018,14 +1018,14 @@ namespace Lib.P2P.Tests
             {
                 var _ = swarm.StartListeningAsync("/ip4/127.0.0.1").Result;
             });
-            Assert.Equals(0, peer.Addresses.Count());
+            Assert.That(0, Is.EqualTo(peer.Addresses.Count()));
         }
 
         [Test]
         public void LocalPeer()
         {
             var swarm = new SwarmService {LocalPeer = _self};
-            Assert.Equals(_self, swarm.LocalPeer)
+            Assert.That(_self, Is.EqualTo(swarm.LocalPeer))
                 ;
             ExceptionAssert.Throws<ArgumentNullException>(() => { swarm.LocalPeer = null; });
             ExceptionAssert.Throws<ArgumentNullException>(() => { swarm.LocalPeer = new Peer {Id = _self.Id}; });
@@ -1039,7 +1039,7 @@ namespace Lib.P2P.Tests
             });
 
             swarm.LocalPeer = new Peer {Id = _other.Id, PublicKey = _other.PublicKey};
-            Assert.Equals(_other, swarm.LocalPeer);
+            Assert.That(_other, Is.EqualTo(swarm.LocalPeer));
         }
 
         [Test]
@@ -1160,7 +1160,7 @@ namespace Lib.P2P.Tests
             swarm.RegisterPeer(new Peer {Id = "QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCM1j"});
             swarm.RegisterPeer(new Peer {Id = "QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCM1j"});
 
-            Assert.Equals(3, peerCount);
+            Assert.That(3, Is.EqualTo(peerCount));
         }
 
         [Test]
@@ -1196,7 +1196,7 @@ namespace Lib.P2P.Tests
             try
             {
                 var _ = await swarm.ConnectAsync(peerBAddress);
-                Assert.Equals(2, OpenNetwork.Count);
+                Assert.That(2, Is.EqualTo(OpenNetwork.Count));
             }
             finally
             {
@@ -1216,7 +1216,7 @@ namespace Lib.P2P.Tests
             swarm.PeerRemoved += (s, e) => removedPeer = e;
             swarm.DeregisterPeer(_other);
             Assert.That(swarm.KnownPeers.Contains(_other), Is.False);
-            Assert.Equals(_other, removedPeer);
+            Assert.That(_other, Is.EqualTo(removedPeer));
         }
 
         [Test]

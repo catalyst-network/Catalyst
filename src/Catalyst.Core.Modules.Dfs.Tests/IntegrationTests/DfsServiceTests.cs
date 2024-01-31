@@ -142,18 +142,18 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             Assert.That(0, Is.Not.EqualTo(peer.Addresses.Count()));
             await _dfs1.StopAsync();
             Assert.That(_dfs1.IsStarted, Is.False);
-            Assert.Equals(0, peer.Addresses.Count());
+            Assert.That(0, Is.EqualTo(peer.Addresses.Count()));
 
             await _dfs1.StartAsync();
             Assert.That(0, Is.Not.EqualTo(peer.Addresses.Count()));
             await _dfs1.StopAsync();
-            Assert.Equals(0, peer.Addresses.Count());
+            Assert.That(0, Is.EqualTo(peer.Addresses.Count()));
 
             await _dfs1.StartAsync();
             Assert.That(0, Is.Not.EqualTo(peer.Addresses.Count()));
             ExceptionAssert.Throws<Exception>(() => _dfs1.StartAsync().Wait());
             await _dfs1.StopAsync();
-            Assert.Equals(0, peer.Addresses.Count());
+            Assert.That(0, Is.EqualTo(peer.Addresses.Count()));
         }
 
         [Test]
@@ -170,9 +170,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
                 Assert.That(0, Is.Not.EqualTo(peer2.Addresses.Count()));
 
                 await _dfs2.StopAsync();
-                Assert.Equals(0, peer2.Addresses.Count());
+                Assert.That(0, Is.EqualTo(peer2.Addresses.Count()));
                 await _dfs1.StopAsync();
-                Assert.Equals(0, peer1.Addresses.Count());
+                Assert.That(0, Is.EqualTo(peer1.Addresses.Count()));
             }
         }
 
@@ -196,7 +196,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
                 Task.Run(() => _dfs1.LocalPeer)
             };
             var r = await Task.WhenAll(tasks);
-            Assert.Equals(r[0], r[1]);
+            Assert.That(r[0], Is.EqualTo(r[1]));
         }
 
         [Test]
@@ -208,7 +208,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
                 Task.Run(() => _dfs1.KeyApi)
             };
             var r = await Task.WhenAll(tasks);
-            Assert.Equals(r[0], r[1]);
+            Assert.That(r[0], Is.EqualTo(r[1]));
         }
 
         //todo

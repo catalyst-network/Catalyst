@@ -40,28 +40,28 @@ namespace Catalyst.KBucket
             Bucket<Contact> actual;
 
             actual = kBucket._DetermineNode(Root, new byte[] {0x00}, 0);
-            Assert.Equals(Left, actual);
+            Assert.That(Left, Is.EqualTo(actual));
 
             actual = kBucket._DetermineNode(Root, new byte[] {0x40}, 0);
-            Assert.Equals(Left, actual);
+            Assert.That(Left, Is.EqualTo(actual));
 
             actual = kBucket._DetermineNode(Root, new byte[] {0x40}, 1);
-            Assert.Equals(Right, actual);
+            Assert.That(Right, Is.EqualTo(actual));
 
             actual = kBucket._DetermineNode(Root, new byte[] {0x40}, 2);
-            Assert.Equals(Left, actual);
+            Assert.That(Left, Is.EqualTo(actual));
 
             actual = kBucket._DetermineNode(Root, new byte[] {0x40}, 9);
-            Assert.Equals(Left, actual);
+            Assert.That(Left, Is.EqualTo(actual));
 
             actual = kBucket._DetermineNode(Root, new byte[] {0x41}, 7);
-            Assert.Equals(Right, actual);
+            Assert.That(Right, Is.EqualTo(actual));
 
             actual = kBucket._DetermineNode(Root, new byte[] {0x41, 0x00}, 7);
-            Assert.Equals(Right, actual);
+            Assert.That(Right, Is.EqualTo(actual));
 
             actual = kBucket._DetermineNode(Root, new byte[] {0x00, 0x41, 0x00}, 15);
-            Assert.Equals(Right, actual);
+            Assert.That(Right, Is.EqualTo(actual));
         }
     }
 }

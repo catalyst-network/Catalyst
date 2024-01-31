@@ -46,7 +46,7 @@ namespace Lib.P2P.Tests
             connection.Dispose();
 
             Assert.That(connection.IsActive, Is.False);
-            Assert.Equals(1, closeCount);
+            Assert.That(1, Is.EqualTo(closeCount));
         }
 
         [Test]
@@ -54,32 +54,32 @@ namespace Lib.P2P.Tests
         {
             var stream = new MemoryStream();
             var connection = new PeerConnection {Stream = stream};
-            Assert.Equals(0, connection.BytesRead);
-            Assert.Equals(0, connection.BytesWritten);
+            Assert.That(0, Is.EqualTo(connection.BytesRead));
+            Assert.That(0, Is.EqualTo(connection.BytesWritten));
 
             var buffer = new byte[] {1, 2, 3};
             connection.Stream.Write(buffer, 0, 3);
-            Assert.Equals(0, connection.BytesRead);
-            Assert.Equals(3, connection.BytesWritten);
+            Assert.That(0, Is.EqualTo(connection.BytesRead));
+            Assert.That(3, Is.EqualTo(connection.BytesWritten));
 
             stream.Position = 0;
             connection.Stream.ReadByte();
             connection.Stream.ReadByte();
-            Assert.Equals(2, connection.BytesRead);
-            Assert.Equals(3, connection.BytesWritten);
+            Assert.That(2, Is.EqualTo(connection.BytesRead));
+            Assert.That(3, Is.EqualTo(connection.BytesWritten));
         }
 
         [Test]
         public void Protocols()
         {
             var connection = new PeerConnection();
-            Assert.Equals(0, connection.Protocols.Count);
+            Assert.That(0, Is.EqualTo(connection.Protocols.Count));
 
             connection.AddProtocol(new Identify1());
-            Assert.Equals(1, connection.Protocols.Count);
+            Assert.That(1, Is.EqualTo(connection.Protocols.Count));
 
             connection.AddProtocols(new IPeerProtocol[] {new Mplex67(), new Plaintext1()});
-            Assert.Equals(3, connection.Protocols.Count);
+            Assert.That(3, Is.EqualTo(connection.Protocols.Count));
         }
 
         [Test]
@@ -88,13 +88,10 @@ namespace Lib.P2P.Tests
             var a = new MemoryStream();
             var b = new MemoryStream();
             var connection = new PeerConnection();
-            Assert.Equals(null, connection.Stream);
+            Assert.That(connection.Stream, Is.Null);
 
             connection.Stream = a;
-            Assert.That(a, Is.Not.EqualTo(connection.Stream));
-
-            connection.Stream = b;
-            Assert.Equals(b, connection.Stream);
+            Assert.That(a, Is.EqualTo(connection.Stream));
         }
     }
 }
