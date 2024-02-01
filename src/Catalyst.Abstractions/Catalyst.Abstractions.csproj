@@ -19,7 +19,7 @@
     <PackageReference Include="AutoMapper" Version="12.0.1" />
     <PackageReference Include="DnsClient" Version="1.7.0" />
     <PackageReference Include="DotNetty.Transport" Version="0.7.5" />
-    <PackageReference Include="Google.Protobuf" Version="3.25.1" />
+    <PackageReference Include="Google.Protobuf" Version="3.25.2" />
     <PackageReference Include="Makaretu.Dns.Unicast" Version="0.11.1" />
     <PackageReference Include="Microsoft.Extensions.Configuration.Abstractions" Version="8.0.0" />
     <PackageReference Include="Serilog" Version="3.1.1" />
