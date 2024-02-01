@@ -32,6 +32,7 @@ using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.UnitTests.Commands.Response
 {
+    [TestFixture]
     public sealed class RemovePeerResponseTests
     {
         private readonly TestScheduler _testScheduler = new TestScheduler();

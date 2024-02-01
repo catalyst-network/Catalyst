@@ -64,9 +64,9 @@ namespace Catalyst.TestUtils
         public IFileSystemWatcherFactory FileSystemWatcher => _fileSystem.FileSystemWatcher;
 
         public DirectoryInfo GetCatalystDataDir() { return _fileSystem.GetCatalystDataDir(); }
-        public async Task<IFileInfo> WriteTextFileToCddAsync(string fileName, string contents) { return await _fileSystem.WriteTextFileToCddAsync(fileName, contents); }
+        public async Task<FileInfo> WriteTextFileToCddAsync(string fileName, string contents) { return await _fileSystem.WriteTextFileToCddAsync(fileName, contents); }
 
-        public async Task<IFileInfo> WriteTextFileToCddSubDirectoryAsync(string fileName,
+        public async Task<FileInfo> WriteTextFileToCddSubDirectoryAsync(string fileName,
             string subDirectory,
             string contents)
         {

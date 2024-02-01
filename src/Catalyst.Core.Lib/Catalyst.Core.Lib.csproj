@@ -26,11 +26,11 @@
         <PackageReference Include="DotNetty.Codecs" Version="0.7.5" />
         <PackageReference Include="DotNetty.Codecs.Protobuf" Version="0.7.5" />
         <PackageReference Include="DotNetty.Handlers" Version="0.7.5" />
-        <PackageReference Include="Google.Protobuf" Version="3.25.1" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.0" />
-        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.0" />
-        <PackageReference Include="Polly" Version="8.2.0" />
+        <PackageReference Include="Google.Protobuf" Version="3.25.2" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore" Version="8.0.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="8.0.1" />
+        <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="8.0.1" />
+        <PackageReference Include="Polly" Version="8.2.1" />
         <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
         <PackageReference Include="SharpRepository.EfCoreRepository" Version="2.1.2" />
         <PackageReference Include="SharpRepository.Ioc.Autofac" Version="2.0.4.2" />

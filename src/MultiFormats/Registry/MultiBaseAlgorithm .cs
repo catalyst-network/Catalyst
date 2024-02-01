@@ -65,10 +65,9 @@ namespace MultiFormats.Registry
             Register("base64url", 'u',
                 bytes => bytes.ToBase64Url(),
                 s => s.FromBase64Url());
-// TODO
-//            Register("base16", 'f',
-//                bytes => SimpleBase.Base16.EncodeLower(bytes),
-//                s => SimpleBase.Base16.Decode(s));
+            Register("base16", 'f',
+                bytes => SimpleBase.Base16.LowerCase.Encode(bytes),
+                s => SimpleBase.Base16.LowerCase.Decode(s));
             Register("base32", 'b',
                 bytes => SimpleBase.Base32.Rfc4648.Encode(bytes, false).ToLowerInvariant(),
                 s => SimpleBase.Base32.Rfc4648.Decode(s));
@@ -81,10 +80,9 @@ namespace MultiFormats.Registry
             Register("base32hexpad", 't',
                 bytes => SimpleBase.Base32.ExtendedHex.Encode(bytes, true).ToLowerInvariant(),
                 s => SimpleBase.Base32.ExtendedHex.Decode(s));
-// TODO
-//            Register("BASE16", 'F',
-//                bytes => SimpleBase.Base16.EncodeUpper(bytes),
-//                s => SimpleBase.Base16.Decode(s));
+            Register("BASE16", 'F',
+                bytes => SimpleBase.Base16.UpperCase.Encode(bytes),
+                s => SimpleBase.Base16.LowerCase.Decode(s));
             Register("BASE32", 'B',
                 bytes => SimpleBase.Base32.Rfc4648.Encode(bytes, false),
                 s => SimpleBase.Base32.Rfc4648.Decode(s));

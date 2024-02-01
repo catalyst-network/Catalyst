@@ -51,7 +51,7 @@ namespace Catalyst.Core.Modules.Kvm
             // TODO
             //  builder.RegisterInstance(new StateDb(new CodeRocksDb(catDir, DbConfig.Default))).As<IDb>().SingleInstance();
             //  builder.RegisterInstance(new StateDb(new StateRocksDb(catDir, DbConfig.Default))).As<ISnapshotableDb>().SingleInstance();
-            //builder.RegisterInstance(new MemDb()).As<IDb>().SingleInstance();               // code db
+            builder.RegisterInstance(new MemDb()).As<IDb>().SingleInstance();               // code db
             //builder.RegisterInstance(new StateDb()).As<ISnapshotableDb>().SingleInstance(); // state db
 
             builder.RegisterType<StateReader>().As<IStateReader>(); // state db

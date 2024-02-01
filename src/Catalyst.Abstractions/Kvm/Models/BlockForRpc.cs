@@ -58,7 +58,7 @@ namespace Catalyst.Abstractions.Kvm.Models
         [JsonConverter(typeof(AddressConverter))]
         public Address Miner { get; set; }
         
-        [JsonConverter(typeof(KeccakConverter))]
+        [JsonConverter(typeof(CidJsonConverter))]
         public Hash256 MixHash { get; set; }
         
         [JsonConverter(typeof(ByteArrayConverter))]
@@ -70,10 +70,10 @@ namespace Catalyst.Abstractions.Kvm.Models
         [JsonConverter(typeof(CidJsonConverter))]
         public Cid ParentHash { get; set; }
         
-        [JsonConverter(typeof(KeccakConverter))]
+        [JsonConverter(typeof(CidJsonConverter))]
         public Hash256 ReceiptsRoot { get; set; }
         
-        [JsonConverter(typeof(KeccakConverter))]
+        [JsonConverter(typeof(CidJsonConverter))]
         public Hash256 Sha3Uncles { get; set; }
         
         [JsonConverter(typeof(ByteArrayConverter))]
@@ -82,7 +82,7 @@ namespace Catalyst.Abstractions.Kvm.Models
         [JsonConverter(typeof(LongConverter))]
         public long Size { get; set; }
         
-        [JsonConverter(typeof(KeccakConverter))]
+        [JsonConverter(typeof(CidJsonConverter))]
         public Hash256 StateRoot { get; set; }
         
         [JsonConverter(typeof(NullableLongConverter))]
@@ -96,10 +96,10 @@ namespace Catalyst.Abstractions.Kvm.Models
         
         public IEnumerable<object> Transactions { get; set; }
         
-        [JsonConverter(typeof(KeccakConverter))]
+        [JsonConverter(typeof(CidJsonConverter))]
         public Hash256 TransactionsRoot { get; set; }
         
-        [JsonProperty(ItemConverterType = typeof(KeccakConverter))]
+        [JsonProperty(ItemConverterType = typeof(CidJsonConverter))]
         public IEnumerable<Hash256> Uncles { get; set; }
     }
 }

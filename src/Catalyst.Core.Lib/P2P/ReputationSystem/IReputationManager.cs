@@ -38,5 +38,7 @@ namespace Catalyst.Core.Lib.P2P.ReputationSystem
         void MergeReputationStream(IObservable<IPeerReputationChange> reputationChangeStream);
 
         void OnNext(IPeerReputationChange peerReputationChange);
+
+        void Dispose();
     }
 }

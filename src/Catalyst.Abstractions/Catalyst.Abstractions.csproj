@@ -1,12 +1,13 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
     <RootNamespace>Catalyst.Abstractions</RootNamespace>
     <Authors>Darren Oliveiro-Priestnall (darren.op@catalystnet.org)</Authors>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>Catalyst.Abstractions.snk</AssemblyOriginatorKeyFile>
     <PublicSign>true</PublicSign>
-    <LangVersion>latest</LangVersion>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
@@ -25,7 +26,7 @@
     <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
     <PackageReference Include="SharpRepository.MongoDbRepository" Version="2.1.1" />
     <PackageReference Include="SharpRepository.Repository" Version="2.2.1" />
-    <PackageReference Include="System.IO.Abstractions" Version="20.0.4" />
+    <PackageReference Include="System.IO.Abstractions" Version="20.0.15" />
     <PackageReference Include="System.Reactive" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>

@@ -78,7 +78,7 @@ namespace Catalyst.Abstractions.Kvm.Models
         [JsonConverter(typeof(ByteArrayConverter))]
         public byte[] Data { get; set; }
         
-        [JsonProperty(ItemConverterType = typeof(KeccakConverter))]
+        [JsonProperty(ItemConverterType = typeof(CidJsonConverter))]
         public Hash256[] Topics { get; set; }
     }
 }
