@@ -33,11 +33,11 @@ namespace Catalyst.Abstractions.Kvm.Models
 
         public UInt256 Balance { get; set; }
 
-        public Hash256 CodeHash { get; set; }
+        public Bytes CodeHash { get; set; }
 
         public UInt256 Nonce { get; set; }
 
-        public Hash256 StorageRoot { get; set; }
+        public Bytes StorageRoot { get; set; }
 
         public StorageProof[] StorageProofs { get; set; }
     }
