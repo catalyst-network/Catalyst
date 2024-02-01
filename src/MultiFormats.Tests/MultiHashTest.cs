@@ -491,7 +491,7 @@ namespace MultiFormats.Tests
             var hello = Encoding.UTF8.GetBytes("Hello, world.");
             var mh = MultiHash.ComputeHash(hello);
             Assert.That(mh.IsIdentityHash, Is.False);
-            Assert.That(hello, Is.EquivalentTo(mh.Digest));
+            Assert.That(hello, Is.Not.EqualTo(mh.Digest));
 
             mh = MultiHash.ComputeHash(hello, "identity");
             Assert.That(mh.IsIdentityHash, Is.True);
