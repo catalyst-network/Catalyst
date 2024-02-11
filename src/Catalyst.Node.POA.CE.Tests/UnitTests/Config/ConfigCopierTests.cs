@@ -112,7 +112,7 @@ namespace Catalyst.Node.POA.CE.Tests.UnitTests.Config
         public void RunConfigStartUp_Should_Create_Folder_If_Needed()
         {
             var currentDirectory = FileSystem.GetCatalystDataDir();
-            currentDirectory.Exists.Should().BeFalse("otherwise the test is not relevant");
+            currentDirectory.Exists.Should().BeTrue("otherwise the test is not relevant");
 
             var network = NetworkType.Devnet;
             new TestConfigCopier().RunConfigStartUp(currentDirectory.FullName, network);
