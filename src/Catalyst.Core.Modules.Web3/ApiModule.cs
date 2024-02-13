@@ -62,30 +62,34 @@ namespace Catalyst.Core.Modules.Web3
             var buildPath = Path.GetDirectoryName(executingAssembly);
             var webDirectory = Directory.CreateDirectory(Path.Combine(buildPath, "wwwroot"));
 
-            async void BuildCallback(IContainer container)
+            // Adjusted to use IComponentContext
+            async void BuildCallback(IComponentContext context)
             {
-                _container = container;
-                var logger = _container.Resolve<ILogger>();
+                var logger = context.Resolve<ILogger>();
 
                 try
                 {
                     await Host.CreateDefaultBuilder()
-                       .UseServiceProviderFactory(new SharedContainerProviderFactory(_container))
-                       .UseConsoleLifetime()
-                       .ConfigureContainer<ContainerBuilder>(ConfigureContainer)
-                       .ConfigureWebHostDefaults(
-                            webHostBuilder =>
-                            {
-                                webHostBuilder
-                                   .ConfigureServices(ConfigureServices)
-                                   .Configure(Configure)
-                                   .UseUrls(_apiBindingAddress)
-                                   .UseWebRoot(webDirectory.FullName);
-                                   //.UseSerilog();
-                            }).RunConsoleAsync();
+                        .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                        .ConfigureWebHostDefaults(webHostBuilder =>
+                        {
+                            webHostBuilder
+                                .ConfigureServices(services =>
+                                {
+                                    // If you need to add services to the IServiceCollection, do it here
+                                    ConfigureServices(services);
+                                })
+                                .Configure(app =>
+                                {
+                                    // Application configuration
+                                    Configure(app.ApplicationServices.GetRequiredService<IApplicationBuilder>());
+                                })
+                                .UseUrls(_apiBindingAddress)
+                                .UseWebRoot(webDirectory.FullName);
+                            // .UseSerilog(); // Uncomment if Serilog is being used
+                        }).Build().RunAsync();
 
-                    //SIGINT is caught from kestrel because we are using RunConsoleAsync in HostBuilder, the SIGINT will not be received in the main console so we need to exit the process manually, to prevent needing to use two SIGINT's
-                    Environment.Exit(2);
+                    // Consider application lifecycle management here if needed
                 }
                 catch (Exception e)
                 {
@@ -93,8 +97,8 @@ namespace Catalyst.Core.Modules.Web3
                 }
             }
 
+            // Register the callback with the correct signature
             builder.RegisterBuildCallback(BuildCallback);
-            base.Load(builder);
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
@@ -177,7 +181,7 @@ namespace Catalyst.Core.Modules.Web3
             public IServiceProvider CreateServiceProvider(ContainerBuilder containerBuilder)
             {
                 // using an obsolete way of updating an already created container
-                containerBuilder.Update(_container);
+                // containerBuilder.Update(_container);
 
                 return new AutofacServiceProvider(_container);
             }

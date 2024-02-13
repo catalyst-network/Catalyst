@@ -38,28 +38,24 @@ namespace Catalyst.Core.Modules.Rpc.Server
             builder.RegisterType<RpcServer>().As<IRpcServer>().SingleInstance();
             builder.RegisterType<RpcServerSettings>().As<IRpcServerSettings>();
 
-            async void BuildCallback(IContainer container)
+            // Register callback in a way that matches the expected signature
+            builder.RegisterBuildCallback(container =>
             {
-                if (container == null)
-                {
-                    throw new ArgumentNullException(nameof(container));
-                }
-                
                 var logger = container.Resolve<ILogger>();
                 try
                 {
                     var rpcServer = container.Resolve<IRpcServer>();
-                    await rpcServer.StartAsync().ConfigureAwait(false);
+
+                    // Execute the StartAsync method and wait for its completion in a non-blocking way
+                    rpcServer.StartAsync().GetAwaiter().GetResult();
                 }
                 catch (Exception e)
                 {
                     logger.Error(e, "Error loading API");
                 }
-            }
+            });
 
-            builder.RegisterBuildCallback(BuildCallback);
-            
             base.Load(builder);
-        }  
+        }
     }
 }

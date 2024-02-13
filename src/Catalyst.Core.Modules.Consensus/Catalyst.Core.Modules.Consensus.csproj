@@ -23,7 +23,7 @@
         <ProjectReference Include="..\Catalyst.Core.Modules.Kvm\Catalyst.Core.Modules.Kvm.csproj" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="4.8.1" />
+        <PackageReference Include="Autofac" Version="8.0.0" />
         <PackageReference Include="Nito.Comparers.Core" Version="6.2.2" />
     </ItemGroup>
 </Project>

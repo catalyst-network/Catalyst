@@ -10,6 +10,6 @@
         <PackageReference Include="Google.Protobuf" Version="3.25.2" />
         <PackageReference Include="protobuf-net" Version="3.2.30" />
         <PackageReference Include="SimpleBase" Version="4.0.0" />
-        <PackageReference Include="System.Text.Json" Version="8.0.1" />
+        <PackageReference Include="System.Text.Json" Version="8.0.2" />
     </ItemGroup>
 </Project>

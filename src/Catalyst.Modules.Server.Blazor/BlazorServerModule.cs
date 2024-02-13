@@ -1,4 +1,4 @@
-﻿#region LICENSE
+#region LICENSE
 
 /**
 * Copyright (c) 2024 Catalyst Network
@@ -52,7 +52,8 @@ namespace Catalyst.Modules.Server.Blazor
                 //Ignored exception as the server cannot start without container being built
             }
 
-            builder.RegisterBuildCallback(Start);
+            // Use a lambda expression to adapt the Start method to the expected delegate signature
+            builder.RegisterBuildCallback(container => Start(container.Resolve<IContainer>()));
         }
 
         private void Start(IContainer container)
