@@ -47,15 +47,28 @@ namespace Catalyst.Core.Modules.Kvm
             // builder.RegisterInstance(new OneLoggerLogManager(new SimpleConsoleLogger())).As<ILogManager>();
             builder.RegisterInstance(LimboLogs.Instance).As<ILogManager>();
 
+            DbSettings stateDbSettings = BuildDbSettings(DbNames.State, () => Nethermind.Db.Metrics.StateDbReads++, () => Nethermind.Db.Metrics.StateDbWrites++);
+
             var catDir = new FileSystem().GetCatalystDataDir().FullName;
-            // TODO
-            //  builder.RegisterInstance(new StateDb(new CodeRocksDb(catDir, DbConfig.Default))).As<IDb>().SingleInstance();
-            //  builder.RegisterInstance(new StateDb(new StateRocksDb(catDir, DbConfig.Default))).As<ISnapshotableDb>().SingleInstance();
-            builder.RegisterInstance(new MemDb()).As<IDb>().SingleInstance();               // code db
+            builder.RegisterInstance(new CodeRocksDb(catDir, stateDbSettings, DbConfig.Default)).As<IDb>().SingleInstance();
+            builder.RegisterInstance(new StateRocksDb(catDir, stateDbSettings, DbConfig.Default)).As<ISnapshotableDb>().SingleInstance();
+            //builder.RegisterInstance(new MemDb()).As<IDb>().SingleInstance();               // code db
             //builder.RegisterInstance(new StateDb()).As<ISnapshotableDb>().SingleInstance(); // state db
 
             builder.RegisterType<StateReader>().As<IStateReader>(); // state db
         }
+
+        private static DbSettings BuildDbSettings(string dbName, Action updateReadsMetrics, Action updateWriteMetrics, bool deleteOnStart = false)
+        {
+            return new(GetTitleDbName(dbName), dbName)
+            {
+                UpdateReadMetrics = updateReadsMetrics,
+                UpdateWriteMetrics = updateWriteMetrics,
+                DeleteOnStart = deleteOnStart
+            };
+        }
+
+        protected static string GetTitleDbName(string dbName) => char.ToUpper(dbName[0]) + dbName[1..];
     }
 
     public static class ExecutionRegistrations
@@ -71,21 +84,21 @@ namespace Catalyst.Core.Modules.Kvm
         {
             var serviceName = Guid.NewGuid().ToString();
 
-            var stateProvider = new ByTypeNamedParameter<IWorldState>(serviceName);
-            var kvm = new ByTypeNamedParameter<IKvm>(serviceName); 
-            var executor = new ByTypeNamedParameter<IDeltaExecutor>(serviceName); 
+            var worldStateProvider = new ByTypeNamedParameter<IWorldState>(serviceName);
+            var kvm = new ByTypeNamedParameter<IKvm>(serviceName);
+            var executor = new ByTypeNamedParameter<IDeltaExecutor>(serviceName);
 
             builder.RegisterType<WorldState>().Named<IWorldState>(serviceName).SingleInstance()
-               .WithParameter(stateProvider);
+               .WithParameter(worldStateProvider);
             builder.RegisterType<KatVirtualMachine>().Named<IKvm>(serviceName).SingleInstance()
-               .WithParameter(stateProvider);
+               .WithParameter(worldStateProvider);
             builder.RegisterType<DeltaExecutor>().Named<IDeltaExecutor>(serviceName).SingleInstance()
-               .WithParameter(stateProvider)
+               .WithParameter(worldStateProvider)
                .WithParameter(kvm);
 
             // parameter registration
             registration
-               .WithParameter(stateProvider)
+               .WithParameter(worldStateProvider)
                .WithParameter(kvm)
                .WithParameter(executor);
 
