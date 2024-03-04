@@ -27,6 +27,7 @@ using Autofac.Builder;
 using Autofac.Core;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Core.Lib.FileSystem;
+using Nethermind.Core;
 using Nethermind.Core.Specs;
 using Nethermind.Db;
 using Nethermind.Db.Rocks;
@@ -34,6 +35,8 @@ using Nethermind.Db.Rocks.Config;
 using Nethermind.Evm;
 using Nethermind.Logging;
 using Nethermind.State;
+using Nethermind.Trie;
+using Nethermind.Trie.Pruning;
 using Module = Autofac.Module;
 
 namespace Catalyst.Core.Modules.Kvm
@@ -50,12 +53,8 @@ namespace Catalyst.Core.Modules.Kvm
             DbSettings stateDbSettings = BuildDbSettings(DbNames.State, () => Nethermind.Db.Metrics.StateDbReads++, () => Nethermind.Db.Metrics.StateDbWrites++);
 
             var catDir = new FileSystem().GetCatalystDataDir().FullName;
-            builder.RegisterInstance(new CodeRocksDb(catDir, stateDbSettings, DbConfig.Default)).As<IDb>().SingleInstance();
-            builder.RegisterInstance(new StateRocksDb(catDir, stateDbSettings, DbConfig.Default)).As<ISnapshotableDb>().SingleInstance();
-            //builder.RegisterInstance(new MemDb()).As<IDb>().SingleInstance();               // code db
-            //builder.RegisterInstance(new StateDb()).As<ISnapshotableDb>().SingleInstance(); // state db
-
-            builder.RegisterType<StateReader>().As<IStateReader>(); // state db
+            builder.RegisterInstance(new CodeRocksDb(catDir, stateDbSettings, DbConfig.Default, LimboLogs.Instance)).As<IDb>().SingleInstance();
+            builder.RegisterType<StateReader>().As<IStateReader>();
         }
 
         private static DbSettings BuildDbSettings(string dbName, Action updateReadsMetrics, Action updateWriteMetrics, bool deleteOnStart = false)
@@ -88,8 +87,25 @@ namespace Catalyst.Core.Modules.Kvm
             var kvm = new ByTypeNamedParameter<IKvm>(serviceName);
             var executor = new ByTypeNamedParameter<IDeltaExecutor>(serviceName);
 
+            
+            var KeyValueStoreWithBatching = new ByTypeNamedParameter<IKeyValueStoreWithBatching>(serviceName);
+            
+            var trieStore = new ByTypeNamedParameter<ITrieStore>(serviceName);
+            var keyValueStore = new ByTypeNamedParameter<IKeyValueStore>(serviceName);
+            var logger = new ByTypeNamedParameter<ILogManager>(serviceName);
+
+            builder.RegisterType<Db>().Named<IKeyValueStoreWithBatching>(serviceName).SingleInstance();
+
+            builder.RegisterType<TrieStore>().Named<ITrieStore>(serviceName).SingleInstance()
+                .WithParameter(KeyValueStoreWithBatching);
+
+            builder.RegisterType<KeyValueStore>().Named<IKeyValueStore>(serviceName).SingleInstance();
+            builder.RegisterType<Logs>().Named<ILogManager>(serviceName).SingleInstance();
+
             builder.RegisterType<WorldState>().Named<IWorldState>(serviceName).SingleInstance()
-               .WithParameter(worldStateProvider);
+               .WithParameter(trieStore)
+               .WithParameter(keyValueStore)
+               .WithParameter(logger);
             builder.RegisterType<KatVirtualMachine>().Named<IKvm>(serviceName).SingleInstance()
                .WithParameter(worldStateProvider);
             builder.RegisterType<DeltaExecutor>().Named<IDeltaExecutor>(serviceName).SingleInstance()
