@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio Version 16
-VisualStudioVersion = 16.0.29306.81
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34607.119
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.POA.CE", "Catalyst.Node.POA.CE\Catalyst.Node.POA.CE.csproj", "{51EFC3B8-979D-4DAF-BD39-0127124B9B94}"
 EndProject
@@ -17,21 +17,13 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nethermind", "nethermind", 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Core", "..\submodules\nethermind\src\Nethermind\Nethermind.Core\Nethermind.Core.csproj", "{319E059F-4CFA-4F0C-A6E7-4E8C037AA8E9}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Store", "..\submodules\nethermind\src\Nethermind\Nethermind.Store\Nethermind.Store.csproj", "{30745734-D408-4344-897A-341A3370B9C9}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.HashLib", "..\submodules\nethermind\src\Nethermind\Nethermind.HashLib\Nethermind.HashLib.csproj", "{835D62C9-659E-486F-ADEA-FD0F88682127}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Logging", "..\submodules\nethermind\src\Nethermind\Nethermind.Logging\Nethermind.Logging.csproj", "{41A19F85-0ED8-4213-B6E9-CEA0BAF70E74}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Secp256k1", "..\submodules\nethermind\src\Nethermind\Nethermind.Secp256k1\Nethermind.Secp256k1.csproj", "{ADA7E764-5A1B-4E52-8299-6FD37D3015CC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Evm", "..\submodules\nethermind\src\Nethermind\Nethermind.Evm\Nethermind.Evm.csproj", "{94976265-3C58-4617-B68B-E7F02B25B27B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Cli", "Catalyst.Cli\Catalyst.Cli.csproj", "{7710C659-28F6-4624-983B-B13109CCCD12}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Cli.Tests", "Catalyst.Cli.Tests\Catalyst.Cli.Tests.csproj", "{8FE5DCE4-E06E-4A2B-9CBC-A434E2B2FA0B}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Dirichlet.Numerics", "..\submodules\nethermind\src\Dirichlet\Nethermind.Dirichlet.Numerics\Nethermind.Dirichlet.Numerics.csproj", "{6201E2B9-4425-4B4F-A17C-853F3D75600C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{7D13EA5F-6C87-402C-AAEF-82A3C8C66D9A}"
 	ProjectSection(SolutionItems) = preProject
@@ -90,6 +82,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Modules.Repository
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Modules.Repository.MongoDb", "Catalyst.Modules.Repository.MongoDb\Catalyst.Modules.Repository.MongoDb.csproj", "{2557AA0F-B548-421B-851C-04BC7DB58305}"
 EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Db.Rocks", "..\submodules\nethermind\src\Nethermind\Nethermind.Db.Rocks\Nethermind.Db.Rocks.csproj", "{EC946224-4E75-41C5-AE95-DCA9FC672143}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -116,22 +110,10 @@ Global
 		{319E059F-4CFA-4F0C-A6E7-4E8C037AA8E9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{319E059F-4CFA-4F0C-A6E7-4E8C037AA8E9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{319E059F-4CFA-4F0C-A6E7-4E8C037AA8E9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{30745734-D408-4344-897A-341A3370B9C9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{30745734-D408-4344-897A-341A3370B9C9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{30745734-D408-4344-897A-341A3370B9C9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{30745734-D408-4344-897A-341A3370B9C9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{835D62C9-659E-486F-ADEA-FD0F88682127}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{835D62C9-659E-486F-ADEA-FD0F88682127}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{835D62C9-659E-486F-ADEA-FD0F88682127}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{835D62C9-659E-486F-ADEA-FD0F88682127}.Release|Any CPU.Build.0 = Release|Any CPU
 		{41A19F85-0ED8-4213-B6E9-CEA0BAF70E74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{41A19F85-0ED8-4213-B6E9-CEA0BAF70E74}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{41A19F85-0ED8-4213-B6E9-CEA0BAF70E74}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{41A19F85-0ED8-4213-B6E9-CEA0BAF70E74}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ADA7E764-5A1B-4E52-8299-6FD37D3015CC}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ADA7E764-5A1B-4E52-8299-6FD37D3015CC}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ADA7E764-5A1B-4E52-8299-6FD37D3015CC}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ADA7E764-5A1B-4E52-8299-6FD37D3015CC}.Release|Any CPU.Build.0 = Release|Any CPU
 		{94976265-3C58-4617-B68B-E7F02B25B27B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{94976265-3C58-4617-B68B-E7F02B25B27B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{94976265-3C58-4617-B68B-E7F02B25B27B}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -144,10 +126,6 @@ Global
 		{8FE5DCE4-E06E-4A2B-9CBC-A434E2B2FA0B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{8FE5DCE4-E06E-4A2B-9CBC-A434E2B2FA0B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{8FE5DCE4-E06E-4A2B-9CBC-A434E2B2FA0B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{6201E2B9-4425-4B4F-A17C-853F3D75600C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{6201E2B9-4425-4B4F-A17C-853F3D75600C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{6201E2B9-4425-4B4F-A17C-853F3D75600C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{6201E2B9-4425-4B4F-A17C-853F3D75600C}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F8847400-418A-470A-9E27-988990451481}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F8847400-418A-470A-9E27-988990451481}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F8847400-418A-470A-9E27-988990451481}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -232,6 +210,10 @@ Global
 		{2557AA0F-B548-421B-851C-04BC7DB58305}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2557AA0F-B548-421B-851C-04BC7DB58305}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2557AA0F-B548-421B-851C-04BC7DB58305}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EC946224-4E75-41C5-AE95-DCA9FC672143}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EC946224-4E75-41C5-AE95-DCA9FC672143}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EC946224-4E75-41C5-AE95-DCA9FC672143}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EC946224-4E75-41C5-AE95-DCA9FC672143}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -241,12 +223,8 @@ Global
 		{8A29BD0D-4E17-4F74-91EC-78DE288F137B} = {31CBF8EE-F057-4903-BD38-4DA20B39833F}
 		{647A8E80-674D-454F-AAE9-3C321AAA4969} = {31CBF8EE-F057-4903-BD38-4DA20B39833F}
 		{319E059F-4CFA-4F0C-A6E7-4E8C037AA8E9} = {647A8E80-674D-454F-AAE9-3C321AAA4969}
-		{30745734-D408-4344-897A-341A3370B9C9} = {647A8E80-674D-454F-AAE9-3C321AAA4969}
-		{835D62C9-659E-486F-ADEA-FD0F88682127} = {647A8E80-674D-454F-AAE9-3C321AAA4969}
 		{41A19F85-0ED8-4213-B6E9-CEA0BAF70E74} = {647A8E80-674D-454F-AAE9-3C321AAA4969}
-		{ADA7E764-5A1B-4E52-8299-6FD37D3015CC} = {647A8E80-674D-454F-AAE9-3C321AAA4969}
 		{94976265-3C58-4617-B68B-E7F02B25B27B} = {647A8E80-674D-454F-AAE9-3C321AAA4969}
-		{6201E2B9-4425-4B4F-A17C-853F3D75600C} = {647A8E80-674D-454F-AAE9-3C321AAA4969}
 		{F8847400-418A-470A-9E27-988990451481} = {31CBF8EE-F057-4903-BD38-4DA20B39833F}
 		{433D58C3-E99F-4864-A660-D7AB1DB66F30} = {31CBF8EE-F057-4903-BD38-4DA20B39833F}
 		{9DBECEF8-7534-4BB8-A89C-F3196FC15FD5} = {31CBF8EE-F057-4903-BD38-4DA20B39833F}
@@ -268,6 +246,7 @@ Global
 		{12A520A9-F736-4CC5-832B-230E11A7DFBB} = {31CBF8EE-F057-4903-BD38-4DA20B39833F}
 		{2A1AD069-FD87-48F2-B741-6DDF36BEAB81} = {31CBF8EE-F057-4903-BD38-4DA20B39833F}
 		{2557AA0F-B548-421B-851C-04BC7DB58305} = {31CBF8EE-F057-4903-BD38-4DA20B39833F}
+		{EC946224-4E75-41C5-AE95-DCA9FC672143} = {647A8E80-674D-454F-AAE9-3C321AAA4969}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {FEAA105F-9B99-4CAE-8618-9214E3F691CB}

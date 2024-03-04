@@ -115,7 +115,8 @@ namespace Catalyst.Node.POA.CE
                 {typeof(MempoolModule), () => new MempoolModule()},
                 {typeof(ConsensusModule), () => new ConsensusModule()},
                 {typeof(SynchroniserModule), () => new SynchroniserModule()},
-                {typeof(KvmModule), () => new KvmModule()},
+                {typeof(
+                    KvmModule), () => new KvmModule()},
                 {typeof(LedgerModule), () => new LedgerModule()},
                 {typeof(HashingModule), () => new HashingModule()},
                 {typeof(DiscoveryHastingModule), () => new DiscoveryHastingModule()},
