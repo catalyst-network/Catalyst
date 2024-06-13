@@ -4,6 +4,12 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 VisualStudioVersion = 17.9.34607.119
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.POA.CE", "Catalyst.Node.POA.CE\Catalyst.Node.POA.CE.csproj", "{51EFC3B8-979D-4DAF-BD39-0127124B9B94}"
+	ProjectSection(ProjectDependencies) = postProject
+		{319E059F-4CFA-4F0C-A6E7-4E8C037AA8E9} = {319E059F-4CFA-4F0C-A6E7-4E8C037AA8E9}
+		{41A19F85-0ED8-4213-B6E9-CEA0BAF70E74} = {41A19F85-0ED8-4213-B6E9-CEA0BAF70E74}
+		{94976265-3C58-4617-B68B-E7F02B25B27B} = {94976265-3C58-4617-B68B-E7F02B25B27B}
+		{EC946224-4E75-41C5-AE95-DCA9FC672143} = {EC946224-4E75-41C5-AE95-DCA9FC672143}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Node.POA.CE.Tests", "Catalyst.Node.POA.CE.Tests\Catalyst.Node.POA.CE.Tests.csproj", "{5FB7FCBC-3848-4434-8E6F-D0C479FF9382}"
 EndProject
@@ -83,6 +89,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Modules.Repository.MongoDb", "Catalyst.Modules.Repository.MongoDb\Catalyst.Modules.Repository.MongoDb.csproj", "{2557AA0F-B548-421B-851C-04BC7DB58305}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Db.Rocks", "..\submodules\nethermind\src\Nethermind\Nethermind.Db.Rocks\Nethermind.Db.Rocks.csproj", "{EC946224-4E75-41C5-AE95-DCA9FC672143}"
+	ProjectSection(ProjectDependencies) = postProject
+		{94976265-3C58-4617-B68B-E7F02B25B27B} = {94976265-3C58-4617-B68B-E7F02B25B27B}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
