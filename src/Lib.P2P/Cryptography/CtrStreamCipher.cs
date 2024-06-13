@@ -77,7 +77,7 @@ namespace Lib.P2P.Cryptography
         /// </param>
         /// <example>
         /// var encrypt = new CtrStreamCipher(new AesEngine());
-        /// var p = new ParametersWithIV(new KeyParameter(key), iv);
+        /// var p = new ParametersWithIV(new KeyParameter(key), Iv);
         /// encrypt.Init(true, p);
         /// </example>
         public void Init(bool forEncryption, ICipherParameters parameters)
