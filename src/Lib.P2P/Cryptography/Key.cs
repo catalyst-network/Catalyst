@@ -137,11 +137,12 @@ namespace Lib.P2P.Cryptography
                 key._publicKey = new RsaKeyParameters(false, rsa.Modulus, rsa.PublicExponent);
                 key._signingAlgorithmName = RsaSigningAlgorithmName;
             }
-            else if (privateKey is Ed25519PrivateKeyParameters ed)
+            // TNA TODO
+       /*     else if (privateKey is Ed25519PrivateKeyParameters ed)
             {
                 key._publicKey = ed.GeneratePublicKey();
                 key._signingAlgorithmName = Ed25519SigningAlgorithmName;
-            }
+            }*/
             else if (privateKey is ECPrivateKeyParameters ec)
             {
                 var q = ec.Parameters.G.Multiply(ec.D);

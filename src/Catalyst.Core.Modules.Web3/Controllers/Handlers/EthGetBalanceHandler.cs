@@ -26,6 +26,7 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Deltas;
 using Address = Nethermind.Core.Address;
 using Nethermind.Int256;
+using Nethermind.Core;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
@@ -36,7 +37,16 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
         {
             Delta delta = api.GetLatestDeltaWithCid().Delta;
             var stateRoot = delta.StateRoot.ToKeccak();
-            return api.StateReader.GetAccount(stateRoot, address).Balance;
+            AccountStruct accStruct;
+            bool bResult = api.StateReader.TryGetAccount(stateRoot, address, out accStruct);
+            if (bResult)
+            {
+                return accStruct.Balance;
+            }
+            else
+            {
+                return 0;
+            }
         }
     }
 }

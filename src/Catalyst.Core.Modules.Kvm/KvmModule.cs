@@ -50,19 +50,21 @@ namespace Catalyst.Core.Modules.Kvm
             // builder.RegisterInstance(new OneLoggerLogManager(new SimpleConsoleLogger())).As<ILogManager>();
             builder.RegisterInstance(LimboLogs.Instance).As<ILogManager>();
 
-            DbSettings stateDbSettings = BuildDbSettings(DbNames.State, () => Nethermind.Db.Metrics.StateDbReads++, () => Nethermind.Db.Metrics.StateDbWrites++);
+// TNA TODO
+//            DbSettings stateDbSettings = BuildDbSettings(DbNames.State, () => Nethermind.Db.Metrics.StateDbReads++, () => Nethermind.Db.Metrics.StateDbWrites++);
 
             var catDir = new FileSystem().GetCatalystDataDir().FullName;
-            builder.RegisterInstance(new CodeRocksDb(catDir, stateDbSettings, DbConfig.Default, LimboLogs.Instance)).As<IDb>().SingleInstance();
+//            builder.RegisterInstance(new CodeRocksDb(catDir, stateDbSettings, DbConfig.Default, LimboLogs.Instance)).As<IDb>().SingleInstance();
             builder.RegisterType<StateReader>().As<IStateReader>();
         }
 
         private static DbSettings BuildDbSettings(string dbName, Action updateReadsMetrics, Action updateWriteMetrics, bool deleteOnStart = false)
         {
             return new(GetTitleDbName(dbName), dbName)
-            {
-                UpdateReadMetrics = updateReadsMetrics,
-                UpdateWriteMetrics = updateWriteMetrics,
+           {
+                // TNA TODO
+                //               UpdateReadMetrics = updateReadsMetrics,
+                //               UpdateWriteMetrics = updateWriteMetrics,
                 DeleteOnStart = deleteOnStart
             };
         }

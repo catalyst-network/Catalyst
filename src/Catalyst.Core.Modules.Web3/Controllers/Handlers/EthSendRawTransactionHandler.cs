@@ -33,7 +33,7 @@ using Google.Protobuf.WellKnownTypes;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
 using Nethermind.Crypto;
-using Nethermind.Evm.Tracing.GethStyle.JavaScript;
+//using Nethermind.Evm.Tracing.GethStyle.JavaScript;
 using Nethermind.Logging;
 using Nethermind.Serialization.Rlp;
 using Nethermind.Specs;
@@ -54,13 +54,16 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
                 tx.Timestamp = (Nethermind.Int256.UInt256) DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                 publicEntry = new PublicEntry
                 {
-                    Data = ByteString.CopyFrom(tx.Data.ToBytes()),
+                    // TNA TODO
+                    //      Data = ByteString.CopyFrom(tx.Data.ToBytes()),
                     GasLimit = (ulong) tx.GasLimit,
-                    GasPrice = ByteString.CopyFrom(tx.GasPrice.ToBytes()),
+                    // TNA TODO
+                    //       GasPrice = ByteString.CopyFrom(tx.GasPrice.ToBytes()),
                     Nonce = (ulong) tx.Nonce,
                     SenderAddress = tx.SenderAddress.Bytes.ToByteString(),
                     ReceiverAddress = tx.To?.Bytes.ToByteString() ?? ByteString.Empty,
-                    Amount = ByteString.CopyFrom(tx.Value.ToBytes()),
+                    // TNA TODO
+                    //      Amount = ByteString.CopyFrom(tx.Value.ToBytes()),
                     Signature = new Protocol.Cryptography.Signature
                     {
                         RawBytes = ByteString.CopyFrom((byte) 1)

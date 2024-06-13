@@ -160,9 +160,6 @@ namespace Catalyst.Core.Modules.Kvm
         public bool IsEip2200Enabled { get; } = Istanbul.Instance.IsEip2200Enabled;
 
         /// <inheritdoc />
-        public bool IsEip2315Enabled { get; } = Istanbul.Instance.IsEip2315Enabled;
-
-        /// <inheritdoc />
         public bool IsEip2537Enabled { get; } = Istanbul.Instance.IsEip2537Enabled;
 
         /// <inheritdoc />
@@ -236,5 +233,9 @@ namespace Catalyst.Core.Modules.Kvm
 
         /// <inheritdoc />
         public bool IsEip158IgnoredAccount(Address address) { return address == Address.SystemUser; }
+
+        public bool IsEip2935Enabled => throw new System.NotImplementedException();
+
+        public Address Eip2935ContractAddress => throw new System.NotImplementedException();
     }
 }

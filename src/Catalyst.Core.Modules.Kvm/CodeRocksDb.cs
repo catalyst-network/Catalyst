@@ -31,7 +31,8 @@ namespace Catalyst.Core.Modules.Kvm
             Name = "Code";
         }
 
-        protected override void UpdateReadMetrics() => Metrics.CodeDbReads++;
-        protected override void UpdateWriteMetrics() => Metrics.CodeDbWrites++;
+        // TNA TODO
+//        protected override void UpdateReadMetrics() => Metrics.DbReads.AddOrUpdate();// .CodeDbReads++;
+//        protected override void UpdateWriteMetrics() => Metrics.CodeDbWrites++;
     }
 }

@@ -65,10 +65,7 @@ namespace Catalyst.Core.Modules.Keystore
             return await _keyStoreService.FindKeyByNameAsync(publicKeyName).ConfigureAwait(false);
         }
 
-        public async Task<AsymmetricKeyParameter> GetPrivateKeyAsync(string privateKeyName)
-        {
-            return await _keyStoreService.GetPrivateKeyAsync(privateKeyName).ConfigureAwait(false);
-        }
+        public async Task<AsymmetricKeyParameter> GetPrivateKeyAsync(string privateKeyName) => await _keyStoreService.GetPrivateKeyAsync(privateKeyName).ConfigureAwait(false);
 
         public async Task<byte[]> CreateProtectedDataAsync(string keyName,
             byte[] plainText,

@@ -37,7 +37,7 @@ using Lib.P2P;
 using MultiFormats;
 using Nethermind.Core.Crypto;
 using Nethermind.Core.Extensions;
-using Nethermind.Evm.Tracing.GethStyle.JavaScript;
+using Nethermind.Evm.Tracing.GethStyle.Custom.JavaScript;
 using Nethermind.Int256;
 
 namespace Nethermind.Serialization.Json;

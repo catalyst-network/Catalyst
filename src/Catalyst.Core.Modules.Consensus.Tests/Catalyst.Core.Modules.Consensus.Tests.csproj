@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\submodules\nethermind\src\Nethermind\Nethermind.Core\Nethermind.Core.csproj" />
     <ProjectReference Include="..\Catalyst.Abstractions\Catalyst.Abstractions.csproj" />
     <ProjectReference Include="..\Catalyst.Core.Modules.Consensus\Catalyst.Core.Modules.Consensus.csproj" />
     <ProjectReference Include="..\Catalyst.Core.Modules.Dfs\Catalyst.Core.Modules.Dfs.csproj" />

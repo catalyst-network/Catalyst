@@ -39,6 +39,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.KeySigner", "Catalyst.Core.Modules.KeySigner\Catalyst.Core.Modules.KeySigner.csproj", "{F2E34968-96C4-425A-997D-5DAC9D508B2C}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Keystore", "Catalyst.Core.Modules.Keystore\Catalyst.Core.Modules.Keystore.csproj", "{E51CDF4F-CA66-4C4E-856A-E6CAAC20BC6E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{65CFE770-0957-4D16-AA95-AD757706DD90} = {65CFE770-0957-4D16-AA95-AD757706DD90}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.P2P.Discovery.Hastings", "Catalyst.Core.Modules.P2P.Discovery.Hastings\Catalyst.Core.Modules.P2P.Discovery.Hastings.csproj", "{7FBB8AD2-E5C8-4AE5-B89E-735A0737EBCB}"
 EndProject
@@ -108,6 +111,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.KBucket", "Catalyst.KBucket\Catalyst.KBucket.csproj", "{F81AF4DE-30BC-48F3-B396-27087997B700}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MultiFormats", "MultiFormats\MultiFormats.csproj", "{76AF1E5A-94AC-44C5-B968-F816CB3A9B2E}"
+	ProjectSection(ProjectDependencies) = postProject
+		{65CFE770-0957-4D16-AA95-AD757706DD90} = {65CFE770-0957-4D16-AA95-AD757706DD90}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethermind.Serialization.Rlp", "..\submodules\nethermind\src\Nethermind\Nethermind.Serialization.Rlp\Nethermind.Serialization.Rlp.csproj", "{43B92BEC-BE53-45D7-A442-77EB14122ED5}"
 EndProject
@@ -166,6 +172,9 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Authentication.Tests", "Catalyst.Core.Modules.Authentication.Tests\Catalyst.Core.Modules.Authentication.Tests.csproj", "{6AC2B41D-27CE-4519-BF51-5905BA51D7EC}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Consensus.Tests", "Catalyst.Core.Modules.Consensus.Tests\Catalyst.Core.Modules.Consensus.Tests.csproj", "{0BB499FF-7DF6-4877-A7A0-FEDBB4FFF8E4}"
+	ProjectSection(ProjectDependencies) = postProject
+		{A1B92EBC-D4FF-4E5A-BAE4-6DD8AABAA3C0} = {A1B92EBC-D4FF-4E5A-BAE4-6DD8AABAA3C0}
+	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Core.Modules.Cryptography.BulletProofs.Tests", "Catalyst.Core.Modules.Cryptography.BulletProofs.Tests\Catalyst.Core.Modules.Cryptography.BulletProofs.Tests.csproj", "{94F44C96-8914-4DA3-8D75-FCF7208AA6A1}"
 EndProject
@@ -229,6 +238,10 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Catalyst.Cli.Tests", "Catal
 		{91A5F73C-5FE6-4BF3-B437-10FA9DF785E9} = {91A5F73C-5FE6-4BF3-B437-10FA9DF785E9}
 		{AB76EC86-3031-4386-A517-D63AC43D116F} = {AB76EC86-3031-4386-A517-D63AC43D116F}
 	EndProjectSection
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethereum.Hex", "Nethereum.Hex\Nethereum.Hex.csproj", "{FF8B02E8-C3AC-46B6-B6FF-64DC50DBF431}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Nethereum.KeyStore", "Nethereum.KeyStore\Nethereum.KeyStore.csproj", "{C5BBA3A5-E0C0-487C-BB15-C15A42B93B93}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -576,6 +589,14 @@ Global
 		{2CA7690B-F019-4403-9A70-547323D9CF1E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2CA7690B-F019-4403-9A70-547323D9CF1E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2CA7690B-F019-4403-9A70-547323D9CF1E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FF8B02E8-C3AC-46B6-B6FF-64DC50DBF431}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FF8B02E8-C3AC-46B6-B6FF-64DC50DBF431}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FF8B02E8-C3AC-46B6-B6FF-64DC50DBF431}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FF8B02E8-C3AC-46B6-B6FF-64DC50DBF431}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C5BBA3A5-E0C0-487C-BB15-C15A42B93B93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C5BBA3A5-E0C0-487C-BB15-C15A42B93B93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C5BBA3A5-E0C0-487C-BB15-C15A42B93B93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C5BBA3A5-E0C0-487C-BB15-C15A42B93B93}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

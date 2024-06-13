@@ -109,6 +109,8 @@ namespace Catalyst.Core.Modules.Ledger
 
         public bool IsTracingStorage => throw new NotImplementedException();
 
+        bool ITxTracer.IsTracingLogs => throw new NotImplementedException();
+
         public void ReportCodeChange(Address address, byte[] before, byte[] after) { throw new NotImplementedException(); }
         public void ReportAccountRead(Address address) { throw new NotImplementedException(); }
         public void StartOperation(int depth, long gas, Instruction opcode, int pc, bool isPostMerge) { throw new NotImplementedException(); }
@@ -190,6 +192,21 @@ namespace Catalyst.Core.Modules.Ledger
         }
 
         public void ReportByteCode(ReadOnlyMemory<byte> byteCode)
+        {
+            throw new NotImplementedException();
+        }
+
+        void ITxTracer.StartOperation(int pc, Instruction opcode, long gas, in ExecutionEnvironment env)
+        {
+            throw new NotImplementedException();
+        }
+
+        void ITxTracer.ReportLog(LogEntry log)
+        {
+            throw new NotImplementedException();
+        }
+
+        void ITxTracer.ReportActionRevert(long gasLeft, ReadOnlyMemory<byte> output)
         {
             throw new NotImplementedException();
         }
