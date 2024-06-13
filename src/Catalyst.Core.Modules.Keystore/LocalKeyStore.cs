@@ -38,6 +38,7 @@ using Catalyst.Protocol.Account;
 using Catalyst.Protocol.Network;
 using MultiFormats;
 using Nethereum.KeyStore.Crypto;
+using Nethermind.Crypto;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Keystore

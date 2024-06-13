@@ -28,6 +28,7 @@ using Catalyst.Abstractions.Cryptography;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.TestUtils;
+using Common.Logging;
 using FluentAssertions;
 using MultiFormats.Registry;
 using Nethermind.Blockchain;
@@ -42,10 +43,17 @@ using Nethermind.Evm.Tracing;
 using Nethermind.Evm.Tracing.GethStyle;
 using Nethermind.Logging;
 using Nethermind.Serialization.Json;
+using Nethermind.Specs.Forks;
+using Nethermind.Specs;
 using Nethermind.State;
 using Nethermind.Trie;
+using Nethermind.Trie.Pruning;
 using NUnit.Framework;
 using IPrivateKey = Catalyst.Abstractions.Cryptography.IPrivateKey;
+using Nethermind.Blockchain.Receipts;
+using Nethermind.Crypto;
+using Nethermind.Consensus.Comparers;
+using Catalyst.TestUtils.Repository.TreeBuilder;
 
 namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
 {
@@ -348,36 +356,34 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         private static GethLikeTxTracer RunVirtualMachine(byte[] code)
         {
             GethLikeTxTracer txTracer = new GethLikeTxMemoryTracer(GethTraceOptions.Default);
-
-            IDb stateDbDevice = new MemDb();
-            IDb codeDbDevice = new MemDb();
-
-            var patriciaTree = new PatriciaTree();
-            IDb codeDb = new MemDb();
-            IWorldState stateProvider = new WorldState(patriciaTree.TrieStore, codeDb, LimboLogs.Instance);
             
-            ISpecProvider specProvider = new CatalystSpecProvider();
+            NoErrorLimboLogs logManager = NoErrorLimboLogs.Instance;
+
+            IDbProvider dbProvider = TestMemDbProvider.Init();
+            IDb codeDb = dbProvider.CodeDb;
+            IDb stateDb = dbProvider.StateDb;
+            SingleReleaseSpecProvider specProvider =
+                new(ConstantinopleFix.Instance, MainnetSpecProvider.Instance.NetworkId, MainnetSpecProvider.Instance.ChainId);
+
+            TrieStore trieStore = new(stateDb, LimboLogs.Instance);
+            StateReader stateReader = new(trieStore, codeDb, logManager);
+            WorldState stateProvider = new(trieStore, codeDb, logManager);
+            stateProvider.CreateAccount(new Address(new ValueHash256()), 10000.Ether());
+            stateProvider.Commit(specProvider.GenesisSpec);
+            stateProvider.CommitTree(0);
+            stateProvider.RecalculateStateRoot();
+
+            InMemoryReceiptStorage receiptStorage = new();
+
+            EthereumEcdsa ecdsa = new(specProvider.ChainId, logManager);
+            BlockTree tree = Build.A.BlockTree().WithoutSettingHead.TestObject;
+            ITransactionComparerProvider transactionComparerProvider =
+                new TransactionComparerProvider(specProvider, tree);
             
-            TxExecutionContext executionContext = new TxExecutionContext();
-
-            // this would be loaded by the tx processor from the recipient's code storage
-            CodeInfo codeInfo = new CodeInfo(code);
-
-            // these values will be set by the tx processor within the state update logic
-            ExecutionEnvironment env = new ExecutionEnvironment(codeInfo,
-                Address.Zero,
-                Address.Zero,
-                Address.Zero,
-                new byte[0],
-                executionContext,
-                1.Kat(),
-                1.Kat(),
-                0);
-
-            BlockhashProvider blockHashProvider = new BlockhashProvider(null, LimboLogs.Instance);
+            BlockhashProvider blockhashProvider = new(tree, specProvider, stateProvider, LimboLogs.Instance);
 
             KatVirtualMachine virtualMachine = new KatVirtualMachine(stateProvider,
-                blockHashProvider,
+                blockhashProvider,
                 specProvider,
                 new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256")),
                 new FfiWrapper(),

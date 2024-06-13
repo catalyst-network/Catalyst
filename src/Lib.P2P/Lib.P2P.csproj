@@ -13,13 +13,12 @@
     <ItemGroup>
         <PackageReference Include="Makaretu.Dns.Multicast" Version="0.27.0" />
         <PackageReference Include="Nito.AsyncEx" Version="5.1.2" />
-        <PackageReference Include="Portable.BouncyCastle" Version="1.9.0" />
         <PackageReference Include="protobuf-net" Version="3.2.30" />
         <PackageReference Include="semver" Version="2.3.0" />
         <PackageReference Include="System.Threading.Tasks.Dataflow" Version="8.0.0" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.8.14" PrivateAssets="All" />
+        <PackageReference Include="Microsoft.VisualStudio.Threading.Analyzers" Version="17.10.48" PrivateAssets="All" />
     </ItemGroup>
     <ItemGroup>
       <ProjectReference Include="..\Catalyst.KBucket\Catalyst.KBucket.csproj" />

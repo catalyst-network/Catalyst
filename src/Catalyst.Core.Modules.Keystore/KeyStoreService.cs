@@ -145,6 +145,8 @@ namespace Catalyst.Core.Modules.Keystore
                 throw new KeyNotFoundException($"The key '{keyName}' does not exist.");
             }
 
+            // TNA TODO
+            /*
             AsymmetricCipherKeyPair kp = null;
             UseEncryptedKey(ekey, key => { kp = GetKeyPairFromPrivateKey(key); });
 
@@ -188,6 +190,8 @@ namespace Catalyst.Core.Modules.Keystore
                 new CmsProcessableByteArray(plainText),
                 CmsEnvelopedGenerator.Aes256Cbc);
             return ed.GetEncoded();
+            */
+            return new byte[1];
         }
 
         /// <summary>

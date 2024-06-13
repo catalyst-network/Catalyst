@@ -49,6 +49,7 @@ using Lib.P2P;
 using MultiFormats.Registry;
 using Nethereum.Hex.HexConvertors.Extensions;
 using Nethermind.Core.Crypto;
+using Nethermind.Core.Extensions;
 using Nethermind.Core.Specs;
 using Nethermind.Db;
 using Nethermind.Logging;
@@ -61,8 +62,7 @@ using Nethermind.Blockchain;
 using Nethermind.Trie.Pruning;
 using Common.Logging;
 using Nethermind.Synchronization.SnapSync;
-using Nethermind.Synchronization.LesSync;
-using Nethermind.State.Witnesses;
+using Nethermind.Synchronization.StateSync;
 using Nethermind.Trie;
 using Microsoft.AspNetCore.Routing.Tree;
 using Nethermind.Blockchain.FullPruning;
@@ -72,6 +72,13 @@ using Nethermind.Synchronization.Blocks;
 using Nethermind.Consensus.Producers;
 using Nethermind.Consensus.Processing;
 using Nethermind.Blockchain.Visitors;
+using Nethermind.Evm.Tracing.GethStyle;
+using Nethermind.Blockchain.Receipts;
+using Nethermind.Crypto;
+using Nethermind.Specs.Forks;
+using Nethermind.Specs;
+using Nethermind.Core;
+using Catalyst.TestUtils.Repository.TreeBuilder;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
@@ -127,18 +134,35 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 
             _dateTimeProvider = new DateTimeProvider();
 
-            IDb codeDb = new MemDb();
-            ISpecProvider specProvider = new CatalystSpecProvider();
             _cryptoContext = new FfiWrapper();
-            // ISnapshotableDb stateDb = new StateDb();
-            var patriciaTree = new PatriciaTree();
-            _stateProvider = new WorldState(patriciaTree.TrieStore, codeDb, LimboLogs.Instance);
-            Assert.That(_stateProvider.StateRoot, Is.Not.EqualTo(Keccak.Zero));
 
-            BlockhashProvider blockHashProvider = new BlockhashProvider(null, LimboLogs.Instance);
+            GethLikeTxTracer txTracer = new GethLikeTxMemoryTracer(GethTraceOptions.Default);
+
+            NoErrorLimboLogs logManager = NoErrorLimboLogs.Instance;
+
+            IDbProvider dbProvider = TestMemDbProvider.Init();
+            IDb codeDb = dbProvider.CodeDb;
+            IDb stateDb = dbProvider.StateDb;
+            SingleReleaseSpecProvider specProvider =
+                new(ConstantinopleFix.Instance, MainnetSpecProvider.Instance.NetworkId, MainnetSpecProvider.Instance.ChainId);
+
+            TrieStore trieStore = new(stateDb, LimboLogs.Instance);
+            StateReader stateReader = new(trieStore, codeDb, logManager);
+            WorldState stateProvider = new(trieStore, codeDb, logManager);
+            Assert.That(stateProvider.StateRoot, Is.Not.EqualTo(Keccak.Zero));
+            stateProvider.CreateAccount(new Address(new ValueHash256()), 10000.Ether());
+            stateProvider.Commit(specProvider.GenesisSpec);
+            stateProvider.CommitTree(0);
+            stateProvider.RecalculateStateRoot();
+
+            InMemoryReceiptStorage receiptStorage = new();
+
+            EthereumEcdsa ecdsa = new(specProvider.ChainId, logManager);
+            BlockTree tree = Build.A.BlockTree().WithoutSettingHead.TestObject;
+            BlockhashProvider blockhashProvider = new(tree, specProvider, stateProvider, LimboLogs.Instance);
 
             KatVirtualMachine virtualMachine = new KatVirtualMachine(_stateProvider,
-                blockHashProvider,
+                blockhashProvider,
                 specProvider,
                 new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256")),
                 new FfiWrapper(), 

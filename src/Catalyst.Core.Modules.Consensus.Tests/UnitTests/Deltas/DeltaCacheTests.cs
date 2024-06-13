@@ -44,6 +44,15 @@ using NUnit.Framework;
 using Catalyst.Core.Lib.Service;
 using Nethermind.Logging;
 using Nethermind.Trie;
+using Nethermind.Trie.Pruning;
+using Nethermind.Evm.Tracing.GethStyle;
+using Nethermind.Blockchain.Receipts;
+using Nethermind.Crypto;
+using Nethermind.Blockchain;
+using Nethermind.Consensus.Comparers;
+using Nethermind.Core;
+using Nethermind.Specs.Forks;
+using Nethermind.Specs;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
@@ -65,6 +74,19 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         [SetUp]
         public void Init()
         {
+            GethLikeTxTracer txTracer = new GethLikeTxMemoryTracer(GethTraceOptions.Default);
+
+            NoErrorLimboLogs logManager = NoErrorLimboLogs.Instance;
+
+            IDbProvider dbProvider = TestMemDbProvider.Init();
+            IDb codeDb = dbProvider.CodeDb;
+            IDb stateDb = dbProvider.StateDb;
+            SingleReleaseSpecProvider specProvider =
+                new(ConstantinopleFix.Instance, MainnetSpecProvider.Instance.NetworkId, MainnetSpecProvider.Instance.ChainId);
+            TrieStore trieStore = new(stateDb, LimboLogs.Instance);
+            StateReader stateReader = new(trieStore, codeDb, logManager);
+            WorldState stateProvider = new(trieStore, codeDb, logManager);
+
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _memoryCache = Substitute.For<IMemoryCache>();
             _dfsReader = Substitute.For<IDeltaDfsReader>();
@@ -73,12 +95,9 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
             var tokenProvider = Substitute.For<IDeltaCacheChangeTokenProvider>();
             tokenProvider.GetChangeToken().Returns(Substitute.For<IChangeToken>());
 
-            IDb codeDb = new MemDb();
-            var patriciaTree = new PatriciaTree();
-            var _stateProvider = new WorldState(patriciaTree.TrieStore, codeDb, LimboLogs.Instance);
-            _stateProvider.StateRoot.Returns(Keccak.Zero);
+            stateProvider.StateRoot.Returns(Keccak.Zero);
 
-            _deltaCache = new DeltaCache(_hashProvider, _memoryCache, _dfsReader, tokenProvider, _stateProvider, Substitute.For<IDeltaIndexService>(), _logger);
+            _deltaCache = new DeltaCache(_hashProvider, _memoryCache, _dfsReader, tokenProvider, stateProvider, Substitute.For<IDeltaIndexService>(), _logger);
         }
 
         [Test]

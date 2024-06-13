@@ -117,7 +117,8 @@ namespace Lib.P2P.Cryptography
             _byteCount = 0;
             Arrays.Fill(_counter, 0);
             Array.Copy(_iv, 0, _counter, 0, _iv.Length);
-            _cipher.Reset();
+            // TNA TODO
+ //           _cipher.Reset();
         }
 
         /// <inheritdoc />
@@ -162,6 +163,11 @@ namespace Lib.P2P.Cryptography
             }
             
             return rv;
+        }
+
+        public void ProcessBytes(ReadOnlySpan<byte> input, Span<byte> output)
+        {
+            throw new NotImplementedException();
         }
     }
 }

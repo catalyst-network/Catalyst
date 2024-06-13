@@ -39,8 +39,16 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
             if (api.TryGetDeltaWithCid(block, out var deltaWithCid))
             {
                 Hash256 stateRoot = deltaWithCid.Delta.StateRoot.ToKeccak();
-                Account account = api.StateReader.GetAccount(stateRoot, address);
-                return account?.Nonce ?? 0;
+                AccountStruct accStruct;
+                bool bExists = api.StateReader.TryGetAccount(stateRoot, address, out accStruct);
+                if (bExists)
+                {
+                    return accStruct.Nonce;
+                }
+                else
+                {
+                    return 0;
+                }
             }
 
             throw new InvalidOperationException($"Delta not found: '{block}'");
