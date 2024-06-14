@@ -42,12 +42,12 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.UnixFileSystem
             var link = node.ToLink("foo");
             Assert.That(node.Id, Is.EqualTo(link.Id));
             Assert.That(node.DagSize, Is.EqualTo(link.Size));
-            Assert.That("foo", Is.EqualTo(link.Name));
+            Assert.That(link.Name, Is.EqualTo("foo"));
 
             link = node.ToLink();
             Assert.That(node.Id, Is.EqualTo(link.Id));
             Assert.That(node.DagSize, Is.EqualTo(link.Size));
-            Assert.That("bar", Is.EqualTo(link.Name));
+            Assert.That(link.Name, Is.EqualTo("bar"));
         }
     }
 }

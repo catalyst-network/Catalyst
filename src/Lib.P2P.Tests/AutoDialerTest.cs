@@ -57,7 +57,7 @@ namespace Lib.P2P.Tests
         {
             using (var dialer = new AutoDialer(new SwarmService()))
             {
-                Assert.That(AutoDialer.DefaultMinConnections, Is.EqualTo(dialer.MinConnections));
+                Assert.That(dialer.MinConnections, Is.EqualTo(AutoDialer.DefaultMinConnections));
             }
         }
 

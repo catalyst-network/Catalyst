@@ -105,7 +105,7 @@ namespace Lib.P2P.Tests
             }
 
             policy.Clear();
-            Assert.That(0, Is.EqualTo(policy.Count));
+            Assert.That(policy.Count, Is.EqualTo(0));
             Assert.That(policy.Contains(addressA), Is.False);
             Assert.That(policy.Contains(addressB), Is.False);
         }

@@ -33,10 +33,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         {
             var ledger = new BitswapLedger();
             Assert.That(ledger.Peer, Is.Null);
-            Assert.That(0ul, Is.EqualTo(ledger.BlocksExchanged));
-            Assert.That(0ul, Is.EqualTo(ledger.DataReceived));
-            Assert.That(0ul, Is.EqualTo(ledger.DataSent));
-            Assert.That(0f, Is.EqualTo(ledger.DebtRatio));
+            Assert.That(ledger.BlocksExchanged, Is.EqualTo(0ul));
+            Assert.That(ledger.DataReceived, Is.EqualTo(0ul));
+            Assert.That(ledger.DataSent, Is.EqualTo(0ul));
+            Assert.That(ledger.DebtRatio, Is.EqualTo(0f));
             Assert.That(ledger.IsInDebt, Is.True);
         }
 

@@ -33,7 +33,7 @@ namespace MultiFormats.Tests
         public void Encode()
         {
             Assert.That(Base58.Encode(Encoding.UTF8.GetBytes("this is a test")), Is.EqualTo("jo91waLQA1NNeBmZKUF"));
-            Assert.That("jo91waLQA1NNeBmZKUF", Is.EqualTo(Encoding.UTF8.GetBytes("this is a test").ToBase58()));
+            Assert.That(Encoding.UTF8.GetBytes("this is a test").ToBase58(), Is.EqualTo("jo91waLQA1NNeBmZKUF"));
         }
 
         [Test]

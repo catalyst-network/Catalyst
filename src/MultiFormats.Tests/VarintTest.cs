@@ -61,14 +61,14 @@ namespace MultiFormats.Tests
             {
                 0x00, 0xAC, 0x02
             };
-            Assert.That(300, Is.EqualTo(Varint.DecodeInt32(x, 1)));
+            Assert.That(Varint.DecodeInt32(x, 1), Is.EqualTo(300));
         }
 
         [Test]
         public void MaxLong()
         {
             var x = "ffffffffffffffff7f".ToHexBuffer();
-            Assert.That(9, Is.EqualTo(Varint.RequiredBytes(long.MaxValue)));
+            Assert.That(Varint.RequiredBytes(long.MaxValue), Is.EqualTo(9));
             Assert.That(x, Is.EquivalentTo(Varint.Encode(long.MaxValue)));
             Assert.That(Varint.DecodeInt64(x), Is.EqualTo(long.MaxValue));
         }

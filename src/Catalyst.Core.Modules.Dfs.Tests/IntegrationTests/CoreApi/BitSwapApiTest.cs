@@ -244,9 +244,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 var ledger = _dfsService.BitSwapApi.GetBitSwapLedger(otherPeer, cts.Token);
                 
                 Assert.That(otherPeer, Is.EqualTo(ledger.Peer));
-                Assert.That(0UL, Is.Not.EqualTo(ledger.BlocksExchanged));
-                Assert.That(0UL, Is.Not.EqualTo(ledger.DataReceived));
-                Assert.That(0UL, Is.EqualTo(ledger.DataSent));
+                Assert.That(ledger.BlocksExchanged, Is.Not.EqualTo(0UL));
+                Assert.That(ledger.DataReceived, Is.Not.EqualTo(0UL));
+                Assert.That(ledger.DataSent, Is.EqualTo(0UL));
                 Assert.That(ledger.IsInDebt, Is.True);
 
                 // TODO: Timing issue here.  ipfsOther could have sent the block
@@ -401,9 +401,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 var otherPeer = _dfsServiceOther.LocalPeer;
                 var ledger = _dfsService.BitSwapApi.GetBitSwapLedger(otherPeer, cts.Token);
                 Assert.That(otherPeer, Is.EqualTo(ledger.Peer));
-                Assert.That(0UL, Is.Not.EqualTo(ledger.BlocksExchanged));
-                Assert.That(0UL, Is.Not.EqualTo(ledger.DataReceived));
-                Assert.That(0UL, Is.EqualTo(ledger.DataSent));
+                Assert.That(ledger.BlocksExchanged, Is.Not.EqualTo(0UL));
+                Assert.That(ledger.DataReceived, Is.Not.EqualTo(0UL));
+                Assert.That(ledger.DataSent, Is.EqualTo(0UL));
                 Assert.That(ledger.IsInDebt, Is.True);
 
                 // TODO: Timing issue here.  ipfsOther could have sent the block
@@ -506,7 +506,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                     var _ = _dfsService.BitSwapApi.GetAsync(block.Id, cts.Token).Result;
                 });
 
-                Assert.That(0, Is.EqualTo((await _dfsService.BitSwapApi.WantsAsync(cancel: cts.Token)).Count()));
+                Assert.That((await _dfsService.BitSwapApi.WantsAsync(cancel: cts.Token)).Count(), Is.EqualTo(0));
             }
             finally
             {

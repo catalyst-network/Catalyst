@@ -386,10 +386,10 @@ namespace MultiFormats.Tests
             Assert.That(ma1, Is.EqualTo(ma1.WithoutPeerId()));
 
             ma1 = new MultiAddress($"/ip4/127.0.0.1/tcp/4001/ipfs/{id}");
-            Assert.That("/ip4/127.0.0.1/tcp/4001", Is.EqualTo(ma1.WithoutPeerId().ToString()));
+            Assert.That(ma1.WithoutPeerId().ToString(), Is.EqualTo("/ip4/127.0.0.1/tcp/4001"));
 
             ma1 = new MultiAddress($"/ip4/127.0.0.1/tcp/4001/p2p/{id}");
-            Assert.That("/ip4/127.0.0.1/tcp/4001", Is.EqualTo(ma1.WithoutPeerId().ToString()));
+            Assert.That(ma1.WithoutPeerId().ToString(), Is.EqualTo("/ip4/127.0.0.1/tcp/4001"));
         }
 
         [Test]

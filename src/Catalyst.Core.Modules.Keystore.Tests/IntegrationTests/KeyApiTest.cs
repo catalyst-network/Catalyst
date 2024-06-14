@@ -66,7 +66,7 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
             var self = keys.Single(k => k.Name == "self");
 
             var me = await _keyStoreService.FindKeyByNameAsync("self");
-            Assert.That("self", Is.EqualTo(self.Name));
+            Assert.That(self.Name, Is.EqualTo("self"));
             Assert.That(me.Id, Is.EqualTo(self.Id));
         }
 
@@ -84,7 +84,7 @@ namespace Catalyst.Core.Modules.Keystore.Tests.IntegrationTests
 
             await _keyStoreService.RemoveAsync("clone");
             var clone = await _keyStoreService.ImportAsync("clone", pem, password);
-            Assert.That("clone", Is.EqualTo(clone.Name));
+            Assert.That(clone.Name, Is.EqualTo("clone"));
             Assert.That(self.Id, Is.EqualTo(clone.Id));
         }
 
@@ -153,11 +153,11 @@ Rw==
 
             await _keyStoreService.RemoveAsync("jsipfs");
             var key = await _keyStoreService.ImportAsync("jsipfs", pem, password);
-            Assert.That("jsipfs", Is.EqualTo(key.Name));
-            Assert.That("QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb", Is.EqualTo(key.Id.ToString()));
+            Assert.That(key.Name, Is.EqualTo("jsipfs"));
+            Assert.That(key.Id.ToString(), Is.EqualTo("QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb"));
 
             var pubKey = await _keyStoreService.GetPublicKeyAsync("jsipfs");
-            Assert.That(spki, Is.EqualTo(pubKey));
+            Assert.That(pubKey, Is.EqualTo(spki));
         }
 
         [Test]
@@ -194,7 +194,7 @@ MIIFDTA/BgkqhkiG9w0BBQ0wMjAaBgkqhkiG9w0BBQwwDQQILdGJynKmkrMCAWQw
             {
                 Assert.That(key, Is.Not.Null);
                 Assert.That(key.Id, Is.Not.Null);
-                Assert.That(name, Is.EqualTo(key.Name));
+                Assert.That(key.Name, Is.EqualTo(name));
 
                 var keys = await _keyStoreService.ListAsync();
                 var clone = keys.Single(k => k.Name == name);
@@ -236,7 +236,7 @@ MIIFDTA/BgkqhkiG9w0BBQ0wMjAaBgkqhkiG9w0BBQwwDQQILdGJynKmkrMCAWQw
             var key = await _keyStoreService.CreateAsync(name, "ed25519", 0);
             var renamed = await _keyStoreService.RenameAsync(name, newName);
             Assert.That(key.Id, Is.EqualTo(renamed.Id));
-            Assert.That(newName, Is.EqualTo(renamed.Name));
+            Assert.That(renamed.Name, Is.EqualTo(newName));
 
             var keys = await _keyStoreService.ListAsync();
             var enumerable = keys as IKey[] ?? keys.ToArray();
@@ -280,7 +280,7 @@ MIIFDTA/BgkqhkiG9w0BBQ0wMjAaBgkqhkiG9w0BBQwwDQQILdGJynKmkrMCAWQw
             {
                 Assert.That(key, Is.Not.Null);
                 Assert.That(key.Id, Is.Not.Null);
-                Assert.That(name, Is.EqualTo(key.Name));
+                Assert.That(key.Name, Is.EqualTo(name));
 
                 var keys = await _keyStoreService.ListAsync();
                 var clone = keys.Single(k => k.Name == name);
@@ -302,7 +302,7 @@ MIIFDTA/BgkqhkiG9w0BBQ0wMjAaBgkqhkiG9w0BBQwwDQQILdGJynKmkrMCAWQw
             {
                 Assert.That(key, Is.Not.Null);
                 Assert.That(key.Id, Is.Not.Null);
-                Assert.That(name, Is.EqualTo(key.Name));
+                Assert.That(key.Name, Is.EqualTo(name));
 
                 var keys = await _keyStoreService.ListAsync();
                 var clone = keys.Single(k => k.Name == name);
@@ -333,7 +333,7 @@ MIIFDTA/BgkqhkiG9w0BBQ0wMjAaBgkqhkiG9w0BBQwwDQQILdGJynKmkrMCAWQw
         {
             const string name = "test-ed25519-id-hash";
             var key = await _keyStoreService.CreateAsync(name, "ed25519", 0);
-            Assert.That("identity", Is.EqualTo(key.Id.Algorithm.Name));
+            Assert.That(key.Id.Algorithm.Name, Is.EqualTo("identity"));
         }
 
         [Test]
@@ -349,8 +349,8 @@ MC4CAQAwBQYDK2VwBCIEIGJnyy3U4ksTQoRBz3mf1dxeFDPXZBrwh7gD7SqMg+/i
 
             await _keyStoreService.RemoveAsync("oed1");
             var key = await _keyStoreService.ImportAsync("oed1", pem);
-            Assert.That("oed1", Is.EqualTo(key.Name));
-            Assert.That("18n3naE9kBZoVvgYMV6saMZe3jn87dZiNbQ22BhxKTwU5yUoGfvBL1R3eScjokDGBk7i", Is.EqualTo(key.Id.ToString()));
+            Assert.That(key.Name, Is.EqualTo("oed1"));
+            Assert.That(key.Id.ToString(), Is.EqualTo("18n3naE9kBZoVvgYMV6saMZe3jn87dZiNbQ22BhxKTwU5yUoGfvBL1R3eScjokDGBk7i"));
 
             var privateKey = await _keyStoreService.GetPrivateKeyAsync("oed1");
             Assert.That(privateKey, Is.TypeOf< Ed25519PrivateKeyParameters>());

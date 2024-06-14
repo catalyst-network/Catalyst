@@ -80,7 +80,7 @@ namespace Lib.P2P.Tests
         {
             var mh = new MultiHash("QmXg9Pp2ytZ14xgmQjYEiHjVjMFXzCVVEcRTWJBmLgR39V");
             Cid cid = mh;
-            Assert.That(0, Is.EqualTo(cid.Version));
+            Assert.That(cid.Version, Is.EqualTo(0));
             Assert.That(cid.ContentType, Is.EqualTo("dag-pb"));
             Assert.That(cid.Encoding, Is.EqualTo("base58btc"));
             Assert.That(mh, Is.EqualTo(cid.Hash));
@@ -92,7 +92,7 @@ namespace Lib.P2P.Tests
             var hello = Encoding.UTF8.GetBytes("Hello, world.");
             var mh = MultiHash.ComputeHash(hello, "sha2-512");
             Cid cid = mh;
-            Assert.That(1, Is.EqualTo(cid.Version));
+            Assert.That(cid.Version, Is.EqualTo(1));
             Assert.That(cid.ContentType, Is.EqualTo("dag-pb"));
             Assert.That(cid.Encoding, Is.EqualTo("base32"));
             Assert.That(mh, Is.EqualTo(cid.Hash));
@@ -209,9 +209,9 @@ namespace Lib.P2P.Tests
         {
             var hash = "QmXg9Pp2ytZ14xgmQjYEiHjVjMFXzCVVEcRTWJBmLgR39V";
             var cid = Cid.Decode(hash);
-            Assert.That(0, Is.EqualTo(cid.Version));
-            Assert.That("dag-pb", Is.EqualTo(cid.ContentType));
-            Assert.That("base58btc", Is.EqualTo(cid.Encoding));
+            Assert.That(cid.Version, Is.EqualTo(0));
+            Assert.That(cid.ContentType, Is.EqualTo("dag-pb"));
+            Assert.That(cid.Encoding, Is.EqualTo("base58btc"));
             Assert.That(hash, Is.EqualTo(cid.Encode()));
         }
 
@@ -242,9 +242,9 @@ namespace Lib.P2P.Tests
             var id = "zb2rhj7crUKTQYRGCRATFaQ6YFLTde2YzdqbbhAASkL9uRDXn";
             var hash = "QmaozNR7DZHQK1ZcU9p7QdrshMvXqWK6gpu5rmrkPdT3L4";
             var cid = Cid.Decode(id);
-            Assert.That(1, Is.EqualTo(cid.Version));
-            Assert.That("base58btc", Is.EqualTo(cid.Encoding));
-            Assert.That("raw", Is.EqualTo(cid.ContentType));
+            Assert.That(cid.Version, Is.EqualTo(1));
+            Assert.That(cid.Encoding, Is.EqualTo("base58btc"));
+            Assert.That(cid.ContentType, Is.EqualTo("raw"));
         }
 
         [Test]
@@ -253,9 +253,9 @@ namespace Lib.P2P.Tests
             var id = "zJAFhtPN28kqMxDkZawWCCL52BzaiymqFgX3LA7XzkNRMNAN1T1J";
             var hash = "QmaozNR7DZHQK1ZcU9p7QdrshMvXqWK6gpu5rmrkPdT3L4";
             var cid = Cid.Decode(id);
-            Assert.That(1, Is.EqualTo(cid.Version));
-            Assert.That("base58btc", Is.EqualTo(cid.Encoding));
-            Assert.That("codec-32767", Is.EqualTo(cid.ContentType));
+            Assert.That(cid.Version, Is.EqualTo(1));
+            Assert.That(cid.Encoding, Is.EqualTo("base58btc"));
+            Assert.That(cid.ContentType, Is.EqualTo("codec-32767"));
         }
 
         [Test]
@@ -320,9 +320,9 @@ namespace Lib.P2P.Tests
         {
             var hash = "QmaozNR7DZHQK1ZcU9p7QdrshMvXqWK6gpu5rmrkPdT3L4";
             Cid cid = hash;
-            Assert.That(0, Is.EqualTo(cid.Version));
-            Assert.That("dag-pb", Is.EqualTo(cid.ContentType));
-            Assert.That("base58btc", Is.EqualTo(cid.Encoding));
+            Assert.That(cid.Version, Is.EqualTo(0));
+            Assert.That(cid.ContentType, Is.EqualTo("dag-pb"));
+            Assert.That(cid.Encoding, Is.EqualTo("base58btc"));
             Assert.That(hash, Is.EqualTo(cid.Encode()));
         }
 
@@ -332,9 +332,9 @@ namespace Lib.P2P.Tests
             var id = "zb2rhj7crUKTQYRGCRATFaQ6YFLTde2YzdqbbhAASkL9uRDXn";
             var hash = "QmaozNR7DZHQK1ZcU9p7QdrshMvXqWK6gpu5rmrkPdT3L4";
             Cid cid = id;
-            Assert.That(1, Is.EqualTo(cid.Version));
-            Assert.That("base58btc", Is.EqualTo(cid.Encoding));
-            Assert.That("raw", Is.EqualTo(cid.ContentType));
+            Assert.That(cid.Version, Is.EqualTo(1));
+            Assert.That(cid.Encoding, Is.EqualTo("base58btc"));
+            Assert.That(cid.ContentType, Is.EqualTo("raw"));
         }
 
         [Test]
@@ -408,7 +408,7 @@ namespace Lib.P2P.Tests
         public void Immutable()
         {
             Cid cid = "QmaozNR7DZHQK1ZcU9p7QdrshMvXqWK6gpu5rmrkPdT3L4";
-            Assert.That("QmaozNR7DZHQK1ZcU9p7QdrshMvXqWK6gpu5rmrkPdT3L4", Is.EqualTo(cid.Encode()));
+            Assert.That(cid.Encode(), Is.EqualTo("QmaozNR7DZHQK1ZcU9p7QdrshMvXqWK6gpu5rmrkPdT3L4"));
             ExceptionAssert.Throws<NotSupportedException>(() => cid.ContentType = "dag-cbor");
             ExceptionAssert.Throws<NotSupportedException>(() => cid.Encoding = "base64");
             ExceptionAssert.Throws<NotSupportedException>(() =>
@@ -466,9 +466,9 @@ namespace Lib.P2P.Tests
         {
             var buffer = "1220a4edf38611d7d4a2d3ff2d97f88a7256eba31b57982f803b4de7bbeb0343c37b".ToHexBuffer();
             var cid = Cid.Read(buffer);
-            Assert.That(0, Is.EqualTo(cid.Version));
-            Assert.That("dag-pb", Is.EqualTo(cid.ContentType));
-            Assert.That("QmZSU1xNFsBtCnzK2Nk9N4bAxQiVNdmugU9DQDE3ntkTpe", Is.EqualTo(cid.Hash.ToString()));
+            Assert.That(cid.Version, Is.EqualTo(0));
+            Assert.That(cid.ContentType, Is.EqualTo("dag-pb"));
+            Assert.That(cid.Hash.ToString(), Is.EqualTo("QmZSU1xNFsBtCnzK2Nk9N4bAxQiVNdmugU9DQDE3ntkTpe"));
 
             var clone = cid.ToArray();
             Assert.That(buffer, Is.EquivalentTo(clone));

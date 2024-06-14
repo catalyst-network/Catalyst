@@ -50,76 +50,76 @@ namespace Lib.P2P.Tests.PubSub
         public void Adding_Duplicate()
         {
             var topics = new TopicManager();
-            Assert.That(0, Is.EqualTo(topics.GetPeers("alpha").Count()));
+            Assert.That(topics.GetPeers("alpha").Count(), Is.EqualTo(0));
 
             topics.AddInterest("alpha", a);
-            Assert.That(1, Is.EqualTo(topics.GetPeers("alpha").Count()));
+            Assert.That(topics.GetPeers("alpha").Count(), Is.EqualTo(1));
 
             topics.AddInterest("alpha", a);
-            Assert.That(1, Is.EqualTo(topics.GetPeers("alpha").Count()));
+            Assert.That(topics.GetPeers("alpha").Count(), Is.EqualTo(1));
 
             topics.AddInterest("alpha", b);
-            Assert.That(2, Is.EqualTo(topics.GetPeers("alpha").Count()));
+            Assert.That(topics.GetPeers("alpha").Count(), Is.EqualTo(2));
         }
 
         [Test]
         public void Removing()
         {
             var topics = new TopicManager();
-            Assert.That(0, Is.EqualTo(topics.GetPeers("alpha").Count()));
+            Assert.That(topics.GetPeers("alpha").Count(), Is.EqualTo(0));
 
             topics.AddInterest("alpha", a);
             topics.AddInterest("alpha", b);
-            Assert.That(2, Is.EqualTo(topics.GetPeers("alpha").Count()));
+            Assert.That(topics.GetPeers("alpha").Count(), Is.EqualTo(2));
 
             topics.RemoveInterest("alpha", a);
             Assert.That(b, Is.EqualTo(topics.GetPeers("alpha").First()));
-            Assert.That(1, Is.EqualTo(topics.GetPeers("alpha").Count()));
+            Assert.That(topics.GetPeers("alpha").Count(), Is.EqualTo(1));
 
             topics.RemoveInterest("alpha", a);
             Assert.That(b, Is.EqualTo(topics.GetPeers("alpha").First()));
-            Assert.That(1, Is.EqualTo(topics.GetPeers("alpha").Count()));
+            Assert.That(topics.GetPeers("alpha").Count(), Is.EqualTo(1));
 
             topics.RemoveInterest("alpha", b);
-            Assert.That(0, Is.EqualTo(topics.GetPeers("alpha").Count()));
+            Assert.That(topics.GetPeers("alpha").Count(), Is.EqualTo(0));
 
             topics.RemoveInterest("beta", b);
-            Assert.That(0, Is.EqualTo(topics.GetPeers("beta").Count()));
+            Assert.That(topics.GetPeers("beta").Count(), Is.EqualTo(0));
         }
 
         [Test]
         public void Clearing_Peers()
         {
             var topics = new TopicManager();
-            Assert.That(0, Is.EqualTo(topics.GetPeers("alpha").Count()));
-            Assert.That(0, Is.EqualTo(topics.GetPeers("beta").Count()));
+            Assert.That(topics.GetPeers("alpha").Count(), Is.EqualTo(0));
+            Assert.That(topics.GetPeers("beta").Count(), Is.EqualTo(0));
 
             topics.AddInterest("alpha", a);
             topics.AddInterest("beta", a);
             topics.AddInterest("beta", b);
-            Assert.That(1, Is.EqualTo(topics.GetPeers("alpha").Count()));
-            Assert.That(2, Is.EqualTo(topics.GetPeers("beta").Count()));
+            Assert.That(topics.GetPeers("alpha").Count(), Is.EqualTo(1));
+            Assert.That(topics.GetPeers("beta").Count(), Is.EqualTo(2));
 
             topics.Clear(a);
-            Assert.That(0, Is.EqualTo(topics.GetPeers("alph)").Count()));
-            Assert.That(1, Is.EqualTo(topics.GetPeers("beta").Count()));
+            Assert.That(topics.GetPeers("alph)").Count(), Is.EqualTo(0));
+            Assert.That(topics.GetPeers("beta").Count(), Is.EqualTo(1));
         }
 
         [Test]
         public void Clearing()
         {
             var topics = new TopicManager();
-            Assert.That(0, Is.EqualTo(topics.GetPeers("alpha").Count()));
-            Assert.That(0, Is.EqualTo(topics.GetPeers("beta").Count()));
+            Assert.That(topics.GetPeers("alpha").Count(), Is.EqualTo(0));
+            Assert.That(topics.GetPeers("beta").Count(), Is.EqualTo(0));
 
             topics.AddInterest("alpha", a);
             topics.AddInterest("beta", b);
-            Assert.That(1, Is.EqualTo(topics.GetPeers("alpha").Count()));
-            Assert.That(1, Is.EqualTo(topics.GetPeers("beta").Count()));
+            Assert.That(topics.GetPeers("alpha").Count(), Is.EqualTo(1));
+            Assert.That(topics.GetPeers("beta").Count(), Is.EqualTo(1));
 
             topics.Clear();
-            Assert.That(0, Is.EqualTo(topics.GetPeers("alpha").Count()));
-            Assert.That(0, Is.EqualTo(topics.GetPeers("beta").Count()));
+            Assert.That(topics.GetPeers("alpha").Count(), Is.EqualTo(0));
+            Assert.That(topics.GetPeers("beta").Count(), Is.EqualTo(0));
         }
 
         [Test]

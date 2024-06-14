@@ -129,7 +129,7 @@ namespace MultiFormats.Tests
         {
             var hello = Encoding.UTF8.GetBytes("Hello, world.");
             var mh = MultiHash.ComputeHash(hello);
-            Assert.That(MultiHash.DefaultAlgorithmName, Is.EqualTo(mh.Algorithm.Name));
+            Assert.That(mh.Algorithm.Name, Is.EqualTo(MultiHash.DefaultAlgorithmName));
             Assert.That(mh.Digest, Is.Not.Null);
         }
 

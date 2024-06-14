@@ -33,7 +33,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         {
             var options = new SwarmOptions();
             Assert.That(options.PrivateNetworkKey, Is.Null);
-            Assert.That(8, Is.EqualTo(options.MinConnections));
+            Assert.That(options.MinConnections, Is.EqualTo(8));
         }
     }
 }
