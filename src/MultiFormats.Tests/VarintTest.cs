@@ -37,9 +37,9 @@ namespace MultiFormats.Tests
             {
                 0
             };
-            Assert.That(1, Is.EqualTo(Varint.RequiredBytes(0)));
+            Assert.That(Varint.RequiredBytes(0), Is.EqualTo(1));
             Assert.That(x, Is.EquivalentTo(Varint.Encode(0)));
-            Assert.That(0, Is.EqualTo(Varint.DecodeInt32(x)));
+            Assert.That(Varint.DecodeInt32(x), Is.EqualTo(0));
         }
 
         [Test]
@@ -49,9 +49,9 @@ namespace MultiFormats.Tests
             {
                 0xAC, 0x02
             };
-            Assert.That(2, Is.EqualTo(Varint.RequiredBytes(300)));
+            Assert.That(Varint.RequiredBytes(300), Is.EqualTo(2));
             Assert.That(x, Is.EquivalentTo(Varint.Encode(300)));
-            Assert.That(300, Is.EqualTo(Varint.DecodeInt32(x)));
+            Assert.That(Varint.DecodeInt32(x), Is.EqualTo(300));
         }
 
         [Test]
@@ -70,7 +70,7 @@ namespace MultiFormats.Tests
             var x = "ffffffffffffffff7f".ToHexBuffer();
             Assert.That(9, Is.EqualTo(Varint.RequiredBytes(long.MaxValue)));
             Assert.That(x, Is.EquivalentTo(Varint.Encode(long.MaxValue)));
-            Assert.That(long.MaxValue, Is.EqualTo(Varint.DecodeInt64(x)));
+            Assert.That(Varint.DecodeInt64(x), Is.EqualTo(long.MaxValue));
         }
 
         [Test]
@@ -111,7 +111,7 @@ namespace MultiFormats.Tests
             {
                 await ms.WriteVarintAsync(long.MaxValue);
                 ms.Position = 0;
-                Assert.That(long.MaxValue, Is.EqualTo(ms.ReadVarint64()));
+                Assert.That(ms.ReadVarint64(), Is.EqualTo(long.MaxValue));
             }
         }
 
@@ -137,7 +137,7 @@ namespace MultiFormats.Tests
             await using (var ms = new MemoryStream("ffffffffffffffff7f".ToHexBuffer()))
             {
                 var v = await ms.ReadVarint64Async();
-                Assert.That(long.MaxValue, Is.EqualTo(v));
+                Assert.That(v, Is.EqualTo(long.MaxValue));
             }
         }
 
@@ -158,7 +158,7 @@ namespace MultiFormats.Tests
         {
             for (long v = 1; v <= 0xFFFFFFFL; v = v << 4)
             {
-                Console.Write($"| {v} (0x{v.ToString("x")}) ");
+                Console.Write($"| {v} (0x{v:x}) ");
                 Console.WriteLine($"| {Varint.Encode(v).ToHexString()} |");
             }
         }

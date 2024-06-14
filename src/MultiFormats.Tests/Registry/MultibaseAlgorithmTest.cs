@@ -50,7 +50,7 @@ namespace MultiFormats.Tests.Registry
         }
 
         [Test]
-        public void Algorithms_Are_Enumerable() { Assert.That(0, Is.Not.EqualTo(MultiBaseAlgorithm.All.Count())); }
+        public void Algorithms_Are_Enumerable() { Assert.That(MultiBaseAlgorithm.All.Count(), Is.Not.EqualTo(0)); }
 
         [Test]
         public void Roundtrip_All_Algorithms()
