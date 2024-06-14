@@ -36,7 +36,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         {
             var options = new AddFileOptions();
 
-            Assert.That(true, Is.EqualTo(options.Pin));
+            Assert.That(options.Pin, Is.EqualTo(true));
             Assert.That(256 * 1024, Is.EqualTo(options.ChunkSize));
             Assert.That(MultiHash.DefaultAlgorithmName, Is.EqualTo(options.Hash));
             Assert.That(false, Is.EqualTo(options.OnlyHash));

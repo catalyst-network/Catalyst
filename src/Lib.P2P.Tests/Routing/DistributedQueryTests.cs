@@ -40,7 +40,7 @@ namespace Lib.P2P.Tests.Routing
             var cts = new CancellationTokenSource();
             cts.Cancel();
             await dquery.RunAsync(cts.Token);
-            Assert.That(0, Is.EqualTo(dquery.Answers.Count()));
+            Assert.That(dquery.Answers.Count(), Is.EqualTo(0));
         }
 
         [Test]

@@ -55,7 +55,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.BlockExchange
         public void WantList()
         {
             var bitSwap = new BitSwapService {SwarmService = new SwarmService {LocalPeer = _self}};
-            Assert.That(0, Is.EqualTo(bitSwap.PeerWants(_self.Id).Count()));
+            Assert.That(bitSwap.PeerWants(_self.Id).Count(), Is.EqualTo(0));
 
             var cid = new DagNode(Encoding.UTF8.GetBytes("BitswapTest unknown block")).Id;
             var cancel = new CancellationTokenSource();

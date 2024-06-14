@@ -147,7 +147,7 @@ namespace Lib.P2P.Tests
             {
                 var _ = swarm.RegisterPeerAddress("/ip4/10.1.10.10/tcp/29087");
             });
-            Assert.That(0, Is.EqualTo(swarm.KnownPeerAddresses.Count()));
+            Assert.That(swarm.KnownPeerAddresses.Count(), Is.EqualTo(0));
         }
 
         [Test]
@@ -155,30 +155,30 @@ namespace Lib.P2P.Tests
         {
             var swarm = new SwarmService {LocalPeer = _self};
             swarm.RegisterPeerAddress(_mars);
-            Assert.That(1, Is.EqualTo(swarm.KnownPeerAddresses.Count()));
+            Assert.That(swarm.KnownPeerAddresses.Count(), Is.EqualTo(1));
 
             swarm.RegisterPeerAddress(_mars);
-            Assert.That(1, Is.EqualTo(swarm.KnownPeerAddresses.Count()));
+            Assert.That(swarm.KnownPeerAddresses.Count(), Is.EqualTo(1));
         }
 
         [Test]
         public void KnownPeers()
         {
             var swarm = new SwarmService {LocalPeer = _self};
-            Assert.That(0, Is.EqualTo(swarm.KnownPeers.Count()));
-            Assert.That(0, Is.EqualTo(swarm.KnownPeerAddresses.Count()));
+            Assert.That(swarm.KnownPeers.Count(), Is.EqualTo(0));
+            Assert.That(swarm.KnownPeerAddresses.Count(), Is.EqualTo(0));
 
             swarm.RegisterPeerAddress("/ip4/10.1.10.10/tcp/29087/ipfs/QmSoLMeWqB7YGVLJN3pNLQpmmEk35v6wYtsMGLzSr5QBU3");
-            Assert.That(1, Is.EqualTo(swarm.KnownPeers.Count()));
-            Assert.That(1, Is.EqualTo(swarm.KnownPeerAddresses.Count()));
+            Assert.That(swarm.KnownPeers.Count(), Is.EqualTo(1));
+            Assert.That(swarm.KnownPeerAddresses.Count(), Is.EqualTo(1));
 
             swarm.RegisterPeerAddress("/ip4/10.1.10.11/tcp/29087/p2p/QmSoLMeWqB7YGVLJN3pNLQpmmEk35v6wYtsMGLzSr5QBU3");
-            Assert.That(1, Is.EqualTo(swarm.KnownPeers.Count()));
-            Assert.That(2, Is.EqualTo(swarm.KnownPeerAddresses.Count()));
+            Assert.That(swarm.KnownPeers.Count(), Is.EqualTo(1));
+            Assert.That(swarm.KnownPeerAddresses.Count(), Is.EqualTo(2));
 
             swarm.RegisterPeerAddress(_venus);
-            Assert.That(2, Is.EqualTo(swarm.KnownPeers.Count()));
-            Assert.That(3, Is.EqualTo(swarm.KnownPeerAddresses.Count()));
+            Assert.That(swarm.KnownPeers.Count(), Is.EqualTo(2));
+            Assert.That(swarm.KnownPeerAddresses.Count(), Is.EqualTo(3));
         }
 
         [Test]

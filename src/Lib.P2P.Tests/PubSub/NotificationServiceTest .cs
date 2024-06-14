@@ -70,8 +70,8 @@ namespace Lib.P2P.Tests.PubSub
                 await ns.PublishAsync("topic", "foo");
                 await ns.PublishAsync("topic", new byte[] {1, 2, 3});
                 await ns.PublishAsync("topic", new MemoryStream(new byte[] {1, 2, 3}));
-                Assert.That(3ul, Is.EqualTo(ns.MesssagesPublished));
-                Assert.That(3ul, Is.EqualTo(ns.MesssagesReceived));
+                Assert.That(ns.MesssagesPublished, Is.EqualTo(3ul));
+                Assert.That(ns.MesssagesReceived, Is.EqualTo(3ul));
             }
             finally
             {

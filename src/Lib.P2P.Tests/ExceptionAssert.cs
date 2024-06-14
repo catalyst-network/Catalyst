@@ -31,7 +31,7 @@ namespace Lib.P2P.Tests
     /// </summary>
     public static class ExceptionAssert
     {
-        public static T Throws<T>(Action action, string expectedMessage = null) where T : Exception
+        public static T? Throws<T>(Action action, string expectedMessage = null) where T : Exception
         {
             try
             {

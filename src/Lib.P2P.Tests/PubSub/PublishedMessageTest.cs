@@ -89,7 +89,7 @@ namespace Lib.P2P.Tests.PubSub
         public void DataStream()
         {
             var msg = new PublishedMessage {DataBytes = new byte[] {1}};
-            Assert.That(1, Is.EqualTo(msg.DataStream.ReadByte()));
+            Assert.That(msg.DataStream.ReadByte(), Is.EqualTo(1));
         }
     }
 }

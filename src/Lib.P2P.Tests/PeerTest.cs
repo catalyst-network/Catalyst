@@ -41,7 +41,7 @@ namespace Lib.P2P.Tests
         [Test]
         public new void ToString()
         {
-            Assert.That("", Is.EqualTo(new Peer().ToString()));
+            Assert.That(new Peer().ToString(), Is.EqualTo(""));
             Assert.That(MarsId, Is.EqualTo(new Peer {Id = MarsId}.ToString()));
         }
 

@@ -46,7 +46,7 @@ namespace Lib.P2P.Tests
             connection.Dispose();
 
             Assert.That(connection.IsActive, Is.False);
-            Assert.That(1, Is.EqualTo(closeCount));
+            Assert.That(closeCount, Is.EqualTo(1));
         }
 
         [Test]

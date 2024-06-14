@@ -35,7 +35,7 @@ namespace Lib.P2P.Tests.PubSub
         public void Adding()
         {
             var topics = new TopicManager();
-            Assert.That(0, Is.EqualTo(topics.GetPeers("alpha").Count()));
+            Assert.That(topics.GetPeers("alpha").Count(), Is.EqualTo(0));
 
             topics.AddInterest("alpha", a);
             Assert.That(a, Is.EqualTo(topics.GetPeers("alpha").First()));

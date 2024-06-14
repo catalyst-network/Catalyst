@@ -199,7 +199,7 @@ namespace Lib.P2P.Tests.Transports
                 {
                     var bytes = new byte[5];
                     await stream.ReadAsync(bytes, 0, bytes.Length, cs.Token);
-                    Assert.That("hello", Is.EqualTo(Encoding.UTF8.GetString(bytes)));
+                    Assert.That(Encoding.UTF8.GetString(bytes), Is.EqualTo("hello"));
                 }
             }
         }

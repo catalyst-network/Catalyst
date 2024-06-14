@@ -59,7 +59,7 @@ namespace Lib.P2P.Tests.PubSub
         public void Defaults()
         {
             var router = new FloodRouter();
-            Assert.That("/floodsub/1.0.0", Is.EqualTo(router.ToString()));
+            Assert.That(router.ToString(), Is.EqualTo("/floodsub/1.0.0"));
         }
 
         [Test]
@@ -69,11 +69,11 @@ namespace Lib.P2P.Tests.PubSub
 
             var sub = new Subscription {Topic = "topic", Subscribe = true};
             router.ProcessSubscription(sub, other);
-            Assert.That(1, Is.EqualTo(router.RemoteTopics.GetPeers("topic").Count()));
+            Assert.That(router.RemoteTopics.GetPeers("topic").Count(), Is.EqualTo(1));
 
             var can = new Subscription {Topic = "topic", Subscribe = false};
             router.ProcessSubscription(can, other);
-            Assert.That(0, Is.EqualTo(router.RemoteTopics.GetPeers("topic").Count()));
+            Assert.That(router.RemoteTopics.GetPeers("topic").Count(), Is.EqualTo(0));
         }
 
         [Test]

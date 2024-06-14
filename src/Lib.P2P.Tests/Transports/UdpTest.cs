@@ -117,14 +117,14 @@ namespace Lib.P2P.Tests.Transports
                 await time.WriteAsync(ntpData, 0, ntpData.Length, cs.Token);
                 await time.FlushAsync(cs.Token);
                 await time.ReadAsync(ntpData, 0, ntpData.Length, cs.Token);
-                Assert.That(0x1B, Is.Not.EqualTo(ntpData[0]));
+                Assert.That(ntpData[0], Is.Not.EqualTo(0x1B));
 
                 Array.Clear(ntpData, 0, ntpData.Length);
                 ntpData[0] = 0x1B;
                 await time.WriteAsync(ntpData, 0, ntpData.Length, cs.Token);
                 await time.FlushAsync(cs.Token);
                 await time.ReadAsync(ntpData, 0, ntpData.Length, cs.Token);
-                Assert.That(0x1B, Is.Not.EqualTo(ntpData[0]));
+                Assert.That(ntpData[0], Is.Not.EqualTo(0x1B));
             }
         }
 

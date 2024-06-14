@@ -35,71 +35,71 @@ namespace Catalyst.Abstractions.Kvm.Models
     public class BlockForRpc
     {
         [JsonConverter(typeof(AddressConverter))]
-        public Address Author { get; set; }
+        public Address? Author { get; set; }
         
         [JsonConverter(typeof(UInt256Converter))]
-        public UInt256 Difficulty { get; set; }
+        public UInt256? Difficulty { get; set; }
         
         [JsonConverter(typeof(ByteArrayConverter))]
-        public byte[] ExtraData { get; set; }
+        public byte[]? ExtraData { get; set; }
         
         [JsonConverter(typeof(LongConverter))]
-        public long GasLimit { get; set; }
+        public long? GasLimit { get; set; }
         
         [JsonConverter(typeof(LongConverter))]
-        public long GasUsed { get; set; }
+        public long? GasUsed { get; set; }
 
         [JsonConverter(typeof(CidJsonConverter))]
-        public Cid Hash { get; set; }
+        public Cid? Hash { get; set; }
         
         [JsonConverter(typeof(BloomConverter))]
-        public Bloom LogsBloom { get; set; }
+        public Bloom? LogsBloom { get; set; }
         
         [JsonConverter(typeof(AddressConverter))]
-        public Address Miner { get; set; }
+        public Address? Miner { get; set; }
         
         [JsonConverter(typeof(CidJsonConverter))]
-        public Hash256 MixHash { get; set; }
+        public Hash256? MixHash { get; set; }
         
         [JsonConverter(typeof(ByteArrayConverter))]
-        public byte[] Nonce { get; set; }
+        public byte[]? Nonce { get; set; }
         
         [JsonConverter(typeof(LongConverter))]
-        public long Number { get; set; }
+        public long? Number { get; set; }
 
         [JsonConverter(typeof(CidJsonConverter))]
-        public Cid ParentHash { get; set; }
+        public Cid? ParentHash { get; set; }
         
         [JsonConverter(typeof(CidJsonConverter))]
-        public Hash256 ReceiptsRoot { get; set; }
+        public Hash256? ReceiptsRoot { get; set; }
         
         [JsonConverter(typeof(CidJsonConverter))]
-        public Hash256 Sha3Uncles { get; set; }
+        public Hash256? Sha3Uncles { get; set; }
         
         [JsonConverter(typeof(ByteArrayConverter))]
-        public byte[] Signature { get; set; }
+        public byte[]? Signature { get; set; }
         
         [JsonConverter(typeof(LongConverter))]
-        public long Size { get; set; }
+        public long? Size { get; set; }
         
         [JsonConverter(typeof(CidJsonConverter))]
-        public Hash256 StateRoot { get; set; }
+        public Hash256? StateRoot { get; set; }
         
         [JsonConverter(typeof(NullableLongConverter))]
         public long? Step { get; set; }
         
         [JsonConverter(typeof(UInt256Converter))]
-        public UInt256 TotalDifficulty { get; set; }
+        public UInt256? TotalDifficulty { get; set; }
         
         [JsonConverter(typeof(UInt256Converter))]
-        public UInt256 Timestamp { get; set; }
+        public UInt256? Timestamp { get; set; }
         
-        public IEnumerable<object> Transactions { get; set; }
+        public IEnumerable<object>? Transactions { get; set; }
         
         [JsonConverter(typeof(CidJsonConverter))]
-        public Hash256 TransactionsRoot { get; set; }
+        public Hash256? TransactionsRoot { get; set; }
         
         [JsonProperty(ItemConverterType = typeof(CidJsonConverter))]
-        public IEnumerable<Hash256> Uncles { get; set; }
+        public IEnumerable<Hash256>? Uncles { get; set; }
     }
 }
