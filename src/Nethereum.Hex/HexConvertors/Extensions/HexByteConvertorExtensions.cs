@@ -75,7 +75,7 @@ namespace Nethereum.Hex.HexConvertors.Extensions
 
         private static byte[] HexToByteArrayInternal(string value)
         {
-            byte[] bytes = null;
+            byte[] bytes;
             if (string.IsNullOrEmpty(value))
             {
                 bytes = Empty;

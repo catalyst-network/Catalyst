@@ -224,7 +224,7 @@ namespace Lib.P2P.Multiplex
         {
             if (disposing)
             {
-                Muxer?.RemoveStreamAsync(this);
+                _ = (Muxer?.RemoveStreamAsync(this));
 
                 _eos = true;
                 if (_outStream != null)

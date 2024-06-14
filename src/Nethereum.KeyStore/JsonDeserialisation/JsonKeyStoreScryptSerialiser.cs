@@ -20,20 +20,23 @@ namespace Nethereum.KeyStore.JsonDeserialisation
         {
             var dto = new KeyStoreScryptDTO()
             {
-                address = scryptKeyStore.Address,
-                id = scryptKeyStore.Id,
-                version = scryptKeyStore.Version
+                Address = scryptKeyStore.Address,
+                Id = scryptKeyStore.Id,
+                Version = scryptKeyStore.Version
             };
-            dto.crypto.Cipher = scryptKeyStore.Crypto.Cipher;
-            dto.crypto.CipherText = scryptKeyStore.Crypto.CipherText;
-            dto.crypto.Kdf = scryptKeyStore.Crypto.Kdf;
-            dto.crypto.Mac = scryptKeyStore.Crypto.Mac;
-            dto.crypto.kdfparams.r = scryptKeyStore.Crypto.Kdfparams.R;
-            dto.crypto.kdfparams.n = scryptKeyStore.Crypto.Kdfparams.N;
-            dto.crypto.kdfparams.p = scryptKeyStore.Crypto.Kdfparams.P;
-            dto.crypto.kdfparams.dklen = scryptKeyStore.Crypto.Kdfparams.Dklen;
-            dto.crypto.kdfparams.salt = scryptKeyStore.Crypto.Kdfparams.Salt;
-            dto.crypto.Cipherparams.Iv = scryptKeyStore.Crypto.CipherParams.Iv;
+            if (scryptKeyStore.Crypto != null)
+            {
+                dto.crypto.Cipher = scryptKeyStore.Crypto.Cipher;
+                dto.crypto.CipherText = scryptKeyStore.Crypto.CipherText;
+                dto.crypto.Kdf = scryptKeyStore.Crypto.Kdf;
+                dto.crypto.Mac = scryptKeyStore.Crypto.Mac;
+                dto.crypto.kdfparams.r = scryptKeyStore.Crypto.Kdfparams != null ? scryptKeyStore.Crypto.Kdfparams.R : 0;
+                dto.crypto.kdfparams.n = scryptKeyStore.Crypto.Kdfparams != null ? scryptKeyStore.Crypto.Kdfparams.N : 0;
+                dto.crypto.kdfparams.p = scryptKeyStore.Crypto.Kdfparams != null ? scryptKeyStore.Crypto.Kdfparams.P : 0;
+                dto.crypto.kdfparams.Dklen = scryptKeyStore.Crypto.Kdfparams != null ? scryptKeyStore.Crypto.Kdfparams.Dklen : 0;
+                dto.crypto.kdfparams.Salt = scryptKeyStore.Crypto.Kdfparams != null ? scryptKeyStore.Crypto.Kdfparams.Salt : string.Empty;
+                dto.crypto.Cipherparams.Iv = scryptKeyStore.Crypto.CipherParams != null ? scryptKeyStore.Crypto.CipherParams.Iv : string.Empty;
+            }
             return dto;
         }
 
@@ -42,9 +45,9 @@ namespace Nethereum.KeyStore.JsonDeserialisation
             var scryptKeyStore = new KeyStore<ScryptParams>();
             if (dto != null)
             {
-                scryptKeyStore.Address = dto.address;
-                scryptKeyStore.Id = dto.id;
-                scryptKeyStore.Version = dto.version;
+                scryptKeyStore.Address = dto.Address ?? string.Empty;
+                scryptKeyStore.Id = dto.Id ?? string.Empty;
+                scryptKeyStore.Version = dto.Version;
                 scryptKeyStore.Crypto = new CryptoInfo<ScryptParams>
                 {
                     Cipher = dto.crypto.Cipher,
@@ -56,8 +59,8 @@ namespace Nethereum.KeyStore.JsonDeserialisation
                 scryptKeyStore.Crypto.Kdfparams.R = dto.crypto.kdfparams.r;
                 scryptKeyStore.Crypto.Kdfparams.N = dto.crypto.kdfparams.n;
                 scryptKeyStore.Crypto.Kdfparams.P = dto.crypto.kdfparams.p;
-                scryptKeyStore.Crypto.Kdfparams.Dklen = dto.crypto.kdfparams.dklen;
-                scryptKeyStore.Crypto.Kdfparams.Salt = dto.crypto.kdfparams.salt;
+                scryptKeyStore.Crypto.Kdfparams.Dklen = dto.crypto.kdfparams.Dklen;
+                scryptKeyStore.Crypto.Kdfparams.Salt = dto.crypto.kdfparams.Salt ?? string.Empty;
                 scryptKeyStore.Crypto.CipherParams = new CipherParams()
                 {
                     Iv = dto.crypto.Cipherparams.Iv ?? string.Empty

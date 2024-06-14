@@ -1,9 +1,9 @@
-﻿namespace Nethereum.KeyStore.JsonDeserialisation
+namespace Nethereum.KeyStore.JsonDeserialisation
 {
     public class KeyStoreDTOBase
     {
-        public string id { get; set; }
-        public string address { get; set; }
-        public int version { get; set; }
+        public string? Id { get; set; }
+        public string? Address { get; set; }
+        public int? Version { get; set; }
     }
 }

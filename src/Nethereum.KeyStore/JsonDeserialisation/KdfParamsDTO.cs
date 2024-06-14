@@ -1,8 +1,8 @@
-﻿namespace Nethereum.KeyStore.JsonDeserialisation
+namespace Nethereum.KeyStore.JsonDeserialisation
 {
     public class KdfParamsDTO
     {
-        public int dklen { get; set; }
-        public string salt { get; set; }
+        public int Dklen { get; set; }
+        public string? Salt { get; set; }
     }
 }

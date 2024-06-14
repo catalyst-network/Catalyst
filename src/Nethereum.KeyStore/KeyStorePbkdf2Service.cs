@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using Nethereum.Hex.HexConvertors.Extensions;
 using Nethereum.KeyStore.Crypto;
 using Nethereum.KeyStore.JsonDeserialisation;
@@ -48,12 +48,22 @@ namespace Nethereum.KeyStore
             if (password == null) throw new ArgumentNullException(nameof(password));
             if (keyStore == null) throw new ArgumentNullException(nameof(keyStore));
 
-            return KeyStoreCrypto.DecryptPbkdf2Sha256(password, keyStore.Crypto.Mac.HexToByteArray(),
-                keyStore.Crypto.CipherParams.Iv.HexToByteArray(),
-                keyStore.Crypto.CipherText.HexToByteArray(),
-                keyStore.Crypto.Kdfparams.Count,
-                keyStore.Crypto.Kdfparams.Salt.HexToByteArray(),
-                keyStore.Crypto.Kdfparams.Dklen);
+            if (keyStore.Crypto.CipherParams != null &&
+                keyStore.Crypto.CipherText != null &&
+                keyStore.Crypto.Kdfparams != null &&
+                keyStore.Crypto.Mac != null)
+            {
+                return KeyStoreCrypto.DecryptPbkdf2Sha256(password, keyStore.Crypto.Mac.HexToByteArray(),
+                    keyStore.Crypto.CipherParams.Iv.HexToByteArray(),
+                    keyStore.Crypto.CipherText.HexToByteArray(),
+                    keyStore.Crypto.Kdfparams.Count,
+                    keyStore.Crypto.Kdfparams.Salt.HexToByteArray(),
+                    keyStore.Crypto.Kdfparams.Dklen);
+            }
+            else
+            {
+                throw new InvalidOperationException(nameof(password));
+            }
         }
 
         public override string GetKdfType()

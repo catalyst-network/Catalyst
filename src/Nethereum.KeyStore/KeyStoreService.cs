@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using Newtonsoft.Json.Linq;
 
@@ -25,11 +25,18 @@ namespace Nethereum.KeyStore
             _keyStorePbkdf2Service = keyStorePbkdf2Service;
         }
 
-        public string GetAddressFromKeyStore(string json)
+        public string? GetAddressFromKeyStore(string json)
         {
             if (json == null) throw new ArgumentNullException(nameof(json));
             var keyStoreDocument = JObject.Parse(json);
-            return keyStoreDocument["address"].Value<string>();
+            if (keyStoreDocument.ContainsKey("address"))
+            {
+                return keyStoreDocument["address"]?.Value<string>();
+            }
+            else
+            {
+                throw new InvalidOperationException();
+            }
         }
 
         public string GenerateUTCFileName(string address)

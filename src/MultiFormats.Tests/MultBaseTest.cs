@@ -216,10 +216,13 @@ namespace MultiFormats.Tests
         {
             foreach (var v in TestVectors)
             {
+                if (v.Input != null)
+                {
                 var bytes = Encoding.UTF8.GetBytes(v.Input);
                 var s = MultiBase.Encode(bytes, v.Algorithm);
                 Assert.That(v.Output, Is.EqualTo(s));
                 Assert.That(bytes, Is.EquivalentTo(MultiBase.Decode(s)));
+                }
             }
         }
 
