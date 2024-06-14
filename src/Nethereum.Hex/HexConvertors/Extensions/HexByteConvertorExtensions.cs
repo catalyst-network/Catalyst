@@ -49,13 +49,13 @@ namespace Nethereum.Hex.HexConvertors.Extensions
 
         public static string EnsureHexPrefix(this string value)
         {
-            if (value == null) return null;
-            if (!value.HasHexPrefix())
+            if (string.IsNullOrEmpty(value) == false &&
+                !value.HasHexPrefix())
                 return "0x" + value;
             return value;
         }
 
-        public static string[] EnsureHexPrefix(this string[] values)
+        public static string[]? EnsureHexPrefix(this string[] values)
         {
             if (values != null)
                 foreach (var value in values)

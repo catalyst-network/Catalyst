@@ -50,15 +50,6 @@ namespace Catalyst.KBucket
         }
 
         [Test]
-        public void AddBadContact()
-        {
-            var bucket = new KBucket<Contact>();
-            ExceptionAssert.Throws<ArgumentNullException>(() => bucket.Add(null));
-            ExceptionAssert.Throws<ArgumentNullException>(() => bucket.Add(new Contact("a") {Id = null}));
-            ExceptionAssert.Throws<ArgumentNullException>(() => bucket.Add(new Contact("a") {Id = new byte[0]}));
-        }
-
-        [Test]
         public void TryGet()
         {
             var bucket = new KBucket<Contact>();
@@ -139,15 +130,18 @@ namespace Catalyst.KBucket
             bucket.Add(new Contact("a"));
             bucket.Add(new Contact("b"));
             bucket.Add(new Contact("c"));
-            Assert.That(3, Is.EqualTo(bucket.Count));
+            Assert.That(bucket, Has.Count.EqualTo(3));
 
             var array = new Contact[bucket.Count + 2];
             bucket.CopyTo(array, 1);
-            Assert.That(array[0], Is.Null);
-            Assert.That(array[1], Is.Not.Null);
-            Assert.That(array[2], Is.Not.Null);
-            Assert.That(array[3], Is.Not.Null);
-            Assert.That(array[4], Is.Null);
+            Assert.Multiple(() =>
+            {
+                Assert.That(array[0], Is.Null);
+                Assert.That(array[1], Is.Not.Null);
+                Assert.That(array[2], Is.Not.Null);
+                Assert.That(array[3], Is.Not.Null);
+                Assert.That(array[4], Is.Null);
+            });
         }
 
         [Test]

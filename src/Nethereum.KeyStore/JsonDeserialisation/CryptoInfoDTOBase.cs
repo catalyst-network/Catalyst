@@ -1,16 +1,16 @@
-﻿namespace Nethereum.KeyStore.JsonDeserialisation
+namespace Nethereum.KeyStore.JsonDeserialisation
 {
     public class CryptoInfoDTOBase
     {
         public CryptoInfoDTOBase()
         {
-            cipherparams = new CipherParamsDTO();
+            Cipherparams = new CipherParamsDTO();
         }
 
-        public string cipher { get; set; }
-        public string cipherText { get; set; }
-        public CipherParamsDTO cipherparams { get; set; }
-        public string kdf { get; set; }
-        public string mac { get; set; }
+        public string? Cipher { get; set; }
+        public string? CipherText { get; set; }
+        public CipherParamsDTO Cipherparams { get; set; }
+        public string? Kdf { get; set; }
+        public string? Mac { get; set; }
     }
 }

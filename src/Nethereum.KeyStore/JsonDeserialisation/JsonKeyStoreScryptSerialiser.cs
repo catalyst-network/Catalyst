@@ -24,16 +24,16 @@ namespace Nethereum.KeyStore.JsonDeserialisation
                 id = scryptKeyStore.Id,
                 version = scryptKeyStore.Version
             };
-            dto.crypto.cipher = scryptKeyStore.Crypto.Cipher;
-            dto.crypto.cipherText = scryptKeyStore.Crypto.CipherText;
-            dto.crypto.kdf = scryptKeyStore.Crypto.Kdf;
-            dto.crypto.mac = scryptKeyStore.Crypto.Mac;
+            dto.crypto.Cipher = scryptKeyStore.Crypto.Cipher;
+            dto.crypto.CipherText = scryptKeyStore.Crypto.CipherText;
+            dto.crypto.Kdf = scryptKeyStore.Crypto.Kdf;
+            dto.crypto.Mac = scryptKeyStore.Crypto.Mac;
             dto.crypto.kdfparams.r = scryptKeyStore.Crypto.Kdfparams.R;
             dto.crypto.kdfparams.n = scryptKeyStore.Crypto.Kdfparams.N;
             dto.crypto.kdfparams.p = scryptKeyStore.Crypto.Kdfparams.P;
             dto.crypto.kdfparams.dklen = scryptKeyStore.Crypto.Kdfparams.Dklen;
             dto.crypto.kdfparams.salt = scryptKeyStore.Crypto.Kdfparams.Salt;
-            dto.crypto.cipherparams.Iv = scryptKeyStore.Crypto.CipherParams.Iv;
+            dto.crypto.Cipherparams.Iv = scryptKeyStore.Crypto.CipherParams.Iv;
             return dto;
         }
 
@@ -47,10 +47,10 @@ namespace Nethereum.KeyStore.JsonDeserialisation
                 scryptKeyStore.Version = dto.version;
                 scryptKeyStore.Crypto = new CryptoInfo<ScryptParams>
                 {
-                    Cipher = dto.crypto.cipher,
-                    CipherText = dto.crypto.cipherText,
-                    Kdf = dto.crypto.kdf,
-                    Mac = dto.crypto.mac,
+                    Cipher = dto.crypto.Cipher,
+                    CipherText = dto.crypto.CipherText,
+                    Kdf = dto.crypto.Kdf,
+                    Mac = dto.crypto.Mac,
                     Kdfparams = new ScryptParams()
                 };
                 scryptKeyStore.Crypto.Kdfparams.R = dto.crypto.kdfparams.r;
@@ -60,7 +60,7 @@ namespace Nethereum.KeyStore.JsonDeserialisation
                 scryptKeyStore.Crypto.Kdfparams.Salt = dto.crypto.kdfparams.salt;
                 scryptKeyStore.Crypto.CipherParams = new CipherParams()
                 {
-                    Iv = dto.crypto.cipherparams.Iv != null ? dto.crypto.cipherparams.Iv : string.Empty
+                    Iv = dto.crypto.Cipherparams.Iv ?? string.Empty
                 };
             }
             return scryptKeyStore;

@@ -31,7 +31,7 @@ namespace Catalyst.KBucket
     /// </summary>
     internal static class ExceptionAssert
     {
-        public static T Throws<T>(Action action, string expectedMessage = null) where T : Exception
+        public static T? Throws<T>(Action action, string expectedMessage) where T : Exception
         {
             try
             {
@@ -60,7 +60,7 @@ namespace Catalyst.KBucket
             return null;
         }
 
-        public static Exception Throws(Action action, string expectedMessage = null)
+        public static Exception? Throws(Action action, string expectedMessage)
         {
             return Throws<Exception>(action, expectedMessage);
         }

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
@@ -605,7 +605,7 @@ namespace Nethereum.KeyStore.Crypto
             int MFLenBytes = r * 128;
             byte[] bytes = SingleIterationPBKDF2(P, S, p * MFLenBytes);
 
-            uint[] B = null;
+            uint[]? B = null;
 
             try
             {
@@ -627,7 +627,10 @@ namespace Nethereum.KeyStore.Crypto
             }
             finally
             {
-                ClearAll(bytes, B);
+                if (B != null)
+                {
+                    ClearAll(bytes, B);
+                }
             }
         }
 

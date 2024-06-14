@@ -8,18 +8,19 @@ namespace Nethereum.Hex.HexTypes
     {
         protected IHexConvertor<T> convertor;
 
-        protected string hexValue;
+        protected string? hexValue;
 
-        protected T value;
+        protected T? value;
 
-        protected object lockingObject = new object();
+        protected object lockingObject = new();
         protected bool needsInitialisingValue;
 
-        protected T GetValue()
+        protected T? GetValue()
         {
             lock (lockingObject)
             {
-                if (needsInitialisingValue)
+                if (needsInitialisingValue &&
+                    !string.IsNullOrEmpty(hexValue))
                 {
                     InitialiseValueFromHex(hexValue);
                     needsInitialisingValue = false;
@@ -44,24 +45,27 @@ namespace Nethereum.Hex.HexTypes
             InitialiseFromValue(value);
         }
 
-        public string HexValue
+        public string? HexValue
         {
             get => hexValue;
             set => SetHexAndFlagValueToBeInitialised(value);
         }
 
-        public T Value
+        public T? Value
         {
             get => GetValue();
             set => InitialiseFromValue(value);
         }
 
-        protected void SetHexAndFlagValueToBeInitialised(string newHexValue)
+        protected void SetHexAndFlagValueToBeInitialised(string? newHexValue)
         {
-            hexValue = newHexValue.EnsureHexPrefix();
-            lock (lockingObject)
+            if (!string.IsNullOrEmpty(newHexValue))
             {
-                needsInitialisingValue = true;
+                hexValue = newHexValue.EnsureHexPrefix();
+                lock (lockingObject)
+                {
+                    needsInitialisingValue = true;
+                }
             }
         }
 
@@ -70,10 +74,13 @@ namespace Nethereum.Hex.HexTypes
             value = ConvertFromHex(newHexValue);
         }
 
-        protected void InitialiseFromValue(T newValue)
+        protected void InitialiseFromValue(T? newValue)
         {
-            hexValue = ConvertToHex(newValue).EnsureHexPrefix();
-            value = newValue;
+            if (newValue != null)
+            {
+                hexValue = ConvertToHex(newValue).EnsureHexPrefix();
+                value = newValue;
+            }
         }
 
         protected string ConvertToHex(T newValue)
@@ -88,7 +95,14 @@ namespace Nethereum.Hex.HexTypes
 
         public byte[] ToHexByteArray()
         {
-            return HexValue.HexToByteArray();
+            if (HexValue != null)
+            {
+                return HexValue.HexToByteArray();
+            }
+            else
+            {
+                throw new InvalidOperationException();
+            }
         }
 
         public static implicit operator byte[](HexRPCType<T> hexRpcType)
@@ -96,7 +110,7 @@ namespace Nethereum.Hex.HexTypes
             return hexRpcType.ToHexByteArray();
         }
 
-        public static implicit operator T(HexRPCType<T> hexRpcType)
+        public static implicit operator T?(HexRPCType<T> hexRpcType)
         {
             return hexRpcType.Value;
         }
@@ -116,12 +130,12 @@ namespace Nethereum.Hex.HexTypes
 
         public override int GetHashCode()
         {
-            return Value.GetHashCode();
+            return Value != null ? Value.GetHashCode() : 0;
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals(object? obj)
         {
-            if (obj is HexRPCType<T> val)
+            if (obj is HexRPCType<T> val && val.Value is not null)
             {
                 // Value is lazy loaded and always e
                 return val.Value.Equals(Value);
@@ -130,9 +144,16 @@ namespace Nethereum.Hex.HexTypes
             return false;
         }
 
-        public bool Equals(HexRPCType<T> other)
+        public bool Equals(HexRPCType<T>? other)
         {
-            return this.Equals((object)other);
+            if (other is not null)
+            {
+                return this.Equals((object)other);
+            }
+            else
+            {
+                return false;
+            }
         }
     }
 }

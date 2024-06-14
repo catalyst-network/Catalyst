@@ -42,12 +42,12 @@ namespace Catalyst.KBucket
 
             kBucket.Add(a3);
             kBucket.Add(a2);
-            Assert.That(1, Is.EqualTo(kBucket.Count));
+            Assert.That(kBucket, Has.Count.EqualTo(1));
             Assert.That(kBucket.TryGet(a3.Id, out var current), Is.True);
             Assert.That(a3, Is.EqualTo(current));
 
             kBucket.Add(a4);
-            Assert.That(1, Is.EqualTo(kBucket.Count));
+            Assert.That(kBucket.Count, Is.EqualTo(1));
             Assert.That(kBucket.TryGet(a4.Id, out current), Is.True);
             Assert.That(a4, Is.EqualTo(current));
         }

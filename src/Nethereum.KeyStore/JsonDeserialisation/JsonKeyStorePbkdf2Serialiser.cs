@@ -25,15 +25,15 @@ namespace Nethereum.KeyStore.JsonDeserialisation
                 id = pbdk2KeyStore.Id,
                 version = pbdk2KeyStore.Version
             };
-            dto.crypto.cipher = pbdk2KeyStore.Crypto.Cipher;
-            dto.crypto.cipherText = pbdk2KeyStore.Crypto.CipherText;
-            dto.crypto.kdf = pbdk2KeyStore.Crypto.Kdf;
-            dto.crypto.mac = pbdk2KeyStore.Crypto.Mac;
-            dto.crypto.kdfparams.c = pbdk2KeyStore.Crypto.Kdfparams.Count;
-            dto.crypto.kdfparams.prf = pbdk2KeyStore.Crypto.Kdfparams.Prf;
+            dto.crypto.Cipher = pbdk2KeyStore.Crypto.Cipher;
+            dto.crypto.CipherText = pbdk2KeyStore.Crypto.CipherText;
+            dto.crypto.Kdf = pbdk2KeyStore.Crypto.Kdf;
+            dto.crypto.Mac = pbdk2KeyStore.Crypto.Mac;
+            dto.crypto.kdfparams.C = pbdk2KeyStore.Crypto.Kdfparams.Count;
+            dto.crypto.kdfparams.Prf = pbdk2KeyStore.Crypto.Kdfparams.Prf;
             dto.crypto.kdfparams.dklen = pbdk2KeyStore.Crypto.Kdfparams.Dklen;
             dto.crypto.kdfparams.salt = pbdk2KeyStore.Crypto.Kdfparams.Salt;
-            dto.crypto.cipherparams.Iv = pbdk2KeyStore.Crypto.CipherParams.Iv;
+            dto.crypto.Cipherparams.Iv = pbdk2KeyStore.Crypto.CipherParams.Iv;
             return dto;
         }
 
@@ -47,19 +47,19 @@ namespace Nethereum.KeyStore.JsonDeserialisation
                 pbdk2KeyStore.Version = dto.version;
                 pbdk2KeyStore.Crypto = new CryptoInfo<Pbkdf2Params>()
                 {
-                    Cipher = dto.crypto.cipher,
-                    CipherText = dto.crypto.cipherText,
-                    Kdf = dto.crypto.kdf,
-                    Mac = dto.crypto.mac,
+                    Cipher = dto.crypto.Cipher,
+                    CipherText = dto.crypto.CipherText,
+                    Kdf = dto.crypto.Kdf,
+                    Mac = dto.crypto.Mac,
                     Kdfparams = new Pbkdf2Params()
                 };
-                pbdk2KeyStore.Crypto.Kdfparams.Count = dto.crypto.kdfparams.c;
-                pbdk2KeyStore.Crypto.Kdfparams.Prf = dto.crypto.kdfparams.prf;
+                pbdk2KeyStore.Crypto.Kdfparams.Count = dto.crypto.kdfparams.C;
+                pbdk2KeyStore.Crypto.Kdfparams.Prf = dto.crypto.kdfparams.Prf;
                 pbdk2KeyStore.Crypto.Kdfparams.Dklen = dto.crypto.kdfparams.dklen;
                 pbdk2KeyStore.Crypto.Kdfparams.Salt = dto.crypto.kdfparams.salt;
                 pbdk2KeyStore.Crypto.CipherParams = new CipherParams()
                 {
-                    Iv = dto.crypto.cipherparams?.Iv != null ? dto.crypto.cipherparams.Iv : string.Empty
+                    Iv = dto.crypto.Cipherparams?.Iv != null ? dto.crypto.Cipherparams.Iv : string.Empty
                 };
             }
             return pbdk2KeyStore;
