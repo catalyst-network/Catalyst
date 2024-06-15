@@ -418,7 +418,7 @@ namespace Lib.P2P.Tests
 
         private sealed class CidAndX
         {
-            public Cid Cid;
+            public Cid? Cid;
             public int X;
         }
 

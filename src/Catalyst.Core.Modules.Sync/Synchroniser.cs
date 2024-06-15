@@ -200,7 +200,7 @@ namespace Catalyst.Core.Modules.Sync
                             break;
                         }
                     }
-                    catch (Exception exc) { }
+                    catch (Exception) { }
 
                     await Task.Delay(100).ConfigureAwait(false);
                 }

@@ -39,7 +39,7 @@ namespace Catalyst.TestUtils
         private readonly ICycleEventsProvider _cycleEventsProvider;
         private readonly IDisposable _deltaUpdatesSubscription;
 
-        public TestCycleEventProvider(ILogger logger = null)
+        public TestCycleEventProvider(ILogger? logger = null)
         {
             Scheduler = new TestScheduler();
 
