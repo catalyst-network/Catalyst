@@ -1,26 +1,3 @@
-#region LICENSE
-
-/**
-* Copyright (c) 2024 Catalyst Network
-*
-* This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
-*
-* Catalyst.Node is free software: you can redistribute it and/or modify
-* it under the terms of the GNU General Public License as published by
-* the Free Software Foundation, either version 2 of the License, or
-* (at your option) any later version.
-*
-* Catalyst.Node is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
-*/
-
-#endregion
-
 using System;
 using Autofac;
 using Catalyst.Abstractions.IO.Transport.Channels;
@@ -38,28 +15,27 @@ namespace Catalyst.Core.Modules.Rpc.Server
             builder.RegisterType<RpcServer>().As<IRpcServer>().SingleInstance();
             builder.RegisterType<RpcServerSettings>().As<IRpcServerSettings>();
 
-            async void BuildCallback(IContainer container)
+            // Adjusted to use an Action<ILifetimeScope> delegate
+            builder.RegisterBuildCallback(scope =>
             {
-                if (container == null)
+                if (scope == null)
                 {
-                    throw new ArgumentNullException(nameof(container));
+                    throw new ArgumentNullException(nameof(scope));
                 }
-                
-                var logger = container.Resolve<ILogger>();
+
+                var logger = scope.Resolve<ILogger>();
                 try
                 {
-                    var rpcServer = container.Resolve<IRpcServer>();
-                    await rpcServer.StartAsync().ConfigureAwait(false);
+                    var rpcServer = scope.Resolve<IRpcServer>();
+                    rpcServer.StartAsync().GetAwaiter().GetResult(); // Synchronously start here
                 }
                 catch (Exception e)
                 {
                     logger.Error(e, "Error loading API");
                 }
-            }
+            });
 
-            builder.RegisterBuildCallback(BuildCallback);
-            
             base.Load(builder);
-        }  
+        }
     }
 }

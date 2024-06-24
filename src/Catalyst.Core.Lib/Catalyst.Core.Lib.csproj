@@ -18,9 +18,9 @@
       <None Remove="Extensions\Protocol\Transaction\**" />
     </ItemGroup>
     <ItemGroup>
-        <PackageReference Include="Autofac" Version="4.8.1" />
-        <PackageReference Include="Autofac.Configuration" Version="4.1.0" />
-        <PackageReference Include="AutofacSerilogIntegration" Version="2.0.0" />
+        <PackageReference Include="Autofac" Version="8.0.0" />
+        <PackageReference Include="Autofac.Configuration" Version="6.0.0" />
+        <PackageReference Include="AutofacSerilogIntegration" Version="5.0.0" />
         <PackageReference Include="AutoMapper" Version="13.0.1" />
         <PackageReference Include="Dawn.Guard" Version="1.12.0" />
         <PackageReference Include="DotNetty.Codecs" Version="0.7.6" />
@@ -33,10 +33,10 @@
         <PackageReference Include="Polly" Version="8.4.0" />
         <PackageReference Include="Serilog.Extensions.Logging" Version="8.0.0" />
         <PackageReference Include="SharpRepository.EfCoreRepository" Version="2.1.2" />
-        <PackageReference Include="SharpRepository.Ioc.Autofac" Version="2.0.4.2" />
+        <PackageReference Include="SharpRepository.Ioc.Autofac" Version="2.2.0" />
         <PackageReference Include="SharpRepository.XmlRepository" Version="2.0.2.1" />
-        <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.0" />
-        <PackageReference Include="Serilog.Enrichers.Thread" Version="3.1.0" />
+        <PackageReference Include="Serilog.Enrichers.Environment" Version="3.0.1" />
+        <PackageReference Include="Serilog.Enrichers.Thread" Version="4.0.0" />
         <PackageReference Include="Serilog.Settings.Configuration" Version="8.0.1" />
         <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
         <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
