@@ -28,10 +28,13 @@ using System.Linq;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
+using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Kvm;
+using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Modules.Web3.Controllers.Handlers;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Server.Kestrel.Https;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
@@ -78,25 +81,26 @@ namespace Catalyst.Core.Modules.Web3
             builder.RegisterBuildCallback(BuildCallback);
         }
 
-        private void BuildCallback(ILifetimeScope scope)
+        async void BuildCallback(ILifetimeScope scope)
         {
             var logger = scope.Resolve<ILogger>();
 
             try
             {
-                Host.CreateDefaultBuilder()
-                    .UseServiceProviderFactory(new AutofacServiceProviderFactory()) // Use the scope directly here
-                    .UseConsoleLifetime()
-                    .ConfigureWebHostDefaults(webBuilder =>
-                    {
-                        webBuilder
-                            .UseUrls(_apiBindingAddress)
-                            .UseWebRoot(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"))
-                            .ConfigureServices(ConfigureServices)
-                            .Configure(Configure);
-                    })
-                    .Build()
-                    .Run();
+                await Host.CreateDefaultBuilder()
+                       .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                       .UseConsoleLifetime()
+                       .ConfigureContainer<ContainerBuilder>(ConfigureContainer)
+                       .ConfigureWebHostDefaults(
+                            webHostBuilder =>
+                            {
+                                webHostBuilder
+                                   .ConfigureServices(ConfigureServices)
+                                   .Configure(Configure)
+                                   .UseUrls(_apiBindingAddress)
+                                   .UseWebRoot(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"));
+                                //.UseSerilog();
+                            }).RunConsoleAsync();
             }
             catch (Exception e)
             {
@@ -104,7 +108,11 @@ namespace Catalyst.Core.Modules.Web3
             }
         }
 
-
+        public void ConfigureContainer(ContainerBuilder builder)
+        {
+            builder.RegisterType<Web3HandlerResolver>().As<IWeb3HandlerResolver>().SingleInstance();
+            builder.RegisterType<EthereumJsonSerializer>().As<IJsonSerializer>().SingleInstance();
+        }
 
         private void ConfigureServices(IServiceCollection services)
         {

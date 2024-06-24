@@ -72,7 +72,7 @@ namespace Catalyst.Core.Modules.Keystore
             var json = GetJsonFromKeyStore(keyIdentifier);
             if (string.IsNullOrEmpty(json))
             {
-                _logger.Error("No keystore exists for the given key");
+                _logger.Warning("No keystore exists for the given key");
                 return null;
             }
 
@@ -84,7 +84,7 @@ namespace Catalyst.Core.Modules.Keystore
             }
             catch (ArgumentException)
             {
-                _logger.Error("Keystore did not contain a valid key");
+                _logger.Warning("Keystore did not contain a valid key");
             }
 
             return privateKey;
