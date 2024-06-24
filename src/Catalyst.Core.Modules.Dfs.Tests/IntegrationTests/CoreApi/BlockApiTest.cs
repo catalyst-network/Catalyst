@@ -64,7 +64,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         public async Task Put_Bytes()
         {
             var cid = await _dfs.BlockApi.PutAsync(_blob);
-            Assert.That(Id, Is.EqualTo(cid.ToString()));
+            Assert.That(cid.ToString(), Is.EqualTo(Id));
 
             var data = _dfs.BlockApi.GetAsync(cid).Result;
             Assert.That(_blob.Length, Is.EqualTo(data.Size));
@@ -85,7 +85,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         public void Put_Bytes_ContentType()
         {
             var cid = _dfs.BlockApi.PutAsync(_blob, "raw").Result;
-            Assert.That("bafkreiaxnnnb7qz2focittuqq3ya25q7rcv3bqynnczfzako47346wosmu", Is.EqualTo(cid.ToString()));
+            Assert.That(cid.ToString(), Is.EqualTo("bafkreiaxnnnb7qz2focittuqq3ya25q7rcv3bqynnczfzako47346wosmu"));
 
             var data = _dfs.BlockApi.GetAsync(cid).Result;
             Assert.That(_blob.Length, Is.EqualTo(data.Size));
@@ -100,7 +100,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 _dfs.Options.Block.AllowInlineCid = true;
                 var cid = _dfs.BlockApi.PutAsync(_blob, "raw").Result;
                 Assert.That(cid.Hash.IsIdentityHash, Is.True);
-                Assert.That("bafkqablcnrxxeyq", Is.EqualTo(cid.ToString()));
+                Assert.That(cid.ToString(), Is.EqualTo("bafkqablcnrxxeyq"));
 
                 var data = _dfs.BlockApi.GetAsync(cid).Result;
                 Assert.That(_blob.Length, Is.EqualTo(data.Size));
@@ -125,8 +125,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         {
             var cid = _dfs.BlockApi.PutAsync(_blob, "raw", "sha2-512").Result;
             Assert.That(
-                "bafkrgqelljziv4qfg5mefz36m2y3h6voaralnw6lwb4f53xcnrf4mlsykkn7vt6eno547tw5ygcz62kxrle45wnbmpbofo5tvu57jvuaf7k7e",
-                Is.EqualTo(cid.ToString()));
+cid.ToString(),
+                Is.EqualTo(                "bafkrgqelljziv4qfg5mefz36m2y3h6voaralnw6lwb4f53xcnrf4mlsykkn7vt6eno547tw5ygcz62kxrle45wnbmpbofo5tvu57jvuaf7k7e"));
 
             var data = _dfs.BlockApi.GetAsync(cid).Result;
             Assert.That(_blob.Length, Is.EqualTo(data.Size));
@@ -139,8 +139,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             var cid = _dfs.BlockApi.PutAsync(_blob,
                 "raw",
                 encoding: "base32").Result;
-            Assert.That(1, Is.EqualTo(cid.Version));
-            Assert.That("base32", Is.EqualTo(cid.Encoding));
+            Assert.That(cid.Version, Is.EqualTo(1));
+            Assert.That(cid.Encoding, Is.EqualTo("base32"));
 
             var data = _dfs.BlockApi.GetAsync(cid).Result;
             Assert.That(_blob.Length, Is.EqualTo(data.Size));
@@ -151,7 +151,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         public void Put_Stream()
         {
             var cid = _dfs.BlockApi.PutAsync(new MemoryStream(_blob)).Result;
-            Assert.That(Id, Is.EqualTo(cid.ToString()));
+            Assert.That(cid.ToString(), Is.EqualTo(Id));
 
             var data = _dfs.BlockApi.GetAsync(cid).Result;
             Assert.That(_blob.Length, Is.EqualTo(data.Size));
@@ -162,7 +162,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         public void Put_Stream_ContentType()
         {
             var cid = _dfs.BlockApi.PutAsync(new MemoryStream(_blob), "raw").Result;
-            Assert.That("bafkreiaxnnnb7qz2focittuqq3ya25q7rcv3bqynnczfzako47346wosmu", Is.EqualTo(cid.ToString()));
+            Assert.That(cid.ToString(), Is.EqualTo("bafkreiaxnnnb7qz2focittuqq3ya25q7rcv3bqynnczfzako47346wosmu"));
 
             var data = _dfs.BlockApi.GetAsync(cid).Result;
             Assert.That(_blob.Length, Is.EqualTo(data.Size));
@@ -174,8 +174,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         {
             var cid = _dfs.BlockApi.PutAsync(new MemoryStream(_blob), "raw", "sha2-512").Result;
             Assert.That(
-                "bafkrgqelljziv4qfg5mefz36m2y3h6voaralnw6lwb4f53xcnrf4mlsykkn7vt6eno547tw5ygcz62kxrle45wnbmpbofo5tvu57jvuaf7k7e",
-                Is.EqualTo(cid.ToString()));
+cid.ToString(),
+                Is.EqualTo(                "bafkrgqelljziv4qfg5mefz36m2y3h6voaralnw6lwb4f53xcnrf4mlsykkn7vt6eno547tw5ygcz62kxrle45wnbmpbofo5tvu57jvuaf7k7e"));
 
             var data = _dfs.BlockApi.GetAsync(cid).Result;
             Assert.That(_blob.Length, Is.EqualTo(data.Size));
@@ -187,7 +187,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         {
             var _ = _dfs.BlockApi.PutAsync(_blob).Result;
             var block = _dfs.BlockApi.GetAsync(Id).Result;
-            Assert.That(Id, Is.EqualTo(block.Id.ToString()));
+            Assert.That(block.Id.ToString(), Is.EqualTo(Id));
             Assert.That(_blob, Is.EqualTo(block.DataBytes));
             var blob1 = new byte[_blob.Length];
             block.DataStream.Read(blob1, 0, blob1.Length);
@@ -199,8 +199,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         {
             var _ = _dfs.BlockApi.PutAsync(_blob).Result;
             var info = _dfs.BlockApi.StatAsync(Id).Result;
-            Assert.That(Id, Is.EqualTo(info.Id.ToString()));
-            Assert.That(5, Is.EqualTo(info.Size));
+            Assert.That(info.Id.ToString(), Is.EqualTo(Id));
+            Assert.That(info.Size, Is.EqualTo(5));
         }
 
         [Test]
@@ -214,7 +214,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             };
             var info = await _dfs.BlockApi.StatAsync(cid, cts.Token);
             Assert.That(cid.Encode(), Is.EqualTo(info.Id.ToString()));
-            Assert.That(5, Is.EqualTo(info.Size));
+            Assert.That(info.Size, Is.EqualTo(5));
         }
 
         [Test]
@@ -230,7 +230,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         {
             var _ = _dfs.BlockApi.PutAsync(_blob).Result;
             var cid = await _dfs.BlockApi.RemoveAsync(Id);
-            Assert.That(Id, Is.EqualTo(cid.ToString()));
+            Assert.That(cid.ToString(), Is.EqualTo(Id));
         }
 
         [Test]

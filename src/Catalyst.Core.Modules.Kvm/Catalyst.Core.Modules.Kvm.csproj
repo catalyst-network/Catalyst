@@ -22,6 +22,6 @@
       <ProjectReference Include="..\Catalyst.Core.Modules.Cryptography.BulletProofs\Catalyst.Core.Modules.Cryptography.BulletProofs.csproj" />
     </ItemGroup>
     <ItemGroup>
-      <PackageReference Include="Autofac" Version="4.8.1" />
+      <PackageReference Include="Autofac" Version="8.0.0" />
     </ItemGroup>
 </Project>

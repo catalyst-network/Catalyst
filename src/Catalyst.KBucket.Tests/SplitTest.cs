@@ -127,7 +127,7 @@ namespace Catalyst.KBucket
             };
 
             for (var i = 0; i < 0x255; ++i) kBucket.Add(new Contact((byte) i));
-            Assert.That(0, Is.Not.EqualTo(pings));
+            Assert.That(pings, Is.Not.EqualTo(0));
         }
     }
 }

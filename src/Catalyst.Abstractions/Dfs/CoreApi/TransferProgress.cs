@@ -37,7 +37,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// <value>
         ///   Typically, a relative file path.
         /// </value>
-        public string Name;
+        public string? Name;
 
         /// <summary>
         ///   The cumuative number of bytes transfered for

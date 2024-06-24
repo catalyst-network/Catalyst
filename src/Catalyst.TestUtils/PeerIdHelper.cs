@@ -36,8 +36,8 @@ namespace Catalyst.TestUtils
 {
     public static class PeerIdHelper
     {
-        public static PeerId GetPeerId(byte[] publicKey = null,
-            IPAddress ipAddress = null,
+        public static PeerId GetPeerId(byte[]? publicKey = null,
+            IPAddress? ipAddress = null,
             int port = 12345)
         {
             var peerIdentifier = new PeerId

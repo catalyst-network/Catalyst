@@ -44,38 +44,38 @@ namespace Lib.P2P.Tests
         {
             var local = new MultiAddress("/ip4/127.0.0.1/tcp/5001");
             var r0 = await local.ResolveAsync();
-            Assert.That(1, Is.EqualTo(r0.Count));
-            Assert.That(local, Is.EqualTo(r0[0]));
+            Assert.That(r0, Has.Count.EqualTo(1));
+            Assert.That(r0[0], Is.EqualTo(local));
         }
 
         [Test]
         public async Task Resolving_Dns()
         {
             var dns = await new MultiAddress("/dns/libp2p.io/tcp/5001").ResolveAsync();
-            Assert.That(0, Is.Not.EqualTo(dns.Count));
+            Assert.That(dns, Has.Count.Not.EqualTo(0));
             var dns4 = await new MultiAddress("/dns4/libp2p.io/tcp/5001").ResolveAsync();
             var dns6 = await new MultiAddress("/dns6/libp2p.io/tcp/5001").ResolveAsync();
-            Assert.That(dns.Count, Is.EqualTo(dns4.Count + dns6.Count));
+            Assert.That(dns4.Count + dns6.Count, Is.EqualTo(dns.Count));
         }
 
         [Test]
         public async Task Resolving_HTTP()
         {
             var r = await new MultiAddress("/ip4/127.0.0.1/http").ResolveAsync();
-            Assert.That("/ip4/127.0.0.1/http/tcp/80", Is.EqualTo(r.First().ToString()));
+            Assert.That(r.First().ToString(), Is.EqualTo("/ip4/127.0.0.1/http/tcp/80"));
 
             r = await new MultiAddress("/ip4/127.0.0.1/http/tcp/8080").ResolveAsync();
-            Assert.That("/ip4/127.0.0.1/http/tcp/8080", Is.EqualTo(r.First().ToString()));
+            Assert.That(r.First().ToString(), Is.EqualTo("/ip4/127.0.0.1/http/tcp/8080"));
         }
 
         [Test]
         public async Task Resolving_HTTPS()
         {
             var r = await new MultiAddress("/ip4/127.0.0.1/https").ResolveAsync();
-            Assert.That("/ip4/127.0.0.1/https/tcp/443", Is.EqualTo(r.First().ToString()));
+            Assert.That(r.First().ToString(), Is.EqualTo("/ip4/127.0.0.1/https/tcp/443"));
 
             r = await new MultiAddress("/ip4/127.0.0.1/https/tcp/4433").ResolveAsync();
-            Assert.That("/ip4/127.0.0.1/https/tcp/4433", Is.EqualTo(r.First().ToString()));
+            Assert.That(r.First().ToString(), Is.EqualTo("/ip4/127.0.0.1/https/tcp/4433"));
         }
 
         [Test]

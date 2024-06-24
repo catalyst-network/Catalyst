@@ -41,8 +41,8 @@ namespace Lib.P2P.Tests
         [Test]
         public new void ToString()
         {
-            Assert.That("", Is.EqualTo(new Peer().ToString()));
-            Assert.That(MarsId, Is.EqualTo(new Peer {Id = MarsId}.ToString()));
+            Assert.That(new Peer().ToString(), Is.EqualTo(""));
+            Assert.That(new Peer {Id = MarsId}.ToString(), Is.EqualTo(MarsId));
         }
 
         [Test]
@@ -50,11 +50,11 @@ namespace Lib.P2P.Tests
         {
             var peer = new Peer();
             Assert.That(peer.Id, Is.Null);
-            Assert.That(0, Is.EqualTo(peer.Addresses.Count()));
-            Assert.That("unknown/0.0", Is.EqualTo(peer.ProtocolVersion));
-            Assert.That("unknown/0.0", Is.EqualTo(peer.AgentVersion));
+            Assert.That(peer.Addresses.Count(), Is.EqualTo(0));
+            Assert.That(peer.ProtocolVersion, Is.EqualTo("unknown/0.0"));
+            Assert.That(peer.AgentVersion, Is.EqualTo("unknown/0.0"));
             Assert.That(peer.PublicKey, Is.Null);
-            Assert.That(false, Is.EqualTo(peer.IsValid())); // missing peer ID
+            Assert.That(peer.IsValid(), Is.EqualTo(false)); // missing peer ID
             Assert.That(peer.ConnectedAddress, Is.Null);
             Assert.That(peer.Latency.HasValue, Is.False);
         }
@@ -68,21 +68,21 @@ namespace Lib.P2P.Tests
                 Latency = TimeSpan.FromHours(3.03 * 2)
             };
             Assert.That(marsAddress, Is.EqualTo(peer.ConnectedAddress.ToString()));
-            Assert.That(3.03 * 2, Is.EqualTo(peer.Latency.Value.TotalHours));
+            Assert.That(peer.Latency.Value.TotalHours, Is.EqualTo(3.03 * 2));
         }
 
         [Test]
         public void Validation_No_Id()
         {
             var peer = new Peer();
-            Assert.That(false, Is.EqualTo(peer.IsValid()));
+            Assert.That(peer.IsValid(), Is.EqualTo(false));
         }
 
         [Test]
         public void Validation_With_Id()
         {
             Peer peer = MarsId;
-            Assert.That(true, Is.EqualTo(peer.IsValid()));
+            Assert.That(peer.IsValid(), Is.EqualTo(true));
         }
 
         [Test]
@@ -93,7 +93,7 @@ namespace Lib.P2P.Tests
                 Id = MarsId,
                 PublicKey = MarsPublicKey
             };
-            Assert.That(true, Is.EqualTo(peer.IsValid()));
+            Assert.That(peer.IsValid(), Is.EqualTo(true));
         }
 
         [Test]
@@ -104,7 +104,7 @@ namespace Lib.P2P.Tests
                 Id = PlutoId,
                 PublicKey = MarsPublicKey
             };
-            Assert.That(false, Is.EqualTo(peer.IsValid()));
+            Assert.That(peer.IsValid(), Is.EqualTo(false));
         }
 
         [Test]

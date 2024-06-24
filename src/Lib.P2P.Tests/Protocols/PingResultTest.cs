@@ -38,9 +38,9 @@ namespace Lib.P2P.Tests.Protocols
                 Text = "ping",
                 Time = time
             };
-            Assert.That(true, Is.EqualTo(r.Success));
-            Assert.That("ping", Is.EqualTo(r.Text));
-            Assert.That(time, Is.EqualTo(r.Time));
+            Assert.That(r.Success, Is.EqualTo(true));
+            Assert.That(r.Text, Is.EqualTo("ping"));
+            Assert.That(r.Time, Is.EqualTo(time));
         }
     }
 }

@@ -30,25 +30,25 @@ namespace MultiFormats.Tests
         private byte[] GetStringBytes(string x) { return Encoding.ASCII.GetBytes(x); }
 
         [Test]
-        public void Vector1() { Assert.That(string.Empty, Is.EqualTo(Base32.Encode(GetStringBytes(string.Empty)))); }
+        public void Vector1() { Assert.That(Base32.Encode(GetStringBytes(string.Empty)), Is.EqualTo(string.Empty)); }
 
         [Test]
-        public void Vector2() { Assert.That("my", Is.EqualTo(Base32.Encode(GetStringBytes("f")))); }
+        public void Vector2() { Assert.That(Base32.Encode(GetStringBytes("f")), Is.EqualTo("my")); }
 
         [Test]
-        public void Vector3() { Assert.That("mzxq", Is.EqualTo(Base32.Encode(GetStringBytes("fo")))); }
+        public void Vector3() { Assert.That(Base32.Encode(GetStringBytes("fo")), Is.EqualTo("mzxq")); }
 
         [Test]
-        public void Vector4() { Assert.That("mzxw6", Is.EqualTo(Base32.Encode(GetStringBytes("foo")))); }
+        public void Vector4() { Assert.That(Base32.Encode(GetStringBytes("foo")), Is.EqualTo("mzxw6")); }
 
         [Test]
-        public void Vector5() { Assert.That("mzxw6yq", Is.EqualTo(Base32.Encode(GetStringBytes("foob")))); }
+        public void Vector5() { Assert.That(Base32.Encode(GetStringBytes("foob")), Is.EqualTo("mzxw6yq")); }
 
         [Test]
-        public void Vector6() { Assert.That("mzxw6ytb", Is.EqualTo(Base32.Encode(GetStringBytes("fooba")))); }
+        public void Vector6() { Assert.That(Base32.Encode(GetStringBytes("fooba")), Is.EqualTo("mzxw6ytb")); }
 
         [Test]
-        public void Vector7() { Assert.That("mzxw6ytboi", Is.EqualTo(Base32.Encode(GetStringBytes("foobar")))); }
+        public void Vector7() { Assert.That(Base32.Encode(GetStringBytes("foobar")), Is.EqualTo("mzxw6ytboi")); }
     }
 
     public class Base32DecodeTests

@@ -1,4 +1,4 @@
-﻿using Nethereum.Hex.HexConvertors.Extensions;
+using Nethereum.Hex.HexConvertors.Extensions;
 using Newtonsoft.Json;
 
 namespace Nethereum.KeyStore.Model
@@ -22,21 +22,21 @@ namespace Nethereum.KeyStore.Model
         }
 
         [JsonProperty("cipher")]
-        public string Cipher { get; set; }
+        public string? Cipher { get; set; }
 
         [JsonProperty("ciphertext")]
-        public string CipherText { get; set; }
+        public string? CipherText { get; set; }
 
         [JsonProperty("cipherparams")]
-        public CipherParams CipherParams { get; set; }
+        public CipherParams? CipherParams { get; set; }
 
         [JsonProperty("kdf")]
-        public string Kdf { get; set; }
+        public string? Kdf { get; set; }
 
         [JsonProperty("mac")]
-        public string Mac { get; set; }
+        public string? Mac { get; set; }
 
         [JsonProperty("kdfparams")]
-        public TKdfParams Kdfparams { get; set; }
+        public TKdfParams? Kdfparams { get; set; }
     }
 }

@@ -2,7 +2,6 @@
     {
         "Ip": "127.0.0.1",
         "Port": 42066,
-        "PublicKey": ""
+        "PublicKey": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
     }
 ]
-

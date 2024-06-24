@@ -1,4 +1,4 @@
-﻿using Newtonsoft.Json;
+using Newtonsoft.Json;
 
 namespace Nethereum.KeyStore.Model
 {
@@ -8,6 +8,6 @@ namespace Nethereum.KeyStore.Model
         public int Count { get; set; }
 
         [JsonProperty("prf")]
-        public string Prf { get; set; }
+        public string? Prf { get; set; }
     }
 }

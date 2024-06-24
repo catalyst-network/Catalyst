@@ -32,15 +32,15 @@ namespace MultiFormats.Tests
         [Test]
         public void Encode()
         {
-            Assert.That("jo91waLQA1NNeBmZKUF", Is.EqualTo(Base58.Encode(Encoding.UTF8.GetBytes("this is a test"))));
-            Assert.That("jo91waLQA1NNeBmZKUF", Is.EqualTo(Encoding.UTF8.GetBytes("this is a test").ToBase58()));
+            Assert.That(Base58.Encode(Encoding.UTF8.GetBytes("this is a test")), Is.EqualTo("jo91waLQA1NNeBmZKUF"));
+            Assert.That(Encoding.UTF8.GetBytes("this is a test").ToBase58(), Is.EqualTo("jo91waLQA1NNeBmZKUF"));
         }
 
         [Test]
         public void Decode()
         {
-            Assert.That("this is a test", Is.EqualTo(Encoding.UTF8.GetString(Base58.Decode("jo91waLQA1NNeBmZKUF"))));
-            Assert.That("this is a test", Is.EqualTo(Encoding.UTF8.GetString("jo91waLQA1NNeBmZKUF".FromBase58())));
+            Assert.That(Encoding.UTF8.GetString(Base58.Decode("jo91waLQA1NNeBmZKUF")), Is.EqualTo("this is a test"));
+            Assert.That(Encoding.UTF8.GetString("jo91waLQA1NNeBmZKUF".FromBase58()), Is.EqualTo("this is a test"));
         }
 
         /// <summary>
@@ -64,8 +64,8 @@ namespace MultiFormats.Tests
         [Test]
         public void Zero()
         {
-            Assert.That("1111111", Is.EqualTo(Base58.Encode(new byte[7])));
-            Assert.That(7, Is.EqualTo(Base58.Decode("1111111").Length));
+            Assert.That(Base58.Encode(new byte[7]), Is.EqualTo("1111111"));
+            Assert.That(Base58.Decode("1111111").Length, Is.EqualTo(7));
             Assert.That(Base58.Decode("1111111").All(b => b == 0), Is.True);
         }
     }

@@ -22,6 +22,7 @@
 #endregion
 
 using MultiFormats;
+using System.Linq;
 
 namespace Lib.P2P.Tests
 {
@@ -70,27 +71,27 @@ namespace Lib.P2P.Tests
 
             var policy = new MultiAddressBlackList();
             Assert.That(policy.IsReadOnly, Is.False);
-            Assert.That(0, Is.EqualTo(policy.Count));
+            Assert.That(policy, Has.Count.EqualTo(0));
             Assert.That(policy.Contains(addressA), Is.False);
             Assert.That(policy.Contains(addressB), Is.False);
 
             policy.Add(addressA);
-            Assert.That(1, Is.EqualTo(policy.Count));
+            Assert.That(policy, Has.Count.EqualTo(1));
             Assert.That(policy.Contains(addressA), Is.True);
             Assert.That(policy.Contains(addressB), Is.False);
 
             policy.Add(addressA);
-            Assert.That(1, Is.EqualTo(policy.Count));
+            Assert.That(policy, Has.Count.EqualTo(1));
             Assert.That(policy.Contains(addressA), Is.True);
             Assert.That(policy.Contains(addressB), Is.False);
 
             policy.Add(addressB);
-            Assert.That(2, Is.EqualTo(policy.Count));
+            Assert.That(policy, Has.Count.EqualTo(2));
             Assert.That(policy.Contains(addressA), Is.True);
             Assert.That(policy.Contains(addressB), Is.True);
 
             policy.Remove(addressB);
-            Assert.That(1, Is.EqualTo(policy.Count));
+            Assert.That(policy, Has.Count.EqualTo(1));
             Assert.That(policy.Contains(addressA), Is.True);
             Assert.That(policy.Contains(addressB), Is.False);
 
@@ -104,7 +105,7 @@ namespace Lib.P2P.Tests
             }
 
             policy.Clear();
-            Assert.That(0, Is.EqualTo(policy.Count));
+            Assert.That(policy, Has.Count.EqualTo(0));
             Assert.That(policy.Contains(addressA), Is.False);
             Assert.That(policy.Contains(addressB), Is.False);
         }

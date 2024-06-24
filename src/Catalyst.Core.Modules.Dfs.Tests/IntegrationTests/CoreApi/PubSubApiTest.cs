@@ -61,7 +61,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         {
             var topic = "net-ipfs-http-client-test-unknown" + Guid.NewGuid();
             var peers = ipfs.PubSubApi.PeersAsync(topic).Result.ToArray();
-            Assert.That(0, Is.EqualTo(peers.Length));
+            Assert.That(peers.Length, Is.EqualTo(0));
         }
 
         [Test]
@@ -99,7 +99,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 await ipfs.PubSubApi.PublishAsync(topic, "hello world!", cs.Token);
 
                 await Task.Delay(100, cs.Token);
-                Assert.That(1, Is.EqualTo(_messageCount));
+                Assert.That(_messageCount, Is.EqualTo(1));
             }
             finally
             {
@@ -177,12 +177,12 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 await ipfs.PubSubApi.SubscribeAsync(topic, msg => { Interlocked.Increment(ref _messageCount1); }, cs.Token);
                 await ipfs.PubSubApi.PublishAsync(topic, "hello world!", default);
                 await Task.Delay(100, default);
-                Assert.That(1, Is.EqualTo(_messageCount1));
+                Assert.That(_messageCount1, Is.EqualTo(1));
 
                 cs.Cancel();
                 await ipfs.PubSubApi.PublishAsync(topic, "hello world!!!", default);
                 await Task.Delay(100, default);
-                Assert.That(1, Is.EqualTo(_messageCount1));
+                Assert.That(_messageCount1, Is.EqualTo(1));
             }
             finally
             {
@@ -204,7 +204,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 await ipfs.PubSubApi.PublishAsync(topic, expected, cs.Token);
 
                 await Task.Delay(100, cs.Token);
-                Assert.That(1, Is.EqualTo(messages.Count));
+                Assert.That(messages.Count, Is.EqualTo(1));
                 Assert.That(expected, Is.EqualTo(messages[0].DataBytes));
             }
             finally
@@ -229,7 +229,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 await ipfs.PubSubApi.PublishAsync(topic, ms, cs.Token);
 
                 await Task.Delay(100, cs.Token);
-                Assert.That(1, Is.EqualTo(messages.Count));
+                Assert.That(messages.Count, Is.EqualTo(1));
                 Assert.That(expected, Is.EqualTo(messages[0].DataBytes));
             }
             finally

@@ -59,8 +59,8 @@ namespace Lib.P2P.Tests.Routing
                 router.Add(cid1, self.Id);
 
                 var providers = router.Get(cid1);
-                Assert.That(1, Is.EqualTo(providers.Count()));
-                Assert.That(self.Id, Is.EqualTo(providers.First()));
+                Assert.That(providers.Count(), Is.EqualTo(1));
+                Assert.That(providers.First(), Is.EqualTo(self.Id));
             }
         }
 
@@ -73,7 +73,7 @@ namespace Lib.P2P.Tests.Routing
                 router.Add(cid1, self.Id);
 
                 var providers = router.Get(cid1);
-                Assert.That(1, Is.EqualTo(providers.Count()));
+                Assert.That(providers.Count(), Is.EqualTo(1));
                 Assert.That(self.Id, Is.EqualTo(providers.First()));
             }
         }
@@ -87,7 +87,7 @@ namespace Lib.P2P.Tests.Routing
                 router.Add(cid1, other.Id);
 
                 var providers = router.Get(cid1).ToArray();
-                Assert.That(2, Is.EqualTo(providers.Length));
+                Assert.That(providers.Length, Is.EqualTo(2));
                 Assert.That(providers, Contains.Item(self.Id));
                 Assert.That(providers, Contains.Item(other.Id));
             }
@@ -99,7 +99,7 @@ namespace Lib.P2P.Tests.Routing
             using (var router = new ContentRouter())
             {
                 var providers = router.Get(cid1);
-                Assert.That(0, Is.EqualTo(providers.Count()));
+                Assert.That(providers.Count(), Is.EqualTo(0));
             }
         }
 
@@ -111,7 +111,7 @@ namespace Lib.P2P.Tests.Routing
                 router.Add(cid1, self.Id, DateTime.MinValue);
 
                 var providers = router.Get(cid1);
-                Assert.That(0, Is.EqualTo(providers.Count()));
+                Assert.That(providers.Count(), Is.EqualTo(0));
             }
         }
 
@@ -122,11 +122,11 @@ namespace Lib.P2P.Tests.Routing
             {
                 router.Add(cid1, self.Id, DateTime.MinValue);
                 var providers = router.Get(cid1);
-                Assert.That(0, Is.EqualTo(providers.Count()));
+                Assert.That(providers.Count(), Is.EqualTo(0));
 
                 router.Add(cid1, self.Id, DateTime.MaxValue - router.ProviderTtl);
                 providers = router.Get(cid1);
-                Assert.That(1, Is.EqualTo(providers.Count()));
+                Assert.That(providers.Count(), Is.EqualTo(1));
             }
         }
     }

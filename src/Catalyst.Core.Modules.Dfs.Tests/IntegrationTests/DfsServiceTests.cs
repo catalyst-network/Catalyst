@@ -139,21 +139,21 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             Assert.That(_dfs1.IsStarted, Is.False);
             await _dfs1.StartAsync();
             Assert.That(_dfs1.IsStarted, Is.True);
-            Assert.That(0, Is.Not.EqualTo(peer.Addresses.Count()));
+            Assert.That(peer.Addresses.Count(), Is.Not.EqualTo(0));
             await _dfs1.StopAsync();
             Assert.That(_dfs1.IsStarted, Is.False);
-            Assert.That(0, Is.EqualTo(peer.Addresses.Count()));
+            Assert.That(peer.Addresses.Count(), Is.EqualTo(0));
 
             await _dfs1.StartAsync();
-            Assert.That(0, Is.Not.EqualTo(peer.Addresses.Count()));
+            Assert.That(peer.Addresses.Count(), Is.Not.EqualTo(0));
             await _dfs1.StopAsync();
-            Assert.That(0, Is.EqualTo(peer.Addresses.Count()));
+            Assert.That(peer.Addresses.Count(), Is.EqualTo(0));
 
             await _dfs1.StartAsync();
-            Assert.That(0, Is.Not.EqualTo(peer.Addresses.Count()));
+            Assert.That(peer.Addresses.Count(), Is.Not.EqualTo(0));
             ExceptionAssert.Throws<Exception>(() => _dfs1.StartAsync().Wait());
             await _dfs1.StopAsync();
-            Assert.That(0, Is.EqualTo(peer.Addresses.Count()));
+            Assert.That(peer.Addresses.Count(), Is.EqualTo(0));
         }
 
         [Test]
@@ -165,14 +165,14 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             for (int n = 0; n < 3; ++n)
             {
                 await _dfs1.StartAsync();
-                Assert.That(0, Is.Not.EqualTo(peer1.Addresses.Count()));
+                Assert.That(peer1.Addresses.Count(), Is.Not.EqualTo(0));
                 await _dfs2.StartAsync();
-                Assert.That(0, Is.Not.EqualTo(peer2.Addresses.Count()));
+                Assert.That(peer2.Addresses.Count(), Is.Not.EqualTo(0));
 
                 await _dfs2.StopAsync();
-                Assert.That(0, Is.EqualTo(peer2.Addresses.Count()));
+                Assert.That(peer2.Addresses.Count(), Is.EqualTo(0));
                 await _dfs1.StopAsync();
-                Assert.That(0, Is.EqualTo(peer1.Addresses.Count()));
+                Assert.That(peer1.Addresses.Count(), Is.EqualTo(0));
             }
         }
 

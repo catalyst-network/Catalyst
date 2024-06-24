@@ -51,19 +51,19 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
     {
         private bool _autoStart;
         private int _burnIn;
-        private ICancellationTokenProvider _cancellationProvider;
-        private IHastingsCareTaker _careTaker;
-        private IHastingsOriginator _currentState;
-        private IDns _dnsClient;
+        private ICancellationTokenProvider? _cancellationProvider;
+        private IHastingsCareTaker? _careTaker;
+        private IHastingsOriginator? _currentState;
+        private IDns? _dnsClient;
         private int _hasValidCandidatesCheckMillisecondsFrequency;
-        private ILogger _logger;
-        private IPeerClient _peerClient;
-        private IPeerMessageCorrelationManager _peerCorrelationManager;
-        private IPeerRepository _peerRepository;
-        private IPeerSettings _peerSettings;
-        private IScheduler _scheduler;
+        private ILogger? _logger;
+        private IPeerClient? _peerClient;
+        private IPeerMessageCorrelationManager? _peerCorrelationManager;
+        private IPeerRepository? _peerRepository;
+        private IPeerSettings? _peerSettings;
+        private IScheduler? _scheduler;
         private int _timeout;
-        public IList<IPeerClientObservable> PeerClientObservables;
+        public IList<IPeerClientObservable>? PeerClientObservables;
 
         public void Dispose()
         {

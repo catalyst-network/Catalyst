@@ -77,7 +77,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
         {
             var json =
                 @"""{""crypto"":{""cipher"":""aes-128-ctr"",""ciphertext"":""58e1617da38fc002816268967fea4d8d2f1dd51c8b638de5265bf06d781226a5""
-                            ,""cipherparams"":{""iv"":""45f6c68c2ac3ad38f02aea8f3c928d2c""},""kdf"":""scrypt"",""mac"":""00bec3c8eb4988e9603105066cf297d7
+                            ,""cipherparams"":{""Iv"":""45f6c68c2ac3ad38f02aea8f3c928d2c""},""kdf"":""scrypt"",""mac"":""00bec3c8eb4988e9603105066cf297d7
                             4b67745ac5f7d749989344cfa4ee4b71"",""kdfparams"":{""n"":""262144,""r"":""1,""p"":""8,""dklen"":32,""salt"":""2a03d9840dec04e0
                             1538df649f61958be4015a97f14b765ec0a46feed88cc5f4""}},""id"":""b4b82bc3-a495-49cd-b3bc-e022f936e6ff"",""address"":""987080731d
                             e5a56833d2edc37458a53e3fec68cd"",""version"":3}";

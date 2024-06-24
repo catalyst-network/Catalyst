@@ -94,7 +94,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                     File.Move(versionPath, versionBackupPath);
                 }
 
-                Assert.That("0", Is.EqualTo(await ipfs.BlockRepositoryApi.VersionAsync()));
+                Assert.That(await ipfs.BlockRepositoryApi.VersionAsync(), Is.EqualTo("0"));
             }
             finally
             {

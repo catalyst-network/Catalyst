@@ -35,10 +35,10 @@ namespace Catalyst.Core.Lib.P2P.Models
     public sealed class Peer : IPeer
     {
         [RepositoryPrimaryKey(Order = 1)]
-        public string DocumentId => PeerId?.ToByteString().ToBase64();
+        public string DocumentId => PeerId.ToByteString().ToBase64();
         
         /// <inheritdoc />
-        public PeerId PeerId { get; set; }
+        public PeerId? PeerId { get; set; }
 
         public bool IsPoaNode { set; get; }
 

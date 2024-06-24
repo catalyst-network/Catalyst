@@ -63,7 +63,7 @@ namespace Catalyst.TestUtils
         public override async Task<IObservableChannel> BuildChannelAsync(IEventLoopGroupFactory eventLoopGroupFactory,
             IPAddress targetAddress,
             int targetPort,
-            X509Certificate2 certificate = null)
+            X509Certificate2? certificate = null)
         {
             var channel = Substitute.For<IChannel>();
 

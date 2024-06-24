@@ -29,8 +29,8 @@ namespace Lib.P2P.Tests
 {
     public class ConnectionManagerTest
     {
-        private MultiHash aId = "QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb";
-        private MultiHash bId = "QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCM1h";
+        private readonly MultiHash aId = "QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb";
+        private readonly MultiHash bId = "QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCM1h";
 
         [Test]
         public void IsConnected()
@@ -55,11 +55,11 @@ namespace Lib.P2P.Tests
 
             manager.Add(connection);
             Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(1, Is.EqualTo(manager.Connections.Count()));
+            Assert.That(manager.Connections.Count(), Is.EqualTo(1));
 
             connection.Stream = null;
             Assert.That(manager.IsConnected(peer), Is.False);
-            Assert.That(0, Is.EqualTo(manager.Connections.Count()));
+            Assert.That(manager.Connections.Count(), Is.EqualTo(0));
         }
 
         [Test]
@@ -72,17 +72,17 @@ namespace Lib.P2P.Tests
 
             Assert.That(a, Is.EqualTo(manager.Add(a)));
             Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(1, Is.EqualTo(manager.Connections.Count()));
+            Assert.That(manager.Connections.Count(), Is.EqualTo(1));
             Assert.That(a.Stream, Is.Not.Null);
 
-            Assert.That(b, Is.EqualTo(manager.Add(b)));
+            Assert.That(manager.Add(b), Is.EqualTo(b));
             Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(2, Is.EqualTo(manager.Connections.Count()));
+            Assert.That(manager.Connections.Count(), Is.EqualTo(2));
             Assert.That(a.Stream, Is.Not.Null);
             Assert.That(b.Stream, Is.Not.Null);
 
             manager.Clear();
-            Assert.That(0, Is.EqualTo(manager.Connections.Count()));
+            Assert.That(manager.Connections.Count(), Is.EqualTo(0));
             Assert.That(a.Stream, Is.Null);
             Assert.That(b.Stream, Is.Null);
         }
@@ -96,12 +96,12 @@ namespace Lib.P2P.Tests
 
             Assert.That(a, Is.EqualTo(manager.Add(a)));
             Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(1, Is.EqualTo(manager.Connections.Count()));
+            Assert.That(manager.Connections.Count(), Is.EqualTo(1));
             Assert.That(a.Stream, Is.Not.Null);
 
-            Assert.That(a, Is.EqualTo(manager.Add(a)));
+            Assert.That(manager.Add(a), Is.EqualTo(a));
             Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(1, Is.EqualTo(manager.Connections.Count()));
+            Assert.That(manager.Connections.Count(), Is.EqualTo(1));
             Assert.That(a.Stream, Is.Not.Null);
         }
 
@@ -117,16 +117,16 @@ namespace Lib.P2P.Tests
 
             Assert.That(a, Is.EqualTo(manager.Add(a)));
             Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(1, Is.EqualTo(manager.Connections.Count()));
+            Assert.That(manager.Connections.Count(), Is.EqualTo(1));
             Assert.That(a.Stream, Is.Not.Null);
-            Assert.That(address, Is.EqualTo(peer.ConnectedAddress.ToString()));
+            Assert.That(peer.ConnectedAddress.ToString(), Is.EqualTo(address));
 
-            Assert.That(b, Is.EqualTo(manager.Add(b)));
+            Assert.That(manager.Add(b), Is.EqualTo(b));
             Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(2, Is.EqualTo(manager.Connections.Count()));
+            Assert.That(manager.Connections.Count(), Is.EqualTo(2));
             Assert.That(a.Stream, Is.Not.Null);
             Assert.That(b.Stream, Is.Not.Null);
-            Assert.That(address, Is.EqualTo(peer.ConnectedAddress.ToString()));
+            Assert.That(peer.ConnectedAddress.ToString(), Is.EqualTo(address));
         }
 
         [Test]
@@ -142,27 +142,27 @@ namespace Lib.P2P.Tests
 
             Assert.That(a, Is.EqualTo(manager.Add(a)));
             Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(1, Is.EqualTo(manager.Connections.Count()));
+            Assert.That(manager.Connections.Count(), Is.EqualTo(1));
             Assert.That(a.Stream, Is.Not.Null);
-            Assert.That(address1, Is.EqualTo(peer.ConnectedAddress.ToString()));
+            Assert.That(peer.ConnectedAddress.ToString(), Is.EqualTo(address1));
 
-            Assert.That(b, Is.EqualTo(manager.Add(b)));
+            Assert.That(manager.Add(b), Is.EqualTo(b));
             Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(2, Is.EqualTo(manager.Connections.Count()));
+            Assert.That(manager.Connections.Count(), Is.EqualTo(2));
             Assert.That(a.Stream, Is.Not.Null);
             Assert.That(b.Stream, Is.Not.Null);
-            Assert.That(address1, Is.EqualTo(peer.ConnectedAddress.ToString()));
+            Assert.That(peer.ConnectedAddress.ToString(), Is.EqualTo(address1));
 
             Assert.That(manager.Remove(a), Is.True);
             Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(1, Is.EqualTo(manager.Connections.Count()));
+            Assert.That(manager.Connections.Count(), Is.EqualTo(1));
             Assert.That(a.Stream, Is.Null);
             Assert.That(b.Stream, Is.Not.Null);
-            Assert.That(address2, Is.EqualTo(peer.ConnectedAddress.ToString()));
+            Assert.That(peer.ConnectedAddress.ToString(), Is.EqualTo(address2));
 
             Assert.That(manager.Remove(b), Is.True);
             Assert.That(manager.IsConnected(peer), Is.False);
-            Assert.That(0, Is.EqualTo(manager.Connections.Count()));
+            Assert.That(manager.Connections.Count(), Is.EqualTo(0));
             Assert.That(a.Stream, Is.Null);
             Assert.That(b.Stream, Is.Null);
             Assert.That(peer.ConnectedAddress, Is.Null);
@@ -180,17 +180,17 @@ namespace Lib.P2P.Tests
 
             Assert.That(a, Is.EqualTo(manager.Add(a)));
             Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(1, Is.EqualTo(manager.Connections.Count()));
+            Assert.That(manager.Connections.Count(), Is.EqualTo(1));
             Assert.That(a.Stream, Is.Not.Null);
-            Assert.That(address, Is.EqualTo(peer.ConnectedAddress.ToString()));
+            Assert.That(peer.ConnectedAddress.ToString(), Is.EqualTo(address));
 
             a.Stream = null;
             Assert.That(b, Is.EqualTo(manager.Add(b)));
             Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(1, Is.EqualTo(manager.Connections.Count()));
+            Assert.That(manager.Connections.Count(), Is.EqualTo(1));
             Assert.That(a.Stream, Is.Null);
             Assert.That(b.Stream, Is.Not.Null);
-            Assert.That(address, Is.EqualTo(peer.ConnectedAddress.ToString()));
+            Assert.That(peer.ConnectedAddress.ToString(), Is.EqualTo(address));
         }
 
         [Test]
@@ -203,13 +203,13 @@ namespace Lib.P2P.Tests
 
             Assert.That(a, Is.EqualTo(manager.Add(a)));
             Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(1, Is.EqualTo(manager.Connections.Count()));
+            Assert.That(manager.Connections.Count(), Is.EqualTo(1));
             Assert.That(a.Stream, Is.Not.Null);
             a.Stream = null;
 
             Assert.That(b, Is.EqualTo(manager.Add(b)));
             Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(1, Is.EqualTo(manager.Connections.Count()));
+            Assert.That(manager.Connections.Count(), Is.EqualTo(1));
             Assert.That(a.Stream, Is.Null);
             Assert.That(b.Stream, Is.Not.Null);
 
@@ -225,12 +225,12 @@ namespace Lib.P2P.Tests
 
             manager.Add(a);
             Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(1, Is.EqualTo(manager.Connections.Count()));
+            Assert.That(manager.Connections.Count(), Is.EqualTo(1));
             Assert.That(a.Stream, Is.Not.Null);
 
             Assert.That(manager.Remove(a), Is.True);
             Assert.That(manager.IsConnected(peer), Is.False);
-            Assert.That(0, Is.EqualTo(manager.Connections.Count()));
+            Assert.That(manager.Connections.Count(), Is.EqualTo(0));
             Assert.That(a.Stream, Is.Null);
         }
 
@@ -243,12 +243,12 @@ namespace Lib.P2P.Tests
 
             manager.Add(a);
             Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(1, Is.EqualTo(manager.Connections.Count()));
+            Assert.That(manager.Connections.Count(), Is.EqualTo(1));
             Assert.That(a.Stream, Is.Not.Null);
 
             Assert.That(manager.Remove(peer.Id), Is.True);
             Assert.That(manager.IsConnected(peer),Is.False);
-            Assert.That(0, Is.EqualTo(manager.Connections.Count()));
+            Assert.That(manager.Connections.Count(), Is.EqualTo(0));
             Assert.That(a.Stream, Is.Null);
         }
 
@@ -261,7 +261,7 @@ namespace Lib.P2P.Tests
 
             Assert.That(manager.Remove(a), Is.False);
             Assert.That(manager.IsConnected(peer), Is.False);
-            Assert.That(0, Is.EqualTo(manager.Connections.Count()));
+            Assert.That(manager.Connections.Count(), Is.EqualTo(0));
             Assert.That(a.Stream, Is.Null);
         }
 
@@ -278,14 +278,14 @@ namespace Lib.P2P.Tests
             Assert.That(b, Is.EqualTo(manager.Add(b)));
             Assert.That(manager.IsConnected(peerA), Is.True);
             Assert.That(manager.IsConnected(peerB), Is.True);
-            Assert.That(2, Is.EqualTo(manager.Connections.Count()));
+            Assert.That(manager.Connections.Count(), Is.EqualTo(2));
             Assert.That(a.Stream, Is.Not.Null);
             Assert.That(b.Stream, Is.Not.Null);
 
             manager.Clear();
             Assert.That(manager.IsConnected(peerA), Is.False);
             Assert.That(manager.IsConnected(peerB), Is.False);
-            Assert.That(0, Is.EqualTo(manager.Connections.Count()));
+            Assert.That(manager.Connections.Count(), Is.EqualTo(0));
             Assert.That(a.Stream, Is.Null);
             Assert.That(b.Stream, Is.Null);
         }
@@ -315,7 +315,7 @@ namespace Lib.P2P.Tests
             manager.Add(a);
 
             manager.Remove(a);
-            Assert.That(1, Is.EqualTo(gotEvent));
+            Assert.That(gotEvent, Is.EqualTo(1));
         }
 
         [Test]
@@ -328,7 +328,7 @@ namespace Lib.P2P.Tests
             var a = new PeerConnection {RemotePeer = peerA, Stream = Stream.Null};
             manager.Add(a);
             a.Dispose();
-            Assert.That(1, Is.EqualTo(gotEvent));
+            Assert.That(gotEvent, Is.EqualTo(1));
         }
     }
 }

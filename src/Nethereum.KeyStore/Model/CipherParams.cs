@@ -1,4 +1,4 @@
-﻿using Nethereum.Hex.HexConvertors.Extensions;
+using Nethereum.Hex.HexConvertors.Extensions;
 using Newtonsoft.Json;
 
 namespace Nethereum.KeyStore.Model
@@ -15,6 +15,6 @@ namespace Nethereum.KeyStore.Model
         }
 
         [JsonProperty("iv")]
-        public string Iv { get; set; }
+        public string? Iv { get; set; }
     }
 }

@@ -45,14 +45,13 @@ namespace Catalyst.Core.Modules.Web3
     public sealed class ApiModule : Module
     {
         private readonly string _apiBindingAddress;
-        private readonly string[] _controllerModules;
-        private IContainer _container;
+        private readonly List<string> _controllerModules;
         private readonly bool _addSwagger;
 
         public ApiModule(string apiBindingAddress, List<string> controllerModules, bool addSwagger = true)
         {
             _apiBindingAddress = apiBindingAddress;
-            _controllerModules = controllerModules.ToArray();
+            _controllerModules = controllerModules;
             _addSwagger = addSwagger;
         }
 
@@ -62,124 +61,101 @@ namespace Catalyst.Core.Modules.Web3
             var buildPath = Path.GetDirectoryName(executingAssembly);
             var webDirectory = Directory.CreateDirectory(Path.Combine(buildPath, "wwwroot"));
 
-            async void BuildCallback(IContainer container)
-            {
-                _container = container;
-                var logger = _container.Resolve<ILogger>();
-
-                try
-                {
-                    await Host.CreateDefaultBuilder()
-                       .UseServiceProviderFactory(new SharedContainerProviderFactory(_container))
-                       .UseConsoleLifetime()
-                       .ConfigureContainer<ContainerBuilder>(ConfigureContainer)
-                       .ConfigureWebHostDefaults(
-                            webHostBuilder =>
-                            {
-                                webHostBuilder
-                                   .ConfigureServices(ConfigureServices)
-                                   .Configure(Configure)
-                                   .UseUrls(_apiBindingAddress)
-                                   .UseWebRoot(webDirectory.FullName);
-                                   //.UseSerilog();
-                            }).RunConsoleAsync();
-
-                    //SIGINT is caught from kestrel because we are using RunConsoleAsync in HostBuilder, the SIGINT will not be received in the main console so we need to exit the process manually, to prevent needing to use two SIGINT's
-                    Environment.Exit(2);
-                }
-                catch (Exception e)
-                {
-                    logger.Error(e, "Error loading API");
-                }
-            }
-
-            builder.RegisterBuildCallback(BuildCallback);
-            base.Load(builder);
-        }
-
-        public void ConfigureContainer(ContainerBuilder builder)
-        {
+            // Configure container
             builder.RegisterType<Web3HandlerResolver>().As<IWeb3HandlerResolver>().SingleInstance();
             builder.RegisterType<EthereumJsonSerializer>().As<IJsonSerializer>().SingleInstance();
+
+            // Register controllers from specified modules
+            foreach (var controllerModule in _controllerModules)
+            {
+                builder.RegisterAssemblyTypes(Assembly.Load(controllerModule))
+                       .Where(t => t.Name.EndsWith("Controller"))
+                       .AsSelf()
+                       .InstancePerLifetimeScope();
+            }
+
+            // Build callback for integrating with ASP.NET Core host
+            builder.RegisterBuildCallback(BuildCallback);
         }
 
-        public void ConfigureServices(IServiceCollection services)
+        private void BuildCallback(ILifetimeScope scope)
         {
-            services.AddCors(c =>
+            var logger = scope.Resolve<ILogger>();
+
+            try
             {
-                c.AddPolicy("AllowOrigin", options =>
-                    options.AllowAnyOrigin()
-                       .AllowAnyMethod()
-                       .AllowAnyHeader());
+                Host.CreateDefaultBuilder()
+                    .UseServiceProviderFactory(new AutofacServiceProviderFactory()) // Use the scope directly here
+                    .UseConsoleLifetime()
+                    .ConfigureWebHostDefaults(webBuilder =>
+                    {
+                        webBuilder
+                            .UseUrls(_apiBindingAddress)
+                            .UseWebRoot(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"))
+                            .ConfigureServices(ConfigureServices)
+                            .Configure(Configure);
+                    })
+                    .Build()
+                    .Run();
+            }
+            catch (Exception e)
+            {
+                logger.Error(e, "Error loading API");
+            }
+        }
+
+
+
+        private void ConfigureServices(IServiceCollection services)
+        {
+            services.AddCors(options =>
+            {
+                options.AddPolicy("AllowOrigin",
+                    builder => builder.AllowAnyOrigin()
+                                      .AllowAnyMethod()
+                                      .AllowAnyHeader());
             });
 
-            services.AddMvc().AddJsonOptions(options =>
-            {
-                var converters = options.JsonSerializerOptions.Converters;
-
-                converters.Add(new UInt256Converter());
-                converters.Add(new NullableUInt256Converter());
-                converters.Add(new AddressConverter());
-                converters.Add(new ByteArrayConverter());
-                converters.Add(new CidJsonConverter());
-            });//.AddApiExplorer();
-
-            var mvcBuilder = services.AddRazorPages();
-
-            _controllerModules.ToList().ForEach(controller => mvcBuilder.AddApplicationPart(Assembly.Load(controller)));
-
-            mvcBuilder.AddControllersAsServices();
+            services.AddControllers()
+                    .AddJsonOptions(options =>
+                    {
+                        options.JsonSerializerOptions.Converters.Add(new UInt256Converter());
+                        options.JsonSerializerOptions.Converters.Add(new NullableUInt256Converter());
+                        options.JsonSerializerOptions.Converters.Add(new AddressConverter());
+                        options.JsonSerializerOptions.Converters.Add(new ByteArrayConverter());
+                        options.JsonSerializerOptions.Converters.Add(new CidJsonConverter());
+                    });
 
             if (_addSwagger)
+            {
                 services.AddSwaggerGen(swagger =>
                 {
-                    swagger.SwaggerDoc("v1", new OpenApiInfo {Title = "Catalyst API", Description = "Catalyst"});
+                    swagger.SwaggerDoc("v1", new OpenApiInfo { Title = "Catalyst API", Description = "Catalyst" });
                 });
+            }
         }
 
-        public void Configure(IApplicationBuilder app)
+        private void Configure(IApplicationBuilder app)
         {
             app.UseHttpsRedirection();
             app.UseRouting();
-            app.UseDeveloperExceptionPage();
             app.UseCors("AllowOrigin");
-            app.UseDefaultFiles();
-            app.UseStaticFiles();
+            app.UseAuthorization();
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapRazorPages();
-                endpoints.MapControllerRoute("CatalystApi", "api/{controller}/{action}/{id}");
+                endpoints.MapControllers();
+                endpoints.MapControllerRoute(
+                    name: "default",
+                    pattern: "api/{controller}/{action}/{id?}");
             });
 
             if (_addSwagger)
             {
                 app.UseSwagger();
-                app.UseSwaggerUI(swagger => { swagger.SwaggerEndpoint("/swagger/v1/swagger.json", "Catalyst API"); });
-            }
-        }
-        
-        private sealed class SharedContainerProviderFactory : IServiceProviderFactory<ContainerBuilder>
-        {
-            readonly IContainer _container;
-
-            public SharedContainerProviderFactory(IContainer container)
-            {
-                _container = container;
-            }
-
-            public ContainerBuilder CreateBuilder(IServiceCollection services)
-            {
-                var builder = new ContainerBuilder();
-                builder.Populate(services);
-                return builder;
-            }
-
-            public IServiceProvider CreateServiceProvider(ContainerBuilder containerBuilder)
-            {
-                // using an obsolete way of updating an already created container
-                containerBuilder.Update(_container);
-
-                return new AutofacServiceProvider(_container);
+                app.UseSwaggerUI(swagger =>
+                {
+                    swagger.SwaggerEndpoint("/swagger/v1/swagger.json", "Catalyst API");
+                });
             }
         }
     }

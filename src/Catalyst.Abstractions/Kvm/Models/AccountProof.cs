@@ -29,16 +29,16 @@ namespace Catalyst.Abstractions.Kvm.Models
 {
     public class AccountProof
     {
-        public byte[][] Proof { get; set; }
+        public byte[][]? Proof { get; set; }
 
         public UInt256 Balance { get; set; }
 
-        public Hash256 CodeHash { get; set; }
+        public Hash256? CodeHash { get; set; }
 
         public UInt256 Nonce { get; set; }
 
-        public Hash256 StorageRoot { get; set; }
+        public Hash256? StorageRoot { get; set; }
 
-        public StorageProof[] StorageProofs { get; set; }
+        public StorageProof[]? StorageProofs { get; set; }
     }
 }

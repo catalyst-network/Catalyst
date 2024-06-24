@@ -47,7 +47,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.FileSystem
         private sealed class Entity
         {
             public int Number;
-            public string Value;
+            public string? Value;
         }
 
         private readonly Entity _a = new Entity {Number = 1, Value = "a"};

@@ -42,7 +42,7 @@ namespace Catalyst.Modules.POA.P2P.Tests.UnitTests
     {
         private const int PeerHeartbeatCheckSeconds = 3;
         private const int PeerChallengeTimeoutSeconds = 1;
-        private IHealthChecker _peerHeartbeatChecker;
+        private IHealthChecker? _peerHeartbeatChecker;
         private IPeerClient _peerClient;
         private IPeerRepository _peerRepository;
         private Peer _testPeer;

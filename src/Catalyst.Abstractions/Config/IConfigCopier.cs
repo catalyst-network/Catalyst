@@ -38,8 +38,8 @@ namespace Catalyst.Abstractions.Config
         /// <param name="overrideNetworkFile"></param>
         void RunConfigStartUp(string dataDir, 
             NetworkType networkType = NetworkType.Devnet, 
-            string sourceFolder = null, 
+            string? sourceFolder = null, 
             bool overwrite = false, 
-            string overrideNetworkFile = null);
+            string? overrideNetworkFile = null);
     }
 }

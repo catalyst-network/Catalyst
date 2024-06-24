@@ -33,11 +33,11 @@ namespace Catalyst.KBucket
         {
             var bucket = new KBucket<Contact>();
 
-            Assert.That((ulong) 0, Is.EqualTo((ulong)bucket.Distance(new byte[] {0x00}, new byte[] {0x00})));
-            Assert.That((ulong) 1, Is.EqualTo((ulong)bucket.Distance(new byte[] {0x00}, new byte[] {0x01})));
-            Assert.That((ulong) 3, Is.EqualTo((ulong)bucket.Distance(new byte[] {0x02}, new byte[] {0x01})));
-            Assert.That((ulong) 255, Is.EqualTo((ulong)bucket.Distance(new byte[] {0x00}, new byte[] {0x00, 0x00})));
-            Assert.That((ulong) 16640, Is.EqualTo((ulong)bucket.Distance(new byte[] {0x01, 0x24}, new byte[] {0x40, 0x24})));
+            Assert.That((ulong)bucket.Distance(new byte[] {0x00}, new byte[] {0x00}), Is.EqualTo((ulong) 0));
+            Assert.That((ulong)bucket.Distance(new byte[] {0x00}, new byte[] {0x01}), Is.EqualTo((ulong) 1));
+            Assert.That((ulong)bucket.Distance(new byte[] {0x02}, new byte[] {0x01}), Is.EqualTo((ulong) 3));
+            Assert.That((ulong)bucket.Distance(new byte[] {0x00}, new byte[] {0x00, 0x00}), Is.EqualTo((ulong) 255));
+            Assert.That((ulong)bucket.Distance(new byte[] {0x01, 0x24}, new byte[] {0x40, 0x24}), Is.EqualTo((ulong) 16640));
         }
 
         [Test]
@@ -50,11 +50,11 @@ namespace Catalyst.KBucket
             var c00 = new Contact((byte) 0, (byte) 0);
             var c0124 = new Contact((byte) 0x01, (byte) 0x24);
             var c4024 = new Contact((byte) 0x40, (byte) 0x24);
-            Assert.That((ulong) 0, Is.EqualTo((ulong)bucket.Distance(c0, c0)));
-            Assert.That((ulong) 1, Is.EqualTo((ulong)bucket.Distance(c0, c1)));
-            Assert.That((ulong) 3, Is.EqualTo((ulong)bucket.Distance(c2, c1)));
-            Assert.That((ulong) 255, Is.EqualTo((ulong)bucket.Distance(c0, c00)));
-            Assert.That((ulong) 16640, Is.EqualTo((ulong)bucket.Distance(c0124, c4024)));
+            Assert.That((ulong)bucket.Distance(c0, c0), Is.EqualTo((ulong) 0));
+            Assert.That((ulong)bucket.Distance(c0, c1), Is.EqualTo((ulong) 1));
+            Assert.That((ulong)bucket.Distance(c2, c1), Is.EqualTo((ulong) 3));
+            Assert.That((ulong)bucket.Distance(c0, c00), Is.EqualTo((ulong) 255));
+            Assert.That((ulong)bucket.Distance(c0124, c4024), Is.EqualTo((ulong) 16640));
         }
     }
 }

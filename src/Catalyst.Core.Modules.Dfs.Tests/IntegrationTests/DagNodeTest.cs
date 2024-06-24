@@ -48,10 +48,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         public void EmptyDag()
         {
             var node = new DagNode((byte[]) null);
-            Assert.That(0, Is.EqualTo(node.DataBytes.Length));
-            Assert.That(0, Is.EqualTo(node.Links.Count()));
-            Assert.That(0, Is.EqualTo(node.Size));
-            Assert.That("QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n", Is.EqualTo(node.Id.ToString()));
+            Assert.That(node.DataBytes.Length, Is.EqualTo(0));
+            Assert.That(node.Links.Count(), Is.EqualTo(0));
+            Assert.That(node.Size, Is.EqualTo(0));
+            Assert.That(node.Id.ToString(), Is.EqualTo("QmdfTbBqBPQ7VNxZEYEj14VmRuZBkqFbiwReogJgS1zR1n"));
 
             RoundtripTest(node);
         }
@@ -63,9 +63,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             var node = new DagNode(abc);
             
             Assert.That(abc, Is.EqualTo(node.DataBytes));
-            Assert.That(0, Is.EqualTo(node.Links.Count()));
-            Assert.That("QmXg9Pp2ytZ14xgmQjYEiHjVjMFXzCVVEcRTWJBmLgR39V", Is.EqualTo(node.Id.ToString()));
-            Assert.That(5, Is.EqualTo(node.Size));
+            Assert.That(node.Links.Count(), Is.EqualTo(0));
+            Assert.That(node.Id.ToString(), Is.EqualTo("QmXg9Pp2ytZ14xgmQjYEiHjVjMFXzCVVEcRTWJBmLgR39V"));
+            Assert.That(node.Size, Is.EqualTo(5));
 
             RoundtripTest(node);
         }
@@ -81,10 +81,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             {
                 alink
             });
-            Assert.That(0, Is.EqualTo(node.DataBytes.Length));
-            Assert.That(1, Is.EqualTo(node.Links.Count()));
-            Assert.That("QmVdMJFGTqF2ghySAmivGiQvsr9ZH7ujnNGBkLNNCe4HUE", Is.EqualTo(node.Id.ToString()));
-            Assert.That(43, Is.EqualTo(node.Size));
+            Assert.That(node.DataBytes.Length, Is.EqualTo(0));
+            Assert.That(node.Links.Count(), Is.EqualTo(1));
+            Assert.That(node.Id.ToString(), Is.EqualTo("QmVdMJFGTqF2ghySAmivGiQvsr9ZH7ujnNGBkLNNCe4HUE"));
+            Assert.That(node.Size, Is.EqualTo(43));
 
             RoundtripTest(node);
         }
@@ -104,9 +104,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             {
                 alink, blink
             });
-            Assert.That(0, Is.EqualTo(node.DataBytes.Length));
-            Assert.That(2, Is.EqualTo(node.Links.Count()));
-            Assert.That("QmbNgNPPykP4YTuAeSa3DsnBJWLVxccrqLUZDPNQfizGKs", Is.EqualTo(node.Id.ToString()));
+            Assert.That(node.DataBytes.Length, Is.EqualTo(0));
+            Assert.That(node.Links.Count(), Is.EqualTo(2));
+            Assert.That(node.Id.ToString(), Is.EqualTo("QmbNgNPPykP4YTuAeSa3DsnBJWLVxccrqLUZDPNQfizGKs"));
 
             RoundtripTest(node);
         }
@@ -129,8 +129,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             });
             
             Assert.That(ab, Is.EqualTo(node.DataBytes));
-            Assert.That(2, Is.EqualTo(node.Links.Count()));
-            Assert.That("Qma5sYpEc9hSYdkuXpMDJYem95Mj7hbEd9C412dEQ4ZkfP", Is.EqualTo(node.Id.ToString()));
+            Assert.That(node.Links.Count(), Is.EqualTo(2));
+            Assert.That(node.Id.ToString(), Is.EqualTo("Qma5sYpEc9hSYdkuXpMDJYem95Mj7hbEd9C412dEQ4ZkfP"));
 
             RoundtripTest(node);
         }
@@ -152,8 +152,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
                 blink, alink
             });
             Assert.That(ab, Is.EqualTo(node.DataBytes));
-            Assert.That(2, Is.EqualTo(node.Links.Count()));
-            Assert.That("Qma5sYpEc9hSYdkuXpMDJYem95Mj7hbEd9C412dEQ4ZkfP", Is.EqualTo(node.Id.ToString()));
+            Assert.That(node.Links.Count(), Is.EqualTo(2));
+            Assert.That(node.Id.ToString(), Is.EqualTo("Qma5sYpEc9hSYdkuXpMDJYem95Mj7hbEd9C412dEQ4ZkfP"));
         }
 
         [Test]
@@ -162,9 +162,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             var abc = Encoding.UTF8.GetBytes("abc");
             var node = new DagNode(abc);
             Assert.That(abc, Is.EqualTo(node.DataBytes));
-            Assert.That(0, Is.EqualTo(node.Links.Count()));
-            Assert.That("QmXg9Pp2ytZ14xgmQjYEiHjVjMFXzCVVEcRTWJBmLgR39V", Is.EqualTo(node.Id.ToString()));
-            Assert.That(5, Is.EqualTo(node.Size));
+            Assert.That(node.Links.Count(), Is.EqualTo(0));
+            Assert.That(node.Id.ToString(), Is.EqualTo("QmXg9Pp2ytZ14xgmQjYEiHjVjMFXzCVVEcRTWJBmLgR39V"));
+            Assert.That(node.Size, Is.EqualTo(5));
 
             RoundtripTest(node);
         }
@@ -175,7 +175,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             var abc = Encoding.UTF8.GetBytes("abc");
             var node = new DagNode(abc);
             var link = node.ToLink();
-            Assert.That("", Is.EqualTo(link.Name));
+            Assert.That(link.Name, Is.EqualTo(""));
             Assert.That(node.Id, Is.EqualTo(link.Id));
             Assert.That(node.Size, Is.EqualTo(link.Size));
         }
@@ -186,7 +186,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             var abc = Encoding.UTF8.GetBytes("abc");
             var node = new DagNode(abc);
             var link = node.ToLink("abc");
-            Assert.That("abc", Is.EqualTo(link.Name));
+            Assert.That(link.Name, Is.EqualTo("abc"));
             Assert.That(node.Id.ToString(), Is.EqualTo(link.Id.ToString()));
             Assert.That(node.Size, Is.EqualTo(link.Size));
         }
@@ -202,8 +202,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 
             var cnode = bnode.AddLink(anode.ToLink());
             Assert.That(ReferenceEquals(bnode, cnode), Is.False);
-            Assert.That(1, Is.EqualTo(cnode.DataBytes.Length));
-            Assert.That(1, Is.EqualTo(cnode.Links.Count()));
+            Assert.That(cnode.DataBytes.Length, Is.EqualTo(1));
+            Assert.That(cnode.Links.Count(), Is.EqualTo(1));
             Assert.That(anode.Id.ToString(), Is.EqualTo(cnode.Links.First().Id.ToString()));
             Assert.That(anode.Size, Is.EqualTo(cnode.Links.First().Size));
 
@@ -227,8 +227,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 
             var dnode = cnode.RemoveLink(anode.ToLink());
             Assert.That(ReferenceEquals(dnode, cnode), Is.False);
-            Assert.That(1, Is.EqualTo(dnode.DataBytes.Length));
-            Assert.That(1, Is.EqualTo(dnode.Links.Count()));
+            Assert.That(dnode.DataBytes.Length, Is.EqualTo(1));
+            Assert.That(dnode.Links.Count(), Is.EqualTo(1));
             Assert.That(bnode.Id.ToString(), Is.EqualTo(dnode.Links.First().Id.ToString()));
             Assert.That(bnode.Size, Is.EqualTo(dnode.Links.First().Size));
 
@@ -250,14 +250,14 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
                    .ToHexBuffer();
             var ms = new MemoryStream(data, false);
             var node = new DagNode(ms);
-            Assert.That("0801", Is.EqualTo(node.DataBytes.ToHexString()));
-            Assert.That(1, Is.EqualTo(node.Links.Count()));
+            Assert.That(node.DataBytes.ToHexString(), Is.EqualTo("0801"));
+            Assert.That(node.Links.Count(), Is.EqualTo(1));
             var link = node.Links.First();
-            Assert.That("hello", Is.EqualTo(link.Name));
-            Assert.That(1, Is.EqualTo(link.Id.Version));
-            Assert.That("raw", Is.EqualTo(link.Id.ContentType));
-            Assert.That("sha2-512", Is.EqualTo(link.Id.Hash.Algorithm.Name));
-            Assert.That(11, Is.EqualTo(link.Size));
+            Assert.That(link.Name, Is.EqualTo("hello"));
+            Assert.That(link.Id.Version, Is.EqualTo(1));
+            Assert.That(link.Id.ContentType, Is.EqualTo("raw"));
+            Assert.That(link.Id.Hash.Algorithm.Name, Is.EqualTo("sha2-512"));
+            Assert.That(link.Size, Is.EqualTo(11));
         }
 
         [Test]

@@ -47,7 +47,7 @@ namespace MultiFormats.Tests.Registry
         }
 
         [Test]
-        public void Algorithms_Are_Enumerable() { Assert.That(0, Is.Not.EqualTo(Codec.All.Count())); }
+        public void Algorithms_Are_Enumerable() { Assert.That(Codec.All.Count(), Is.Not.EqualTo(0)); }
 
         [Test]
         public void Register()
@@ -55,9 +55,9 @@ namespace MultiFormats.Tests.Registry
             var codec = Codec.Register("something-new", 0x0bad);
             try
             {
-                Assert.That("something-new", Is.EqualTo(codec.Name));
-                Assert.That("something-new", Is.EqualTo(codec.ToString()));
-                Assert.That(0x0bad, Is.EqualTo(codec.Code));
+                Assert.That(codec.Name, Is.EqualTo("something-new"));
+                Assert.That(codec.ToString(), Is.EqualTo("something-new"));
+                Assert.That(codec.Code, Is.EqualTo(0x0bad));
             }
             finally
             {

@@ -25,7 +25,7 @@ namespace Catalyst.TestUtils
 {
     public class StoredItem
     {
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public int Value { get; set; }
     }
 }
