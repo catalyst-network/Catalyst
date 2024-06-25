@@ -76,7 +76,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             stateProvider.Commit(CatalystGenesisSpec.Instance);
 
             // TODO
-            stateProvider.CommitTree((long)deltaIndexService.LatestDeltaIndex().Height);
+//            stateProvider.CommitTree((long)deltaIndexService.LatestDeltaIndex().Height);
 
             var genesisDelta = new Delta
             {
