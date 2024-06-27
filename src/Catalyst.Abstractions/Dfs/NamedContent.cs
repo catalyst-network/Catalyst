@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -37,7 +37,7 @@ namespace Catalyst.Abstractions.Dfs
         /// <value>
         ///   Typically <c>/ipns/...</c>.
         /// </value>
-        public string? NamePath { get; set; }
+        public string NamePath { get; set; }
 
         /// <summary>
         ///   Path to the content.
@@ -45,6 +45,6 @@ namespace Catalyst.Abstractions.Dfs
         /// <value>
         ///   Typically <c>/ipfs/...</c>.
         /// </value>
-        public string? ContentPath { get; set; }
+        public string ContentPath { get; set; }
     }
 }

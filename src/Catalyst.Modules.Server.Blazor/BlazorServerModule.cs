@@ -1,7 +1,7 @@
-#region LICENSE
+﻿#region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -43,12 +43,19 @@ namespace Catalyst.Modules.Server.Blazor
         {
             _autofacServiceProviderFactory = new AutofacServiceProviderFactory(builder);
             _hostBuilder = CreateHostBuilder();
+            try
+            {
+                _hostBuilder.Build();
+            }
+            catch (Exception)
+            {
+                //Ignored exception as the server cannot start without container being built
+            }
 
-            // Register the build callback with a lambda expression
-            builder.RegisterBuildCallback(scope => Start(scope));
+            builder.RegisterBuildCallback(Start);
         }
 
-        private void Start(ILifetimeScope container)
+        private void Start(IContainer container)
         {
             _autofacServiceProviderFactory.SetContainer(container);
             _ = container.Resolve<IHost>().RunAsync().ConfigureAwait(false);

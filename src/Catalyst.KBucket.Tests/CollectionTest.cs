@@ -23,33 +23,44 @@
 
 using System;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Catalyst.KBucket
 {
+    [TestClass]
     public sealed class CollectionTest
     {
-        [Test]
+        [TestMethod]
         public void Add()
         {
             var bucket = new KBucket<Contact>();
             var x = new Contact("1");
             bucket.Add(x);
-            Assert.That(bucket.Count, Is.EqualTo(1));
-            Assert.That(bucket.Contains(x), Is.True);
+            Assert.AreEqual(1, bucket.Count);
+            Assert.IsTrue(bucket.Contains(x));
         }
 
-        [Test]
+        [TestMethod]
         public void AddDuplicate()
         {
             var bucket = new KBucket<Contact>();
             var x = new Contact("1");
             bucket.Add(x);
             bucket.Add(x);
-            Assert.That(bucket.Count, Is.EqualTo(1));
-            Assert.That(bucket.Contains(x), Is.True);
+            Assert.AreEqual(1, bucket.Count);
+            Assert.IsTrue(bucket.Contains(x));
         }
 
-        [Test]
+        [TestMethod]
+        public void AddBadContact()
+        {
+            var bucket = new KBucket<Contact>();
+            ExceptionAssert.Throws<ArgumentNullException>(() => bucket.Add(null));
+            ExceptionAssert.Throws<ArgumentNullException>(() => bucket.Add(new Contact("a") {Id = null}));
+            ExceptionAssert.Throws<ArgumentNullException>(() => bucket.Add(new Contact("a") {Id = new byte[0]}));
+        }
+
+        [TestMethod]
         public void TryGet()
         {
             var bucket = new KBucket<Contact>();
@@ -58,19 +69,19 @@ namespace Catalyst.KBucket
             bucket.Add(alpha);
 
             var q = bucket.TryGet(alpha.Id, out var found);
-            Assert.That(q, Is.True);
-            Assert.That(alpha, Is.EqualTo(found));
+            Assert.IsTrue(q);
+            Assert.AreSame(alpha, found);
 
             q = bucket.TryGet(beta.Id, out var notfound);
-            Assert.That(q, Is.False);
-            Assert.That(notfound, Is.Null);
+            Assert.IsFalse(q);
+            Assert.IsNull(notfound);
         }
 
-        [Test]
+        [TestMethod]
         public void Count()
         {
             var bucket = new KBucket<Contact>();
-            Assert.That(bucket.Count, Is.EqualTo(0));
+            Assert.AreEqual(0, bucket.Count);
 
             bucket.Add(new Contact("a"));
             bucket.Add(new Contact("a"));
@@ -84,67 +95,64 @@ namespace Catalyst.KBucket
             bucket.Add(new Contact("e"));
             bucket.Add(new Contact("f"));
             bucket.Add(new Contact("a"));
-            Assert.That(bucket.Count, Is.EqualTo(6));
+            Assert.AreEqual(6, bucket.Count);
         }
 
-        [Test]
+        [TestMethod]
         public void Clear()
         {
             var bucket = new KBucket<Contact>();
-            Assert.That(bucket.Count, Is.EqualTo(0));
+            Assert.AreEqual(0, bucket.Count);
 
             bucket.Add(new Contact("a"));
             bucket.Add(new Contact("b"));
             bucket.Add(new Contact("c"));
-            Assert.That(bucket.Count, Is.EqualTo(3));
+            Assert.AreEqual(3, bucket.Count);
 
             bucket.Clear();
-            Assert.That(bucket.Count, Is.EqualTo(0));
+            Assert.AreEqual(0, bucket.Count);
         }
 
-        [Test]
+        [TestMethod]
         public void Remove()
         {
             var bucket = new KBucket<Contact>();
-            Assert.That(bucket.Count, Is.EqualTo(0));
+            Assert.AreEqual(0, bucket.Count);
 
             bucket.Add(new Contact("a"));
             bucket.Add(new Contact("b"));
             bucket.Add(new Contact("c"));
-            Assert.That(bucket.Count, Is.EqualTo(3));
+            Assert.AreEqual(3, bucket.Count);
 
             bucket.Remove(new Contact("b"));
-            Assert.That(bucket.Count, Is.EqualTo(2));
+            Assert.AreEqual(2, bucket.Count);
 
-            Assert.That(bucket.Contains(new Contact("a")), Is.True);
-            Assert.That(bucket.Contains(new Contact("b")), Is.False);
-            Assert.That(bucket.Contains(new Contact("c")), Is.True);
+            Assert.IsTrue(bucket.Contains(new Contact("a")));
+            Assert.IsFalse(bucket.Contains(new Contact("b")));
+            Assert.IsTrue(bucket.Contains(new Contact("c")));
         }
 
-        [Test]
+        [TestMethod]
         public void CopyTo()
         {
             var bucket = new KBucket<Contact>();
-            Assert.That(bucket.Count, Is.EqualTo(0));
+            Assert.AreEqual(0, bucket.Count);
 
             bucket.Add(new Contact("a"));
             bucket.Add(new Contact("b"));
             bucket.Add(new Contact("c"));
-            Assert.That(bucket, Has.Count.EqualTo(3));
+            Assert.AreEqual(3, bucket.Count);
 
             var array = new Contact[bucket.Count + 2];
             bucket.CopyTo(array, 1);
-            Assert.Multiple(() =>
-            {
-                Assert.That(array[0], Is.Null);
-                Assert.That(array[1], Is.Not.Null);
-                Assert.That(array[2], Is.Not.Null);
-                Assert.That(array[3], Is.Not.Null);
-                Assert.That(array[4], Is.Null);
-            });
+            Assert.IsNull(array[0]);
+            Assert.IsNotNull(array[1]);
+            Assert.IsNotNull(array[2]);
+            Assert.IsNotNull(array[3]);
+            Assert.IsNull(array[4]);
         }
 
-        [Test]
+        [TestMethod]
         public void Enumerate()
         {
             var bucket = new KBucket<Contact>();
@@ -154,7 +162,7 @@ namespace Catalyst.KBucket
                 bucket.Add(new Contact(i));
             }
 
-            Assert.That(nContacts, Is.EqualTo(bucket.Count));
+            Assert.AreEqual(nContacts, bucket.Count);
 
             var n = 0;
             
@@ -163,13 +171,13 @@ namespace Catalyst.KBucket
                 ++n;
             }
             
-            Assert.That(nContacts, Is.EqualTo(n));
+            Assert.AreEqual(nContacts, n);
         }
 
-        [Test]
-        public void CanBeModified() { Assert.That(new KBucket<Contact>().IsReadOnly, Is.False); }
+        [TestMethod]
+        public void CanBeModified() { Assert.IsFalse(new KBucket<Contact>().IsReadOnly); }
 
-        [Test]
+        [TestMethod]
         public async Task ThreadSafe()
         {
             var bucket = new KBucket<Contact>();

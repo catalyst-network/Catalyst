@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -23,20 +23,24 @@
 
 using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.P2P.ReputationSystem;
-using Catalyst.Protocol.Peer;
+using Catalyst.Core.Lib.Extensions;
+using MultiFormats;
+using Nethermind.Core;
 
 namespace Catalyst.Core.Lib.P2P.ReputationSystem
 {
     public sealed class ReputationChange
         : IPeerReputationChange
     {
-        public PeerId PeerId { get; }
+        public Address Address { get; }
         public IReputationEvents ReputationEvent { get; }
 
-        public ReputationChange(PeerId peerIdentifier, IReputationEvents reputationEvent)
+        public ReputationChange(Address address, IReputationEvents reputationEvent)
         {
-            PeerId = peerIdentifier;
+            Address = address;
             ReputationEvent = reputationEvent;
         }
+
+        public ReputationChange(MultiAddress address, IReputationEvents reputationEvent) : this(address.GetKvmAddress(), reputationEvent) { }
     }
 }

@@ -24,10 +24,12 @@
 using System;
 using System.Linq;
 using Lib.P2P.Routing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MultiFormats;
 
 namespace Lib.P2P.Tests.Routing
 {
+    [TestClass]
     public class ContentRouterTest
     {
         private Peer self = new Peer
@@ -51,7 +53,7 @@ namespace Lib.P2P.Tests.Routing
         private Cid cid1 =
             "zBunRGrmCGokA1oMESGGTfrtcMFsVA8aEtcNzM54akPWXF97uXCqTjF3GZ9v8YzxHrG66J8QhtPFWwZebRZ2zeUEELu67";
 
-        [Test]
+        [TestMethod]
         public void Add()
         {
             using (var router = new ContentRouter())
@@ -59,12 +61,12 @@ namespace Lib.P2P.Tests.Routing
                 router.Add(cid1, self.Id);
 
                 var providers = router.Get(cid1);
-                Assert.That(providers.Count(), Is.EqualTo(1));
-                Assert.That(providers.First(), Is.EqualTo(self.Id));
+                Assert.AreEqual(1, providers.Count());
+                Assert.AreEqual(self.Id, providers.First());
             }
         }
 
-        [Test]
+        [TestMethod]
         public void Add_Duplicate()
         {
             using (var router = new ContentRouter())
@@ -73,12 +75,12 @@ namespace Lib.P2P.Tests.Routing
                 router.Add(cid1, self.Id);
 
                 var providers = router.Get(cid1);
-                Assert.That(providers.Count(), Is.EqualTo(1));
-                Assert.That(self.Id, Is.EqualTo(providers.First()));
+                Assert.AreEqual(1, providers.Count());
+                Assert.AreEqual(self.Id, providers.First());
             }
         }
 
-        [Test]
+        [TestMethod]
         public void Add_MultipleProviders()
         {
             using (var router = new ContentRouter())
@@ -87,23 +89,23 @@ namespace Lib.P2P.Tests.Routing
                 router.Add(cid1, other.Id);
 
                 var providers = router.Get(cid1).ToArray();
-                Assert.That(providers.Length, Is.EqualTo(2));
-                Assert.That(providers, Contains.Item(self.Id));
-                Assert.That(providers, Contains.Item(other.Id));
+                Assert.AreEqual(2, providers.Length);
+                CollectionAssert.Contains(providers, self.Id);
+                CollectionAssert.Contains(providers, other.Id);
             }
         }
 
-        [Test]
+        [TestMethod]
         public void Get_NonexistentCid()
         {
             using (var router = new ContentRouter())
             {
                 var providers = router.Get(cid1);
-                Assert.That(providers.Count(), Is.EqualTo(0));
+                Assert.AreEqual(0, providers.Count());
             }
         }
 
-        [Test]
+        [TestMethod]
         public void Get_Expired()
         {
             using (var router = new ContentRouter())
@@ -111,22 +113,22 @@ namespace Lib.P2P.Tests.Routing
                 router.Add(cid1, self.Id, DateTime.MinValue);
 
                 var providers = router.Get(cid1);
-                Assert.That(providers.Count(), Is.EqualTo(0));
+                Assert.AreEqual(0, providers.Count());
             }
         }
 
-        [Test]
+        [TestMethod]
         public void Get_NotExpired()
         {
             using (var router = new ContentRouter())
             {
                 router.Add(cid1, self.Id, DateTime.MinValue);
                 var providers = router.Get(cid1);
-                Assert.That(providers.Count(), Is.EqualTo(0));
+                Assert.AreEqual(0, providers.Count());
 
                 router.Add(cid1, self.Id, DateTime.MaxValue - router.ProviderTtl);
                 providers = router.Get(cid1);
-                Assert.That(providers.Count(), Is.EqualTo(1));
+                Assert.AreEqual(1, providers.Count());
             }
         }
     }

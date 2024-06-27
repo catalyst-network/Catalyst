@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -22,6 +22,8 @@
 #endregion
 
 using System.Reflection;
+using Google.Protobuf;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Protocol.Wire
@@ -32,9 +34,9 @@ namespace Catalyst.Protocol.Wire
 
         public bool IsValid()
         {
-            if (ProducerId == null)
+            if (Producer == null || Producer == ByteString.Empty)
             {
-                Logger.Debug("{field} cannot be null", nameof(ProducerId));
+                Logger.Debug("{field} is a invalid address", nameof(Producer));
                 return false;
             }
 

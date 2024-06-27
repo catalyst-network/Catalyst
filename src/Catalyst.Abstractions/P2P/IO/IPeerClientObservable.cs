@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -21,11 +21,11 @@
 
 #endregion
 
+using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
 using System;
 using System.Reactive.Subjects;
-using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
 
-namespace Catalyst.Abstractions.P2P.IO
+namespace Catalyst.Core.Lib.Abstractions.P2P.IO
 {
     public interface IPeerClientObservable
     {

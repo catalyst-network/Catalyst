@@ -76,7 +76,7 @@
 //                 {
 //                     await ipfs.Swarm.ConnectAsync(addr);
 //                     var peers = await ipfs.Swarm.PeersAsync();
-//                     Assert.True(peers.Any(p => p.Id == addr.PeerId));
+//                     Assert.True(peers.Any(p => p.Id == addr.Address));
 //                     await ipfs.Swarm.DisconnectAsync(addr);
 //                 }
 //                 finally

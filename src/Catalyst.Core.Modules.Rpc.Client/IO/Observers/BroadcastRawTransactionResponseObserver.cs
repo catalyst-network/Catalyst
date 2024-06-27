@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -23,9 +23,9 @@
 
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Rpc.IO;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
@@ -34,9 +34,9 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Observers
     {
         public BroadcastRawTransactionResponseObserver(ILogger logger) : base(logger) { }
 
-        protected override void HandleResponse(BroadcastRawTransactionResponse messageDto,
+        protected override void HandleResponse(BroadcastRawTransactionResponse message,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerIdentifier,
+            MultiAddress senderAddress,
             ICorrelationId correlationId) { }
     }
 }

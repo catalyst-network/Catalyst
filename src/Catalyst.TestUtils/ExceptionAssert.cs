@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -44,7 +44,7 @@ namespace Catalyst.TestUtils
                 if (match != null)
                 {
                     if (expectedMessage != null)
-                        Assert.Equals(expectedMessage, match.Message);
+                        Assert.AreEqual(expectedMessage, match.Message);
                     return match;
                 }
 
@@ -53,7 +53,7 @@ namespace Catalyst.TestUtils
             catch (T e)
             {
                 if (expectedMessage != null)
-                    Assert.Equals(expectedMessage, e.Message);
+                    Assert.AreEqual(expectedMessage, e.Message);
                 return e;
             }
 

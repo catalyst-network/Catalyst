@@ -23,13 +23,15 @@
 
 using System;
 using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MultiFormats.Registry;
 
 namespace MultiFormats.Tests.Registry
 {
+    [TestClass]
     public class CodecTest
     {
-        [Test]
+        [TestMethod]
         public void Bad_Name()
         {
             ExceptionAssert.Throws<ArgumentNullException>(() => Codec.Register(null, 1));
@@ -37,27 +39,27 @@ namespace MultiFormats.Tests.Registry
             ExceptionAssert.Throws<ArgumentNullException>(() => Codec.Register("   ", 1));
         }
 
-        [Test]
+        [TestMethod]
         public void Name_Already_Exists() { ExceptionAssert.Throws<ArgumentException>(() => Codec.Register("raw", 1)); }
 
-        [Test]
+        [TestMethod]
         public void Code_Already_Exists()
         {
             ExceptionAssert.Throws<ArgumentException>(() => Codec.Register("raw-x", 0x55));
         }
 
-        [Test]
-        public void Algorithms_Are_Enumerable() { Assert.That(Codec.All.Count(), Is.Not.EqualTo(0)); }
+        [TestMethod]
+        public void Algorithms_Are_Enumerable() { Assert.AreNotEqual(0, Codec.All.Count()); }
 
-        [Test]
+        [TestMethod]
         public void Register()
         {
             var codec = Codec.Register("something-new", 0x0bad);
             try
             {
-                Assert.That(codec.Name, Is.EqualTo("something-new"));
-                Assert.That(codec.ToString(), Is.EqualTo("something-new"));
-                Assert.That(codec.Code, Is.EqualTo(0x0bad));
+                Assert.AreEqual("something-new", codec.Name);
+                Assert.AreEqual("something-new", codec.ToString());
+                Assert.AreEqual(0x0bad, codec.Code);
             }
             finally
             {

@@ -1,7 +1,7 @@
-#region LICENSE
+﻿#region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -52,7 +52,7 @@ namespace Catalyst.Modules.Server.Blazor
             return _containerBuilder;
         }
 
-        public void SetContainer(ILifetimeScope container) { _autofacServiceProvider.LifetimeScope = container; }
+        public void SetContainer(IContainer container) { _autofacServiceProvider.LifetimeScope = container; }
 
         /// <summary>
         /// Creates an <see cref="IServiceProvider" /> from the container builder.

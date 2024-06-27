@@ -39,12 +39,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 {
     public sealed class DeltaHeightResponseObserverTests : IDisposable
     {
-        private readonly IChannelHandlerContext _fakeContext;
         private readonly DeltaHeightResponseObserver _observer;
 
         public DeltaHeightResponseObserverTests()
         {
-            _fakeContext = Substitute.For<IChannelHandlerContext>();
             _observer = new DeltaHeightResponseObserver(Substitute.For<ILogger>(), Substitute.For<IPeerQueryTipRequest>());
         }
 
@@ -55,13 +53,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 
             var deltaHeightResponse = new LatestDeltaHashResponse();
             var protocolMessage =
-                deltaHeightResponse.ToProtocolMessage(PeerIdHelper.GetPeerId("sender"),
+                deltaHeightResponse.ToProtocolMessage(MultiAddressHelper.GetAddress("sender"),
                     CorrelationId.GenerateCorrelationId());
 
             var deltaHeightResponseObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler,
-                protocolMessage);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(testScheduler, protocolMessage);
 
             _observer.StartObserving(messageStream);
 

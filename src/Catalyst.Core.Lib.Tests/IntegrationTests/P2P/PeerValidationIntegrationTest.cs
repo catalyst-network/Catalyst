@@ -25,23 +25,32 @@ using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
 using Autofac;
+using Catalyst.Abstractions.Cli;
+using Catalyst.Abstractions.Config;
+using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Discovery;
-using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Abstractions.P2P.IO.Messaging.Correlation;
 using Catalyst.Abstractions.P2P.Protocols;
-using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.EventLoop;
+using Catalyst.Abstractions.Types;
+using Catalyst.Core.Lib.Cli;
+using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.P2P;
-using Catalyst.Core.Lib.P2P.IO.Transport.Channels;
 using Catalyst.Core.Lib.P2P.Protocols;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.KeySigner;
 using Catalyst.Core.Modules.Keystore;
+using Catalyst.Modules.Network.Dotnetty;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.P2P.IO.Messaging.Broadcast;
+using Catalyst.Modules.Network.Dotnetty.IO.EventLoop;
+using Catalyst.Modules.Network.Dotnetty.P2P;
+using Catalyst.Modules.Network.Dotnetty.P2P.IO.Transport.Channels;
+using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NSubstitute;
@@ -51,7 +60,7 @@ using Serilog;
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 {
     [TestFixture]
-    [Category(Traits.IntegrationTest)] 
+    [Category(Traits.IntegrationTest)]
     public sealed class PeerValidationIntegrationTest : FileSystemBasedTest
     {
         private IPeerService _peerService;
@@ -68,22 +77,32 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             var keyRegistry = TestKeyRegistry.MockKeyRegistry();
             ContainerProvider.ContainerBuilder.RegisterInstance(keyRegistry).As<IKeyRegistry>();
 
+            ContainerProvider.ContainerBuilder.RegisterModule(new CoreLibProvider());
             ContainerProvider.ContainerBuilder.RegisterModule(new KeystoreModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new KeySignerModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new HashingModule());
             ContainerProvider.ContainerBuilder.RegisterModule(new BulletProofsModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new DfsModule());
+            ContainerProvider.ContainerBuilder.RegisterModule(new DotnettyNetworkModule());
 
-            _peerSettings = new PeerSettings(ContainerProvider.ConfigurationRoot);
+            ContainerProvider.ContainerBuilder.RegisterType<ConsoleUserOutput>().As<IUserOutput>();
+            ContainerProvider.ContainerBuilder.RegisterType<ConsoleUserInput>().As<IUserInput>();
 
-            var peerSettings =
-                PeerIdHelper.GetPeerId("sender", _peerSettings.BindAddress, _peerSettings.Port)
-                   .ToSubstitutedPeerSettings();
+            var passwordManager = Substitute.For<IPasswordManager>();
+            passwordManager.PromptPassword(Arg.Is(PasswordRegistryTypes.DefaultNodePassword), Arg.Any<string>()).Returns(TestPasswordReader.BuildSecureStringPassword("test"));
+            ContainerProvider.ContainerBuilder.RegisterInstance(passwordManager).As<IPasswordManager>();
+            
+            var networkTypeProvider = Substitute.For<INetworkTypeProvider>();
+            networkTypeProvider.NetworkType.Returns(NetworkType.Devnet);
+            ContainerProvider.ContainerBuilder.RegisterInstance(networkTypeProvider).As<INetworkTypeProvider>();
+
+            _peerSettings = (PeerSettings) ContainerProvider.Container.Resolve<IPeerSettings>();
 
             ContainerProvider.ContainerBuilder.Register(c =>
             {
                 var peerClient = c.Resolve<IPeerClient>();
                 peerClient.StartAsync().ConfigureAwait(false).GetAwaiter().GetResult();
-                return new PeerChallengeRequest(logger, peerClient, peerSettings, 10);
+                return new PeerChallengeRequest(logger, peerClient, _peerSettings, 10);
             }).As<IPeerChallengeRequest>().SingleInstance();
 
             _peerChallengeRequest = ContainerProvider.Container.Resolve<IPeerChallengeRequest>();
@@ -98,7 +117,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 
             var keySigner = ContainerProvider.Container.Resolve<IKeySigner>(); // @@
 
-            _peerService = new PeerService(
+            _peerService = new DotnettyPeerService(
                 new UdpServerEventLoopGroupFactory(eventLoopGroupFactoryConfiguration),
                 new PeerServerChannelFactory(ContainerProvider.Container.Resolve<IPeerMessageCorrelationManager>(),
                     ContainerProvider.Container.Resolve<IBroadcastManager>(),
@@ -114,6 +133,12 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             _peerService.StartAsync().Wait();
         }
 
+        [TearDown]
+        public void TearDown()
+        {
+            this.Dispose();
+        }
+
         // [Fact(Skip = "this wont work as it tries to connect to a real node!! We need to instantiate two sockets here")]
         // public async Task PeerChallenge_PeerIdentifiers_Expect_To_Succeed_Valid_IP_Port_PublicKey()
         // {
@@ -125,8 +150,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         // }
 
         [Theory]
-        [TestCase("ftqm5kpzpo7bvl6e53q5j6mmrjwupbbiuszpsopxvjodkkqqiusa", "92.207.178.198", 1574)]
-        [TestCase("fzqm5kpzpo7bvl5e53q5j6mmrjwupbbiuszpsopxvjodkkqqiusd", "198.51.100.3", 2524)]
+        [TestCase("42Bm3dA9xKjnMYp5CztnUYqEme4Y46suNCvKx6ueDhz", "92.207.178.198", 1574)]
+        [TestCase("483NWsFHJ5UrTRf8q6Ew3E8mD89i9cXyaxxFM1sSn4q1", "198.51.100.3", 2524)]
         public async Task PeerChallenge_PeerIdentifiers_Expect_To_Fail_IP_Port_PublicKey(string publicKey,
             string ip,
             int port)
@@ -142,8 +167,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             TestContext.WriteLine(ip.ToString());
             TestContext.WriteLine(port.ToString());
 
-            var recipient = publicKey.BuildPeerIdFromBase32Key(ip, port);
-
+            var recipient = MultiAddressHelper.GetAddress(publicKey, ip, port);
             return await _peerChallengeRequest.ChallengePeerAsync(recipient);
         }
 

@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -21,7 +21,6 @@
 
 #endregion
 
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Abstractions.Cryptography;
@@ -31,10 +30,8 @@ using Catalyst.Abstractions.Types;
 
 namespace Catalyst.Core.Lib.Cryptography
 {
-    public sealed class KeyRegistry : RegistryBase<KeyRegistryTypes, IPrivateKey>, IKeyRegistry, IDisposable
+    public sealed class KeyRegistry : RegistryBase<KeyRegistryTypes, IPrivateKey>, IKeyRegistry
     {
-        private static bool _disposeWasCalled;
-
         public KeyRegistry()
         {
             Registry = new Dictionary<KeyRegistryTypes, IPrivateKey>();
@@ -44,7 +41,5 @@ namespace Catalyst.Core.Lib.Cryptography
         {
             return Registry.Values.Any(privateKey => privateKey.GetPublicKey().Bytes.SequenceEqual(publicKeyBytes));
         }
-
-        public void Dispose() => _disposeWasCalled = true;
     }
 }

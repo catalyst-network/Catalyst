@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -32,7 +32,7 @@ namespace Catalyst.Core.Lib.DAO.Peer
     [Audit]
     public sealed class PeerDao : DaoBase
     {
-        public PeerIdDao PeerIdentifier { get; set; }
+        public string Address { get; set; }
 
         public int Reputation { get; set; }
 
@@ -67,7 +67,7 @@ namespace Catalyst.Core.Lib.DAO.Peer
                .ForMember(e => e.Created, opt => opt.UseDestinationValue())
                .ForMember(e => e.Modified, opt => opt.UseDestinationValue())
                .ForMember(e => e.LastSeen, opt => opt.UseDestinationValue())
-               .ForMember(e => e.PeerId, opt => opt.UseDestinationValue());
+               .ForMember(e => e.Address, opt => opt.UseDestinationValue());
         }
     }
 }

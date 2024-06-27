@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -21,10 +21,10 @@
 
 #endregion
 
-using Catalyst.Abstractions.Cli.Commands;
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
-using Catalyst.Core.Lib.Network;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.Cli.Commands;
 using Dawn;
 using Serilog;
 
@@ -53,8 +53,7 @@ namespace Catalyst.Cli.Commands
                 return false;
             }
 
-            var clientHashCode = CommandContext.SocketClientRegistry.GenerateClientHashCode(
-                EndpointBuilder.BuildNewEndPoint(rpcNodeConfigs.HostAddress, rpcNodeConfigs.Port));
+            var clientHashCode = CommandContext.SocketClientRegistry.GenerateClientHashCode(rpcNodeConfigs.Address.GetIPEndPoint());
 
             CommandContext.SocketClientRegistry.AddClientToRegistry(clientHashCode, nodeRpcClient);
             CommandContext.UserOutput.WriteLine($"Connected to Node {nodeRpcClient.Channel.RemoteAddress}");

@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -33,7 +33,7 @@ using Google.Protobuf.WellKnownTypes;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
 using Nethermind.Crypto;
-//using Nethermind.Evm.Tracing.GethStyle.JavaScript;
+using Nethermind.Dirichlet.Numerics;
 using Nethermind.Logging;
 using Nethermind.Serialization.Rlp;
 using Nethermind.Specs;
@@ -41,29 +41,26 @@ using Nethermind.Specs;
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
     [EthWeb3RequestHandler("eth", "sendRawTransaction")]
-    public class EthSendRawTransactionHandler : EthWeb3RequestHandler<byte[], Hash256>
+    public class EthSendRawTransactionHandler : EthWeb3RequestHandler<byte[], Keccak>
     {
-        protected override Hash256 Handle(byte[] transaction, IWeb3EthApi api)
+        protected override Keccak Handle(byte[] transaction, IWeb3EthApi api)
         {
             PublicEntry publicEntry;
             try
             {
                 Transaction tx = Rlp.Decode<Transaction>(transaction);
-                EthereumEcdsa ecdsa = new EthereumEcdsa(MainnetSpecProvider.Instance.ChainId, LimboLogs.Instance);
-                tx.SenderAddress = ecdsa.RecoverAddress(tx, false);
-                tx.Timestamp = (Nethermind.Int256.UInt256) DateTimeOffset.UtcNow.ToUnixTimeSeconds();
+                EthereumEcdsa ecdsa = new EthereumEcdsa(MainnetSpecProvider.Instance, LimboLogs.Instance);
+                tx.SenderAddress = ecdsa.RecoverAddress(tx, MainnetSpecProvider.IstanbulBlockNumber);
+                tx.Timestamp = (UInt256) DateTimeOffset.UtcNow.ToUnixTimeSeconds();
                 publicEntry = new PublicEntry
                 {
-                    // TNA TODO
-                    //      Data = ByteString.CopyFrom(tx.Data.ToBytes()),
+                    Data = (tx.Data ?? tx.Init).ToByteString(),
                     GasLimit = (ulong) tx.GasLimit,
-                    // TNA TODO
-                    //       GasPrice = ByteString.CopyFrom(tx.GasPrice.ToBytes()),
+                    GasPrice = tx.GasPrice.ToUint256ByteString(),
                     Nonce = (ulong) tx.Nonce,
                     SenderAddress = tx.SenderAddress.Bytes.ToByteString(),
                     ReceiverAddress = tx.To?.Bytes.ToByteString() ?? ByteString.Empty,
-                    // TNA TODO
-                    //      Amount = ByteString.CopyFrom(tx.Value.ToBytes()),
+                    Amount = tx.Value.ToUint256ByteString(),
                     Signature = new Protocol.Cryptography.Signature
                     {
                         RawBytes = ByteString.CopyFrom((byte) 1)

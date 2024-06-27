@@ -24,42 +24,44 @@
 using System;
 using System.IO;
 using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MultiFormats.Tests
 {
+    [TestClass]
     public sealed class HexStringTest
     {
-        [Test]
+        [TestMethod]
         public void Encode()
         {
-            var buffer = Enumerable.Range(byte.MinValue, byte.MaxValue).Select(b => (byte)b).ToArray();
+            var buffer = Enumerable.Range(byte.MinValue, byte.MaxValue).Select(b => (byte) b).ToArray();
             var lowerHex = string.Concat(buffer.Select(b => b.ToString("x2")).ToArray());
             var upperHex = string.Concat(buffer.Select(b => b.ToString("X2")).ToArray());
 
-            Assert.That(lowerHex, Is.EqualTo(buffer.ToHexString()), "encode default");
-            Assert.That(lowerHex, Is.EqualTo(buffer.ToHexString()), "encode general");
-            Assert.That(lowerHex, Is.EqualTo(buffer.ToHexString("x")), "encode lower");
-            Assert.That(upperHex, Is.EqualTo(buffer.ToHexString("X")), "encode upper");
+            Assert.AreEqual(lowerHex, buffer.ToHexString(), "encode default");
+            Assert.AreEqual(lowerHex, buffer.ToHexString(), "encode general");
+            Assert.AreEqual(lowerHex, buffer.ToHexString("x"), "encode lower");
+            Assert.AreEqual(upperHex, buffer.ToHexString("X"), "encode upper");
         }
 
-        [Test]
+        [TestMethod]
         public void Decode()
         {
-            var buffer = Enumerable.Range(byte.MinValue, byte.MaxValue).Select(b => (byte)b).ToArray();
+            var buffer = Enumerable.Range(byte.MinValue, byte.MaxValue).Select(b => (byte) b).ToArray();
             var lowerHex = string.Concat(buffer.Select(b => b.ToString("x2")).ToArray());
             var upperHex = string.Concat(buffer.Select(b => b.ToString("X2")).ToArray());
 
-            Assert.That(buffer, Is.EqualTo(lowerHex.ToHexBuffer()), "decode lower");
-            Assert.That(buffer, Is.EqualTo(upperHex.ToHexBuffer()), "decode upper");
+            CollectionAssert.AreEqual(buffer, lowerHex.ToHexBuffer(), "decode lower");
+            CollectionAssert.AreEqual(buffer, upperHex.ToHexBuffer(), "decode upper");
         }
 
-        [Test]
+        [TestMethod]
         public void InvalidFormatSpecifier()
         {
             ExceptionAssert.Throws<FormatException>(() => HexString.Encode(new byte[0], "..."));
         }
 
-        [Test]
+        [TestMethod]
         public void InvalidHexStrings()
         {
             ExceptionAssert.Throws<InvalidDataException>(() => HexString.Decode("0"));

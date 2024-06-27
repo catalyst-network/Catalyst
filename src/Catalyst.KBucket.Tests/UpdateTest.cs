@@ -21,15 +21,17 @@
 
 #endregion
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Catalyst.KBucket
 {
     /// <summary>
     ///   From https://github.com/tristanls/k-bucket/blob/master/test/update.js
     /// </summary>
+    [TestClass]
     public class UpdateTest
     {
-        [Test]
+        [TestMethod]
         public void ContactDrop()
         {
             var kBucket = new KBucket<Contact>
@@ -42,14 +44,14 @@ namespace Catalyst.KBucket
 
             kBucket.Add(a3);
             kBucket.Add(a2);
-            Assert.That(kBucket, Has.Count.EqualTo(1));
-            Assert.That(kBucket.TryGet(a3.Id, out var current), Is.True);
-            Assert.That(a3, Is.EqualTo(current));
+            Assert.AreEqual(1, kBucket.Count);
+            Assert.IsTrue(kBucket.TryGet(a3.Id, out var current));
+            Assert.AreSame(a3, current);
 
             kBucket.Add(a4);
-            Assert.That(kBucket.Count, Is.EqualTo(1));
-            Assert.That(kBucket.TryGet(a4.Id, out current), Is.True);
-            Assert.That(a4, Is.EqualTo(current));
+            Assert.AreEqual(1, kBucket.Count);
+            Assert.IsTrue(kBucket.TryGet(a4.Id, out current));
+            Assert.AreSame(a4, current);
         }
     }
 }

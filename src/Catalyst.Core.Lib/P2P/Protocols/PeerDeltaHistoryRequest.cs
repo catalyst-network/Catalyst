@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -33,9 +32,8 @@ using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Abstractions.Util;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.IPPN;
-using Catalyst.Protocol.Peer;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.Protocols
@@ -48,31 +46,29 @@ namespace Catalyst.Core.Lib.P2P.Protocols
             IPeerClient peerClient,
             IPeerSettings peerSettings,
             ICancellationTokenProvider cancellationTokenProvider,
-            IScheduler observableScheduler = null) : base(logger, peerSettings.PeerId, cancellationTokenProvider, peerClient)
+            IScheduler observableScheduler = null) : base(logger, peerSettings.Address, cancellationTokenProvider, peerClient)
         {
             DeltaHistoryResponseMessageStreamer = new ReplaySubject<IPeerDeltaHistoryResponse>(1, observableScheduler ?? Scheduler.Default);
         }
 
-        public async Task<IPeerDeltaHistoryResponse> DeltaHistoryAsync(PeerId recipientPeerId, uint height = 1, uint range = 1024)
+        public async Task<IPeerDeltaHistoryResponse> DeltaHistoryAsync(MultiAddress recipientAddress, uint height, uint range)
         {
             IPeerDeltaHistoryResponse history;
             try
             {
-                PeerClient.SendMessage(new MessageDto(
+                await PeerClient.SendMessageAsync(
                     new DeltaHistoryRequest
                     {
                         Range = range,
                         Height = height
-                    }.ToProtocolMessage(PeerId, CorrelationId.GenerateCorrelationId()),
-                    recipientPeerId
-                ));
-                
+                    }.ToProtocolMessage(Address, CorrelationId.GenerateCorrelationId()),
+                    recipientAddress
+                );
+
                 using (CancellationTokenProvider.CancellationTokenSource)
                 {
                     history = await DeltaHistoryResponseMessageStreamer
-                       .FirstAsync(a => a != null 
-                         && a.PeerId.PublicKey.SequenceEqual(recipientPeerId.PublicKey) 
-                         && a.PeerId.Ip.SequenceEqual(recipientPeerId.Ip))
+                       .FirstAsync(a => a != null && a.Address == recipientAddress)
                        .ToTask(CancellationTokenProvider.CancellationTokenSource.Token)
                        .ConfigureAwait(false);
                 }

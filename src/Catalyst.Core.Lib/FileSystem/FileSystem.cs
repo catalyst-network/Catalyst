@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -39,8 +39,8 @@ namespace Catalyst.Core.Lib.FileSystem
         private readonly RetryPolicy _retryPolicy;
 
         public FileSystem()
-   {
-            _dataDir = System.IO.Path.Combine(GetUserHomeDir(), Constants.CatalystDataDir);
+        {
+            _dataDir = Path.Combine(GetUserHomeDir(), Constants.CatalystDataDir);
             _retryPolicy = Policy.Handle<IOException>()
                .WaitAndRetry(5, i => TimeSpan.FromMilliseconds(500).Multiply(i));
         }
@@ -58,7 +58,7 @@ namespace Catalyst.Core.Lib.FileSystem
         {
             try
             {
-                var fullPath = System.IO.Path.GetFullPath(path);
+                var fullPath = Path.GetFullPath(path);
 
                 var dirInfo = new DirectoryInfo(fullPath);
                 if (!dirInfo.Exists)
@@ -77,23 +77,23 @@ namespace Catalyst.Core.Lib.FileSystem
             return true;
         }
 
-        public Task<FileInfo> WriteTextFileToCddAsync(string fileName, string contents)
+        public Task<IFileInfo> WriteTextFileToCddAsync(string fileName, string contents)
         {
-            var fullPath = System.IO.Path.Combine(GetCatalystDataDir().FullName, fileName);
+            var fullPath = Path.Combine(GetCatalystDataDir().FullName, fileName);
 
             return WriteFileToPathAsync(fullPath, contents);
         }
 
-        public Task<FileInfo> WriteTextFileToCddSubDirectoryAsync(string fileName, string subDirectory, string contents)
+        public Task<IFileInfo> WriteTextFileToCddSubDirectoryAsync(string fileName, string subDirectory, string contents)
         {
-            var fullPath = System.IO.Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName);
+            var fullPath = Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName);
 
             return WriteFileToPathAsync(fullPath, contents);
         }
 
-        private async Task<FileInfo> WriteFileToPathAsync(string path, string contents)
+        private async Task<IFileInfo> WriteFileToPathAsync(string path, string contents)
         {
-            var fileInfo = new FileInfo(path);
+            var fileInfo = FileInfo.FromFileName(path);
             if (!Directory.Exists(fileInfo.DirectoryName))
             {
                 Directory.CreateDirectory(fileInfo.DirectoryName);
@@ -105,17 +105,17 @@ namespace Catalyst.Core.Lib.FileSystem
                 await file.FlushAsync().ConfigureAwait(false);
             }
 
-            return fileInfo;
+            return FileInfo.FromFileName(path);
         }
 
         public bool DataFileExists(string fileName)
         {
-            return File.Exists(System.IO.Path.Combine(GetCatalystDataDir().FullName, fileName));
+            return File.Exists(Path.Combine(GetCatalystDataDir().FullName, fileName));
         }
 
         public bool DataFileExistsInSubDirectory(string fileName, string subDirectory)
         {
-            return File.Exists(System.IO.Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName));
+            return File.Exists(Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName));
         }
         
         public static string GetUserHomeDir()
@@ -125,13 +125,13 @@ namespace Catalyst.Core.Lib.FileSystem
 
         public string ReadTextFromCddFile(string fileName)
         {
-            var path = System.IO.Path.Combine(GetCatalystDataDir().FullName, fileName);
+            var path = Path.Combine(GetCatalystDataDir().FullName, fileName);
             return ReadTextFromFile(path);
         }
 
         public string ReadTextFromCddSubDirectoryFile(string fileName, string subDirectory)
         {
-            var path = System.IO.Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName);
+            var path = Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName);
             return ReadTextFromFile(path);
         }
 

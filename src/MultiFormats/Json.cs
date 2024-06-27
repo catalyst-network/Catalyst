@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -22,68 +22,38 @@
 #endregion
 
 using System;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace MultiFormats
 {
     public partial class MultiHash
     {
-        private sealed class DateTimeOffsetNullHandlingConverter : JsonConverter<DateTimeOffset>
-        {
-            public override DateTimeOffset Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options) =>
-            reader.TokenType == JsonTokenType.Null
-                ? default
-                : reader.GetDateTimeOffset();
-
-            public override void Write(
-                Utf8JsonWriter writer,
-                DateTimeOffset dateTimeValue,
-                JsonSerializerOptions options) =>
-                writer.WriteStringValue(dateTimeValue);
-        }
-
-        private sealed class DateTimeNullHandlingConverter : JsonConverter<DateTime>
-        {
-            public override DateTime Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options) =>
-            reader.TokenType == JsonTokenType.Null
-                ? default
-                : reader.GetDateTime();
-
-            public override void Write(
-                Utf8JsonWriter writer,
-                DateTime dateTimeValue,
-                JsonSerializerOptions options) =>
-                writer.WriteStringValue(dateTimeValue);
-        }
-
         /// <summary>
         ///   Conversion of a <see cref="MultiHash"/> to and from JSON.
         /// </summary>
         /// <remarks>
         ///   The JSON is just a single string value.
         /// </remarks>
-        private sealed class Json : JsonConverter<object>
+        private sealed class Json : JsonConverter
         {
-            public override object Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options) =>
-            reader.TokenType == JsonTokenType.Null
-                ? default
-                : new MultiHash(reader.GetBytesFromBase64());
+            public override bool CanConvert(Type objectType) { return true; }
 
-            public override void Write(
-                Utf8JsonWriter writer,
-                object value,
-                JsonSerializerOptions options) =>
-                writer.WriteStringValue((value as MultiHash)?.ToString());
+            public override bool CanRead => true;
+            public override bool CanWrite => true;
+
+            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+            {
+                var mh = value as MultiHash;
+                writer.WriteValue(mh?.ToString());
+            }
+
+            public override object ReadJson(JsonReader reader,
+                Type objectType,
+                object existingValue,
+                JsonSerializer serializer)
+            {
+                return !(reader.Value is string s) ? null : new MultiHash(s);
+            }
         }
     }
 }

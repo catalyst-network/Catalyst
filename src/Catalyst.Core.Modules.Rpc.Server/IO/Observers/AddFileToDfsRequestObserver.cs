@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -27,23 +27,22 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Enumerator;
-using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.Options;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.FileTransfer;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Protocol.Peer;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.FileTransfer;
+using Catalyst.Modules.Network.Dotnetty.FileTransfer;
+using Catalyst.Modules.Network.Dotnetty.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
+using Catalyst.Modules.Network.Dotnetty.Rpc.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
 using Google.Protobuf;
-using Microsoft.Reactive.Testing;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
@@ -53,7 +52,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
     /// </summary>
     /// <seealso cref="IRpcRequestObserver" />
     public sealed class AddFileToDfsRequestObserver
-        : RequestObserverBase<AddFileToDfsRequest, AddFileToDfsResponse>,
+        : RpcRequestObserverBase<AddFileToDfsRequest, AddFileToDfsResponse>,
             IRpcRequestObserver
     {
         /// <summary>The download file transfer factory</summary>
@@ -90,15 +89,15 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// <returns></returns>
         protected override AddFileToDfsResponse HandleRequest(AddFileToDfsRequest addFileToDfsRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress senderAddress,
             ICorrelationId correlationId)
         {
             Guard.Argument(addFileToDfsRequest, nameof(addFileToDfsRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
+            Guard.Argument(senderAddress, nameof(senderAddress)).NotNull();
 
-            var fileTransferInformation = new DownloadFileTransferInformation(PeerSettings.PeerId,
-                senderPeerId, channelHandlerContext.Channel,
+            var fileTransferInformation = new DownloadFileTransferInformation(PeerSettings.Address,
+                senderAddress, channelHandlerContext.Channel,
                 correlationId, addFileToDfsRequest.FileName, addFileToDfsRequest.FileSize);
 
             FileTransferResponseCodeTypes responseCodeType;
@@ -124,14 +123,14 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
             _fileTransferFactory.FileTransferAsync(fileTransferInformation.CorrelationId, CancellationToken.None)
                .ContinueWith(task =>
-                {
-                    if (fileTransferInformation.ChunkIndicatorsTrue())
-                    {
-                        OnSuccessAsync(fileTransferInformation).ConfigureAwait(false).GetAwaiter().GetResult();
-                    }
+               {
+                   if (fileTransferInformation.ChunkIndicatorsTrue())
+                   {
+                       OnSuccessAsync(fileTransferInformation).ConfigureAwait(false).GetAwaiter().GetResult();
+                   }
 
-                    fileTransferInformation.Dispose();
-                }, ctx.Token)
+                   fileTransferInformation.Dispose();
+               }, ctx.Token)
                .ConfigureAwait(false);
 
             return message;
@@ -150,7 +149,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
                 {
                     fileSystemNode = await _dfsService.UnixFsApi.AddAsync(fileStream,
                         fileTransferInformation.FileOutputPath,
-                        new AddFileOptions {Hash = _hashProvider.HashingAlgorithm.Name}).ConfigureAwait(false);
+                        new AddFileOptions { Hash = _hashProvider.HashingAlgorithm.Name }).ConfigureAwait(false);
                 }
 
                 fileTransferInformation.DfsHash = fileSystemNode.Id.Encode();
@@ -180,12 +179,12 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
             var message = GetResponse(fileTransferInformation, await addFileResponseCode);
             var protocolMessage =
-                message.ToProtocolMessage(PeerSettings.PeerId, fileTransferInformation.CorrelationId);
+                message.ToProtocolMessage(PeerSettings.Address, fileTransferInformation.CorrelationId);
 
             // Send Response
             var responseMessage = new MessageDto(
                 protocolMessage,
-                fileTransferInformation.RecipientId
+                fileTransferInformation.Recipient
             );
 
             await fileTransferInformation.RecipientChannel.WriteAndFlushAsync(responseMessage).ConfigureAwait(false);

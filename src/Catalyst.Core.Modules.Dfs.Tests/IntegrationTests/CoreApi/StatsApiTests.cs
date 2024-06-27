@@ -34,19 +34,13 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
     {
         private readonly IDfsService _dfs;
 
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            _dfs.Dispose();
-        }
-
         public StatsApiTest()
         {
             _dfs = TestDfs.GetTestDfs();
         }
         
         [Test]
-        public void Exists() { Assert.That(_dfs.StatsApi, Is.Not.Null); }
+        public void Exists() { Assert.NotNull(_dfs.StatsApi); }
 
         [Test]
         public async Task SmokeTest()

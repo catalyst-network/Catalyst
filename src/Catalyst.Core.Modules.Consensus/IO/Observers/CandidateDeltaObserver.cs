@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -25,15 +25,13 @@ using System;
 using System.Linq;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P.Repository;
-using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Core.Lib.Service;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Wire;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Consensus.IO.Observers
@@ -45,36 +43,28 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
     public sealed class CandidateDeltaObserver : BroadcastObserverBase<CandidateDeltaBroadcast>, IP2PMessageObserver
     {
         private readonly IDeltaVoter _deltaVoter;
-        private readonly IDeltaIndexService _deltaIndexService;
         private readonly IHashProvider _hashProvider;
-        private readonly SyncState _syncState;
         private readonly IPeerRepository _peerRepository;
 
-        public CandidateDeltaObserver(IDeltaVoter deltaVoter, IDeltaIndexService deltaIndexService, SyncState syncState, IPeerRepository peerRepository, IHashProvider provider, ILogger logger)
+        public CandidateDeltaObserver(IDeltaVoter deltaVoter, IPeerRepository peerRepository, IHashProvider provider, ILogger logger)
             : base(logger)
         {
             _deltaVoter = deltaVoter;
-            _deltaIndexService = deltaIndexService;
-            _syncState = syncState;
             _peerRepository = peerRepository;
             _hashProvider = provider;
         }
 
-        public override void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto)
+        public override void HandleBroadcast(ProtocolMessage message)
         {
-            if (!_syncState.IsSynchronized)
-            {
-                return;
-            }
-
             try
             {
-                Logger.Verbose("received {message} from {port}", messageDto.Payload.CorrelationId.ToCorrelationId(),
-                    messageDto.Payload.PeerId.Port);
+                var multiAddress = new MultiAddress(message.Address);
+                Logger.Verbose("received {message} from {port}", message.CorrelationId.ToCorrelationId(),
+                    multiAddress.GetPort());
 
                 // @TODO here we use the protobuff message to parse rather than using the CandidateDeltaBroadcastDao
                 /////////////////////////////////////////////////////////////////////////////////////////////////
-                var deserialized = messageDto.Payload.FromProtocolMessage<CandidateDeltaBroadcast>();
+                var deserialized = message.FromProtocolMessage<CandidateDeltaBroadcast>();
                 var previousDeltaDfsHashCid = deserialized.PreviousDeltaDfsHash.ToByteArray().ToCid();
                 /////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -94,11 +84,10 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
                     return;
                 }
 
-
-                var messagePoaNode = _peerRepository.GetPeersByIpAndPublicKey(messageDto.Payload.PeerId.Ip, messageDto.Payload.PeerId.PublicKey).FirstOrDefault();
+                var messagePoaNode = _peerRepository.GetPoaPeersByPublicKey(multiAddress.GetPublicKey()).FirstOrDefault();
                 if (messagePoaNode == null)
                 {
-                    Logger.Error($"Message from IP address '{messageDto.Payload.PeerId.Ip}' with public key '{messageDto.Payload.PeerId.PublicKey}' is not found in producer node list.");
+                    Logger.Error($"Message from IP address '{multiAddress.GetIpAddress()}' with public key '{multiAddress.GetPublicKey()}' is not found in producer node list.");
                     return;
                 }
 
@@ -110,7 +99,7 @@ namespace Catalyst.Core.Modules.Consensus.IO.Observers
             catch (Exception exception)
             {
                 Logger.Error(exception,
-                    $"Failed to process candidate delta broadcast {messageDto.Payload.ToJsonString()}.");
+                    $"Failed to process candidate delta broadcast {message.ToJsonString()}.");
             }
         }
     }

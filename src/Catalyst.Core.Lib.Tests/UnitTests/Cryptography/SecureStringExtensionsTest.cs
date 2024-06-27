@@ -45,10 +45,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
             
             secret.UseSecretBytes(bytes =>
             {
-                Assert.Equals(expected.Length, bytes.Length);
+                Assert.AreEqual(expected.Length, bytes.Length);
                 for (var i = 0; i < expected.Length; ++i)
                 {
-                    Assert.Equals(expected[i], (int) bytes[i]);
+                    Assert.AreEqual(expected[i], (int) bytes[i]);
                 }
             });
         }

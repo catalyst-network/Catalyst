@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -21,17 +21,15 @@
 
 #endregion
 
-using System.Net;
+using MultiFormats;
 
 namespace Catalyst.Abstractions.Rpc
 {
     public interface IRpcClientConfig
     {
+        MultiAddress Address { get; set; }
         string NodeId { get; set; }
-        IPAddress HostAddress { get; set; }
-        int Port { get; set; }
         string PfxFileName { get; set; }
         string SslCertPassword { get; set; }
-        string PublicKey { get; set; }
     }
 }

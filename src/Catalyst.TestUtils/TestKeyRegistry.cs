@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -25,6 +25,7 @@ using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using MultiFormats;
 using NSubstitute;
 
 namespace Catalyst.TestUtils
@@ -32,12 +33,12 @@ namespace Catalyst.TestUtils
     public static class TestKeyRegistry
     {
         public static readonly string TestPrivateKey = "ftqm5kpzpo7bvl6e53q5j6mmrjwupbbiuszpsopxvjodkkqqiusa";
-        public static readonly string TestPublicKey; // = "qnb9bw3b2yj4hpjcmsvgp12bkwff313v9gaqb18atvwfpevrmmf0"
+        public static readonly string TestPublicKey;
 
         static TestKeyRegistry()
         {
             var cryptoContext = new FfiWrapper();
-            var fakePrivateKey = cryptoContext.GetPrivateKeyFromBytes(TestPrivateKey.KeyToBytes());
+            var fakePrivateKey = cryptoContext.GetPrivateKeyFromBytes(TestPrivateKey.FromBase32());
             TestPublicKey = fakePrivateKey.GetPublicKey().Bytes.KeyToString();
         }
 
@@ -45,7 +46,8 @@ namespace Catalyst.TestUtils
         {
             var keyRegistry = Substitute.For<IKeyRegistry>();
             var cryptoContext = new FfiWrapper();
-            var fakePrivateKey = cryptoContext.GetPrivateKeyFromBytes(TestPrivateKey.KeyToBytes());
+            var fakePrivateKey = cryptoContext.GetPrivateKeyFromBytes(TestPrivateKey.FromBase32());
+            keyRegistry.RegistryContainsKey(Arg.Any<KeyRegistryTypes>()).Returns(true);
             keyRegistry.GetItemFromRegistry(KeyRegistryTypes.DefaultKey).Returns(fakePrivateKey);
             keyRegistry.Contains(Arg.Any<byte[]>()).Returns(true);
             return keyRegistry;

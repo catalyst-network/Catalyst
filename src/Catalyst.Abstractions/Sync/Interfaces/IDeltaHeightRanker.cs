@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -23,6 +23,7 @@
 
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,12 +32,12 @@ namespace Catalyst.Abstractions.Sync.Interfaces
 {
     public interface IDeltaHeightRanker : IDisposable
     {
-         IEnumerable<PeerId> GetPeers();
+        IEnumerable<MultiAddress> GetPeers();
 
-         void Add(PeerId key, LatestDeltaHashResponse value);
+        void Add(MultiAddress key, LatestDeltaHashResponse value);
 
-         int Count();
+        int Count();
 
-         IOrderedEnumerable<IRankedItem<LatestDeltaHashResponse>> GetMessagesByMostPopular(Func<KeyValuePair<PeerId, LatestDeltaHashResponse>, bool> filter = null);
+        IOrderedEnumerable<IRankedItem<LatestDeltaHashResponse>> GetMessagesByMostPopular();
     }
 }

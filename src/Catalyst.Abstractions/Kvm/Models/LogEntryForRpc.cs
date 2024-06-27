@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -78,7 +78,7 @@ namespace Catalyst.Abstractions.Kvm.Models
         [JsonConverter(typeof(ByteArrayConverter))]
         public byte[] Data { get; set; }
         
-        [JsonProperty(ItemConverterType = typeof(CidJsonConverter))]
-        public Hash256[] Topics { get; set; }
+        [JsonProperty(ItemConverterType = typeof(KeccakConverter))]
+        public Keccak[] Topics { get; set; }
     }
 }

@@ -23,9 +23,11 @@
 
 using System;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Lib.P2P.Tests
 {
+    [TestClass]
     public sealed class AutoDialerTest
     {
         private Peer peerA = new Peer
@@ -52,23 +54,23 @@ namespace Lib.P2P.Tests
                 "CAASXjBcMA0GCSqGSIb3DQEBAQUAA0sAMEgCQQCAL8J1Lp6Ad5eYanOwNenXZ6Efvhk9wwFRXqqPn9UT+/JTxBvZPzQwK/FbPRczjZ/A1x8BSec1gvFCzcX4fkULAgMBAAE="
         };
 
-        [Test]
+        [TestMethod]
         public void Defaults()
         {
-            using (var dialer = new AutoDialer(new SwarmService()))
+            using (var dialer = new AutoDialer(new SwarmService(peerA)))
             {
-                Assert.That(dialer.MinConnections, Is.EqualTo(AutoDialer.DefaultMinConnections));
+                Assert.AreEqual(AutoDialer.DefaultMinConnections, dialer.MinConnections);
             }
         }
 
-        [Test]
+        [TestMethod]
         public async Task Connects_OnPeerDiscovered_When_Below_MinConnections()
         {
-            var swarmA = new SwarmService {LocalPeer = peerA};
+            var swarmA = new SwarmService(peerA);
             await swarmA.StartAsync();
             await swarmA.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
 
-            var swarmB = new SwarmService {LocalPeer = peerB};
+            var swarmB = new SwarmService(peerB);
             await swarmB.StartAsync();
             var peerBAddress = await swarmB.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
 
@@ -95,14 +97,14 @@ namespace Lib.P2P.Tests
             }
         }
 
-        [Test]
+        [TestMethod]
         public async Task Noop_OnPeerDiscovered_When_NotBelow_MinConnections()
         {
-            var swarmA = new SwarmService {LocalPeer = peerA};
+            var swarmA = new SwarmService(peerA);
             await swarmA.StartAsync();
             await swarmA.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
 
-            var swarmB = new SwarmService {LocalPeer = peerB};
+            var swarmB = new SwarmService(peerB);
             await swarmB.StartAsync();
             var peerBAddress = await swarmB.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
 
@@ -134,18 +136,18 @@ namespace Lib.P2P.Tests
             }
         }
 
-        [Test]
+        [TestMethod]
         public async Task Connects_OnPeerDisconnected_When_Below_MinConnections()
         {
-            var swarmA = new SwarmService {LocalPeer = peerA};
+            var swarmA = new SwarmService(peerA);
             await swarmA.StartAsync();
             await swarmA.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
 
-            var swarmB = new SwarmService {LocalPeer = peerB};
+            var swarmB = new SwarmService(peerB);
             await swarmB.StartAsync();
             var peerBAddress = await swarmB.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
 
-            var swarmC = new SwarmService {LocalPeer = peerC};
+            var swarmC = new SwarmService(peerC);
             await swarmC.StartAsync();
             var peerCAddress = await swarmC.StartListeningAsync("/ip4/127.0.0.1/tcp/0");
 
@@ -177,7 +179,7 @@ namespace Lib.P2P.Tests
                         await Task.Delay(100); // get cancellaton token
                     }
 
-                    Assert.That(c.ConnectedAddress, Is.Null);
+                    Assert.IsNull(c.ConnectedAddress);
                     await swarmA.DisconnectAsync(peerBAddress);
 
                     // wait for the peer C connection.

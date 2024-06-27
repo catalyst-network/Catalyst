@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -73,11 +73,13 @@ namespace Catalyst.Core.Modules.Consensus
 
         public void StartProducing()
         {
-            Task.Delay(_cycleEventsProvider.GetTimeSpanUntilNextCycleStart()).Wait();
+            _cycleEventsProvider.StartAsync().ConfigureAwait(false).GetAwaiter().GetResult();
 
             _constructionProducingSubscription = _cycleEventsProvider.PhaseChanges
                .Where(p => p.Name.Equals(PhaseName.Construction) && p.Status.Equals(PhaseStatus.Producing))
-               .Select(p => _deltaBuilder.BuildCandidateDelta(p.PreviousDeltaDfsHash))
+               .Select(p => {
+                   return _deltaBuilder.BuildCandidateDelta(p.PreviousDeltaDfsHash);
+                   })
                .Where(c => c != null)
                .Subscribe(c =>
                 {
@@ -101,7 +103,10 @@ namespace Catalyst.Core.Modules.Consensus
 
             _votingProductionSubscription = _cycleEventsProvider.PhaseChanges
                .Where(p => p.Name.Equals(PhaseName.Voting) && p.Status.Equals(PhaseStatus.Producing))
-               .Select(p => _deltaElector.GetMostPopularCandidateDelta(p.PreviousDeltaDfsHash))
+               .Select(p =>
+               {
+                   return _deltaElector.GetMostPopularCandidateDelta(p.PreviousDeltaDfsHash);
+               })
                .Where(c => c != null)
                .Select(c =>
                 {

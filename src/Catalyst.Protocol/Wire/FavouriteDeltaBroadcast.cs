@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -22,6 +22,8 @@
 #endregion
 
 using System.Reflection;
+using Google.Protobuf;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Protocol.Wire
@@ -38,13 +40,13 @@ namespace Catalyst.Protocol.Wire
                 return false;
             }
 
-            if (VoterId == null)
+            if (Voter == null || Voter == ByteString.Empty)
             {
-                Logger.Debug("{field} cannot be null", nameof(VoterId));
+                Logger.Debug("{field} is a invalid address", nameof(Voter));
                 return false;
             }
 
-            return Candidate.IsValid() && VoterId.IsValid();
+            return Candidate.IsValid();
         }
     }
 }

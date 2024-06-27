@@ -1,14 +1,15 @@
 <Project Sdk="Microsoft.NET.Sdk">
     <PropertyGroup>
-        <TargetFramework>net8.0</TargetFramework>
+        <TargetFramework>netcoreapp3.1</TargetFramework>
         <RootNamespace>Catalyst.Core.Modules.Sync</RootNamespace>
-        <Authors>Darren Oliveiro-Priestnall (darren.op@catalystnet.org)</Authors>
+        <Authors>James Kirby (nshcore@protonmail.com)</Authors>
     </PropertyGroup>
     <Import Project="../Common.Packable.props" />
     <Import Project="../Common.Projects.props" />
 
   <ItemGroup>
-    <PackageReference Include="Autofac" Version="8.0.0" />
+    <PackageReference Include="Autofac" Version="4.8.1" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
     <PackageReference Include="SharpRepository.InMemoryRepository" Version="2.0.3.1" />
     <PackageReference Include="SharpRepository.XmlRepository" Version="2.0.2.1" />
     <PackageReference Include="System.Collections.Concurrent" Version="4.3.0" />

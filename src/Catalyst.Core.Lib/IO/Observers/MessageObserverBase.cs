@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -23,39 +23,34 @@
 
 using System;
 using System.Reactive.Linq;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Protocol.Wire;
 using Serilog;
 
 namespace Catalyst.Core.Lib.IO.Observers
 {
-    public abstract class MessageObserverBase : IMessageObserver, IDisposable
+    public abstract class MessageObserverBase<T> : IMessageObserver<T>, IDisposable
     {
         protected readonly ILogger Logger;
         protected IDisposable MessageSubscription;
-        private readonly string _filterMessageType;
+        private readonly Func<T, bool> _filterExpression;
 
-        protected MessageObserverBase(ILogger logger, string filterMessageType)
+        protected MessageObserverBase(ILogger logger, Func<T, bool> filterExpression)
         {
             Logger = logger;
-            _filterMessageType = filterMessageType;
+            _filterExpression = filterExpression;
         }
 
-        public void StartObserving(IObservable<IObserverDto<ProtocolMessage>> messageStream)
+        public void StartObserving(IObservable<T> messageStream)
         {
             if (MessageSubscription != null)
             {
                 return;
             }
 
-            MessageSubscription = messageStream
-               .Where(m => m.Payload?.TypeUrl != null
-                 && m.Payload.TypeUrl == _filterMessageType)
-               .Subscribe(this);
+            MessageSubscription = messageStream.Where(_filterExpression).Subscribe(this);
         }
 
-        public abstract void OnNext(IObserverDto<ProtocolMessage> messageDto);
+        public abstract void OnNext(T message);
 
         public virtual void OnCompleted()
         {

@@ -48,7 +48,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
                 
                 if (expectedMessage != null)
                 {
-                    Assert.Equals(expectedMessage, match.Message);
+                    Assert.AreEqual(expectedMessage, match.Message);
                 }
                     
                 return match;
@@ -57,7 +57,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             {
                 if (expectedMessage != null)
                 {
-                    Assert.Equals(expectedMessage, e.Message);
+                    Assert.AreEqual(expectedMessage, e.Message);
                 }
                 
                 return e;

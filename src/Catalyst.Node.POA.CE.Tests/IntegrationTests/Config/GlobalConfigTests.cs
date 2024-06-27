@@ -27,6 +27,7 @@ using System.Linq;
 using Autofac;
 using Catalyst.Abstractions;
 using Catalyst.Abstractions.Cli;
+using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.DAO;
 using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Core.Lib;
@@ -43,10 +44,11 @@ using Catalyst.Core.Modules.Keystore;
 using Catalyst.Core.Modules.Kvm;
 using Catalyst.Core.Modules.Ledger;
 using Catalyst.Core.Modules.Mempool;
-using Catalyst.Core.Modules.Rpc.Server;
 using Catalyst.Core.Modules.Sync;
+using Catalyst.Modules.Network.LibP2P;
 using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
+using Nethermind.Db;
 using NSubstitute;
 using NUnit.Framework;
 using SharpRepository.InMemoryRepository;
@@ -76,11 +78,15 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.Config
             _configFilesUsed = new[]
                 {
                     Constants.NetworkConfigFile(network),
-                    Constants.SerilogJsonConfigFile
+                    Constants.SerilogJsonConfigFile,
+                    Constants.ValidatorSetConfigFile
                 }
                .Select(f => Path.Combine(Constants.ConfigSubFolder, f));
 
             _containerProvider = new ContainerProvider(_configFilesUsed, FileSystem, Output);
+
+            var networkTypeProvider = Substitute.For<INetworkTypeProvider>();
+            networkTypeProvider.NetworkType.Returns(network);
 
             SocketPortHelper.AlterConfigurationToGetUniquePort(_containerProvider.ConfigurationRoot);
 
@@ -91,20 +97,19 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests.Config
             containerBuilder.RegisterType<ConsoleUserOutput>().As<IUserOutput>();
             containerBuilder.RegisterType<ConsoleUserInput>().As<IUserInput>();
             containerBuilder.RegisterInstance(Substitute.For<IPeerDiscovery>()).As<IPeerDiscovery>();
+            containerBuilder.RegisterInstance(networkTypeProvider).As<INetworkTypeProvider>();
             containerBuilder.RegisterModule(new KeystoreModule());
             containerBuilder.RegisterModule(new KeySignerModule());
             containerBuilder.RegisterModule(new ConsensusModule());
             containerBuilder.RegisterModule(new DfsModule());
-            containerBuilder.RegisterModule(new KvmModule());
             containerBuilder.RegisterModule(new LedgerModule());
-            containerBuilder.RegisterModule(new RpcServerModule());
             containerBuilder.RegisterModule(new MempoolModule());
             containerBuilder.RegisterModule(new KeystoreModule());
             containerBuilder.RegisterModule(new BulletProofsModule());
             containerBuilder.RegisterModule(new AuthenticationModule());
             containerBuilder.RegisterModule(new SynchroniserModule());
+            containerBuilder.RegisterModule(new LibP2PNetworkModule());
             containerBuilder.RegisterType<InMemoryRepository<DeltaIndexDao, string>>().As<IRepository<DeltaIndexDao, string>>().SingleInstance();
-
             containerBuilder.RegisterAssemblyTypes(typeof(CoreLibProvider).Assembly)
                .AssignableTo<IMapperInitializer>().As<IMapperInitializer>();
             containerBuilder.RegisterType<MapperProvider>().As<IMapperProvider>()

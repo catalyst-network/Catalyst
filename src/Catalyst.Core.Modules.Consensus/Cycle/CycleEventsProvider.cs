@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -22,37 +22,47 @@
 #endregion
 
 using System;
+using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Threading;
+using System.Threading.Tasks;
 using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Cycle;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Core.Abstractions.Sync;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Consensus.Cycle
 {
     /// <inheritdoc cref="ICycleEventsProvider"/>
     /// <inheritdoc cref="IDisposable"/>
+    [Obsolete]
     public class CycleEventsProvider : ICycleEventsProvider, IDisposable
     {
         private readonly CancellationTokenSource _cancellationTokenSource;
         protected readonly IScheduler Scheduler;
         private readonly IDateTimeProvider _dateTimeProvider;
+        private readonly IDeltaHashProvider _deltaHashProvider;
+        private readonly ILogger _logger;
 
         public CycleEventsProvider(ICycleConfiguration configuration,
             IDateTimeProvider timeProvider,
             ICycleSchedulerProvider schedulerProvider,
             IDeltaHashProvider deltaHashProvider,
-            SyncState syncState,
             ILogger logger)
         {
             _cancellationTokenSource = new CancellationTokenSource();
 
             Configuration = configuration;
             Scheduler = schedulerProvider.Scheduler;
+            _logger = logger;
 
+            _dateTimeProvider = timeProvider;
+            _deltaHashProvider = deltaHashProvider;
+        }
+
+        public Task StartAsync()
+        {
             var constructionStatusChanges = StatefulPhase.GetStatusChangeObservable(
                 PhaseName.Construction, Configuration.Construction, Configuration.CycleDuration, Scheduler);
 
@@ -65,7 +75,6 @@ namespace Catalyst.Core.Modules.Consensus.Cycle
             var synchronisationStatusChanges = StatefulPhase.GetStatusChangeObservable(
                 PhaseName.Synchronisation, Configuration.Synchronisation, Configuration.CycleDuration, Scheduler);
 
-            _dateTimeProvider = timeProvider;
             var synchronisationOffset = GetTimeSpanUntilNextCycleStart();
 
             PhaseChanges = constructionStatusChanges
@@ -73,12 +82,12 @@ namespace Catalyst.Core.Modules.Consensus.Cycle
                .Merge(votingStatusChanges, Scheduler)
                .Merge(synchronisationStatusChanges, Scheduler)
                .Delay(synchronisationOffset, Scheduler)
-               .Where(x => syncState.IsSynchronized)
-               .Select(s => new Phase(deltaHashProvider.GetLatestDeltaHash(_dateTimeProvider.UtcNow), s.Name, s.Status, _dateTimeProvider.UtcNow))
-               .Do(p => logger.Debug("Current delta production phase {phase}", p),
-                    exception => logger.Error(exception, "{PhaseChanges} stream failed and will stop producing cycle events.", nameof(PhaseChanges)),
-                    () => logger.Debug("Stream {PhaseChanges} completed.", nameof(PhaseChanges)))
+               .Select(s => new Phase(_deltaHashProvider.GetLatestDeltaHash(_dateTimeProvider.UtcNow), s.Name, s.Status, _dateTimeProvider.UtcNow))
+               .Do(p => _logger.Debug("Current delta production phase {phase}", p),
+                    exception => _logger.Error(exception, "{PhaseChanges} stream failed and will stop producing cycle events.", nameof(PhaseChanges)),
+                    () => _logger.Debug("Stream {PhaseChanges} completed.", nameof(PhaseChanges)))
                .TakeWhile(_ => !_cancellationTokenSource.IsCancellationRequested);
+            return Task.CompletedTask;
         }
 
         public TimeSpan GetTimeSpanUntilNextCycleStart()
@@ -94,7 +103,7 @@ namespace Catalyst.Core.Modules.Consensus.Cycle
         public ICycleConfiguration Configuration { get; }
 
         /// <inheritdoc />
-        public IObservable<IPhase> PhaseChanges { get; }
+        public IObservable<IPhase> PhaseChanges { private set; get; }
 
         /// <inheritdoc />
         public void Close() { _cancellationTokenSource.Cancel(); }

@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -21,15 +21,22 @@
 
 #endregion
 
-using Catalyst.Abstractions.IO.Transport;
-using Catalyst.Protocol.Peer;
+using Catalyst.Protocol.Wire;
 using Google.Protobuf;
+using MultiFormats;
+using System;
 using System.Collections.Generic;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Catalyst.Abstractions.P2P
 {
-    public interface IPeerClient : ISocketClient
+    public interface IPeerClient : IDisposable
     {
-        void SendMessageToPeers(IMessage message, IEnumerable<PeerId> peers);
+        Task SendMessageToPeersAsync(IMessage message, IEnumerable<MultiAddress> peers);
+        Task SendMessageAsync(ProtocolMessage message, MultiAddress recipient);
+        Task BroadcastAsync(ProtocolMessage message);
+        Task StartAsync();
+        Task StartAsync(CancellationToken cancellationToken);
     }
 }

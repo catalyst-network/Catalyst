@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -51,7 +51,7 @@ namespace Lib.P2P.Protocols
         /// <summary>
         ///   Provides access to other peers.
         /// </summary>
-        public SwarmService SwarmService { get; set; }
+        public ISwarmService SwarmService { get; set; }
 
         /// <inheritdoc />
         public override string ToString() { return $"/{Name}/{Version}"; }
@@ -60,7 +60,7 @@ namespace Lib.P2P.Protocols
         /// 
         /// </summary>
         /// <param name="swarmService"></param>
-        public Ping1(SwarmService swarmService) { SwarmService = swarmService; }
+        public Ping1(ISwarmService swarmService) { SwarmService = swarmService; }
 
         /// <inheritdoc />
         public async Task ProcessMessageAsync(PeerConnection connection,

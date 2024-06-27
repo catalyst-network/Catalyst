@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -23,7 +23,12 @@
 
 using System;
 using System.Buffers;
+using System.IO;
 using Google.Protobuf;
+using MultiFormats;
+using Org.BouncyCastle.Asn1;
+using Org.BouncyCastle.Asn1.X509;
+using ProtoBuf;
 
 namespace Catalyst.Abstractions.Cryptography
 {

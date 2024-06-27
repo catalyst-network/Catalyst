@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -30,8 +30,8 @@ namespace Catalyst.Abstractions.FileSystem
     public interface IFileSystem : System.IO.Abstractions.IFileSystem
     {
         DirectoryInfo GetCatalystDataDir();
-        Task<FileInfo> WriteTextFileToCddAsync(string fileName, string contents);
-        Task<FileInfo> WriteTextFileToCddSubDirectoryAsync(string fileName, string subDirectory, string contents);
+        Task<IFileInfo> WriteTextFileToCddAsync(string fileName, string contents);
+        Task<IFileInfo> WriteTextFileToCddSubDirectoryAsync(string fileName, string subDirectory, string contents);
         bool DataFileExists(string fileName);
 
         string ReadTextFromCddSubDirectoryFile(string fileName, string subDirectory);

@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -111,7 +111,7 @@ namespace Lib.P2P.SecureCommunication
         public override bool CanSeek => false;
 
         /// <inheritdoc />
-        public override bool CanWrite => _stream.CanRead;
+        public override bool CanWrite => _stream.CanWrite;
 
         /// <inheritdoc />
         public override bool CanTimeout => false;

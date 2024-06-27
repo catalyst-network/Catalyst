@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -22,9 +22,12 @@
 #endregion
 
 using Autofac;
-using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.Rpc;
+using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Core.Modules.Rpc.Client
 {
@@ -33,7 +36,7 @@ namespace Catalyst.Core.Modules.Rpc.Client
         protected override void Load(ContainerBuilder builder)
         {
             builder.RegisterType<RpcClient>().As<IRpcClient>();
-            builder.RegisterType<RpcClientChannelFactory>().As<ITcpClientChannelFactory>();
+            builder.RegisterType<RpcClientChannelFactory>().As<ITcpClientChannelFactory<IObserverDto<ProtocolMessage>>>();
             builder.RegisterType<RpcClientFactory>().As<IRpcClientFactory>();
             builder.RegisterType<RpcClientSettings>().As<IRpcClientConfig>();
         }

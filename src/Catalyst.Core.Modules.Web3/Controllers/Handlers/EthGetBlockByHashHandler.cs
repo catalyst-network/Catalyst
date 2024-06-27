@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -21,37 +21,32 @@
 
 #endregion
 
-using System;
 using System.Buffers.Binary;
+using System.Collections.Generic;
 using System.Linq;
-using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
-using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Repository;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Modules.Hashing;
-using Google.Protobuf;
 using Lib.P2P;
-using MultiFormats.Registry;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
-using Nethermind.Int256;
+using Nethermind.Dirichlet.Numerics;
 using Address = Nethermind.Core.Address;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
     [EthWeb3RequestHandler("eth", "getBlockByHash")]
-    public class EthGetBlockByHashHandler : EthWeb3RequestHandler<Hash256, BlockForRpc>
+    public class EthGetBlockByHashHandler : EthWeb3RequestHandler<Keccak, bool, BlockForRpc>
     {
-        protected override BlockForRpc Handle(Hash256 deltaHash, IWeb3EthApi api)
+        protected override BlockForRpc Handle(Keccak deltaHash, bool includeFullTxs, IWeb3EthApi api)
         {
             DeltaWithCid deltaWithCid = api.GetDeltaWithCid(deltaHash.ToCid());
-            return BuildBlock(deltaWithCid, deltaWithCid.Delta.DeltaNumber, api.HashProvider);
+            return BuildBlock(api, deltaWithCid, deltaWithCid.Delta.DeltaNumber, api.HashProvider, includeFullTxs);
         }
 
-        private static BlockForRpc BuildBlock(DeltaWithCid deltaWithCid, long blockNumber, IHashProvider hashProvider)
+        private static BlockForRpc BuildBlock(IWeb3EthApi api, DeltaWithCid deltaWithCid, long blockNumber, IHashProvider hashProvider, bool includeFullTxs)
         {
             var (delta, deltaHash) = deltaWithCid;
 
@@ -59,7 +54,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
             var firstCoinBaseEntry = delta.CoinbaseEntries.FirstOrDefault();
             if (firstCoinBaseEntry != null)
             {
-                author = new Address(Keccak.Compute(firstCoinBaseEntry.ReceiverPublicKey.ToByteArray()));
+                author = new Address(firstCoinBaseEntry.ReceiverKvmAddress.ToByteArray());
             }
             else
             {
@@ -75,10 +70,9 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
                 Difficulty = 1,
                 Hash = deltaHash,
                 Number = blockNumber,
-                GasLimit = (long) delta.GasLimit,
-                // TODO
-                GasUsed = (long)delta.GasLimit,
-                Timestamp = (UInt256)delta.TimeStamp.Seconds,
+                GasLimit = (long)delta.GasLimit,
+                GasUsed = delta.GasUsed,
+                Timestamp = new UInt256(delta.TimeStamp.Seconds),
                 ParentHash = blockNumber == 0 ? null : Cid.Read(delta.PreviousDeltaDfsHash.ToByteArray()),
                 StateRoot = delta.StateRoot.ToKeccak(),
                 ReceiptsRoot = Keccak.EmptyTreeHash,
@@ -86,10 +80,10 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
                 LogsBloom = Bloom.Empty,
                 MixHash = Keccak.Zero,
                 Nonce = nonce,
-                Uncles = new Hash256[0],
-                Transactions = delta.PublicEntries.Select(x => x.GetHash(hashProvider))
+                Uncles = new Keccak[0],
+                Transactions = includeFullTxs ? (IEnumerable<object>)api.ToTransactionsForRpc(deltaWithCid) : delta.PublicEntries.Select(x => x.GetHash(hashProvider))
             };
-            blockForRpc.TotalDifficulty = (UInt256) ((long) blockForRpc.Difficulty * (blockNumber + 1));
+            blockForRpc.TotalDifficulty = (UInt256)((long)blockForRpc.Difficulty * (blockNumber + 1));
             blockForRpc.Sha3Uncles = Keccak.OfAnEmptySequenceRlp;
             return blockForRpc;
         }

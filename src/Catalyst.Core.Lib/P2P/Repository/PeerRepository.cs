@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -27,7 +27,8 @@ using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Protocol.Peer;
-using Google.Protobuf;
+using MultiFormats;
+using Nethermind.Core;
 using SharpRepository.Repository;
 using SharpRepository.Repository.Queries;
 using SharpRepository.Repository.Specifications;
@@ -41,8 +42,9 @@ namespace Catalyst.Core.Lib.P2P.Repository
 
         public Peer Get(string id) { return _repository.Get(id); }
 
-        public Peer Get(PeerId id) {
-            return _repository.Find(x => x.PeerId.Equals(id)); 
+        public Peer Get(PeerId id)
+        {
+            return _repository.Find(x => x.Address.Equals(id));
         }
 
         public IEnumerable<Peer> GetAll() { return _repository.GetAll(); }
@@ -63,10 +65,21 @@ namespace Catalyst.Core.Lib.P2P.Repository
                .ToList();
         }
 
-        public IEnumerable<Peer> GetPeersByIpAndPublicKey(ByteString ip, ByteString publicKey)
+        public IEnumerable<Peer> GetPeersByAddress(MultiAddress address)
         {
-            return _repository.FindAll(m =>
-                m.PeerId.Ip == ip && (publicKey.IsEmpty || m.PeerId.PublicKey == publicKey));
+            return _repository.FindAll(m => m.Address == address);
+        }
+
+        public IEnumerable<Peer> GetPeersByKvmAddress(Address kvmAddress)
+        {
+            return _repository.FindAll(m => m.KvmAddress == kvmAddress);
+        }
+
+        public IEnumerable<Peer> GetPoaPeersByPublicKey(string publicKeyBase58)
+        {
+            var peerId = publicKeyBase58.FromBase58().ToPeerId();
+            var poaPeers = _repository.FindAll(m => m.IsPoaNode && m.Address.PeerId == peerId);
+            return poaPeers;
         }
 
         public IEnumerable<Peer> TakeHighestReputationPeers(int page, int count)
@@ -82,10 +95,10 @@ namespace Catalyst.Core.Lib.P2P.Repository
 
         public void Update(Peer peer) { _repository.Update(peer); }
 
-        public uint DeletePeersByIpAndPublicKey(ByteString ip, ByteString publicKey)
+        public uint DeletePeersByAddress(MultiAddress address)
         {
             var peerDeletedCount = 0u;
-            var peersToDelete = GetPeersByIpAndPublicKey(ip, publicKey);
+            var peersToDelete = GetPeersByAddress(address);
 
             foreach (var peerToDelete in peersToDelete)
             {
@@ -101,7 +114,7 @@ namespace Catalyst.Core.Lib.P2P.Repository
         public void Delete(string id) { _repository.Delete(id); }
 
         public int Count() { return _repository.Count(); }
-        public int CountActivePeers() { return _repository.FindAll(x=>!x.IsAwolPeer).Count(); }
+        public int CountActivePeers() { return _repository.FindAll(x => !x.IsAwolPeer).Count(); }
 
         public void Dispose() { _repository.Dispose(); }
     }

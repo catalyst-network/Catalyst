@@ -25,25 +25,24 @@ using System;
 using System.Collections.Generic;
 using Autofac;
 using Catalyst.TestUtils;
-using Catalyst.Core.Lib.DAO;
 using Catalyst.Core.Lib.DAO.Peer;
 using Catalyst.Core.Lib.Service;
-using Catalyst.Protocol.Peer;
 using SharpRepository.Repository;
 using FluentAssertions;
 using Microsoft.EntityFrameworkCore;
 using Catalyst.TestUtils.Repository;
 using NUnit.Framework;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 {
     [TestFixture]
-    [Category(Traits.IntegrationTest)] 
+    [Category(Traits.IntegrationTest)]
     public sealed class PeerRepositoryTests : FileSystemBasedTest
     {
         private TestMapperProvider _mapperProvider;
 
-        public static IEnumerable<object[]> ModulesList => 
+        public static IEnumerable<object[]> ModulesList =>
             new List<object[]>
             {
                 new object[] {new InMemoryTestModule<PeerDao>()},
@@ -63,8 +62,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
                 var peerRepo = PopulatePeerRepo(scope, out var peerDao);
 
                 peerRepo.Get(peerDao.Id).Id.Should().Be(peerDao.Id);
-                peerRepo.Get(peerDao.Id).PeerIdentifier.PublicKey.Should().Be(peerDao.PeerIdentifier.PublicKey);
-                peerRepo.Get(peerDao.Id).PeerIdentifier.Ip.Should().Be(peerDao.PeerIdentifier.Ip);
+                new MultiAddress(peerRepo.Get(peerDao.Id).Address).Should().Be(peerDao.Address);
             }
         }
 
@@ -87,7 +85,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
                 }
 
                 var dateComparer = retrievedPeerModified.Modified.Value.Date.ToString("MM/dd/yyyy");
-                
+
                 // ReSharper disable once SuspiciousTypeConversion.Global
                 // ReSharper disable once ReturnValueOfPureMethodIsNotUsed
                 dateComparer.Should()?.Equals(now.ToString("MM/dd/yyyy"));
@@ -102,20 +100,20 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             {
                 Id = Guid.NewGuid().ToString()
             };
-            
-            var peerId = PeerIdHelper.GetPeerId(new Random().Next().ToString());
-            peerDao.PeerIdentifier = peerId.ToDao<PeerId, PeerIdDao>(_mapperProvider);
-            peerDao.PeerIdentifier.Id = Guid.NewGuid().ToString();
+
+            var address = MultiAddressHelper.GetAddress(new Random().Next().ToString());
+            peerDao.Address = address.ToString();
 
             peerRepo.Add(peerDao);
             peerDaoOutput = peerDao;
 
             return peerRepo;
         }
-        
+
         [Ignore("Setup to run in pipeline only")]
         [Category(Traits.E2EMongoDb)]
-        public void PeerRepo_All_Dbs_Can_Update_And_Retrieve(Module dbModule)
+        [TestCase(nameof(ModulesList))]
+        public void PeerRepo_All_Dbs_Can_Update_And_Retrieve(Autofac.Module dbModule)
         {
             RegisterModules(dbModule);
 
@@ -124,7 +122,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
 
         [Ignore("Setup to run in pipeline only")]
         [Category(Traits.E2EMongoDb)]
-        public void PeerRepo_All_Dbs_Can_Save_And_Retrieve(Module dbModule)
+        [TestCase(nameof(ModulesList))]
+        public void PeerRepo_All_Dbs_Can_Save_And_Retrieve(Autofac.Module dbModule)
         {
             RegisterModules(dbModule);
 
@@ -169,7 +168,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
             }
         }
 
-        private void RegisterModules(Module module)
+        private void RegisterModules(Autofac.Module module)
         {
             ContainerProvider.ConfigureContainerBuilder();
 

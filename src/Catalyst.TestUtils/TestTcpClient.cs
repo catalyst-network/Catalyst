@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -23,18 +23,19 @@
 
 using System;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.IO.EventLoop;
-using Catalyst.Abstractions.IO.Transport.Channels;
-using Catalyst.Core.Lib.IO.Transport;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.EventLoop;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.IO.Transport;
+using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 using NSubstitute;
 using Serilog;
 
 namespace Catalyst.TestUtils
 {
-    public class TestTcpClient : TcpClient
+    public class TestTcpClient : TcpClient<ProtocolMessage>
     {
-        public TestTcpClient(ITcpClientChannelFactory tcpClientChannelFactory,
+        public TestTcpClient(ITcpClientChannelFactory<ProtocolMessage> tcpClientChannelFactory,
             ILogger logger,
             ITcpClientEventLoopGroupFactory eventLoopGroupFactory) : base(tcpClientChannelFactory, logger, eventLoopGroupFactory)
         {

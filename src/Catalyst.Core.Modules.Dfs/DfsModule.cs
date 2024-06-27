@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -21,19 +21,19 @@
 
 #endregion
 
-using System.Reflection;
 using Autofac;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Dfs.BlockExchange;
 using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Dfs.Migration;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Options;
-using Catalyst.Abstractions.Types;
+using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.Kernel;
 using Catalyst.Core.Lib.P2P;
+using Catalyst.Core.Lib.P2P.Repository;
 using Catalyst.Core.Modules.Dfs.BlockExchange;
 using Catalyst.Core.Modules.Dfs.CoreApi;
 using Catalyst.Core.Modules.Dfs.Migration;
@@ -41,7 +41,10 @@ using Catalyst.Core.Modules.Keystore;
 using Lib.P2P;
 using Lib.P2P.Protocols;
 using Lib.P2P.PubSub;
+using Lib.P2P.Routing;
 using Makaretu.Dns;
+using SharpRepository.InMemoryRepository;
+using SharpRepository.Repository;
 
 namespace Catalyst.Core.Modules.Dfs
 {
@@ -82,85 +85,25 @@ namespace Catalyst.Core.Modules.Dfs
                .SingleInstance();
 
             builder.RegisterType<BitSwapService>()
-               .As<BitSwapService>()
-               .SingleInstance();
+               .As<IBitswapService>()
+               .SingleInstance().OnActivated(e => e.Instance.BlockService = e.Context.Resolve<IBlockApi>());
 
-            builder.RegisterBuildCallback(async x =>
-            {
-                //Log.Debug("Building bitswap service");
-                //Log.Debug("Built bitswap service");
+            builder.RegisterType<LoopbackRouter>()
+               .As<IMessageRouter>();
 
-                var localPeer = x.Resolve<Peer>();
-                var swarmService = x.Resolve<SwarmService>();
-
-                var bitSwapService = x.Resolve<BitSwapService>();
-                bitSwapService.SwarmService = swarmService;
-                bitSwapService.BlockService = x.Resolve<IBlockApi>();
-
-                var pubService = x.Resolve<PubSubService>();
-                pubService.LocalPeer = localPeer;
-                pubService.Routers.Add(new FloodRouter
-                {
-                    SwarmService = swarmService
-                });
-
-                //var keyApi = x.Resolve<IKeyApi>();
-                //var swarmOptions = x.Resolve<SwarmOptions>();
-                //swarmService.LocalPeer = localPeer;
-                //swarmService.LocalPeerKey =
-                //    Key.CreatePrivateKey(await keyApi.GetPrivateKeyAsync("self").ConfigureAwait(false));
-                //swarmService.NetworkProtector = swarmOptions.PrivateNetworkKey == null
-                //    ? null
-                //    : new Psk1Protector
-                //    {
-                //        Key = swarmOptions.PrivateNetworkKey
-                //    };
-
-                //if (swarmOptions.PrivateNetworkKey != null)
-                //{
-                //    Log.Debug($"Private network {swarmOptions.PrivateNetworkKey.Fingerprint().ToHexString()}");
-                //}
-            });
-
-            builder.Register(x =>
-            {
-                var keyStoreService = x.Resolve<IKeyStoreService>();
-                var keyApi = x.Resolve<IKeyApi>();
-                var passwordManager = x.Resolve<IPasswordManager>();
-
-                var passphrase = passwordManager.RetrieveOrPromptAndAddPasswordToRegistry(
-                    PasswordRegistryTypes.IpfsPassword,
-                    "Please provide your IPFS password");
-
-                keyApi.SetPassphraseAsync(passphrase).ConfigureAwait(false).GetAwaiter().GetResult();
-
-                var self = keyApi.GetPublicKeyAsync("self").ConfigureAwait(false).GetAwaiter().GetResult()
-                 ?? keyApi.CreateAsync("self", "rsa", 0).ConfigureAwait(false).GetAwaiter().GetResult();
-
-                var localPeer = new Peer
-                {
-                    Id = self.Id,
-                    PublicKey =
-                        keyStoreService.GetPublicKeyAsync("self").ConfigureAwait(false).GetAwaiter().GetResult(),
-                    ProtocolVersion = "ipfs/0.1.0"
-                };
-
-                var version = typeof(DfsService).GetTypeInfo().Assembly.GetName().Version;
-                localPeer.AgentVersion = $"net-ipfs/{version.Major}.{version.Minor}.{version.Revision}";
-
-                return localPeer;
-            }).As<Peer>();
+            builder.RegisterType<FloodRouter>()
+                .As<IMessageRouter>();
 
             builder.RegisterType<SwarmService>()
-               .As<SwarmService>()
+               .As<ISwarmService>()
                .SingleInstance();
 
             builder.RegisterType<KatDhtService>()
-               .As<KatDhtService>()
+               .As<IDhtService>()
                .SingleInstance();
 
             builder.RegisterType<PubSubService>()
-               .As<PubSubService>()
+               .As<IPubSubService>()
                .SingleInstance();
 
             builder.RegisterType<Makaretu.Dns.DnsClient>()
@@ -168,6 +111,9 @@ namespace Catalyst.Core.Modules.Dfs
 
             builder.RegisterType<Ping1>()
                .As<Ping1>();
+
+            builder.RegisterType<InMemoryRepository<Lib.P2P.Models.Peer, string>>().As<IRepository<Lib.P2P.Models.Peer, string>>().SingleInstance();
+            builder.RegisterType<PeerRepository>().As<IPeerRepository>().SingleInstance();
 
             builder.RegisterType<MigrationManager>()
                .As<IMigrationManager>();
@@ -180,8 +126,8 @@ namespace Catalyst.Core.Modules.Dfs
             builder.RegisterType<RepositoryOptions>().SingleInstance()
                .WithParameter("dfsDirectory", Constants.DfsDataSubDir);
             //Disable Mdns in dfs as it causes a memoryleak/outofmemory exception
-            builder.RegisterType<DiscoveryOptions>().SingleInstance().WithProperty("DisableMdns", true);
-            builder.RegisterType<KeyChainOptions>().SingleInstance().WithProperty("DefaultKeyType", "rsa");
+            builder.RegisterType<DiscoveryOptions>().SingleInstance().WithProperty("DisableMdns", true).WithProperty("UsePeerRepository", true);
+            builder.RegisterType<KeyChainOptions>().SingleInstance().WithProperty("DefaultKeyType", "ed25519");
             builder.RegisterType<SwarmOptions>().SingleInstance();
         }
     }

@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -25,6 +25,7 @@ using System.Collections.Generic;
 using System.Net;
 using Catalyst.Protocol.Network;
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 
 namespace Catalyst.Abstractions.P2P
 {
@@ -37,7 +38,7 @@ namespace Catalyst.Abstractions.P2P
         IList<string> SeedServers { get; }
         NetworkType NetworkType { get; }
         IPEndPoint[] DnsServers { get; }
-        PeerId PeerId { get; }
+        MultiAddress Address { get; }
     }
 }
 

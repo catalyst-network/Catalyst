@@ -24,21 +24,23 @@
 using System;
 using System.IO;
 using Google.Protobuf;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MultiFormats.Tests
 {
+    [TestClass]
     public class NetworkProtocolTest
     {
-        [Test]
-        public void Stringing() { Assert.That(new MultiAddress("/tcp/8080").Protocols[0].ToString(), Is.EqualTo("/tcp/8080")); }
+        [TestMethod]
+        public void Stringing() { Assert.AreEqual("/tcp/8080", new MultiAddress("/tcp/8080").Protocols[0].ToString()); }
 
-        [Test]
+        [TestMethod]
         public void Register_Name_Already_Exists()
         {
             ExceptionAssert.Throws<ArgumentException>(() => NetworkProtocol.Register<NameExists>());
         }
 
-        [Test]
+        [TestMethod]
         public void Register_Code_Already_Exists()
         {
             ExceptionAssert.Throws<ArgumentException>(() => NetworkProtocol.Register<CodeExists>());

@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -21,13 +21,14 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using Catalyst.Core.Lib.DAO.Ledger;
 using Lib.P2P;
 
 namespace Catalyst.Core.Lib.Service
 {
-    public interface IDeltaIndexService
+    public interface IDeltaIndexService : IDisposable
     {
         void Add(DeltaIndexDao deltaIndex);
         void Add(IEnumerable<DeltaIndexDao> deltaIndexes);

@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -66,8 +66,8 @@ namespace MultiFormats.Registry
                 bytes => bytes.ToBase64Url(),
                 s => s.FromBase64Url());
             Register("base16", 'f',
-                bytes => SimpleBase.Base16.LowerCase.Encode(bytes),
-                s => SimpleBase.Base16.LowerCase.Decode(s));
+                bytes => SimpleBase.Base16.EncodeLower(bytes),
+                s => SimpleBase.Base16.Decode(s));
             Register("base32", 'b',
                 bytes => SimpleBase.Base32.Rfc4648.Encode(bytes, false).ToLowerInvariant(),
                 s => SimpleBase.Base32.Rfc4648.Decode(s));
@@ -81,8 +81,8 @@ namespace MultiFormats.Registry
                 bytes => SimpleBase.Base32.ExtendedHex.Encode(bytes, true).ToLowerInvariant(),
                 s => SimpleBase.Base32.ExtendedHex.Decode(s));
             Register("BASE16", 'F',
-                bytes => SimpleBase.Base16.UpperCase.Encode(bytes),
-                s => SimpleBase.Base16.LowerCase.Decode(s));
+                bytes => SimpleBase.Base16.EncodeUpper(bytes),
+                s => SimpleBase.Base16.Decode(s));
             Register("BASE32", 'B',
                 bytes => SimpleBase.Base32.Rfc4648.Encode(bytes, false),
                 s => SimpleBase.Base32.Rfc4648.Decode(s));

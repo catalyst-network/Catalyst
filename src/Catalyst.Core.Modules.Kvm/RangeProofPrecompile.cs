@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -24,12 +24,11 @@
 using Nethermind.Core;
 using Nethermind.Core.Specs;
 using Nethermind.Evm.Precompiles;
-using System;
 
 namespace Catalyst.Core.Modules.Kvm
 {
     /// <inheritdoc />
-    public sealed class RangeProofPrecompile : IPrecompile
+    public sealed class RangeProofPrecompile : IPrecompiledContract
     {
         /// <inheritdoc />
         /// <summary>
@@ -44,12 +43,12 @@ namespace Catalyst.Core.Modules.Kvm
         public long BaseGasCost(IReleaseSpec releaseSpec) { return 200000; } // numbers need to be benchmarked
 
         /// <inheritdoc />
-        public long DataGasCost(in ReadOnlyMemory<byte> inputData, IReleaseSpec releaseSpec)
+        public long DataGasCost(byte[] inputData, IReleaseSpec releaseSpec)
         {
             return 0;
         } // numbers need to be benchmarked
 
         /// <inheritdoc />
-        public (ReadOnlyMemory<byte>, bool) Run(in ReadOnlyMemory<byte> inputData, IReleaseSpec releaseSpec) { return (new byte[32], true); }
+        public (byte[], bool) Run(byte[] inputData) { return (new byte[32], true); }
     }
 }

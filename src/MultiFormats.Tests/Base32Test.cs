@@ -22,61 +22,64 @@
 #endregion
 
 using System.Text;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MultiFormats.Tests
 {
+    [TestClass]
     public class Base32EncodeTests
     {
         private byte[] GetStringBytes(string x) { return Encoding.ASCII.GetBytes(x); }
 
-        [Test]
-        public void Vector1() { Assert.That(Base32.Encode(GetStringBytes(string.Empty)), Is.EqualTo(string.Empty)); }
+        [TestMethod]
+        public void Vector1() { Assert.AreEqual(string.Empty, Base32.Encode(GetStringBytes(string.Empty))); }
 
-        [Test]
-        public void Vector2() { Assert.That(Base32.Encode(GetStringBytes("f")), Is.EqualTo("my")); }
+        [TestMethod]
+        public void Vector2() { Assert.AreEqual("my", Base32.Encode(GetStringBytes("f"))); }
 
-        [Test]
-        public void Vector3() { Assert.That(Base32.Encode(GetStringBytes("fo")), Is.EqualTo("mzxq")); }
+        [TestMethod]
+        public void Vector3() { Assert.AreEqual("mzxq", Base32.Encode(GetStringBytes("fo"))); }
 
-        [Test]
-        public void Vector4() { Assert.That(Base32.Encode(GetStringBytes("foo")), Is.EqualTo("mzxw6")); }
+        [TestMethod]
+        public void Vector4() { Assert.AreEqual("mzxw6", Base32.Encode(GetStringBytes("foo"))); }
 
-        [Test]
-        public void Vector5() { Assert.That(Base32.Encode(GetStringBytes("foob")), Is.EqualTo("mzxw6yq")); }
+        [TestMethod]
+        public void Vector5() { Assert.AreEqual("mzxw6yq", Base32.Encode(GetStringBytes("foob"))); }
 
-        [Test]
-        public void Vector6() { Assert.That(Base32.Encode(GetStringBytes("fooba")), Is.EqualTo("mzxw6ytb")); }
+        [TestMethod]
+        public void Vector6() { Assert.AreEqual("mzxw6ytb", Base32.Encode(GetStringBytes("fooba"))); }
 
-        [Test]
-        public void Vector7() { Assert.That(Base32.Encode(GetStringBytes("foobar")), Is.EqualTo("mzxw6ytboi")); }
+        [TestMethod]
+        public void Vector7() { Assert.AreEqual("mzxw6ytboi", Base32.Encode(GetStringBytes("foobar"))); }
     }
 
+    [TestClass]
     public class Base32DecodeTests
     {
         private byte[] GetStringBytes(string x) { return Encoding.ASCII.GetBytes(x); }
 
-        [Test]
-        public void Vector1() { Assert.That(GetStringBytes(string.Empty), Is.EquivalentTo(Base32.Decode(string.Empty))); }
+        [TestMethod]
+        public void Vector1() { CollectionAssert.AreEqual(GetStringBytes(string.Empty), Base32.Decode(string.Empty)); }
 
-        [Test]
-        public void Vector2() { Assert.That(GetStringBytes("f"), Is.EquivalentTo(Base32.Decode("MY======"))); }
+        [TestMethod]
+        public void Vector2() { CollectionAssert.AreEqual(GetStringBytes("f"), Base32.Decode("MY======")); }
 
-        [Test]
-        public void Vector3() { Assert.That(GetStringBytes("fo"), Is.EquivalentTo(Base32.Decode("MZXQ===="))); }
+        [TestMethod]
+        public void Vector3() { CollectionAssert.AreEqual(GetStringBytes("fo"), Base32.Decode("MZXQ====")); }
 
-        [Test]
-        public void Vector4() { Assert.That(GetStringBytes("foo"), Is.EquivalentTo(Base32.Decode("MZXW6==="))); }
+        [TestMethod]
+        public void Vector4() { CollectionAssert.AreEqual(GetStringBytes("foo"), Base32.Decode("MZXW6===")); }
 
-        [Test]
-        public void Vector5() { Assert.That(GetStringBytes("foob"), Is.EquivalentTo(Base32.Decode("MZXW6YQ="))); }
+        [TestMethod]
+        public void Vector5() { CollectionAssert.AreEqual(GetStringBytes("foob"), Base32.Decode("MZXW6YQ=")); }
 
-        [Test]
-        public void Vector6() { Assert.That(GetStringBytes("fooba"), Is.EquivalentTo(Base32.Decode("MZXW6YTB"))); }
+        [TestMethod]
+        public void Vector6() { CollectionAssert.AreEqual(GetStringBytes("fooba"), Base32.Decode("MZXW6YTB")); }
 
-        [Test]
+        [TestMethod]
         public void Vector7()
         {
-            Assert.That(GetStringBytes("foobar"), Is.EquivalentTo(Base32.Decode("MZXW6YTBOI======")));
+            CollectionAssert.AreEqual(GetStringBytes("foobar"), Base32.Decode("MZXW6YTBOI======"));
         }
     }
 }

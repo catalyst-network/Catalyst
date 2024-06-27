@@ -23,75 +23,80 @@
 
 using System.IO;
 using Lib.P2P.Protocols;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Lib.P2P.Tests
 {
+    [TestClass]
     public class PeerConnectionTest
     {
-        [Test]
+        [TestMethod]
         public void Disposing()
         {
             var closeCount = 0;
             var stream = new MemoryStream();
             var connection = new PeerConnection {Stream = stream};
             connection.Closed += (s, e) => { ++closeCount; };
-            Assert.That(connection.IsActive, Is.True);
-            Assert.That(connection.Stream, Is.Not.Null);
+            Assert.IsTrue(connection.IsActive);
+            Assert.IsNotNull(connection.Stream);
 
             connection.Dispose();
-            Assert.That(connection.IsActive, Is.False);
-            Assert.That(connection.Stream, Is.Null);
+            Assert.IsFalse(connection.IsActive);
+            Assert.IsNull(connection.Stream);
 
             // Can be disposed multiple times.
             connection.Dispose();
 
-            Assert.That(connection.IsActive, Is.False);
-            Assert.That(closeCount, Is.EqualTo(1));
+            Assert.IsFalse(connection.IsActive);
+            Assert.AreEqual(1, closeCount);
         }
 
-        [Test]
+        [TestMethod]
         public void Stats()
         {
             var stream = new MemoryStream();
             var connection = new PeerConnection {Stream = stream};
-            Assert.That(connection.BytesRead, Is.EqualTo(0));
-            Assert.That(connection.BytesWritten, Is.EqualTo(0));
+            Assert.AreEqual(0, connection.BytesRead);
+            Assert.AreEqual(0, connection.BytesWritten);
 
             var buffer = new byte[] {1, 2, 3};
             connection.Stream.Write(buffer, 0, 3);
-            Assert.That(connection.BytesRead, Is.EqualTo(0));
-            Assert.That(connection.BytesWritten, Is.EqualTo(3));
+            Assert.AreEqual(0, connection.BytesRead);
+            Assert.AreEqual(3, connection.BytesWritten);
 
             stream.Position = 0;
             connection.Stream.ReadByte();
             connection.Stream.ReadByte();
-            Assert.That(connection.BytesRead, Is.EqualTo(2));
-            Assert.That(connection.BytesWritten, Is.EqualTo(3));
+            Assert.AreEqual(2, connection.BytesRead);
+            Assert.AreEqual(3, connection.BytesWritten);
         }
 
-        [Test]
+        [TestMethod]
         public void Protocols()
         {
             var connection = new PeerConnection();
-            Assert.That(connection.Protocols.Count, Is.EqualTo(0));
+            Assert.AreEqual(0, connection.Protocols.Count);
 
             connection.AddProtocol(new Identify1());
-            Assert.That(connection.Protocols.Count, Is.EqualTo(1));
+            Assert.AreEqual(1, connection.Protocols.Count);
 
             connection.AddProtocols(new IPeerProtocol[] {new Mplex67(), new Plaintext1()});
-            Assert.That(connection.Protocols.Count, Is.EqualTo(3));
+            Assert.AreEqual(3, connection.Protocols.Count);
         }
 
-        [Test]
+        [TestMethod]
         public void CreatesOneStatsStream()
         {
             var a = new MemoryStream();
             var b = new MemoryStream();
             var connection = new PeerConnection();
-            Assert.That(connection.Stream, Is.Null);
+            Assert.AreEqual(null, connection.Stream);
 
             connection.Stream = a;
-            Assert.That(a, Is.EqualTo(connection.Stream));
+            Assert.AreNotSame(a, connection.Stream);
+
+            connection.Stream = b;
+            Assert.AreSame(b, connection.Stream);
         }
     }
 }

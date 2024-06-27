@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -61,21 +61,21 @@ namespace Catalyst.Abstractions.Dfs
         /// <summary>
         ///   Manages communication with other peers.
         /// </summary>
-        SwarmService SwarmService { get; }
+        ISwarmService SwarmService { get; }
 
         /// <summary>
         ///   Manages publishng and subscribing to messages.
         /// </summary>
-        PubSubService PubSubService { get; }
+        IPubSubService PubSubService { get; }
 
         /// <summary>
         ///   Exchange blocks with other peers.
         /// </summary>
         IBitswapService BitSwapService { get; }
-        
+
         /// <summary>
         ///   Finds information with a distributed hash table.
         /// </summary>
-        DhtService DhtService { get; }
+        IDhtService DhtService { get; }
     }
 }

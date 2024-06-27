@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -29,6 +29,9 @@ namespace Catalyst.Core.Lib.Config
     {
         // <summary> Folder with config files </summary>
         public static string ConfigSubFolder => "Config";
+
+        // <summary> ValidatorSet configuration file </summary>
+        public static string ValidatorSetConfigFile => "validators.json";
 
         // <summary> Serilog configuration file </summary>
         public static string SerilogJsonConfigFile => "serilog.json";

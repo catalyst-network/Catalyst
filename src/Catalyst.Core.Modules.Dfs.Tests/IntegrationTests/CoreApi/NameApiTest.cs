@@ -34,12 +34,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
     {
         private IDfsService ipfs;
 
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            ipfs.Dispose();
-        }
-
         public NameApiTest()
         {
             ipfs = TestDfs.GetTestDfs(null, "sha2-256");
@@ -49,10 +43,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         public async Task Resolve_Cid()
         {
             var actual = await ipfs.NameApi.ResolveAsync("QmYNQJoKGNHTpPxCBPh9KkDpaExgd2duMa3aF6ytMpHdao");
-            Assert.That(actual, Is.EqualTo("/ipfs/QmYNQJoKGNHTpPxCBPh9KkDpaExgd2duMa3aF6ytMpHdao"));
+            Assert.AreEqual("/ipfs/QmYNQJoKGNHTpPxCBPh9KkDpaExgd2duMa3aF6ytMpHdao", actual);
 
             actual = await ipfs.NameApi.ResolveAsync("/ipfs/QmYNQJoKGNHTpPxCBPh9KkDpaExgd2duMa3aF6ytMpHdao");
-            Assert.That(actual, Is.EqualTo("/ipfs/QmYNQJoKGNHTpPxCBPh9KkDpaExgd2duMa3aF6ytMpHdao"));
+            Assert.AreEqual("/ipfs/QmYNQJoKGNHTpPxCBPh9KkDpaExgd2duMa3aF6ytMpHdao", actual);
         }
 
         [Test]
@@ -63,8 +57,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             {
                 var dir = await ipfs.UnixFsApi.AddDirectoryAsync(temp);
                 var name = "/ipfs/" + dir.Id.Encode() + "/x/y/y.txt";
-                Assert.That(await ipfs.NameApi.ResolveAsync(name),
-                    Is.EqualTo("/ipfs/QmTwEE2eSyzcvUctxP2negypGDtj7DQDKVy8s3Rvp6y6Pc"));
+                Assert.AreEqual("/ipfs/QmTwEE2eSyzcvUctxP2negypGDtj7DQDKVy8s3Rvp6y6Pc",
+                    await ipfs.NameApi.ResolveAsync(name));
             }
             finally
             {
@@ -85,10 +79,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         public async Task Resolve_DnsLink()
         {
             var iopath = await ipfs.NameApi.ResolveAsync("ipfs.io");
-            Assert.That(iopath, Is.Not.Null);
+            Assert.NotNull(iopath);
 
             var path = await ipfs.NameApi.ResolveAsync("/ipns/ipfs.io");
-            Assert.That(iopath, Is.EqualTo(path));
+            Assert.AreEqual(iopath, path);
         }
 
         [Test]

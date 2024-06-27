@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -26,12 +26,13 @@ using System.Collections.Generic;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.P2P.ReputationSystem;
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 
 namespace Catalyst.Abstractions.P2P.IO.Messaging.Correlation
 {
     public interface IPeerMessageCorrelationManager : IMessageCorrelationManager
     {
         IObservable<IPeerReputationChange> ReputationEventStream { get; }
-        IObservable<KeyValuePair<ICorrelationId, PeerId>> EvictionEventStream { get; }
+        IObservable<KeyValuePair<ICorrelationId, MultiAddress>> EvictionEventStream { get; }
     }
 }

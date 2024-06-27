@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -62,7 +62,7 @@ namespace Lib.P2P
         /// <summary>
         ///   Provides access to other peers.
         /// </summary>
-        public SwarmService SwarmService { get; set; }
+        public ISwarmService SwarmService { get; set; }
 
         /// <summary>
         ///   The peers that are reachable.
@@ -83,16 +83,17 @@ namespace Lib.P2P
         }
 
         /// <inheritdoc />
-        public async Task StopAsync()
+        public Task StopAsync()
         {
             SwarmService.ConnectionEstablished -= Swarm_ConnectionEstablished;
             SwarmService.PeerNotReachable -= Swarm_PeerNotReachable;
             DeadPeers.Clear();
 
-            await _cancel.CancelAsync();
+            _cancel.Cancel();
             _cancel.Dispose();
 
             _log.Debug("stopped");
+            return Task.CompletedTask;
         }
 
         /// <summary>

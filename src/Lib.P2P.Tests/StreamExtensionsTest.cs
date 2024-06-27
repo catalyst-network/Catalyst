@@ -24,12 +24,14 @@
 using System.IO;
 using System.Threading;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Lib.P2P.Tests
 {
+    [TestClass]
     public class StreamExtensionsTest
     {
-        [Test]
+        [TestMethod]
         public async Task ReadAsync()
         {
             var expected = new byte[] {1, 2, 3, 4};
@@ -37,11 +39,11 @@ namespace Lib.P2P.Tests
             {
                 var actual = new byte[expected.Length];
                 await ms.ReadExactAsync(actual, 0, actual.Length);
-                Assert.That(expected, Is.EquivalentTo(actual));
+                CollectionAssert.AreEqual(expected, actual);
             }
         }
 
-        [Test]
+        [TestMethod]
         public void ReadAsync_EOS()
         {
             var expected = new byte[] {1, 2, 3, 4};
@@ -65,7 +67,7 @@ namespace Lib.P2P.Tests
             }
         }
 
-        [Test]
+        [TestMethod]
         public async Task ReadAsync_Cancel()
         {
             var expected = new byte[] {1, 2, 3, 4};
@@ -74,7 +76,7 @@ namespace Lib.P2P.Tests
             await using (var ms = new MemoryStream(expected))
             {
                 await ms.ReadExactAsync(actual, 0, actual.Length, cancel.Token);
-                Assert.That(expected, Is.EquivalentTo(actual));
+                CollectionAssert.AreEqual(expected, actual);
             }
 
             cancel.Cancel();

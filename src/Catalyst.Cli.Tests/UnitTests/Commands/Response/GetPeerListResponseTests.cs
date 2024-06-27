@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -30,10 +30,10 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using Catalyst.TestUtils;
 
 namespace Catalyst.Cli.Tests.UnitTests.Commands.Response
 {
-    [TestFixture]
     public sealed class GetPeerListResponseTests
     {
         private readonly TestScheduler _testScheduler = new TestScheduler();
@@ -42,7 +42,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands.Response
         public void GetPeerListResponse_Can_Get_Output()
         {
             var getPeerListResponse = new GetPeerListResponse();
-            getPeerListResponse.Peers.Add(new PeerId());
+            getPeerListResponse.Peers.Add(MultiAddressHelper.GetAddress().ToString());
 
             var commandContext = TestCommandHelpers.GenerateCliResponseCommandContext(_testScheduler);
 

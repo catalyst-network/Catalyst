@@ -23,7 +23,6 @@
 
 using System;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Core.Lib.P2P.Protocols;
@@ -44,13 +43,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
         private IPeerSettings _testSettings;
         private CancellationTokenProvider _cancellationProvider;
 
-        [TearDown]
-        public void TearDown()
-        {
-            _peerChallengeRequest.Dispose();
-            _cancellationProvider.Dispose();
-        }
-
         [SetUp]
         public void Init()
         {
@@ -69,41 +61,38 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
         [Test]
         public async Task Can_Challenge_Peer()
         {
-            var recipientPeerId = PeerIdHelper.GetPeerId();
-            await _peerChallengeRequest.ChallengePeerAsync(recipientPeerId).ConfigureAwait(false);
-            var expectedDto = Substitute.For<IMessageDto<ProtocolMessage>>();
-            expectedDto.RecipientPeerIdentifier.Returns(recipientPeerId);
-            expectedDto.SenderPeerIdentifier.Returns(_testSettings.PeerId);
-            _peerChallengeRequest.PeerClient.ReceivedWithAnyArgs(1).SendMessage(Arg.Is(expectedDto));
+            var recipientAddress = MultiAddressHelper.GetAddress();
+            await _peerChallengeRequest.ChallengePeerAsync(recipientAddress).ConfigureAwait(false);
+            await _peerChallengeRequest.PeerClient.ReceivedWithAnyArgs(1).SendMessageAsync(Arg.Is<ProtocolMessage>(x => x.Address == _testSettings.Address), Arg.Is(recipientAddress));
         }
-        
+
         [Test]
         public async Task Can_Receive_Query_Response_On_Observer()
         {
-            var recipientPeerId = PeerIdHelper.GetPeerId();
-            var challengeResposne = new PeerChallengeResponse(recipientPeerId);
+            var recipientAddress = MultiAddressHelper.GetAddress();
+            var challengeResposne = new PeerChallengeResponse(recipientAddress);
 
             _peerChallengeRequest.ChallengeResponseMessageStreamer.OnNext(challengeResposne);
-            var response = await _peerChallengeRequest.ChallengePeerAsync(recipientPeerId).ConfigureAwait(false);
+            var response = await _peerChallengeRequest.ChallengePeerAsync(recipientAddress).ConfigureAwait(false);
             response.Should().BeTrue();
         }
 
         [Test]
         public async Task No_Response_Timeout_And_Returns_False()
         {
-            var recipientPeerId = PeerIdHelper.GetPeerId();
+            var recipientAddress = MultiAddressHelper.GetAddress();
             _cancellationProvider.CancellationTokenSource.Cancel();
-            var response = await _peerChallengeRequest.ChallengePeerAsync(recipientPeerId).ConfigureAwait(false);
+            var response = await _peerChallengeRequest.ChallengePeerAsync(recipientAddress).ConfigureAwait(false);
             response.Should().BeFalse();
         }
 
         [Test]
         public async Task Exception_During_Query_Returns_Null()
         {
-            var recipientPeerId = PeerIdHelper.GetPeerId();
+            var recipientAddress = MultiAddressHelper.GetAddress();
             _cancellationProvider.Dispose(); //do summet nasty to force exception
-            var response = await _peerChallengeRequest.ChallengePeerAsync(recipientPeerId).ConfigureAwait(false);
-            response.Should().BeFalse();   
+            var response = await _peerChallengeRequest.ChallengePeerAsync(recipientAddress).ConfigureAwait(false);
+            response.Should().BeFalse();
         }
     }
 }

@@ -23,10 +23,12 @@
 
 using System;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MultiFormats;
 
 namespace Lib.P2P.Tests
 {
+    [TestClass]
     public class PeerManagerTest
     {
         private Peer self = new Peer
@@ -37,43 +39,43 @@ namespace Lib.P2P.Tests
                 "CAASXjBcMA0GCSqGSIb3DQEBAQUAA0sAMEgCQQCC5r4nQBtnd9qgjnG8fBN5+gnqIeWEIcUFUdCG4su/vrbQ1py8XGKNUBuDjkyTv25Gd3hlrtNJV3eOKZVSL8ePAgMBAAE="
         };
 
-        [Test]
+        [TestMethod]
         public void IsNotReachable()
         {
             var peer = new Peer {Id = "QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb"};
-            var manager = new PeerManager {SwarmService = new SwarmService()};
-            Assert.That(manager.DeadPeers.Count, Is.EqualTo(0));
+            var manager = new PeerManager {SwarmService = new SwarmService(null)};
+            Assert.AreEqual(0, manager.DeadPeers.Count);
 
             manager.SetNotReachable(peer);
-            Assert.That(manager.DeadPeers.ContainsKey(peer), Is.True);
-            Assert.That(manager.DeadPeers.Count, Is.EqualTo(1));
+            Assert.IsTrue(manager.DeadPeers.ContainsKey(peer));
+            Assert.AreEqual(1, manager.DeadPeers.Count);
 
             manager.SetNotReachable(peer);
-            Assert.That(manager.DeadPeers.ContainsKey(peer), Is.True);
-            Assert.That(manager.DeadPeers.Count, Is.EqualTo(1));
+            Assert.IsTrue(manager.DeadPeers.ContainsKey(peer));
+            Assert.AreEqual(1, manager.DeadPeers.Count);
 
             manager.SetReachable(peer);
-            Assert.That(manager.DeadPeers.ContainsKey(peer), Is.False);
-            Assert.That(manager.DeadPeers.Count, Is.EqualTo(0));
+            Assert.IsFalse(manager.DeadPeers.ContainsKey(peer));
+            Assert.AreEqual(0, manager.DeadPeers.Count);
         }
 
-        [Test]
+        [TestMethod]
         public void BlackListsThePeer()
         {
             var peer = new Peer {Id = "QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb"};
-            var manager = new PeerManager {SwarmService = new SwarmService()};
-            Assert.That(manager.DeadPeers.Count, Is.EqualTo(0));
+            var manager = new PeerManager {SwarmService = new SwarmService(null)};
+            Assert.AreEqual(0, manager.DeadPeers.Count);
 
             manager.SetNotReachable(peer);
-            Assert.That(
-                manager.SwarmService.IsAllowed((MultiAddress) "/p2p/QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb"), Is.False);
+            Assert.IsFalse(
+                manager.SwarmService.IsAllowed((MultiAddress) "/p2p/QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb"));
 
             manager.SetReachable(peer);
-            Assert.That(
-                manager.SwarmService.IsAllowed((MultiAddress) "/p2p/QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb"), Is.True);
+            Assert.IsTrue(
+                manager.SwarmService.IsAllowed((MultiAddress) "/p2p/QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb"));
         }
 
-        [Test]
+        [TestMethod]
         public async Task Backoff_Increases()
         {
             var peer = new Peer
@@ -84,13 +86,13 @@ namespace Lib.P2P.Tests
                     "/ip4/127.0.0.1/tcp/4040/ipfs/QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTxx"
                 }
             };
-            var swarm = new SwarmService {LocalPeer = self};
+            var swarm = new SwarmService(self);
             var manager = new PeerManager
             {
                 SwarmService = swarm,
                 InitialBackoff = TimeSpan.FromMilliseconds(100),
             };
-            Assert.That(manager.DeadPeers.Count, Is.EqualTo(0));
+            Assert.AreEqual(0, manager.DeadPeers.Count);
 
             try
             {
@@ -105,7 +107,7 @@ namespace Lib.P2P.Tests
                     // ignored
                 }
 
-                Assert.That(manager.DeadPeers.Count, Is.EqualTo(1));
+                Assert.AreEqual(1, manager.DeadPeers.Count);
 
                 var end = DateTime.Now + TimeSpan.FromSeconds(4);
                 while (DateTime.Now <= end)
@@ -120,7 +122,7 @@ namespace Lib.P2P.Tests
             }
         }
 
-        [Test]
+        [TestMethod]
         public async Task PermanentlyDead()
         {
             var peer = new Peer
@@ -131,14 +133,14 @@ namespace Lib.P2P.Tests
                     "/ip4/127.0.0.1/tcp/4040/ipfs/QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb"
                 }
             };
-            var swarm = new SwarmService {LocalPeer = self};
+            var swarm = new SwarmService(self);
             var manager = new PeerManager
             {
                 SwarmService = swarm,
                 InitialBackoff = TimeSpan.FromMilliseconds(100),
                 MaxBackoff = TimeSpan.FromMilliseconds(200),
             };
-            Assert.That(manager.DeadPeers.Count, Is.EqualTo(0));
+            Assert.AreEqual(0, manager.DeadPeers.Count);
 
             try
             {
@@ -153,7 +155,7 @@ namespace Lib.P2P.Tests
                     // ignored
                 }
 
-                Assert.That(manager.DeadPeers.Count, Is.EqualTo(1));
+                Assert.AreEqual(1, manager.DeadPeers.Count);
 
                 var end = DateTime.Now + TimeSpan.FromSeconds(6);
                 while (DateTime.Now <= end)

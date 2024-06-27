@@ -21,10 +21,10 @@
 
 #endregion
 
-using System.Net;
 using System.Threading.Tasks;
-using Catalyst.Core.Lib.IO.EventLoop;
-using Catalyst.Core.Lib.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.IO.EventLoop;
+using Catalyst.Modules.Network.Dotnetty.IO.Transport.Channels;
+using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using NUnit.Framework;
@@ -42,13 +42,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport.Channels
             };
 
             var eventLoopGroupFactory = new TcpClientEventLoopGroupFactory(eventLoopGroupFactoryConfiguration);
-            var ipAddress = IPAddress.Loopback;
-            var port = 9000;
+            var address = "/ip4/127.0.0.1/tcp/9000";
 
             var testTcpClientChannelFactory = new TestTcpClientChannelFactory();
-            var channel = await testTcpClientChannelFactory.BuildChannelAsync(eventLoopGroupFactory, ipAddress, port).ConfigureAwait(false);
+            var channel = await testTcpClientChannelFactory.BuildChannelAsync(eventLoopGroupFactory, address).ConfigureAwait(false);
 
-            channel.Should().BeOfType<ObservableChannel>();
+            channel.Should().BeOfType<ObservableChannel<ProtocolMessage>>();
         }
     }
 }

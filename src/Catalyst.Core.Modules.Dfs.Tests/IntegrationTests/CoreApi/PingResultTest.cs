@@ -39,9 +39,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 Text = "ping",
                 Time = time
             };
-            Assert.That(r.Success, Is.EqualTo(true));
-            Assert.That(r.Text, Is.EqualTo("ping"));
-            Assert.That(time, Is.EqualTo(r.Time));
+            Assert.AreEqual(true, r.Success);
+            Assert.AreEqual("ping", r.Text);
+            Assert.AreEqual(time, r.Time);
         }
     }
 }

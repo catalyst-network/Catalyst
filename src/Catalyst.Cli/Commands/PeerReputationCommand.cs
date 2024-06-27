@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -21,10 +21,10 @@
 
 #endregion
 
-using Catalyst.Abstractions.Cli.Commands;
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
 using Catalyst.Core.Lib.Extensions;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.Cli.Commands;
 using Catalyst.Protocol.Rpc.Node;
 using Serilog;
 
@@ -40,8 +40,7 @@ namespace Catalyst.Cli.Commands
         {
             return new GetPeerReputationRequest
             {
-                PublicKey = option.PublicKey.ToUtf8ByteString(),
-                Ip = option.IpAddress.ToUtf8ByteString()
+                Address = option.Address
             };
         }
     }

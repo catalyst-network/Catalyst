@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -21,18 +21,17 @@
 
 #endregion
 
-using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.IO.Transport;
-using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Protocol.Wire;
+using System;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace Catalyst.Abstractions.P2P
 {
-    public interface IPeerService : IObservableMessageStreamer<ProtocolMessage>, ISocket
+    public interface IPeerService : IDisposable
     {
-        /// <summary>
-        ///     The discovery mechanism for the peer network.
-        /// </summary>
-        IPeerDiscovery Discovery { get; }
+        IObservable<ProtocolMessage> MessageStream { get; }
+        Task StartAsync();
+        Task StartAsync(CancellationToken cancellationToken);
     }
 }

@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -37,6 +37,7 @@ using Catalyst.Core.Lib.Cryptography.Proto;
 using Catalyst.Core.Lib.FileSystem;
 using Common.Logging;
 using MultiFormats;
+using Org.BouncyCastle.Asn1;
 using Org.BouncyCastle.Asn1.EdEC;
 using Org.BouncyCastle.Asn1.Pkcs;
 using Org.BouncyCastle.Asn1.Sec;
@@ -61,46 +62,19 @@ namespace Catalyst.Core.Modules.Keystore
     /// </summary>
     public class KeyStoreService : IKeyStoreService
     {
-        private readonly string _folder;
         private static readonly ILog Log = LogManager.GetLogger(typeof(KeyStoreService));
 
         private char[] _dek;
-        private FileStore<string, EncryptedKey> _store;
+        private IStore<string, EncryptedKey> _store;
 
         /// <summary>
         ///     Create a new instance of the <see cref="KeyStoreService" /> class.
         /// </summary>
         /// <param name="dfsOptions"></param>
-        public KeyStoreService(DfsOptions dfsOptions)
+        public KeyStoreService(KeyChainOptions keyChainOptions, IStore<string, EncryptedKey> store)
         {
-            _folder = dfsOptions.Repository.Folder;
-            Options = dfsOptions.KeyChain;
-        }
-
-        private FileStore<string, EncryptedKey> Store
-        {
-            get
-            {
-                if (_store != null)
-                {
-                    return _store;
-                }
-
-                var folder = Path.Combine(_folder, "keys");
-                if (!Directory.Exists(folder))
-                {
-                    Directory.CreateDirectory(folder);
-                }
-
-                _store = new FileStore<string, EncryptedKey>
-                {
-                    Folder = folder,
-                    NameToKey = name => Encoding.UTF8.GetBytes(name).ToBase32(),
-                    KeyToName = key => Encoding.UTF8.GetString(Base32.Decode(key))
-                };
-
-                return _store;
-            }
+            _store = store;
+            Options = keyChainOptions;
         }
 
         /// <summary>
@@ -139,14 +113,12 @@ namespace Catalyst.Core.Modules.Keystore
 
             // TODO: Need a method to just the get BC public key
             // Get the BC key pair for the named key.
-            var ekey = await Store.TryGetAsync(keyName, cancel).ConfigureAwait(false);
+            var ekey = await _store.TryGetAsync(keyName, cancel).ConfigureAwait(false);
             if (ekey == null)
             {
                 throw new KeyNotFoundException($"The key '{keyName}' does not exist.");
             }
 
-            // TNA TODO
-            /*
             AsymmetricCipherKeyPair kp = null;
             UseEncryptedKey(ekey, key => { kp = GetKeyPairFromPrivateKey(key); });
 
@@ -190,8 +162,6 @@ namespace Catalyst.Core.Modules.Keystore
                 new CmsProcessableByteArray(plainText),
                 CmsEnvelopedGenerator.Aes256Cbc);
             return ed.GetEncoded();
-            */
-            return new byte[1];
         }
 
         /// <summary>
@@ -326,7 +296,7 @@ namespace Catalyst.Core.Modules.Keystore
             });
 
             // Verify that that pass phrase is okay, by reading a key.
-            var akey = await Store.TryGetAsync("self", cancel).ConfigureAwait(false);
+            var akey = await _store.TryGetAsync("self", cancel).ConfigureAwait(false);
             if (akey != null)
             {
                 try
@@ -357,7 +327,7 @@ namespace Catalyst.Core.Modules.Keystore
         /// </returns>
         public async Task<IKey> FindKeyByNameAsync(string name, CancellationToken cancel = default)
         {
-            var key = await Store.TryGetAsync(name, cancel).ConfigureAwait(false);
+            var key = await _store.TryGetAsync(name, cancel).ConfigureAwait(false);
             if (key == null)
             {
                 return null;
@@ -387,18 +357,16 @@ namespace Catalyst.Core.Modules.Keystore
         ///     a type and the DER encoding of the PKCS Subject Public Key Info.
         /// </remarks>
         /// <seealso href="https://tools.ietf.org/html/rfc5280#section-4.1.2.7" />
-        public async Task<string> GetPublicKeyAsync(string name, CancellationToken cancel = default)
+        public async Task<string> GetDfsPublicKeyAsync(string name, CancellationToken cancel = default)
         {
-            // TODO: Rename to GetIpfsPublicKeyAsync
             string result = null;
-            var ekey = await Store.TryGetAsync(name, cancel).ConfigureAwait(false);
+            var ekey = await _store.TryGetAsync(name, cancel).ConfigureAwait(false);
             if (ekey != null)
             {
                 UseEncryptedKey(ekey, key =>
                 {
                     var kp = GetKeyPairFromPrivateKey(key);
                     var spki = SubjectPublicKeyInfoFactory.CreateSubjectPublicKeyInfo(kp.Public).GetDerEncoded();
-
                     // Add protobuf cruft.
                     var publicKey = new PublicKey
                     {
@@ -475,7 +443,7 @@ namespace Catalyst.Core.Modules.Keystore
             CancellationToken cancel = default)
         {
             var pem = "";
-            var key = await Store.GetAsync(name, cancel).ConfigureAwait(false);
+            var key = await _store.GetAsync(name, cancel).ConfigureAwait(false);
             UseEncryptedKey(key, pkey =>
             {
                 using var sw = new StringWriter();
@@ -527,7 +495,7 @@ namespace Catalyst.Core.Modules.Keystore
         /// <inheritdoc />
         public Task<IEnumerable<IKey>> ListAsync(CancellationToken cancel = default)
         {
-            var keys = Store.Values.Select(key => (IKey) new KeyInfo
+            var keys = _store.Values.Select(key => (IKey) new KeyInfo
             {
                 Id = key.Id, Name = key.Name
             });
@@ -538,13 +506,13 @@ namespace Catalyst.Core.Modules.Keystore
         /// <inheritdoc />
         public async Task<IKey> RemoveAsync(string name, CancellationToken cancel = default)
         {
-            var key = await Store.TryGetAsync(name, cancel).ConfigureAwait(false);
+            var key = await _store.TryGetAsync(name, cancel).ConfigureAwait(false);
             if (key == null)
             {
                 return null;
             }
 
-            await Store.RemoveAsync(name, cancel).ConfigureAwait(false);
+            await _store.RemoveAsync(name, cancel).ConfigureAwait(false);
             return new KeyInfo
             {
                 Id = key.Id, Name = key.Name
@@ -556,15 +524,15 @@ namespace Catalyst.Core.Modules.Keystore
             string newName,
             CancellationToken cancel = default)
         {
-            var key = await Store.TryGetAsync(oldName, cancel).ConfigureAwait(false);
+            var key = await _store.TryGetAsync(oldName, cancel).ConfigureAwait(false);
             if (key == null)
             {
                 return null;
             }
 
             key.Name = newName;
-            await Store.PutAsync(newName, key, cancel).ConfigureAwait(false);
-            await Store.RemoveAsync(oldName, cancel).ConfigureAwait(false);
+            await _store.PutAsync(newName, key, cancel).ConfigureAwait(false);
+            await _store.RemoveAsync(oldName, cancel).ConfigureAwait(false);
 
             return new KeyInfo
             {
@@ -585,10 +553,9 @@ namespace Catalyst.Core.Modules.Keystore
         ///     A task that represents the asynchronous operation. The task's result is
         ///     the private key as an <b>AsymmetricKeyParameter</b>.
         /// </returns>
-        public async Task<AsymmetricKeyParameter> GetPrivateKeyAsync(string name,
-            CancellationToken cancel = default)
+        public async Task<AsymmetricKeyParameter> GetPrivateKeyAsync(string name, CancellationToken cancel = default)
         {
-            var key = await Store.TryGetAsync(name, cancel).ConfigureAwait(false);
+            var key = await _store.TryGetAsync(name, cancel).ConfigureAwait(false);
             if (key == null)
             {
                 throw new KeyNotFoundException($"The key '{name}' does not exist.");
@@ -639,7 +606,7 @@ namespace Catalyst.Core.Modules.Keystore
                 Name = name,
                 Pem = pem
             };
-            await Store.PutAsync(name, key, cancel).ConfigureAwait(false);
+            await _store.PutAsync(name, key, cancel).ConfigureAwait(false);
             Log.DebugFormat("Added key '{0}' with ID {1}", name, keyId);
 
             return new KeyInfo
@@ -658,7 +625,7 @@ namespace Catalyst.Core.Modules.Keystore
         ///     a protobuf encoding containing a type and
         ///     the DER encoding of the PKCS SubjectPublicKeyInfo.
         /// </remarks>
-        private MultiHash CreateKeyId(AsymmetricKeyParameter key)
+        public MultiHash CreateKeyId(AsymmetricKeyParameter key)
         {
             var spki = SubjectPublicKeyInfoFactory
                .CreateSubjectPublicKeyInfo(key)
@@ -695,6 +662,7 @@ namespace Catalyst.Core.Modules.Keystore
                 var alg = ms.Length <= 48 ? "identity" : "sha2-256";
 
                 ms.Position = 0;
+
                 return MultiHash.ComputeHash(ms, alg);
             }
         }
@@ -760,7 +728,7 @@ namespace Catalyst.Core.Modules.Keystore
             CancellationToken cancel = default)
         {
             // Get the BC key pair for the named key.
-            var ekey = await Store.TryGetAsync(keyName, cancel).ConfigureAwait(false);
+            var ekey = await _store.TryGetAsync(keyName, cancel).ConfigureAwait(false);
             if (ekey == null)
             {
                 throw new KeyNotFoundException($"The key '{keyName}' does not exist.");

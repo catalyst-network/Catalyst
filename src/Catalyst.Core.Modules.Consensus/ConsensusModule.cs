@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -34,14 +34,14 @@ using Catalyst.Core.Modules.Kvm;
 
 namespace Catalyst.Core.Modules.Consensus
 {
-    public class ConsensusModule : Module
+    public class ConsensusModule : Autofac.Module
     {
         protected override void Load(ContainerBuilder builder)
         {
             // we will put this in its own module eventually
             builder.RegisterType<DateTimeProvider>().As<IDateTimeProvider>();
             builder.RegisterType<CycleSchedulerProvider>().As<ICycleSchedulerProvider>();
-            builder.RegisterType<CycleEventsProvider>().As<ICycleEventsProvider>();
+            builder.RegisterType<CycleEventsProviderRaw>().As<ICycleEventsProvider>();
             builder.RegisterType<DeltaCacheChangeTokenProvider>().As<IDeltaCacheChangeTokenProvider>().WithParameter("timeToLiveInMs", 600000);
             builder.RegisterType<FavouriteDeltaObserver>().As<IP2PMessageObserver>();
             builder.RegisterType<DeltaDfsHashObserver>().As<IP2PMessageObserver>();
@@ -50,7 +50,9 @@ namespace Catalyst.Core.Modules.Consensus
             builder.RegisterType<DeltaElector>().As<IDeltaElector>().SingleInstance();
             builder.RegisterType<DeltaHashProvider>().As<IDeltaHashProvider>().SingleInstance().WithParameter("capacity", 10_000);
             builder.RegisterType<DeltaCache>().As<IDeltaCache>().SingleInstance()
-               .WithExecutionParameters(builder);
+               .WithExecutionParameters(builder)
+               .WithStateDbParameters(builder);
+
             builder.RegisterType<DeltaVoter>().As<IDeltaVoter>().SingleInstance();
             builder.RegisterType<TransactionComparerByPriceAndHash>().As<ITransactionComparer>();
             builder.RegisterType<DeltaHub>().As<IDeltaHub>().SingleInstance();

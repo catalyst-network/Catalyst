@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -22,6 +22,8 @@
 #endregion
 
 using System.Buffers;
+using System.Text;
+using DotNetty.Common.Utilities;
 using Google.Protobuf;
 using MultiFormats;
 
@@ -60,6 +62,37 @@ namespace Catalyst.Abstractions.Hashing
             {
                 ArrayPool<byte>.Shared.Return(array);
             }
+        }
+
+        public static MultiHash ComputeMultiHash(this IHashProvider provider, string message, byte[] suffix)
+        {
+            return ComputeMultiHash(provider, Encoding.UTF8.GetBytes(message), suffix);
+        }
+
+        public static MultiHash ComputeMultiHash(this IHashProvider provider, byte[] message, byte[] suffix)
+        {
+            var calculateSize = message.Length;
+
+            var required = calculateSize + suffix.Length;
+            var array = ArrayPool<byte>.Shared.Rent(required);
+
+            try
+            {
+                message.CopyTo(array, 0);
+                suffix.CopyTo(array, calculateSize);
+
+                var result = provider.ComputeMultiHash(array, 0, required);
+                return result;
+            }
+            finally
+            {
+                ArrayPool<byte>.Shared.Return(array);
+            }
+        }
+
+        public static MultiHash ComputeMultiHash(this IHashProvider provider, MultiAddress address, byte[] suffix)
+        {
+            return ComputeMultiHash(provider, address.ToArray(), suffix);
         }
 
         /// <summary>

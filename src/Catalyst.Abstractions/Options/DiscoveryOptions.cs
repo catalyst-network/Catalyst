@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -52,12 +52,14 @@ namespace Catalyst.Abstractions.Options
         /// </summary>
         public bool DisableMdns { set; get; }
 
+        public bool UsePeerRepository { set; get; }
+
         /// <summary>
         ///   Disables discovery of other peers by walking the
         ///   DHT.
         /// </summary>
         public bool DisableRandomWalk { set; get; }
 
-        public DiscoveryOptions(){}
+        public DiscoveryOptions() { }
     }
 }

@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -86,13 +86,13 @@ namespace Catalyst.Core.Modules.Ledger.Repository
             return false;
         }
 
-        public bool TryFind(Cid transactionHash, out TransactionReceipt receipts)
+        public bool TryFind(Keccak transactionHash, out TransactionReceipt receipt)
         {
-            var id = transactionHash.Hash.ToString();
+            var id = transactionHash.AsDocumentId();
 
             if (!TryFetchData(id, out var deltaHash, out var delta))
             {
-                receipts = default;
+                receipt = default;
                 return false;
             }
 
@@ -104,26 +104,26 @@ namespace Catalyst.Core.Modules.Ledger.Repository
                 if (id == documentId)
                 {
                     var key = GetDocumentId(deltaHash);
-                    if (_repository.TryGet(key, out var allReceipts))
+                    if (_repository.TryGet(key, out var receipts))
                     {
-                        receipts = allReceipts.Receipts[index];
+                        receipt = receipts.Receipts[index];
                         return true;
                     }
 
-                    receipts = default;
+                    receipt = default;
                     return false;
                 }
 
                 index++;
             }
 
-            receipts = default;
+            receipt = default;
             return false;
         }
 
-        public bool TryFind(Cid transactionHash, out Cid deltaHash, out Delta delta, out int index)
+        public bool TryFind(Keccak transactionHash, out Cid deltaHash, out Delta delta, out int index)
         {
-            var id = transactionHash.Hash.ToString();
+            var id = transactionHash.AsDocumentId();
 
             if (!TryFetchData(id, out deltaHash, out delta))
             {
@@ -165,10 +165,5 @@ namespace Catalyst.Core.Modules.Ledger.Repository
         }
 
         static string GetDocumentId(Cid deltaHash) => deltaHash.ToString();
-
-        bool ITransactionRepository.TryFind(Cid transactionHash, out TransactionReceipt receipts)
-        {
-            throw new System.NotImplementedException();
-        }
     }
 }

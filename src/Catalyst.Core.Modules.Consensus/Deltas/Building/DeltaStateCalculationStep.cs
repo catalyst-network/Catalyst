@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -23,9 +23,7 @@
 
 using System;
 using Catalyst.Abstractions.Kvm;
-using Lib.P2P;
 using Nethermind.Core.Crypto;
-using Nethermind.Core.Specs;
 using Nethermind.Evm.Tracing;
 using Nethermind.State;
 using Serilog;
@@ -35,11 +33,11 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
 {
     internal sealed class DeltaStateCalculationStep : IDeltaBuilderStep
     {
-        private readonly IWorldState _stateProvider;
+        private readonly IStateProvider _stateProvider;
         private readonly IDeltaExecutor _deltaExecutor;
         private readonly ILogger _logger;
 
-        public DeltaStateCalculationStep(IWorldState stateProvider, IDeltaExecutor deltaExecutor, ILogger logger)
+        public DeltaStateCalculationStep(IStateProvider stateProvider, IDeltaExecutor deltaExecutor, ILogger logger)
         {
             // note that this mus be a different state provider and a different executor
             _stateProvider = stateProvider ?? throw new ArgumentNullException(nameof(stateProvider));
@@ -50,13 +48,12 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
         public void Execute(DeltaBuilderContext context)
         {
             var previousRoot = context.PreviousDelta.StateRoot;
-            Hash256 stateRoot = previousRoot.IsEmpty ? Keccak.EmptyTreeHash : new Hash256(previousRoot.ToByteArray());
+            Keccak stateRoot = previousRoot.IsEmpty ? Keccak.EmptyTreeHash : new Keccak(previousRoot.ToByteArray());
             
             if (_logger.IsEnabled(LogEventLevel.Debug)) _logger.Error($"Running state calculation for delta {context.ProducedDelta.DeltaNumber}");
 
             // here we need a read only delta executor (like in block builders - everything reverts in the end)
             _stateProvider.StateRoot = stateRoot;
-
             _deltaExecutor.CallAndReset(context.ProducedDelta, NullTxTracer.Instance);
 
             _stateProvider.Reset();

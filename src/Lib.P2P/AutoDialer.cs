@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -44,7 +44,7 @@ namespace Lib.P2P
         /// </summary>
         public const int DefaultMinConnections = 16;
 
-        private readonly SwarmService _swarmService;
+        private readonly ISwarmService _swarmService;
         private int _pendingConnects;
 
         /// <summary>
@@ -53,7 +53,7 @@ namespace Lib.P2P
         /// <param name="swarmService">
         ///   Provides access to other peers.
         /// </param>
-        public AutoDialer(SwarmService swarmService)
+        public AutoDialer(ISwarmService swarmService)
         {
             _swarmService = swarmService;
             swarmService.PeerDiscovered += OnPeerDiscovered;
@@ -162,7 +162,7 @@ namespace Lib.P2P
             var peers = _swarmService.KnownPeers
                .Where(p => p.ConnectedAddress == null)
                .Where(p => p != disconnectedPeer)
-               //.Where(p => _swarmService.IsAllowed(p))
+               .Where(p => _swarmService.IsAllowed(p))
                .Where(p => !_swarmService.HasPendingConnection(p))
                .ToArray();
             

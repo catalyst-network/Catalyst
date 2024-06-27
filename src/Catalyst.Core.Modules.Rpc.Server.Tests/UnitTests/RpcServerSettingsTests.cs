@@ -21,7 +21,6 @@
 
 #endregion
 
-using System.Net;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
@@ -35,21 +34,17 @@ namespace Catalyst.Core.Modules.Rpc.Server.Tests.UnitTests
         public void Constructor_Should_Set_Settings_From_Config()
         {
             const string pfxFileName = "pfx";
-            const int port = 9000;
-            var bindAddress = IPAddress.Loopback.ToString();
 
             var config = Substitute.For<IConfigurationRoot>();
             var rpcSection = config.GetSection("CatalystNodeConfiguration").GetSection("Rpc");
-            rpcSection.GetSection("Port").Value.Returns(port.ToString());
             rpcSection.GetSection("PfxFileName").Value.Returns(pfxFileName);
-            rpcSection.GetSection("BindAddress").Value.Returns(bindAddress);
+            rpcSection.GetSection("Address").Value.Returns("/ip4/127.0.0.1/tcp/9000");
 
             var rpcSeverSettings = new RpcServerSettings(config);
 
             rpcSeverSettings.NodeConfig.Should().Be(config);
             rpcSeverSettings.PfxFileName.Should().Be(pfxFileName);
-            rpcSeverSettings.Port.Should().Be(port);
-            rpcSeverSettings.BindAddress.Should().Be(IPAddress.Parse(bindAddress));
+            rpcSeverSettings.Address.ToString().Should().Be("/ip4/127.0.0.1/tcp/9000");
         }
     }
 }

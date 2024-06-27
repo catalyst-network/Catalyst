@@ -32,12 +32,12 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         public void Defaults()
         {
             var ledger = new BitswapLedger();
-            Assert.That(ledger.Peer, Is.Null);
-            Assert.That(ledger.BlocksExchanged, Is.EqualTo(0ul));
-            Assert.That(ledger.DataReceived, Is.EqualTo(0ul));
-            Assert.That(ledger.DataSent, Is.EqualTo(0ul));
-            Assert.That(ledger.DebtRatio, Is.EqualTo(0f));
-            Assert.That(ledger.IsInDebt, Is.True);
+            Assert.Null(ledger.Peer);
+            Assert.AreEqual(0ul, ledger.BlocksExchanged);
+            Assert.AreEqual(0ul, ledger.DataReceived);
+            Assert.AreEqual(0ul, ledger.DataSent);
+            Assert.AreEqual(0f, ledger.DebtRatio);
+            Assert.True(ledger.IsInDebt);
         }
 
         [Test]
@@ -47,8 +47,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             {
                 DataSent = 1024 * 1024
             };
-            Assert.That(ledger.DebtRatio >= 1, Is.True);
-            Assert.That(ledger.IsInDebt, Is.False);
+            Assert.True(ledger.DebtRatio >= 1);
+            Assert.False(ledger.IsInDebt);
         }
 
         [Test]
@@ -58,8 +58,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             {
                 DataReceived = 1024 * 1024
             };
-            Assert.That(ledger.DebtRatio < 1, Is.True);
-            Assert.That(ledger.IsInDebt, Is.True);
+            Assert.True(ledger.DebtRatio < 1);
+            Assert.True(ledger.IsInDebt);
         }
     }
 }

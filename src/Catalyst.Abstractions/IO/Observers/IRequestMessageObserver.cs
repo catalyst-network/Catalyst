@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -25,7 +25,7 @@ using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Abstractions.IO.Observers
 {
-    public interface IRequestMessageObserver : IMessageObserver
+    public interface IRequestMessageObserver<T> : IMessageObserver<T>
     {
         IPeerSettings PeerSettings { get; }
     }

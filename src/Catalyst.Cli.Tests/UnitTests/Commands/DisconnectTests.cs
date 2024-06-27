@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -22,7 +22,6 @@
 #endregion
 
 using System.Collections.Generic;
-using Catalyst.Abstractions.Cli.CommandTypes;
 using Catalyst.Cli.Commands;
 using Catalyst.Cli.Tests.UnitTests.Helpers;
 using Catalyst.Core.Lib.Network;
@@ -31,10 +30,11 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.Cli.CommandTypes;
+using Catalyst.Core.Lib.Extensions;
 
 namespace Catalyst.Cli.Tests.UnitTests.Commands
 {
-    [TestFixture]
     public sealed class DisconnectTests
     {
         private readonly TestScheduler _testScheduler = new TestScheduler();
@@ -51,8 +51,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands
             var socketClientRegistry = TestCommandHelpers.AddClientSocketRegistry(commandContext, _testScheduler);
 
             var clientHashCode =
-                socketClientRegistry.GenerateClientHashCode(
-                    EndpointBuilder.BuildNewEndPoint(rpcNodeConfig.HostAddress, rpcNodeConfig.Port));
+                socketClientRegistry.GenerateClientHashCode(rpcNodeConfig.Address.GetIPEndPoint());
             socketClientRegistry.AddClientToRegistry(clientHashCode, nodeRpcClient);
 
             var commands = new List<ICommand> {new DisconnectCommand(commandContext, Substitute.For<ILogger>())};

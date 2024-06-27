@@ -27,7 +27,6 @@ using System.Threading.Tasks;
 using Catalyst.Core.Lib.DAO.Ledger;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.IO.Observers;
 using Catalyst.Core.Lib.Service;
 using Catalyst.Core.Lib.Util;
@@ -35,7 +34,6 @@ using Catalyst.Core.Modules.Hashing;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
-using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Microsoft.Reactive.Testing;
 using MultiFormats.Registry;
@@ -43,6 +41,7 @@ using NSubstitute;
 using Serilog;
 using SharpRepository.InMemoryRepository;
 using NUnit.Framework;
+using Catalyst.Abstractions.P2P;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 {
@@ -51,18 +50,21 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         private readonly TestScheduler _testScheduler;
         private readonly ILogger _subbedLogger;
         private readonly DeltaHistoryRequestObserver _deltaHistoryRequestObserver;
+        private readonly IPeerClient _peerClient;
 
         public DeltaHistoryRequestObserverTests()
         {
             _testScheduler = new TestScheduler();
             _subbedLogger = Substitute.For<ILogger>();
-            
-            var peerSettings = PeerIdHelper.GetPeerId("sender").ToSubstitutedPeerSettings();
+            _peerClient = Substitute.For<IPeerClient>();
+
+            var peerSettings = MultiAddressHelper.GetAddress("sender").ToSubstitutedPeerSettings();
             var deltaIndexService = new DeltaIndexService(new InMemoryRepository<DeltaIndexDao, string>());
 
             _deltaHistoryRequestObserver = new DeltaHistoryRequestObserver(peerSettings,
                 deltaIndexService,
-                new TestMapperProvider(), 
+                new TestMapperProvider(),
+                _peerClient,
                 _subbedLogger
             );
         }
@@ -70,17 +72,14 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
         [Test]
         public async Task Can_Process_DeltaHeightRequest_Correctly()
         {
-            var fakeContext = Substitute.For<IChannelHandlerContext>();
             var deltaHistoryRequestMessage = new DeltaHistoryRequest();
-            
-            var channeledAny = new ObserverDto(fakeContext,
-                deltaHistoryRequestMessage.ToProtocolMessage(PeerIdHelper.GetPeerId(),
+
+            var channeledAny = deltaHistoryRequestMessage.ToProtocolMessage(MultiAddressHelper.GetAddress(),
                     CorrelationId.GenerateCorrelationId()
-                )
-            );
-            
-            var observableStream = new[] {channeledAny}.ToObservable(_testScheduler);
-            
+                );
+
+            var observableStream = new[] { channeledAny }.ToObservable(_testScheduler);
+
             _deltaHistoryRequestObserver.StartObserving(observableStream);
             _testScheduler.Start();
 
@@ -101,17 +100,19 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
                     Cid = delta.ToByteString()
                 };
 
-                // TODO
-                // response.DeltaIndex.Add(index);
+                response.DeltaIndex.Add(index);
                 lastDeltaHash = hp.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32));
             }
-            
-            await fakeContext.Channel.ReceivedWithAnyArgs(1)
-               .WriteAndFlushAsync(response.ToProtocolMessage(PeerIdHelper.GetPeerId(), CorrelationId.GenerateCorrelationId())).ConfigureAwait(false);
-            
+
+            var responder = MultiAddressHelper.GetAddress();
+            var protocolMessageResponse = response.ToProtocolMessage(responder, CorrelationId.GenerateCorrelationId());
+
+            await _peerClient.ReceivedWithAnyArgs(1).SendMessageAsync(protocolMessageResponse, responder)
+             .ConfigureAwait(false);
+
             _subbedLogger.ReceivedWithAnyArgs(1);
         }
-        
+
         public void Dispose()
         {
             _deltaHistoryRequestObserver?.Dispose();

@@ -47,11 +47,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
         public void Init()
         {
             Setup(TestContext.CurrentContext);
-            var dfsOptions = new DfsOptions(new BlockOptions(), new DiscoveryOptions(), new RepositoryOptions(FileSystem, Constants.DfsDataSubDir), Substitute.For<KeyChainOptions>(), Substitute.For<SwarmOptions>(), Substitute.For<IDnsClient>());
-            _keyStoreService = new KeyStoreService(dfsOptions)
-            {
-                Options = dfsOptions.KeyChain
-            };
+            var keyChain = Substitute.For<KeyChainOptions>();
+            _keyStoreService = new KeyStoreService(keyChain, new KeyFileStore(new RepositoryOptions(FileSystem, Constants.DfsDataSubDir)));
             var securePassword = new SecureString();
 
             "mypassword".ToList().ForEach(c => securePassword.AppendChar(c));
@@ -85,7 +82,7 @@ cn4oisOvxCprs4aM9UVjtZTCjfyNpX8UWwT1W3rySV+KQNhxuMy3RzmL
             var key = await _keyStoreService.ImportAsync("alice", alice, "mypassword".ToArray());
             try
             {
-                Assert.Equals(aliceKid, key.Id.ToString());
+                Assert.AreEqual(aliceKid, key.Id.ToString());
 
                 var cipher = Convert.FromBase64String(@"
 MIIBcwYJKoZIhvcNAQcDoIIBZDCCAWACAQAxgfowgfcCAQAwYDBbMQ0wCwYDVQQK
@@ -99,7 +96,7 @@ nHILFmhac/+a/StQOKuf9dx5qXeGvt9LnwKuGGSfNX4g+dTkoa6N
 ");
                 var plain = await _keyStoreService.ReadProtectedDataAsync(cipher);
                 var plainText = Encoding.UTF8.GetString(plain);
-                Assert.Equals("This is a message from Alice to Bob", plainText);
+                Assert.AreEqual("This is a message from Alice to Bob", plainText);
             }
             finally
             {
@@ -135,7 +132,7 @@ nHILFmhac/+a/StQOKuf9dx5qXeGvt9LnwKuGGSfNX4g+dTkoa6N
                 var data = new byte[] {1, 2, 3, 4};
                 var cipher = await _keyStoreService.CreateProtectedDataAsync("alice", data);
                 var plain = await _keyStoreService.ReadProtectedDataAsync(cipher);
-                Assert.Equals(data, plain);
+                Assert.AreEqual(data, plain);
             }
             finally
             {
@@ -152,7 +149,7 @@ nHILFmhac/+a/StQOKuf9dx5qXeGvt9LnwKuGGSfNX4g+dTkoa6N
                 var data = new byte[] {1, 2, 3, 4};
                 var cipher = await _keyStoreService.CreateProtectedDataAsync("alice", data);
                 var plain = await _keyStoreService.ReadProtectedDataAsync(cipher);
-                Assert.Equals(data, plain);
+                Assert.AreEqual(data, plain);
             }
             finally
             {

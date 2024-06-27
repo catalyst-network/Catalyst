@@ -1,8 +1,34 @@
+#region LICENSE
+
+/**
+* Copyright (c) 2019 Catalyst Network
+*
+* This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
+*
+* Catalyst.Node is free software: you can redistribute it and/or modify
+* it under the terms of the GNU General Public License as published by
+* the Free Software Foundation, either version 2 of the License, or
+* (at your option) any later version.
+*
+* Catalyst.Node is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+* GNU General Public License for more details.
+*
+* You should have received a copy of the GNU General Public License
+* along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
+*/
+
+#endregion
+
 using System;
 using Autofac;
-using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Modules.Rpc.Server.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.Rpc;
+using Catalyst.Protocol.Wire;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server
@@ -11,31 +37,32 @@ namespace Catalyst.Core.Modules.Rpc.Server
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<RpcServerChannelFactory>().As<ITcpServerChannelFactory>().SingleInstance();
+            builder.RegisterType<RpcServerChannelFactory>().As<ITcpServerChannelFactory<IObserverDto<ProtocolMessage>>>().SingleInstance();
             builder.RegisterType<RpcServer>().As<IRpcServer>().SingleInstance();
             builder.RegisterType<RpcServerSettings>().As<IRpcServerSettings>();
 
-            // Adjusted to use an Action<ILifetimeScope> delegate
-            builder.RegisterBuildCallback(scope =>
+            async void BuildCallback(IContainer container)
             {
-                if (scope == null)
+                if (container == null)
                 {
-                    throw new ArgumentNullException(nameof(scope));
+                    throw new ArgumentNullException(nameof(container));
                 }
-
-                var logger = scope.Resolve<ILogger>();
+                
+                var logger = container.Resolve<ILogger>();
                 try
                 {
-                    var rpcServer = scope.Resolve<IRpcServer>();
-                    rpcServer.StartAsync().GetAwaiter().GetResult(); // Synchronously start here
+                    var rpcServer = container.Resolve<IRpcServer>();
+                    await rpcServer.StartAsync().ConfigureAwait(false);
                 }
                 catch (Exception e)
                 {
                     logger.Error(e, "Error loading API");
                 }
-            });
+            }
 
+            builder.RegisterBuildCallback(BuildCallback);
+            
             base.Load(builder);
-        }
+        }  
     }
 }

@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Collections.Generic;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Repository;
@@ -34,11 +35,10 @@ using Google.Protobuf.WellKnownTypes;
 using Lib.P2P;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
+using Nethermind.Dirichlet.Numerics;
 using Nethermind.Evm.Tracing;
-using Nethermind.Evm.Tracing.GethStyle.Custom.JavaScript;
-using Nethermind.Int256;
 
-namespace Catalyst.Core.Modules.Web3 
+namespace Catalyst.Core.Modules.Web3
 {
     public static class Web3EthApiExtensions
     {
@@ -92,21 +92,20 @@ namespace Catalyst.Core.Modules.Web3
             return true;
         }
 
-        public static PublicEntry ToPublicEntry(this IWeb3EthApi api, TransactionForRpc transactionCall, Hash256 root)
+        public static PublicEntry ToPublicEntry(this IWeb3EthApi api, TransactionForRpc transactionCall, Keccak root)
         {
             return new PublicEntry
             {
-                // TODO
-              //  Nonce = (ulong) api.StateReader.GetNonce(root, transactionCall.From),
+                Nonce = (ulong)api.StateReader.GetNonce(root, transactionCall.From),
                 SenderAddress = transactionCall.From.Bytes.ToByteString(),
                 ReceiverAddress = transactionCall.To?.Bytes.ToByteString() ?? ByteString.Empty,
-                GasLimit = (ulong) transactionCall.Gas.GetValueOrDefault(),
+                GasLimit = (ulong)transactionCall.Gas.GetValueOrDefault(),
                 GasPrice = transactionCall.GasPrice.GetValueOrDefault().ToUint256ByteString(),
-                Amount = transactionCall.Value.GetValueOrDefault().ToUint256ByteString(), 
+                Amount = transactionCall.Value.GetValueOrDefault().ToUint256ByteString(),
                 Data = transactionCall.Data?.ToByteString() ?? ByteString.Empty
             };
         }
-        
+
         public static TransactionForRpc ToTransactionForRpc(this IWeb3EthApi api, DeltaWithCid deltaWithCid, int transactionIndex)
         {
             var (delta, deltaCid) = deltaWithCid;
@@ -117,7 +116,7 @@ namespace Catalyst.Core.Modules.Web3
             {
                 GasPrice = publicEntry.GasPrice.ToUInt256(),
                 BlockHash = deltaCid,
-                BlockNumber = (UInt256) deltaNumber,
+                BlockNumber = (UInt256)deltaNumber,
                 Nonce = publicEntry.Nonce,
                 To = ToAddress(publicEntry.ReceiverAddress),
                 From = ToAddress(publicEntry.SenderAddress),
@@ -128,8 +127,37 @@ namespace Catalyst.Core.Modules.Web3
                 S = new byte[0],
                 V = UInt256.Zero,
                 Gas = publicEntry.GasLimit,
-                TransactionIndex = (UInt256) transactionIndex
+                TransactionIndex = (UInt256)transactionIndex
             };
+        }
+
+        public static IEnumerable<TransactionForRpc> ToTransactionsForRpc(this IWeb3EthApi api, DeltaWithCid deltaWithCid)
+        {
+            var (delta, deltaCid) = deltaWithCid;
+            var publicEntries = delta.PublicEntries;
+            var deltaNumber = delta.DeltaNumber;
+
+            for (var i = 0; i < publicEntries.Count; i++)
+            {
+                var publicEntry = publicEntries[i];
+                yield return new TransactionForRpc
+                {
+                    GasPrice = publicEntry.GasPrice.ToUInt256(),
+                    BlockHash = deltaCid,
+                    BlockNumber = (UInt256)deltaNumber,
+                    Nonce = publicEntry.Nonce,
+                    To = ToAddress(publicEntry.ReceiverAddress),
+                    From = ToAddress(publicEntry.SenderAddress),
+                    Value = publicEntry.Amount.ToUInt256(),
+                    Hash = publicEntry.GetHash(api.HashProvider),
+                    Data = publicEntry.Data.ToByteArray(),
+                    R = new byte[0],
+                    S = new byte[0],
+                    V = UInt256.Zero,
+                    Gas = publicEntry.GasLimit,
+                    TransactionIndex = (UInt256)i
+                };
+            }
         }
 
         public static Address ToAddress(ByteString address)
@@ -145,8 +173,7 @@ namespace Catalyst.Core.Modules.Web3
         public static CallOutputTracer CallAndRestore(this IWeb3EthApi api, TransactionForRpc transactionCall, DeltaWithCid deltaWithCid)
         {
             var parentDelta = deltaWithCid.Delta;
-            // TODO
-            Hash256 root = new Hash256(parentDelta.StateRoot.ToBytes()); // .ToKeccak();
+            Keccak root = parentDelta.StateRoot.ToKeccak();
 
             if (transactionCall.Gas == null)
             {
@@ -162,7 +189,7 @@ namespace Catalyst.Core.Modules.Web3
             api.StateProvider.StateRoot = root;
             api.Executor.CallAndReset(newDelta, callOutputTracer);
             api.StateProvider.Reset();
-           // api.StateProvider.StorageProvider.Reset();
+            api.StorageProvider.Reset();
             return callOutputTracer;
         }
     }

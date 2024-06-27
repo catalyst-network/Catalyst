@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -25,20 +25,21 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Reflection;
 using Autofac;
 using Autofac.Extensions.DependencyInjection;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Kvm;
-using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Modules.Web3.Controllers.Handlers;
+using Catalyst.Core.Modules.Web3.Options;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Server.Kestrel.Https;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using Nethermind.Core;
 using Nethermind.Serialization.Json;
 using Serilog;
 using Module = Autofac.Module;
@@ -47,14 +48,22 @@ namespace Catalyst.Core.Modules.Web3
 {
     public sealed class ApiModule : Module
     {
-        private readonly string _apiBindingAddress;
-        private readonly List<string> _controllerModules;
+        private readonly HttpOptions _httpOptions;
+        private readonly HttpsOptions _httpsOptions;
+        private readonly string[] _controllerModules;
+        private IContainer _container;
         private readonly bool _addSwagger;
+        public ApiModule(HttpOptions httpOptions, List<string> controllerModules, bool addSwagger = true) : this(httpOptions, null, controllerModules, addSwagger)
+        { }
 
-        public ApiModule(string apiBindingAddress, List<string> controllerModules, bool addSwagger = true)
+        public ApiModule(HttpsOptions httpsOptions, List<string> controllerModules, bool addSwagger = true) : this(null, httpsOptions, controllerModules, addSwagger)
+        { }
+
+        public ApiModule(HttpOptions httpOptions, HttpsOptions httpsOptions, List<string> controllerModules, bool addSwagger = true)
         {
-            _apiBindingAddress = apiBindingAddress;
-            _controllerModules = controllerModules;
+            _httpOptions = httpOptions;
+            _httpsOptions = httpsOptions;
+            _controllerModules = controllerModules.ToArray();
             _addSwagger = addSwagger;
         }
 
@@ -64,31 +73,15 @@ namespace Catalyst.Core.Modules.Web3
             var buildPath = Path.GetDirectoryName(executingAssembly);
             var webDirectory = Directory.CreateDirectory(Path.Combine(buildPath, "wwwroot"));
 
-            // Configure container
-            builder.RegisterType<Web3HandlerResolver>().As<IWeb3HandlerResolver>().SingleInstance();
-            builder.RegisterType<EthereumJsonSerializer>().As<IJsonSerializer>().SingleInstance();
-
-            // Register controllers from specified modules
-            foreach (var controllerModule in _controllerModules)
+            async void BuildCallback(IContainer container)
             {
-                builder.RegisterAssemblyTypes(Assembly.Load(controllerModule))
-                       .Where(t => t.Name.EndsWith("Controller"))
-                       .AsSelf()
-                       .InstancePerLifetimeScope();
-            }
-
-            // Build callback for integrating with ASP.NET Core host
-            builder.RegisterBuildCallback(BuildCallback);
-        }
-
-        async void BuildCallback(ILifetimeScope scope)
-        {
-            var logger = scope.Resolve<ILogger>();
-
-            try
-            {
-                await Host.CreateDefaultBuilder()
-                       .UseServiceProviderFactory(new AutofacServiceProviderFactory())
+                _container = container;
+                var logger = _container.Resolve<ILogger>();
+                var certificateStore = _container.Resolve<ICertificateStore>();
+                try
+                {
+                    await Host.CreateDefaultBuilder()
+                       .UseServiceProviderFactory(new SharedContainerProviderFactory(_container))
                        .UseConsoleLifetime()
                        .ConfigureContainer<ContainerBuilder>(ConfigureContainer)
                        .ConfigureWebHostDefaults(
@@ -97,15 +90,38 @@ namespace Catalyst.Core.Modules.Web3
                                 webHostBuilder
                                    .ConfigureServices(ConfigureServices)
                                    .Configure(Configure)
-                                   .UseUrls(_apiBindingAddress)
-                                   .UseWebRoot(Path.Combine(Directory.GetCurrentDirectory(), "wwwroot"));
-                                //.UseSerilog();
+                                   .UseWebRoot(webDirectory.FullName)
+                                   .ConfigureKestrel(options =>
+                                   {
+                                       if (_httpsOptions != null)
+                                       {
+                                           var certificate = certificateStore.ReadOrCreateCertificateFile(_httpsOptions.CertificateName);
+                                           options.Listen(_httpsOptions.BindingAddress, listenOptions =>
+                                           {
+                                               listenOptions.UseHttps(certificate);
+                                           });
+                                           options.ConfigureHttpsDefaults(o => o.ClientCertificateMode = ClientCertificateMode.RequireCertificate);
+                                       }
+
+                                       if (_httpOptions != null)
+                                       {
+                                           options.Listen(_httpOptions.BindingAddress);
+                                       }
+                                   })
+                                   .UseSerilog();
                             }).RunConsoleAsync();
+
+                    //SIGINT is caught from kestrel because we are using RunConsoleAsync in HostBuilder, the SIGINT will not be received in the main console so we need to exit the process manually, to prevent needing to use two SIGINT's
+                    Environment.Exit(2);
+                }
+                catch (Exception e)
+                {
+                    logger.Error(e, "Error loading API");
+                }
             }
-            catch (Exception e)
-            {
-                logger.Error(e, "Error loading API");
-            }
+
+            builder.RegisterBuildCallback(BuildCallback);
+            base.Load(builder);
         }
 
         public void ConfigureContainer(ContainerBuilder builder)
@@ -114,56 +130,95 @@ namespace Catalyst.Core.Modules.Web3
             builder.RegisterType<EthereumJsonSerializer>().As<IJsonSerializer>().SingleInstance();
         }
 
-        private void ConfigureServices(IServiceCollection services)
+        public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options =>
+            services.AddCors(c =>
             {
-                options.AddPolicy("AllowOrigin",
-                    builder => builder.AllowAnyOrigin()
-                                      .AllowAnyMethod()
-                                      .AllowAnyHeader());
+                c.AddPolicy("AllowOrigin", options =>
+                    options.AllowAnyOrigin()
+                       .AllowAnyMethod()
+                       .AllowAnyHeader());
             });
 
-            services.AddControllers()
-                    .AddJsonOptions(options =>
-                    {
-                        options.JsonSerializerOptions.Converters.Add(new UInt256Converter());
-                        options.JsonSerializerOptions.Converters.Add(new NullableUInt256Converter());
-                        options.JsonSerializerOptions.Converters.Add(new AddressConverter());
-                        options.JsonSerializerOptions.Converters.Add(new ByteArrayConverter());
-                        options.JsonSerializerOptions.Converters.Add(new CidJsonConverter());
-                    });
+            services.AddAntiforgery(
+               options =>
+               {
+                   options.Cookie.Name = "_af";
+                   options.Cookie.HttpOnly = true;
+                   options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+                   options.HeaderName = "X-XSRF-TOKEN";
+               }
+            );
+
+            services.AddMvcCore().AddNewtonsoftJson(options =>
+            {
+                var converters = options.SerializerSettings.Converters;
+
+                converters.Add(new UInt256Converter());
+                converters.Add(new NullableUInt256Converter());
+                converters.Add(new KeccakConverter());
+                converters.Add(new AddressConverter());
+                converters.Add(new ByteArrayConverter());
+                converters.Add(new CidJsonConverter());
+            }).AddApiExplorer();
+
+            var mvcBuilder = services.AddRazorPages();
+
+            _controllerModules.ToList().ForEach(controller => mvcBuilder.AddApplicationPart(Assembly.Load(controller)));
+
+            mvcBuilder.AddControllersAsServices();
 
             if (_addSwagger)
-            {
                 services.AddSwaggerGen(swagger =>
                 {
                     swagger.SwaggerDoc("v1", new OpenApiInfo { Title = "Catalyst API", Description = "Catalyst" });
                 });
-            }
         }
 
-        private void Configure(IApplicationBuilder app)
+        public void Configure(IApplicationBuilder app)
         {
-            app.UseHttpsRedirection();
+            //enable to force http to upgrade to https, disabled because dashboard uses http, wallet https.
+            //app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseDeveloperExceptionPage();
             app.UseCors("AllowOrigin");
-            app.UseAuthorization();
+            app.UseDefaultFiles();
+            app.UseStaticFiles();
             app.UseEndpoints(endpoints =>
             {
-                endpoints.MapControllers();
-                endpoints.MapControllerRoute(
-                    name: "default",
-                    pattern: "api/{controller}/{action}/{id?}");
+                endpoints.MapRazorPages();
+                endpoints.MapControllerRoute("CatalystApi", "api/{controller}/{action}/{id}");
             });
 
             if (_addSwagger)
             {
                 app.UseSwagger();
-                app.UseSwaggerUI(swagger =>
-                {
-                    swagger.SwaggerEndpoint("/swagger/v1/swagger.json", "Catalyst API");
-                });
+                app.UseSwaggerUI(swagger => { swagger.SwaggerEndpoint("/swagger/v1/swagger.json", "Catalyst API"); });
+            }
+        }
+
+        private sealed class SharedContainerProviderFactory : IServiceProviderFactory<ContainerBuilder>
+        {
+            readonly IContainer _container;
+
+            public SharedContainerProviderFactory(IContainer container)
+            {
+                _container = container;
+            }
+
+            public ContainerBuilder CreateBuilder(IServiceCollection services)
+            {
+                var builder = new ContainerBuilder();
+                builder.Populate(services);
+                return builder;
+            }
+
+            public IServiceProvider CreateServiceProvider(ContainerBuilder containerBuilder)
+            {
+                // using an obsolete way of updating an already created container
+                containerBuilder.Update(_container);
+
+                return new AutofacServiceProvider(_container);
             }
         }
     }

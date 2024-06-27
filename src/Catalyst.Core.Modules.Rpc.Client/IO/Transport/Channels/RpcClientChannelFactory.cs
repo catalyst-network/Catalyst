@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -23,35 +23,35 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Handlers;
-using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.IO.Codecs;
-using Catalyst.Core.Lib.IO.Handlers;
-using Catalyst.Core.Lib.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.EventLoop;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.IO.Codecs;
+using Catalyst.Modules.Network.Dotnetty.IO.Handlers;
+using Catalyst.Modules.Network.Dotnetty.IO.Transport.Channels;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
 using DotNetty.Buffers;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels
 {
-    public class RpcClientChannelFactory : TcpClientChannelFactory
+    public class RpcClientChannelFactory : TcpClientChannelFactory<IObserverDto<ProtocolMessage>>
     {
         private readonly IKeySigner _keySigner;
         private readonly IRpcMessageCorrelationManager _messageCorrelationCache;
         private readonly IPeerIdValidator _peerIdValidator;
-        private readonly IObservableServiceHandler _observableServiceHandler;
+        private readonly IObservableServiceHandler<IObserverDto<ProtocolMessage>> _observableServiceHandler;
         private readonly SigningContext _signingContext;
 
         /// <summary>
@@ -74,7 +74,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels
             _messageCorrelationCache = messageCorrelationCache;
             _peerIdValidator = peerIdValidator;
             _signingContext = new SigningContext {NetworkType = peerSettings.NetworkType, SignatureType = SignatureType.ProtocolRpc};
-            _observableServiceHandler = new ObservableServiceHandler(observableScheduler);
+            _observableServiceHandler = new RpcObservableServiceHandler(observableScheduler);
         }
 
         protected override Func<List<IChannelHandler>> HandlerGenerationFunction
@@ -105,17 +105,15 @@ namespace Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels
         /// <param name="targetAddress">Ignored</param>
         /// <param name="targetPort">Ignored</param>
         /// <param name="certificate">Local TLS certificate</param>
-        public override async Task<IObservableChannel> BuildChannelAsync(IEventLoopGroupFactory eventLoopGroupFactory,
-            IPAddress targetAddress,
-            int targetPort,
+        public override async Task<IObservableChannel<IObserverDto<ProtocolMessage>>> BuildChannelAsync(IEventLoopGroupFactory eventLoopGroupFactory,
+            MultiAddress address,
             X509Certificate2 certificate = null)
         {
-            var channel = await BootstrapAsync(eventLoopGroupFactory, targetAddress, targetPort, certificate).ConfigureAwait(false);
+            var channel = await BootstrapAsync(eventLoopGroupFactory, address, certificate).ConfigureAwait(false);
 
             var messageStream = _observableServiceHandler.MessageStream;
 
-            return new ObservableChannel(messageStream
-             ?? Observable.Never<IObserverDto<ProtocolMessage>>(), channel);
+            return new ObservableChannel<IObserverDto<ProtocolMessage>>(messageStream ?? Observable.Never<IObserverDto<ProtocolMessage>>(), channel);
         }
     }
 }

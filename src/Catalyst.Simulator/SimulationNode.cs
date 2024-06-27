@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -24,6 +24,7 @@
 using System.Net;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 
 namespace Catalyst.Simulator
 {
@@ -35,9 +36,10 @@ namespace Catalyst.Simulator
 
         public string PublicKey { get; set; }
 
-        public PeerId ToPeerIdentifier()
+        public MultiAddress ToPeerIdentifier()
         {
-            return PublicKey.BuildPeerIdFromBase32Key(IPAddress.Parse(Ip), Port);
+            return null;
+            //return PublicKey.BuildPeerIdFromBase58Key(IPAddress.Parse(Ip), Port);
         }
     }
 }

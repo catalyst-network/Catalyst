@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -28,18 +28,19 @@ using System.Security.Cryptography.X509Certificates;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.IO.EventLoop;
-using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.Rpc;
-using Catalyst.Core.Lib.IO.Transport;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.EventLoop;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
+using Catalyst.Modules.Network.Dotnetty.IO.Transport;
+using Catalyst.Modules.Network.Dotnetty.Rpc;
 using Catalyst.Protocol.Wire;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server
 {
-    public sealed class RpcServer : TcpServer, IRpcServer
+    public sealed class RpcServer : TcpServer<IObserverDto<ProtocolMessage>>, IRpcServer
     {
         private readonly IEnumerable<IRpcRequestObserver> _requestHandlers;
         private readonly CancellationTokenSource _cancellationSource;
@@ -50,7 +51,7 @@ namespace Catalyst.Core.Modules.Rpc.Server
 
         public RpcServer(IRpcServerSettings settings,
             ILogger logger,
-            ITcpServerChannelFactory channelFactory,
+            ITcpServerChannelFactory<IObserverDto<ProtocolMessage>> channelFactory,
             ICertificateStore certificateStore,
             IEnumerable<IRpcRequestObserver> requestHandlers,
             ITcpServerEventLoopGroupFactory eventEventLoopGroupFactory) 
@@ -64,7 +65,7 @@ namespace Catalyst.Core.Modules.Rpc.Server
 
         public override async Task StartAsync()
         {
-            var observableSocket = await ChannelFactory.BuildChannelAsync(EventLoopGroupFactory, Settings.BindAddress, Settings.Port, _certificate).ConfigureAwait(false);
+            var observableSocket = await ChannelFactory.BuildChannelAsync(EventLoopGroupFactory, Settings.Address, _certificate).ConfigureAwait(false);
             Channel = observableSocket.Channel;
             MessageStream = observableSocket.MessageStream;
             _requestHandlers.ToList().ForEach(h => h.StartObserving(MessageStream));

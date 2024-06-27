@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -22,16 +22,14 @@
 #endregion
 
 using System;
-using Catalyst.Abstractions.IO.Messaging.Dto;
-using Google.Protobuf;
 
 namespace Catalyst.Abstractions.IO.Observers
 {
-    public interface IObservableMessageStreamer<out T> where T : IMessage<T>
+    public interface IObservableMessageStreamer<out T>
     {
         /// <summary>
         ///     Message stream
         /// </summary>
-        IObservable<IObserverDto<T>> MessageStream { get; }
+        IObservable<T> MessageStream { get; }
     }
 }

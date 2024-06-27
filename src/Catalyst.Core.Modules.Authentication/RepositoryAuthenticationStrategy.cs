@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -24,6 +24,7 @@
 using Catalyst.Abstractions.Rpc.Authentication;
 using Catalyst.Core.Modules.Authentication.Repository;
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.Authentication
 {
@@ -44,9 +45,9 @@ namespace Catalyst.Core.Modules.Authentication
         }
 
         /// <inheritdoc cref="IAuthenticationStrategy"/>
-        public bool Authenticate(PeerId peerIdentifier)
+        public bool Authenticate(MultiAddress address)
         {
-            return _trustedPeers.TryFind(peerIdentifier, out _);
+            return _trustedPeers.TryFind(address, out _);
         }
     }
 }

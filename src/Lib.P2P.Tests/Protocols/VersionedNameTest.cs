@@ -24,75 +24,77 @@
 using System.Collections.Generic;
 using System.Linq;
 using Lib.P2P.Protocols;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Lib.P2P.Tests.Protocols
 {
+    [TestClass]
     public class VersionedNameTest
     {
-        [Test]
+        [TestMethod]
         public void Parsing()
         {
             var vn = VersionedName.Parse("/multistream/1.0.0");
-            Assert.That(vn.Name, Is.EqualTo("multistream"));
-            Assert.That(vn.Version.ToString(), Is.EqualTo("1.0.0"));
+            Assert.AreEqual("multistream", vn.Name);
+            Assert.AreEqual("1.0.0", vn.Version.ToString());
 
             vn = VersionedName.Parse("/ipfs/id/1.0.0");
-            Assert.That(vn.Name, Is.EqualTo("ipfs/id"));
-            Assert.That(vn.Version.ToString(), Is.EqualTo("1.0.0"));
+            Assert.AreEqual("ipfs/id", vn.Name);
+            Assert.AreEqual("1.0.0", vn.Version.ToString());
         }
 
-        [Test]
+        [TestMethod]
         public void Stringing()
         {
             var vn = new VersionedName {Name = "x", Version = new Semver.SemVersion(0, 42)};
-            Assert.That(vn.ToString(), Is.EqualTo("/x/0.42.0"));
+            Assert.AreEqual("/x/0.42.0", vn.ToString());
         }
 
-        [Test]
+        [TestMethod]
         public void Value_Equality()
         {
             var a0 = VersionedName.Parse("/x/1.0.0");
             var a1 = VersionedName.Parse("/x/1.0.0");
             var b = VersionedName.Parse("/x/1.1.0");
-            VersionedName? c = null;
-            VersionedName? d = null;
+            VersionedName c = null;
+            VersionedName d = null;
 
-            Assert.That(c == d, Is.True);
-            Assert.That(c == b, Is.False);
-            Assert.That(b == c, Is.False);
+            Assert.IsTrue(c == d);
+            Assert.IsFalse(c == b);
+            Assert.IsFalse(b == c);
 
-            Assert.That(c != d, Is.False);
-            Assert.That(c != b, Is.True);
-            Assert.That(b != c, Is.True);
-
-#pragma warning disable 1718
-            Assert.That(a0 == a0, Is.True);
-            Assert.That(a0 == a1, Is.True);
-            Assert.That(a0 == b, Is.False);
+            Assert.IsFalse(c != d);
+            Assert.IsTrue(c != b);
+            Assert.IsTrue(b != c);
 
 #pragma warning disable 1718
-            Assert.That(a0 != a0, Is.False);
-            Assert.That(a0 != a1, Is.False);
-            Assert.That(a0 != b, Is.True);
+            Assert.IsTrue(a0 == a0);
+            Assert.IsTrue(a0 == a1);
+            Assert.IsFalse(a0 == b);
 
-            Assert.That(a0.Equals(a0), Is.True);
-            Assert.That(a0.Equals(a1), Is.True);
-            Assert.That(a0.Equals(b), Is.False);
+#pragma warning disable 1718
+            Assert.IsFalse(a0 != a0);
+            Assert.IsFalse(a0 != a1);
+            Assert.IsTrue(a0 != b);
 
-            Assert.That(a0, Is.EqualTo(a0));
-            Assert.That(a0, Is.EqualTo(a1));
-            Assert.That(a0, Is.Not.EqualTo(b));
+            Assert.IsTrue(a0.Equals(a0));
+            Assert.IsTrue(a0.Equals(a1));
+            Assert.IsFalse(a0.Equals(b));
 
-            Assert.That(a0, Is.EqualTo(a0));
-            Assert.That(a0, Is.EqualTo(a1));
-            Assert.That(a0, Is.Not.EqualTo(b));
+            Assert.AreEqual(a0, a0);
+            Assert.AreEqual(a0, a1);
+            Assert.AreNotEqual(a0, b);
 
-            Assert.That(a0.GetHashCode(), Is.EqualTo(a0.GetHashCode()));
-            Assert.That(a1.GetHashCode(), Is.EqualTo(a0.GetHashCode()));
-            Assert.That(a0.GetHashCode(), Is.Not.EqualTo(b.GetHashCode()));
+            Assert.AreEqual(a0, a0);
+            Assert.AreEqual(a0, a1);
+            Assert.AreNotEqual(a0, b);
+
+            Assert.AreEqual(a0.GetHashCode(), a0.GetHashCode());
+            Assert.AreEqual(a0.GetHashCode(), a1.GetHashCode());
+            Assert.AreNotEqual(a0.GetHashCode(), b.GetHashCode());
         }
 
-        [Test]
+        [TestMethod]
         public void Comparing()
         {
             var a0 = VersionedName.Parse("/x/1.0.0");
@@ -100,17 +102,17 @@ namespace Lib.P2P.Tests.Protocols
             var b = VersionedName.Parse("/x/1.1.0");
             var c = VersionedName.Parse("/y/0.42.0");
 
-            Assert.That(a0.CompareTo(a1), Is.EqualTo(0));
-            Assert.That(a1.CompareTo(a0), Is.EqualTo(0));
+            Assert.AreEqual(0, a0.CompareTo(a1));
+            Assert.AreEqual(0, a1.CompareTo(a0));
 
-            Assert.That(b.CompareTo(a0), Is.EqualTo(1));
-            Assert.That(a0.CompareTo(b), Is.EqualTo(-1));
+            Assert.AreEqual(1, b.CompareTo(a0));
+            Assert.AreEqual(-1, a0.CompareTo(b));
 
-            Assert.That(c.CompareTo(b), Is.EqualTo(1));
-            Assert.That(b.CompareTo(c), Is.EqualTo(-1));
+            Assert.AreEqual(1, c.CompareTo(b));
+            Assert.AreEqual(-1, b.CompareTo(c));
         }
 
-        [Test]
+        [TestMethod]
         public void Ordering()
         {
             var names = new List<VersionedName>
@@ -120,9 +122,9 @@ namespace Lib.P2P.Tests.Protocols
                 VersionedName.Parse("/y/0.42.0"),
             };
             var ordered = names.OrderByDescending(n => n).ToArray();
-            Assert.That(ordered[0].ToString(), Is.EqualTo("/y/0.42.0"));
-            Assert.That(ordered[1].ToString(), Is.EqualTo("/x/1.1.0"));
-            Assert.That(ordered[2].ToString(), Is.EqualTo("/x/1.0.0"));
+            Assert.AreEqual("/y/0.42.0", ordered[0].ToString());
+            Assert.AreEqual("/x/1.1.0", ordered[1].ToString());
+            Assert.AreEqual("/x/1.0.0", ordered[2].ToString());
         }
     }
 }

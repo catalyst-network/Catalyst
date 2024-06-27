@@ -35,26 +35,20 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
     {
         private IDfsService ipfs;
 
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            ipfs.Dispose();
-        }
-
         public BlockRepositoryApiTest()
         {
             ipfs = TestDfs.GetTestDfs();    
         }
         
         [Test]
-        public void Exists() { Assert.That(ipfs.BlockRepositoryApi, Is.Not.Null); }
+        public void Exists() { Assert.NotNull(ipfs.BlockRepositoryApi); }
 
         [Test]
         public async Task Stats()
         {
             var stats = await ipfs.BlockRepositoryApi.StatisticsAsync();
             var version = await ipfs.BlockRepositoryApi.VersionAsync();
-            Assert.That(stats.Version, Is.EqualTo(version));
+            Assert.AreEqual(stats.Version, version);
         }
 
         [Test]
@@ -62,20 +56,20 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         {
             var pinned = await ipfs.BlockApi.PutAsync(new byte[256], pin: true);
             var unpinned = await ipfs.BlockApi.PutAsync(new byte[512]);
-            Assert.That(pinned, Is.Not.EqualTo(unpinned));
-            Assert.That(await ipfs.BlockApi.StatAsync(pinned), Is.Not.Null);
-            Assert.That(await ipfs.BlockApi.StatAsync(unpinned), Is.Not.Null);
+            Assert.AreNotEqual(pinned, unpinned);
+            Assert.NotNull(await ipfs.BlockApi.StatAsync(pinned));
+            Assert.NotNull(await ipfs.BlockApi.StatAsync(unpinned));
 
             await ipfs.BlockRepositoryApi.RemoveGarbageAsync();
-            Assert.That(await ipfs.BlockApi.StatAsync(pinned), Is.Not.Null);
-            Assert.That(await ipfs.BlockApi.StatAsync(unpinned), Is.Null);
+            Assert.NotNull(await ipfs.BlockApi.StatAsync(pinned));
+            Assert.Null(await ipfs.BlockApi.StatAsync(unpinned));
         }
 
         [Test]
         public async Task Version_Info()
         {
             var versions = await ipfs.BlockRepositoryApi.VersionAsync();
-            Assert.That(versions, Is.Not.Null);
+            Assert.NotNull(versions);
          
             // Assert.True(versions.ContainsKey("Version"));
             // Assert.True(versions.ContainsKey("Repo"));
@@ -94,7 +88,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                     File.Move(versionPath, versionBackupPath);
                 }
 
-                Assert.That(await ipfs.BlockRepositoryApi.VersionAsync(), Is.EqualTo("0"));
+                Assert.AreEqual("0", await ipfs.BlockRepositoryApi.VersionAsync());
             }
             finally
             {

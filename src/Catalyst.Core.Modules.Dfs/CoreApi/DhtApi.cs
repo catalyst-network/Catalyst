@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -26,7 +26,6 @@ using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Dfs.CoreApi;
-using Catalyst.Core.Lib.P2P;
 using Lib.P2P;
 using Lib.P2P.Routing;
 using MultiFormats;
@@ -37,7 +36,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
     {
         private readonly IDhtService _dhtService;
 
-        public DhtApi(KatDhtService dhtService)
+        public DhtApi(IDhtService dhtService)
         {
             _dhtService = dhtService;
         }

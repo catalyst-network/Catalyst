@@ -30,7 +30,6 @@ using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Options;
 using Catalyst.Core.Lib.Dag;
 using Catalyst.TestUtils;
-using FluentAssertions;
 using Lib.P2P;
 using MultiFormats;
 using NUnit.Framework;
@@ -40,12 +39,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
     public class PinApiTest
     {
         private readonly IDfsService _dfs;
-
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            _dfs.Dispose();
-        }
 
         public PinApiTest()
         {
@@ -59,14 +52,14 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             var id = result.Id;
 
             var pins = await _dfs.PinApi.AddAsync(id);
-            Assert.That(pins.Any(pin => pin == id), Is.True);
+            Assert.True(pins.Any(pin => pin == id));
             var all = await _dfs.PinApi.ListAsync();
-            Assert.That(all.Any(pin => pin == id), Is.True);
+            Assert.True(all.Any(pin => pin == id));
 
             pins = await _dfs.PinApi.RemoveAsync(id);
-            Assert.That(pins.Any(pin => pin == id), Is.True);
+            Assert.True(pins.Any(pin => pin == id));
             all = await _dfs.PinApi.ListAsync();
-            Assert.That(all.Any(pin => pin == id), Is.False);
+            Assert.False(all.Any(pin => pin == id));
         }
 
         [Test]
@@ -88,12 +81,12 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 }, "identity")
             };
             var pins = await _dfs.PinApi.AddAsync(cid, false);
-            Assert.That(pins.ToArray().Should().Contain(cid), Is.True);
+            Assert.Contains(cid, pins.ToArray());
             var all = await _dfs.PinApi.ListAsync();
-            Assert.That(all.ToArray().Should().Contain(cid), Is.True);
+            Assert.Contains(cid, all.ToArray());
 
             var removals = await _dfs.PinApi.RemoveAsync(cid, false);
-            Assert.That(removals.ToArray().Should().Contain(cid), Is.True);
+            Assert.Contains(cid, removals.ToArray());
             all = await _dfs.PinApi.ListAsync();
             Assert.That(all.ToArray(), Does.Not.Contain(cid));
         }
@@ -121,7 +114,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             };
             var node = await _dfs.UnixFsApi.AddTextAsync("hello world", options);
             var cids = await _dfs.PinApi.AddAsync(node.Id);
-            Assert.That(cids.Count(), Is.EqualTo(6));
+            Assert.AreEqual(6, cids.Count());
         }
 
         [Test]
@@ -136,10 +129,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             };
             var node = await _dfs.UnixFsApi.AddTextAsync("hello world", options);
             var cids = await _dfs.PinApi.AddAsync(node.Id);
-            Assert.That(cids.Count(), Is.EqualTo(6));
+            Assert.AreEqual(6, cids.Count());
 
             var removedCids = await _dfs.PinApi.RemoveAsync(node.Id);
-            Assert.That(cids.ToArray(), Is.EqualTo(removedCids.ToArray()));
+            Assert.AreEqual(cids.ToArray(), removedCids.ToArray());
         }
     }
 }

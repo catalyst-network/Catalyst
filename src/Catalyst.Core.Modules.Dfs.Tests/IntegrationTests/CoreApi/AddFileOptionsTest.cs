@@ -36,15 +36,15 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         {
             var options = new AddFileOptions();
 
-            Assert.That(options.Pin, Is.EqualTo(true));
-            Assert.That(options.ChunkSize, Is.EqualTo(256 * 1024));
-            Assert.That(options.Hash, Is.EqualTo(MultiHash.DefaultAlgorithmName));
-            Assert.That(options.OnlyHash, Is.EqualTo(false));
-            Assert.That(options.RawLeaves, Is.EqualTo(false));
-            Assert.That(options.Trickle, Is.EqualTo(false));
-            Assert.That(options.Wrap, Is.EqualTo(false));
-            Assert.That(options.Progress, Is.Null);
-            Assert.That(options.ProtectionKey, Is.Null);
+            Assert.AreEqual(true, options.Pin);
+            Assert.AreEqual(256 * 1024, options.ChunkSize);
+            Assert.AreEqual(MultiHash.DefaultAlgorithmName, options.Hash);
+            Assert.AreEqual(false, options.OnlyHash);
+            Assert.AreEqual(false, options.RawLeaves);
+            Assert.AreEqual(false, options.Trickle);
+            Assert.AreEqual(false, options.Wrap);
+            Assert.Null(options.Progress);
+            Assert.Null(options.ProtectionKey);
         }
 
         [Test]
@@ -63,15 +63,15 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
                 ProtectionKey = "secret"
             };
 
-            Assert.That(options.Pin, Is.EqualTo(false));
-            Assert.That(options.ChunkSize, Is.EqualTo(2 * 1024));
-            Assert.That(options.Hash, Is.EqualTo("sha2-512"));
-            Assert.That(options.OnlyHash, Is.EqualTo(true));
-            Assert.That(options.RawLeaves, Is.EqualTo(true));
-            Assert.That(options.Trickle, Is.EqualTo(true));
-            Assert.That(options.Wrap, Is.EqualTo(true));
-            Assert.That(options.Progress, Is.Not.Null);
-            Assert.That(options.ProtectionKey, Is.EqualTo("secret"));
+            Assert.AreEqual(false, options.Pin);
+            Assert.AreEqual(2 * 1024, options.ChunkSize);
+            Assert.AreEqual("sha2-512", options.Hash);
+            Assert.AreEqual(true, options.OnlyHash);
+            Assert.AreEqual(true, options.RawLeaves);
+            Assert.AreEqual(true, options.Trickle);
+            Assert.AreEqual(true, options.Wrap);
+            Assert.NotNull(options.Progress);
+            Assert.AreEqual("secret", options.ProtectionKey);
         }
     }
 }

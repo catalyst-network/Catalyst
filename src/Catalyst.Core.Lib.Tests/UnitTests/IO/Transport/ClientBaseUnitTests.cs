@@ -21,14 +21,14 @@
 
 #endregion
 
-using Catalyst.Abstractions.IO.EventLoop;
-using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.EventLoop;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport
 {
@@ -38,7 +38,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport
         public void SendMessage_Should_Write_Message_To_Channel()
         {
             var messageDto = Substitute.For<IMessageDto<ProtocolMessage>>();
-            var channelFactory = Substitute.For<ITcpClientChannelFactory>();
+            var channelFactory = Substitute.For<ITcpClientChannelFactory<ProtocolMessage>>();
             var logger = Substitute.For<ILogger>();
             var eventLoopGroupFactory = Substitute.For<IEventLoopGroupFactory>();
 

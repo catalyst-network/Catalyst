@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -28,14 +28,15 @@ using System.Reactive.Linq;
 using System.Reflection;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.IO.EventLoop;
-using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Transport;
 using Catalyst.Core.Lib.Rpc.IO.Exceptions;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.EventLoop;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
+using Catalyst.Modules.Network.Dotnetty.IO.Transport;
+using Catalyst.Modules.Network.Dotnetty.Rpc;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Serilog;
@@ -46,9 +47,9 @@ namespace Catalyst.Core.Modules.Rpc.Client
     ///     This class provides a command line interface (CLI) application to connect to Catalyst Node.
     ///     Through the CLI the node operator will be able to connect to any number of running nodes and run commands.
     /// </summary>
-    public sealed class RpcClient : TcpClient, IRpcClient
+    public sealed class RpcClient : TcpClient<IObserverDto<ProtocolMessage>>, IRpcClient
     {
-        private readonly ITcpClientChannelFactory _channelFactory;
+        private readonly ITcpClientChannelFactory<IObserverDto<ProtocolMessage>> _channelFactory;
         private readonly IEnumerable<IRpcResponseObserver> _rpcResponseObservers;
         private readonly X509Certificate2 _certificate;
         private readonly IRpcClientConfig _clientConfig;
@@ -63,7 +64,7 @@ namespace Catalyst.Core.Modules.Rpc.Client
         /// <param name="clientConfig">rpc node config</param>
         /// <param name="handlers"></param>
         /// <param name="clientEventLoopGroupFactory"></param>
-        public RpcClient(ITcpClientChannelFactory channelFactory,
+        public RpcClient(ITcpClientChannelFactory<IObserverDto<ProtocolMessage>> channelFactory,
             X509Certificate2 certificate,
             IRpcClientConfig clientConfig,
             IEnumerable<IRpcResponseObserver> handlers,
@@ -93,16 +94,14 @@ namespace Catalyst.Core.Modules.Rpc.Client
             }
 
             var handler = _handlers[observer.Payload.TypeUrl];
-            handler.HandleResponseObserver(message, observer.Context, observer.Payload.PeerId,
-                observer.Payload.CorrelationId.ToCorrelationId());
+            handler.HandleResponseObserver(message, observer.Context, observer.Payload.Address, observer.Payload.CorrelationId.ToCorrelationId());
 
             return message;
         }
 
         public override async Task StartAsync()
         {
-            var socket = await _channelFactory.BuildChannelAsync(EventLoopGroupFactory, _clientConfig.HostAddress, _clientConfig.Port,
-                _certificate).ConfigureAwait(false);
+            var socket = await _channelFactory.BuildChannelAsync(EventLoopGroupFactory, _clientConfig.Address, _certificate).ConfigureAwait(false);
 
             _socketMessageStream = socket.MessageStream;
 

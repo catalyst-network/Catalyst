@@ -21,23 +21,25 @@
 
 #endregion
 
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Lib.P2P.Tests
 {
+    [TestClass]
     public class PolicyTest
     {
-        [Test]
+        [TestMethod]
         public void Always()
         {
             var policy = new PolicyAlways<string>();
-            Assert.That(policy.IsAllowed("foo"), Is.True);
+            Assert.IsTrue(policy.IsAllowed("foo"));
         }
 
-        [Test]
+        [TestMethod]
         public void Never()
         {
             var policy = new PolicyNever<string>();
-            Assert.That(policy.IsAllowed("foo"), Is.False);
+            Assert.IsFalse(policy.IsAllowed("foo"));
         }
     }
 }

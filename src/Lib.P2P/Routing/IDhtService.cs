@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -35,6 +35,8 @@ namespace Lib.P2P.Routing
         ///   Provides access to other peers.
         /// </summary>
         ISwarmService SwarmService { get; set; }
+
+        RoutingTable RoutingTable { get; }
 
         /// <summary>
         ///   The number of closer peers to return.

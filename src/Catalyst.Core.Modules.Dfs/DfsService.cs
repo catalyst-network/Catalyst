@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -69,61 +69,70 @@ namespace Catalyst.Core.Modules.Dfs
         private readonly DfsState _dfsState;
         private readonly IHashProvider _hashProvider;
         private ConcurrentBag<Func<Task>> _stopTasks = new ConcurrentBag<Func<Task>>();
+        private readonly IPeerRepository _peerRepository;
 
-        public DfsService(IBitSwapApi bitSwapApi,
-            BitSwapService bitSwapService,
-            IBlockApi blockApi,
-            IBlockRepositoryApi blockRepositoryApi,
+        public DfsService(
+            Peer localPeer,
+            IBitswapService bitSwapService,
+            IDhtService dhtService,
+            Ping1 pingService,
+            IPubSubService pubSubService,
+            ISwarmService swarmService,
             IBootstrapApi bootstrapApi,
             IConfigApi configApi,
+            IBitSwapApi bitSwapApi,
+            IBlockApi blockApi,
+            IBlockRepositoryApi blockRepositoryApi,
             IDagApi dagApi,
             IDhtApi dhtApi,
             IDnsApi dnsApi,
-            KatDhtService dhtService,
             IUnixFsApi unixFsApi,
             IKeyApi keyApi,
             INameApi nameApi,
             IObjectApi objectApi,
             IPinApi pinApi,
-            Ping1 pingService,
             IPubSubApi pubSubApi,
-            PubSubService pubSubService,
             IStatsApi statsApi,
             ISwarmApi swarmApi,
-            SwarmService swarmService,
-            DfsOptions dfsOptions,
             IHashProvider hashProvider,
+            DfsOptions dfsOptions,
             DfsState dfsState,
-            IPasswordManager passwordManager,
+            IEnumerable<IService> pluginServices,
             IMigrationManager migrationManager,
-            Peer localPeer)
+            IPeerRepository peerRepository
+            )
         {
-            BitSwapApi = bitSwapApi;
+            LocalPeer = localPeer;
+
             BitSwapService = bitSwapService;
-            BlockApi = blockApi;
-            BlockRepositoryApi = blockRepositoryApi;
+            DhtService = dhtService;
+            PingService = pingService;
+            PubSubService = pubSubService;
+            SwarmService = swarmService;
+
             BootstrapApi = bootstrapApi;
             ConfigApi = configApi;
+            BitSwapApi = bitSwapApi;
+            BlockApi = blockApi;
+            BlockRepositoryApi = blockRepositoryApi;
             DagApi = dagApi;
             DhtApi = dhtApi;
-            DhtService = dhtService;
+            DnsApi = dnsApi;
             UnixFsApi = unixFsApi;
             KeyApi = keyApi;
             NameApi = nameApi;
             ObjectApi = objectApi;
             PinApi = pinApi;
-            PingService = pingService;
             PubSubApi = pubSubApi;
-            PubSubService = pubSubService;
             StatsApi = statsApi;
             SwarmApi = swarmApi;
-            SwarmService = swarmService;
             Options = dfsOptions;
             _hashProvider = hashProvider;
             _dfsState = dfsState;
-            DnsApi = dnsApi;
             MigrationManager = migrationManager;
-            LocalPeer = localPeer;
+            PluginServices = pluginServices;
+
+            _peerRepository = peerRepository;
 
             InitAsync().Wait();
         }
@@ -137,12 +146,12 @@ namespace Catalyst.Core.Modules.Dfs
             };
         }
 
+        public IEnumerable<IService> PluginServices { set; get; }
+
         /// <summary>
         ///     The configuration options.
         /// </summary>
         public DfsOptions Options { get; set; }
-
-        //private IKeyStoreService _keyStoreService;
 
         private async Task InitAsync()
         {
@@ -166,7 +175,6 @@ namespace Catalyst.Core.Modules.Dfs
 
             Log.Debug("Building PubSub service");
 
-            //PubSubService.LocalPeer = LocalPeer;
             Log.Debug("Built PubSub service");
         }
 
@@ -232,6 +240,15 @@ namespace Catalyst.Core.Modules.Dfs
                 }
             };
 
+            foreach (var service in PluginServices)
+            {
+                tasks.Add(async () =>
+                {
+                    _stopTasks.Add(async () => await service.StopAsync().ConfigureAwait(false));
+                    await service.StartAsync().ConfigureAwait(false);
+                });
+            }
+
             Log.Debug("waiting for services to start");
             await Task.WhenAll(tasks.Select(t => t())).ConfigureAwait(false);
 
@@ -282,7 +299,7 @@ namespace Catalyst.Core.Modules.Dfs
                 {
                     var bootstrap = new Bootstrap
                     {
-                        Addresses = await BootstrapApi.ListAsync()
+                        Addresses = Options.Discovery.UsePeerRepository ? _peerRepository.GetAll().Select(x=>x.Address) : await BootstrapApi.ListAsync()
                     };
                     bootstrap.PeerDiscovered += OnPeerDiscovered;
                     _stopTasks.Add(async () => await bootstrap.StopAsync().ConfigureAwait(false));
@@ -384,6 +401,22 @@ namespace Catalyst.Core.Modules.Dfs
             try
             {
                 SwarmService.RegisterPeer(peer);
+
+                if (Options.Discovery.UsePeerRepository)
+                {
+                    var address = peer.Addresses.FirstOrDefault();
+                    if (address != null)
+                    {
+                        var newPeer = new Lib.P2P.Models.Peer
+                        {
+                            Address = address
+                        };
+                        if (!_peerRepository.Exists(newPeer.DocumentId))
+                        {
+                            _peerRepository.Add(newPeer);
+                        }
+                    }
+                }
             }
             catch (Exception ex)
             {
@@ -419,12 +452,12 @@ namespace Catalyst.Core.Modules.Dfs
         /// <summary>
         ///     Manages communication with other peers.
         /// </summary>
-        public SwarmService SwarmService { get; }
+        public ISwarmService SwarmService { get; }
 
         /// <summary>
         ///     Manages publishng and subscribing to messages.
         /// </summary>
-        public PubSubService PubSubService { get; }
+        public IPubSubService PubSubService { get; }
 
         /// <summary>
         ///     Exchange blocks with other peers.
@@ -434,7 +467,7 @@ namespace Catalyst.Core.Modules.Dfs
         /// <summary>
         ///     Finds information with a distributed hash table.
         /// </summary>
-        public DhtService DhtService { get; }
+        public IDhtService DhtService { get; }
 
         #endregion
 

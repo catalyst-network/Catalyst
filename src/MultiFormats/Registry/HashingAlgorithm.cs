@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -84,8 +84,8 @@ namespace MultiFormats.Registry
             Register("sha3-256", 0x16, 256 / 8, () => new BouncyDigest(new BC.Sha3Digest(256)));
             Register("sha3-384", 0x15, 384 / 8, () => new BouncyDigest(new BC.Sha3Digest(384)));
             Register("sha3-512", 0x14, 512 / 8, () => new BouncyDigest(new BC.Sha3Digest(512)));
-            Register("shake-128", 0x18, 128 / 4, () => new BouncyDigest(new BC.ShakeDigest(128)));
-            Register("shake-256", 0x19, 256 / 4, () => new BouncyDigest(new BC.ShakeDigest(256)));
+            Register("shake-128", 0x18, 128 / 8, () => new BouncyDigest(new BC.ShakeDigest(128)));
+            Register("shake-256", 0x19, 256 / 8, () => new BouncyDigest(new BC.ShakeDigest(256)));
             Register("blake2b-160", 0xb214, 160 / 8, () => new BouncyDigest(new BC.Blake2bDigest(160)));
             Register("blake2b-256", 0xb220, 256 / 8, () => new BouncyDigest(new BC.Blake2bDigest(256)));
             Register("blake2b-384", 0xb230, 384 / 8, () => new BouncyDigest(new BC.Blake2bDigest(384)));

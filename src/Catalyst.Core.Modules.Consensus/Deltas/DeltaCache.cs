@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -39,7 +39,8 @@ using MultiFormats;
 using Nethermind.Db;
 using Nethermind.State;
 using Serilog;
-using Catalyst.Core.Lib.DAO.Ledger;
+using Nethermind.Core.Crypto;
+using Nethermind.Core.Extensions;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
@@ -59,34 +60,19 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
         public static Address TruffleTestAccount = new Address("0xb77aec9f59f9d6f39793289a09aea871932619ed");
 
         public static Address CatalystTruffleTestAccount = new Address("0x58BeB247771F0B6f87AA099af479aF767CcC0F00");
-        
+
         public DeltaCache(IHashProvider hashProvider,
             IMemoryCache memoryCache,
             IDeltaDfsReader dfsReader,
             IDeltaCacheChangeTokenProvider changeTokenProvider,
-            IWorldState stateProvider,
+            IStorageProvider storageProvider,
+            IStateProvider stateProvider,
+            ISnapshotableDb stateDb,
+            ISnapshotableDb codeDb,
             IDeltaIndexService deltaIndexService,
             ILogger logger)
         {
             _deltaIndexService = deltaIndexService;
-
-            stateProvider.CreateAccount(TruffleTestAccount, 1_000_000_000.Kat());
-            stateProvider.CreateAccount(CatalystTruffleTestAccount, 1_000_000_000.Kat());
-            
-            stateProvider.Commit(CatalystGenesisSpec.Instance);
-
-            // TODO
-//            stateProvider.CommitTree((long)deltaIndexService.LatestDeltaIndex().Height);
-
-            var genesisDelta = new Delta
-            {
-                TimeStamp = Timestamp.FromDateTime(DateTime.UnixEpoch),
-                StateRoot = ByteString.CopyFrom(stateProvider.StateRoot.Bytes),
-            };
-
-            
-            GenesisHash = hashProvider.ComputeMultiHash(genesisDelta).ToCid();
-
             _dfsReader = dfsReader;
             _logger = logger;
             _entryOptions = () => new MemoryCacheEntryOptions()
@@ -94,6 +80,26 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                .RegisterPostEvictionCallback(EvictionCallback);
 
             _memoryCache = memoryCache;
+
+            stateProvider.CreateAccount(TruffleTestAccount, 1_000_000_000.Kat());
+            stateProvider.CreateAccount(CatalystTruffleTestAccount, 1_000_000_000.Kat());
+
+            storageProvider.Commit();
+            stateProvider.Commit(CatalystGenesisSpec.Instance);
+
+            storageProvider.CommitTrees();
+            stateProvider.CommitTree();
+
+            stateDb.Commit();
+            codeDb.Commit();
+
+            var genesisDelta = new Delta
+            {
+                TimeStamp = Timestamp.FromDateTime(DateTime.UnixEpoch),
+                StateRoot = ByteString.CopyFrom(stateProvider.StateRoot.Bytes),
+            };
+
+            GenesisHash = hashProvider.ComputeMultiHash(genesisDelta).ToCid();
             _memoryCache.Set(GenesisHash, genesisDelta);
         }
 

@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -29,7 +29,7 @@ using NUnit.Framework;
 namespace Catalyst.Cli.Tests.IntegrationTests.Commands
 {
     [TestFixture]
-    [Category(Traits.IntegrationTest)] 
+    [Category(Traits.IntegrationTest)]
     public sealed class PeerRemoveCommandTests : CliCommandTestsBase
     {
         [SetUp]
@@ -41,8 +41,10 @@ namespace Catalyst.Cli.Tests.IntegrationTests.Commands
         [Test]
         public void Cli_Can_Send_Remove_Peer_Request()
         {
+            var address = "/ip4/127.0.0.1/tcp/42066/ipfs/18n3naE9kBZoVvgYMV6saMZdwu2yu3QMzKa2BDkb5C5pcuhtrH1G9HHbztbbxA8tGmf4";
+
             var result = Shell.ParseCommand(
-                "removepeer", NodeArgumentPrefix, ServerNodeName, "-p", "fake_public_key", "-i", "127.0.0.1");
+                "removepeer", NodeArgumentPrefix, ServerNodeName, "-a", address);
             result.Should().BeTrue();
 
             AssertSentMessageAndGetMessageContent<RemovePeerRequest>();

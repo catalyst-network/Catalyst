@@ -42,17 +42,6 @@ using NSubstitute;
 using Serilog;
 using NUnit.Framework;
 using Catalyst.Core.Lib.Service;
-using Nethermind.Logging;
-using Nethermind.Trie;
-using Nethermind.Trie.Pruning;
-using Nethermind.Evm.Tracing.GethStyle;
-using Nethermind.Blockchain.Receipts;
-using Nethermind.Crypto;
-using Nethermind.Blockchain;
-using Nethermind.Consensus.Comparers;
-using Nethermind.Core;
-using Nethermind.Specs.Forks;
-using Nethermind.Specs;
 
 namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
 {
@@ -62,42 +51,24 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         private IMemoryCache _memoryCache;
         private IDeltaDfsReader _dfsReader;
         private DeltaCache _deltaCache;
-        private Serilog.ILogger _logger;
-
-        [TearDown]
-        public void TearDown()
-        {
-            _memoryCache.Dispose();
-            _deltaCache.Dispose();
-        }
+        private ILogger _logger;
 
         [SetUp]
         public void Init()
         {
-            GethLikeTxTracer txTracer = new GethLikeTxMemoryTracer(GethTraceOptions.Default);
-
-            NoErrorLimboLogs logManager = NoErrorLimboLogs.Instance;
-
-            IDbProvider dbProvider = TestMemDbProvider.Init();
-            IDb codeDb = dbProvider.CodeDb;
-            IDb stateDb = dbProvider.StateDb;
-            SingleReleaseSpecProvider specProvider =
-                new(ConstantinopleFix.Instance, MainnetSpecProvider.Instance.NetworkId, MainnetSpecProvider.Instance.ChainId);
-            TrieStore trieStore = new(stateDb, LimboLogs.Instance);
-            StateReader stateReader = new(trieStore, codeDb, logManager);
-            WorldState stateProvider = new(trieStore, codeDb, logManager);
-
             _hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             _memoryCache = Substitute.For<IMemoryCache>();
             _dfsReader = Substitute.For<IDeltaDfsReader>();
-            _logger = Substitute.For<Serilog.ILogger>();
+            _logger = Substitute.For<ILogger>();
 
             var tokenProvider = Substitute.For<IDeltaCacheChangeTokenProvider>();
             tokenProvider.GetChangeToken().Returns(Substitute.For<IChangeToken>());
 
+            var storageProvider = Substitute.For<IStorageProvider>();
+            var stateProvider = Substitute.For<IStateProvider>();
             stateProvider.StateRoot.Returns(Keccak.Zero);
 
-            _deltaCache = new DeltaCache(_hashProvider, _memoryCache, _dfsReader, tokenProvider, stateProvider, Substitute.For<IDeltaIndexService>(), _logger);
+            _deltaCache = new DeltaCache(_hashProvider, _memoryCache, _dfsReader, tokenProvider, storageProvider, stateProvider, Substitute.For<ISnapshotableDb>(), Substitute.For<ISnapshotableDb>(), Substitute.For<IDeltaIndexService>(), _logger);
         }
 
         [Test]

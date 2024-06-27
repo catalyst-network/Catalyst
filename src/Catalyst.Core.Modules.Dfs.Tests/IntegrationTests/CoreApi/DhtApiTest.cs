@@ -35,12 +35,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         private IDfsService ipfs;
         private MultiHash _locaId;
 
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            ipfs.Dispose();
-        }
-
         public DhtApiTest()
         {
             ipfs = TestDfs.GetTestDfs();
@@ -52,14 +46,14 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         public void Local_Info()
         {
             var peer = ipfs.DhtApi.FindPeerAsync(_locaId).GetAwaiter().GetResult();
-            Assert.That(peer, Is.TypeOf<Peer>());
-            Assert.That(peer.Addresses, Is.Not.Null);
+            Assert.IsInstanceOf(typeof(Peer), peer);
+            Assert.NotNull(peer.Addresses);
             Assert.That(peer.AgentVersion, Does.StartWith("net-ipfs/"));
-            Assert.That(peer.Id, Is.Not.Null);
+            Assert.NotNull(peer.Id);
             Assert.That(peer.ProtocolVersion, Does.StartWith("ipfs/"));
-            Assert.That(peer.PublicKey, Is.Not.Null);
-            Assert.That(_locaId, Is.EqualTo(peer.Id));
-            Assert.That(peer.IsValid(), Is.True);
+            Assert.NotNull(peer.PublicKey);
+            Assert.AreEqual(_locaId, peer.Id);
+            Assert.True(peer.IsValid());
         }
 
         [Test]
@@ -71,8 +65,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             var mars = swarm.RegisterPeerAddress(marsAddr);
 
             var peer = ipfs.DhtApi.FindPeerAsync(marsId).GetAwaiter().GetResult();
-            Assert.That(mars.Id, Is.EqualTo(peer.Id));
-            Assert.That(mars.Addresses.First(), Is.EqualTo(peer.Addresses.First()));
+            Assert.AreEqual(mars.Id, peer.Id);
+            Assert.AreEqual(mars.Addresses.First(), peer.Addresses.First());
         }
 
         // [Test]

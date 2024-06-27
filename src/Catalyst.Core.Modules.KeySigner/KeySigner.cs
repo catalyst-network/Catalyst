@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -22,69 +22,49 @@
 #endregion
 
 using System;
-using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
 using Catalyst.Protocol;
 using Catalyst.Protocol.Cryptography;
-using Catalyst.Protocol.Network;
-using Org.BouncyCastle.Security;
+using Org.BouncyCastle.Crypto.Parameters;
 
 namespace Catalyst.Core.Modules.KeySigner
 {
     public sealed class KeySigner : IKeySigner
     {
-        private readonly IKeyStore _keyStore;
         private readonly ICryptoContext _cryptoContext;
+        private readonly IKeyApi _keyApi;
         private readonly IKeyRegistry _keyRegistry;
-        private readonly KeyRegistryTypes _defaultKey = KeyRegistryTypes.DefaultKey;
 
         /// <summary>Initializes a new instance of the <see cref="KeySigner"/> class.</summary>
         /// <param name="keyStore">The key store.</param>
         /// <param name="cryptoContext">The crypto context.</param>
         /// /// <param name="keyRegistry">The key registry.</param>
-        public KeySigner(IKeyStore keyStore, 
-            ICryptoContext cryptoContext, 
+        public KeySigner(ICryptoContext cryptoContext,
+            IKeyApi keyApi,
             IKeyRegistry keyRegistry)
         {
-            _keyStore = keyStore;
             _cryptoContext = cryptoContext;
+            _keyApi = keyApi;
             _keyRegistry = keyRegistry;
-            InitialiseKeyRegistry();
         }
-
-        private void InitialiseKeyRegistry()
-        {
-            if (!TryPopulateDefaultKeyFromKeyStore(out _))
-            {
-                GenerateKeyAndPopulateRegistryWithDefaultAsync().ConfigureAwait(false);
-            }   
-        }
-
-        private async Task GenerateKeyAndPopulateRegistryWithDefaultAsync()
-        {
-            var privateKey = await _keyStore.KeyStoreGenerateAsync(NetworkType.Devnet, _defaultKey).ConfigureAwait(false);
-            if (privateKey != null)
-            { 
-                _keyRegistry.AddItemToRegistry(_defaultKey, privateKey);
-            }
-        }
-
-        /// <inheritdoc/>
-        IKeyStore IKeySigner.KeyStore => _keyStore;
 
         /// <inheritdoc/>
         ICryptoContext IKeySigner.CryptoContext => _cryptoContext;
 
-        private IPrivateKey GetPrivateKey(KeyRegistryTypes keyIdentifier)
+        public IPrivateKey GetPrivateKey(KeyRegistryTypes keyIdentifier)
         {
-            var privateKey = _keyRegistry.GetItemFromRegistry(keyIdentifier);
-            if (privateKey == null && !TryPopulateRegistryFromKeyStore(keyIdentifier, out privateKey))
+            if (_keyRegistry.RegistryContainsKey(keyIdentifier))
             {
-                throw new SignatureException("The signature cannot be created because the key does not exist");
+                return _keyRegistry.GetItemFromRegistry(keyIdentifier);
             }
+
+            var privateKeyParameters = (Ed25519PrivateKeyParameters) _keyApi.GetPrivateKeyAsync(keyIdentifier.Name).GetAwaiter().GetResult();
+            var privateKeyBytes = privateKeyParameters.GetEncoded();
+            var privateKey = _cryptoContext.GetPrivateKeyFromBytes(privateKeyBytes);
+            _keyRegistry.AddItemToRegistry(keyIdentifier, privateKey);
 
             return privateKey;
         }
@@ -95,7 +75,9 @@ namespace Catalyst.Core.Modules.KeySigner
 
             using var pooled = signingContext.SerializeToPooledBytes();
 
-            return _cryptoContext.Sign(privateKey, data, pooled.Span);
+            var signature = _cryptoContext.Sign(privateKey, data, pooled.Span);
+
+            return signature;
         }
 
         /// <inheritdoc/>
@@ -105,22 +87,5 @@ namespace Catalyst.Core.Modules.KeySigner
 
             return _cryptoContext.Verify(signature, data, pooled.Span);
         }
-
-        public void ExportKey()
-        {
-            throw new NotImplementedException();
-        }
-
-        private bool TryPopulateRegistryFromKeyStore(KeyRegistryTypes keyIdentifier, out IPrivateKey key)
-        {
-            key = _keyStore.KeyStoreDecrypt(keyIdentifier);
-            
-            return key != null && (_keyRegistry.RegistryContainsKey(keyIdentifier) || _keyRegistry.AddItemToRegistry(keyIdentifier, key));
-        }
-
-        private bool TryPopulateDefaultKeyFromKeyStore(out IPrivateKey key)
-        {
-            return TryPopulateRegistryFromKeyStore(_defaultKey, out key);
-        }   
     }
 }

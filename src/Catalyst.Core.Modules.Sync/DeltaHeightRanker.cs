@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -21,12 +21,12 @@
 
 #endregion
 
-using Catalyst.Abstractions.P2P.Repository;
+using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Core.Modules.Sync.Modal;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.IPPN;
-using Catalyst.Protocol.Peer;
+using MultiFormats;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -36,19 +36,19 @@ using System.Reactive.Subjects;
 
 namespace Catalyst.Core.Modules.Sync
 {
-    public class DeltaHeightRanker : PeerMessageRankManager<PeerId, LatestDeltaHashResponse>, IDeltaHeightRanker
+    public class DeltaHeightRanker : PeerMessageRankManager<MultiAddress, LatestDeltaHashResponse>, IDeltaHeightRanker
     {
         private bool _disposed;
         private readonly double _threshold;
-        private readonly IPeerRepository _peerRepository;
         private readonly int _maxPeersInStore;
+        private readonly ISwarmApi _swarmApi;
 
         private readonly ReplaySubject<DeltaIndex> _foundDeltaHeightSubject;
         public IObservable<DeltaIndex> FoundDeltaHeight { get; }
 
-        public DeltaHeightRanker(IPeerRepository peerRepository, int maxPeersInStore = 100, double threshold = 0.5, IScheduler scheduler = null)
+        public DeltaHeightRanker(ISwarmApi swarmApi, int maxPeersInStore = 100, double threshold = 0.5, IScheduler scheduler = null)
         {
-            _peerRepository = peerRepository;
+            _swarmApi = swarmApi;
             _maxPeersInStore = maxPeersInStore;
             _threshold = threshold;
 
@@ -56,10 +56,10 @@ namespace Catalyst.Core.Modules.Sync
             FoundDeltaHeight = _foundDeltaHeightSubject.AsObservable();
         }
 
-        private int GetAvaliablePeerCount() => Math.Min(_maxPeersInStore, _peerRepository.Count());
-        public IEnumerable<PeerId> GetPeers() => _messages.Keys;
+        private int GetAvaliablePeerCount() => Math.Max(_maxPeersInStore, _swarmApi.PeersAsync().ConfigureAwait(false).GetAwaiter().GetResult().Count());
+        public IEnumerable<MultiAddress> GetPeers() => _messages.Keys;
 
-        public override void Add(PeerId key, LatestDeltaHashResponse value)
+        public override void Add(MultiAddress key, LatestDeltaHashResponse value)
         {
             base.Add(key, value);
 
@@ -67,9 +67,9 @@ namespace Catalyst.Core.Modules.Sync
             ClearPeersOutOfRange(mostPopularMessages);
 
             var minimumScore = GetAvaliablePeerCount() * _threshold;
-            if (mostPopularMessages.Count() >= minimumScore || mostPopularMessages.Count() >= _peerRepository.Count())
+            if (mostPopularMessages.Where(x => x.Item.IsSync).Count() >= minimumScore || mostPopularMessages.Count() >= _maxPeersInStore)
             {
-                _foundDeltaHeightSubject.OnNext(mostPopularMessages.First().Item.Result);
+                _foundDeltaHeightSubject.OnNext(mostPopularMessages.First().Item.DeltaIndex);
             }
         }
 
@@ -77,7 +77,9 @@ namespace Catalyst.Core.Modules.Sync
         {
             while (_maxPeersInStore < _messages.Count())
             {
-                _messages.Values.Remove(mostPopularMessages.Last().Item);
+                var lastGroup = _messages.Where(kvp => kvp.Value == mostPopularMessages.Last().Item);
+                var lastItem = lastGroup.Last();
+                _messages.Remove(lastItem);
             }
         }
 
@@ -86,9 +88,9 @@ namespace Catalyst.Core.Modules.Sync
             return _messages.Count();
         }
 
-        public IOrderedEnumerable<IRankedItem<LatestDeltaHashResponse>> GetMessagesByMostPopular(Func<KeyValuePair<PeerId, LatestDeltaHashResponse>, bool> filter = null)
+        public IOrderedEnumerable<IRankedItem<LatestDeltaHashResponse>> GetMessagesByMostPopular()
         {
-            return _messages.GroupBy(x => x.Value).Select(x => new RankedItem<LatestDeltaHashResponse> { Item = x.Key, Score = x.Count() }).OrderByDescending(x => x.Score).ThenByDescending(x => x.Item.Result.Height);
+            return _messages.GroupBy(x => x.Value).Select(x => new RankedItem<LatestDeltaHashResponse> { Item = x.Key, Score = x.Count() }).OrderByDescending(x => x.Score).ThenByDescending(x => x.Item.DeltaIndex.Height);
         }
 
         public void Dispose()

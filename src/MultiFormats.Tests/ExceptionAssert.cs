@@ -23,6 +23,7 @@
 
 using System;
 using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MultiFormats.Tests
 {
@@ -43,7 +44,7 @@ namespace MultiFormats.Tests
                 if (match != null)
                 {
                     if (expectedMessage != null)
-                        Assert.That(expectedMessage, Is.EqualTo(match.Message), "Wrong exception message.");
+                        Assert.AreEqual(expectedMessage, match.Message, "Wrong exception message.");
                     return match;
                 }
 
@@ -52,9 +53,11 @@ namespace MultiFormats.Tests
             catch (T e)
             {
                 if (expectedMessage != null)
-                    Assert.Equals(expectedMessage, e.Message);
+                    Assert.AreEqual(expectedMessage, e.Message);
                 return e;
             }
+
+            Assert.Fail("Exception of type {0} should be thrown.", typeof(T));
 
             //  The compiler doesn't know that Assert.Fail will always throw an exception
             return null;

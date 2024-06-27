@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -21,6 +21,7 @@
 
 #endregion
 
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using Catalyst.Core.Lib.DAO.Ledger;
@@ -32,6 +33,7 @@ namespace Catalyst.Core.Lib.Service
 {
     public class DeltaIndexService : IDeltaIndexService
     {
+        private bool _disposed;
         private readonly IRepository<DeltaIndexDao, string> _repository;
 
         public DeltaIndexService(IRepository<DeltaIndexDao, string> repository) { _repository = repository; }
@@ -85,6 +87,24 @@ namespace Catalyst.Core.Lib.Service
 
             deltaHash = default;
             return false;
+        }
+
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!_disposed)
+            {
+                if (disposing)
+                {
+                    _repository.Dispose();
+                }
+            }
+            _disposed = true;
         }
     }
 }

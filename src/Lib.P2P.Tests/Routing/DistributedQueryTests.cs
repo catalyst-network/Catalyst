@@ -25,12 +25,14 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Lib.P2P.Routing;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Lib.P2P.Tests.Routing
 {
+    [TestClass]
     public class DistributedQueryTest
     {
-        [Test]
+        [TestMethod]
         public async Task Cancelling()
         {
             var dquery = new DistributedQuery<Peer>
@@ -40,15 +42,15 @@ namespace Lib.P2P.Tests.Routing
             var cts = new CancellationTokenSource();
             cts.Cancel();
             await dquery.RunAsync(cts.Token);
-            Assert.That(dquery.Answers.Count(), Is.EqualTo(0));
+            Assert.AreEqual(0, dquery.Answers.Count());
         }
 
-        [Test]
+        [TestMethod]
         public void UniqueId()
         {
             var q1 = new DistributedQuery<Peer>();
             var q2 = new DistributedQuery<Peer>();
-            Assert.That(q1.Id, Is.Not.EqualTo(q2.Id));
+            Assert.AreNotEqual(q1.Id, q2.Id);
         }
     }
 }

@@ -43,17 +43,6 @@ using NSubstitute;
 using Serilog.Events;
 using NUnit.Framework;
 using ILogger = Serilog.ILogger;
-using Nethermind.Trie;
-using Nethermind.Blockchain;
-using Nethermind.Core.Specs;
-using Nethermind.Core.Crypto;
-using Nethermind.Specs;
-using Nethermind.Blockchain.Receipts;
-using Nethermind.Evm.Tracing.GethStyle;
-using Nethermind.Specs.Forks;
-using Nethermind.Trie.Pruning;
-using Catalyst.TestUtils.Repository.TreeBuilder;
-using Nethermind.Crypto;
 
 namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
 {
@@ -62,10 +51,8 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
     public sealed class DeltaExecutorTests
     {
         private ICryptoContext _cryptoContext = new FfiWrapper();
-        private SingleReleaseSpecProvider _specProvider;
-        // TNA TODO
-        //private CatalystSpecProvider _specProvider;
-        private WorldState _stateProvider;
+        private CatalystSpecProvider _specProvider;
+        private StateProvider _stateProvider;
         private IPrivateKey _senderPrivateKey;
         private IPublicKey _senderPublicKey;
         private SigningContext _signingContext;
@@ -79,38 +66,11 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         [SetUp]
         public void Init()
         {
-            // TNA TODO
-            //_specProvider = new CatalystSpecProvider();
-            _specProvider = new(ConstantinopleFix.Instance, MainnetSpecProvider.Instance.NetworkId, MainnetSpecProvider.Instance.ChainId);
-
-            GethLikeTxTracer txTracer = new GethLikeTxMemoryTracer(GethTraceOptions.Default);
-
-            NoErrorLimboLogs logManager = NoErrorLimboLogs.Instance;
-
-            IDbProvider dbProvider = TestMemDbProvider.Init();
-            IDb codeDb = dbProvider.CodeDb;
-            IDb stateDb = dbProvider.StateDb;
-
-            TrieStore trieStore = new(stateDb, LimboLogs.Instance);
-            StateReader stateReader = new(trieStore, codeDb, logManager);
-            _stateProvider = new(trieStore, codeDb, logManager);
-            Assert.That(_stateProvider.StateRoot, Is.Not.EqualTo(Keccak.Zero));
-            _stateProvider.CreateAccount(new Address(new ValueHash256()), 10000.Ether());
-            _stateProvider.Commit(_specProvider.GenesisSpec);
-            _stateProvider.CommitTree(0);
-            _stateProvider.RecalculateStateRoot();
-
-            InMemoryReceiptStorage receiptStorage = new();
-            EthereumEcdsa ecdsa = new(_specProvider.ChainId, logManager);
-            BlockTree tree = Build.A.BlockTree().WithoutSettingHead.TestObject;
-            BlockhashProvider blockhashProvider = new(tree, _specProvider, _stateProvider, LimboLogs.Instance);
-
-            IKvm virtualMachine = new KatVirtualMachine(_stateProvider,
-                blockhashProvider,
-                _specProvider,
-                new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256")),
-                new FfiWrapper(),
-                LimboLogs.Instance);
+            _specProvider = new CatalystSpecProvider();
+            _stateProvider = new StateProvider(new StateDb(), new StateDb(), LimboLogs.Instance);
+            var storageProvider = new StorageProvider(new StateDb(), _stateProvider, LimboLogs.Instance);
+            IKvm virtualMachine = new KatVirtualMachine(_stateProvider, storageProvider, new StateUpdateHashProvider(),
+                _specProvider, new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256")), new FfiWrapper(), LimboLogs.Instance);
             var logger = Substitute.For<ILogger>();
             logger.IsEnabled(Arg.Any<LogEventLevel>()).Returns(true);
 
@@ -125,7 +85,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             _stateProvider.CreateAccount(Address.Zero, 1000.Kat());
             _stateProvider.Commit(_specProvider.GenesisSpec);
 
-            _executor = new DeltaExecutor(_specProvider, _stateProvider, virtualMachine,
+            _executor = new DeltaExecutor(_specProvider, _stateProvider, storageProvider, virtualMachine,
                 new FfiWrapper(), logger);
 
             _signingContext = new SigningContext
@@ -294,12 +254,8 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
         {
             var contractAddress = ContractAddress.From(_senderPublicKey.ToKvmAddress(), 0);
             _stateProvider.CreateAccount(contractAddress, 1000.Kat());
-            IReleaseSpec specProvider = new ReleaseSpec();
-            ReadOnlyMemory<byte> codeBytes = Bytes.FromHexString("0x01");
-            _stateProvider.InsertCode(Address.Zero,
-                new Hash256(Bytes.FromHexString("0x01")),
-                codeBytes,
-                specProvider);
+            var codeHash = _stateProvider.UpdateCode(Bytes.FromHexString("0x01"));
+            _stateProvider.UpdateCodeHash(contractAddress, codeHash, _specProvider.GenesisSpec);
             _stateProvider.Commit(_specProvider.GenesisSpec);
 
             var delta = EntryUtils.PrepareSingleContractEntryDelta(null, _senderPublicKey, 0,

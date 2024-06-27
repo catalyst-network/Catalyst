@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -31,9 +31,8 @@ using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Lib.Service;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.IPPN;
-using Catalyst.Protocol.Peer;
 using Dawn;
-using DotNetty.Transport.Channels;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.IO.Observers
@@ -48,8 +47,9 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         public DeltaHistoryRequestObserver(IPeerSettings peerSettings,
             IDeltaIndexService deltaIndexService,
             IMapperProvider mapperProvider,
+            IPeerClient peerClient,
             ILogger logger)
-            : base(logger, peerSettings)
+            : base(logger, peerSettings, peerClient)
         {
             _deltaIndexService = deltaIndexService;
             _mapperProvider = mapperProvider;
@@ -57,19 +57,17 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
 
         /// <param name="deltaHeightRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerId"></param>
+        /// <param name="sender"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override DeltaHistoryResponse HandleRequest(DeltaHistoryRequest deltaHeightRequest,
-            IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(deltaHeightRequest, nameof(deltaHeightRequest)).NotNull();
-            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
 
-            Logger.Debug("PeerId: {0} requests: {1} deltas from height: {2}", senderPeerId, deltaHeightRequest.Range,
+            Logger.Debug("PeerId: {0} requests: {1} deltas from height: {2}", sender, deltaHeightRequest.Range,
                 deltaHeightRequest.Height);
 
             var rangeDao = _deltaIndexService.GetRange(deltaHeightRequest.Height, deltaHeightRequest.Range)
@@ -77,8 +75,7 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             var range = rangeDao.Select(x => DeltaIndexDao.ToProtoBuff<DeltaIndex>(x, _mapperProvider)).ToList();
 
             var response = new DeltaHistoryResponse();
-            // TODO
-            response.Result.Add(range);
+            response.DeltaIndex.Add(range);
             return response;
         }
     }

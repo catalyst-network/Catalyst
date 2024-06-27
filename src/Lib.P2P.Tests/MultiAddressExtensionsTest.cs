@@ -24,61 +24,63 @@
 using System.Linq;
 using System.Net.Sockets;
 using System.Threading.Tasks;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MultiFormats;
 
 namespace Lib.P2P.Tests
 {
+    [TestClass]
     public class MultiAddressExtensionsTest
     {
-        [Test]
+        [TestMethod]
         public void Cloning()
         {
             var a = new MultiAddress("/dns/libp2p.io/tcp/5001");
             var b = a.Clone();
-            Assert.That(a, Is.EqualTo(b));
-            Assert.That(a.Protocols, Is.EqualTo(b.Protocols));
+            Assert.AreEqual(a, b);
+            Assert.AreNotSame(a.Protocols, b.Protocols);
         }
 
-        [Test]
+        [TestMethod]
         public async Task Resolving()
         {
             var local = new MultiAddress("/ip4/127.0.0.1/tcp/5001");
             var r0 = await local.ResolveAsync();
-            Assert.That(r0, Has.Count.EqualTo(1));
-            Assert.That(r0[0], Is.EqualTo(local));
+            Assert.AreEqual(1, r0.Count);
+            Assert.AreEqual(local, r0[0]);
         }
 
-        [Test]
+        [TestMethod]
         public async Task Resolving_Dns()
         {
             var dns = await new MultiAddress("/dns/libp2p.io/tcp/5001").ResolveAsync();
-            Assert.That(dns, Has.Count.Not.EqualTo(0));
+            Assert.AreNotEqual(0, dns.Count);
             var dns4 = await new MultiAddress("/dns4/libp2p.io/tcp/5001").ResolveAsync();
             var dns6 = await new MultiAddress("/dns6/libp2p.io/tcp/5001").ResolveAsync();
-            Assert.That(dns4.Count + dns6.Count, Is.EqualTo(dns.Count));
+            Assert.AreEqual(dns.Count, dns4.Count + dns6.Count);
         }
 
-        [Test]
+        [TestMethod]
         public async Task Resolving_HTTP()
         {
             var r = await new MultiAddress("/ip4/127.0.0.1/http").ResolveAsync();
-            Assert.That(r.First().ToString(), Is.EqualTo("/ip4/127.0.0.1/http/tcp/80"));
+            Assert.AreEqual("/ip4/127.0.0.1/http/tcp/80", r.First());
 
             r = await new MultiAddress("/ip4/127.0.0.1/http/tcp/8080").ResolveAsync();
-            Assert.That(r.First().ToString(), Is.EqualTo("/ip4/127.0.0.1/http/tcp/8080"));
+            Assert.AreEqual("/ip4/127.0.0.1/http/tcp/8080", r.First());
         }
 
-        [Test]
+        [TestMethod]
         public async Task Resolving_HTTPS()
         {
             var r = await new MultiAddress("/ip4/127.0.0.1/https").ResolveAsync();
-            Assert.That(r.First().ToString(), Is.EqualTo("/ip4/127.0.0.1/https/tcp/443"));
+            Assert.AreEqual("/ip4/127.0.0.1/https/tcp/443", r.First());
 
             r = await new MultiAddress("/ip4/127.0.0.1/https/tcp/4433").ResolveAsync();
-            Assert.That(r.First().ToString(), Is.EqualTo("/ip4/127.0.0.1/https/tcp/4433"));
+            Assert.AreEqual("/ip4/127.0.0.1/https/tcp/4433", r.First());
         }
 
-        [Test]
+        [TestMethod]
         public void Resolving_Unknown()
         {
             ExceptionAssert.Throws<SocketException>(() =>

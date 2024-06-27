@@ -44,10 +44,10 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.Cryptography
             _passwordManager = Substitute.For<IPasswordManager>();
         }
 
-        private string? _fileWithPassName;
-        private CertificateStore? _certificateStore;
-        private X509Certificate2? _createdCertificate;
-        private X509Certificate2? _retrievedCertificate;
+        private string _fileWithPassName;
+        private CertificateStore _certificateStore;
+        private X509Certificate2 _createdCertificate;
+        private X509Certificate2 _retrievedCertificate;
 
         private IPasswordManager _passwordManager;
 

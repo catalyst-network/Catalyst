@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -22,23 +22,22 @@
 #endregion
 
 using Nethermind.Core.Crypto;
-using Nethermind.Int256;
-using Org.BouncyCastle.Utilities;
+using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Abstractions.Kvm.Models 
 {
     public class AccountProof
     {
-        public byte[][]? Proof { get; set; }
+        public byte[][] Proof { get; set; }
 
         public UInt256 Balance { get; set; }
 
-        public Hash256? CodeHash { get; set; }
+        public Keccak CodeHash { get; set; }
 
         public UInt256 Nonce { get; set; }
 
-        public Hash256? StorageRoot { get; set; }
+        public Keccak StorageRoot { get; set; }
 
-        public StorageProof[]? StorageProofs { get; set; }
+        public StorageProof[] StorageProofs { get; set; }
     }
 }

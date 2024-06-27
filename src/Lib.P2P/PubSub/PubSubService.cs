@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -65,10 +65,7 @@ namespace Lib.P2P.PubSub
         /// <summary>
         ///   Sends and receives messages to other peers.
         /// </summary>
-        public List<IMessageRouter> Routers { get; set; } = new List<IMessageRouter>
-        {
-            new LoopbackRouter()
-        };
+        public List<IMessageRouter> Routers { get; set; }
 
         /// <summary>
         ///   The number of messages that have published.
@@ -84,6 +81,12 @@ namespace Lib.P2P.PubSub
         ///   The number of duplicate messages that have been received.
         /// </summary>
         public ulong DuplicateMesssagesReceived;
+
+        public PubSubService(Peer localPeer, IEnumerable<IMessageRouter> messageRouters)
+        {
+            LocalPeer = localPeer;
+            Routers = messageRouters.ToList();
+        }
 
         /// <inheritdoc />
         public async Task StartAsync()
@@ -142,10 +145,10 @@ namespace Lib.P2P.PubSub
             {
                 seqno = seqno.Reverse().ToArray();
             }
-            
+
             return new PublishedMessage
             {
-                Topics = new[] {topic},
+                Topics = new[] { topic },
                 Sender = LocalPeer,
                 SequenceNumber = seqno,
                 DataBytes = data
@@ -194,8 +197,7 @@ namespace Lib.P2P.PubSub
         {
             var msg = CreateMessage(topic, message);
             ++MesssagesPublished;
-            return Task
-               .WhenAll(Routers.Select(r => r.PublishAsync(msg, cancel)));
+            return Task.WhenAll(Routers.Select(r => r.PublishAsync(msg, cancel)));
         }
 
         /// <inheritdoc />
@@ -203,7 +205,7 @@ namespace Lib.P2P.PubSub
             Action<IPublishedMessage> handler,
             CancellationToken cancellationToken)
         {
-            var topicHandler = new TopicHandler {Topic = topic, Handler = handler};
+            var topicHandler = new TopicHandler { Topic = topic, Handler = handler };
             _topicHandlers.TryAdd(topicHandler, topicHandler);
 
             // TODO: need a better way.
@@ -211,7 +213,7 @@ namespace Lib.P2P.PubSub
             cancellationToken.Register(async () =>
             {
                 _topicHandlers.TryRemove(topicHandler, out _);
-                
+
                 if (_topicHandlers.Values.Count(t => t.Topic == topic) == 0)
                 {
                     await Task.WhenAll(Routers.Select(r => r.LeaveTopicAsync(topic, CancellationToken.None)))

@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -24,21 +24,27 @@
 using AutoMapper;
 using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO.Peer;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Wire;
+using Nethermind.Core;
 
 namespace Catalyst.Core.Lib.DAO.Deltas
 {
     public class FavouriteDeltaBroadcastDao : DaoBase
     {
         public CandidateDeltaBroadcastDao Candidate { get; set; }
-        public PeerIdDao VoterId { get; set; }
+        public string Voter { get; set; }
     }
 
     public class FavouriteDeltaBroadcastMapperInitialiser : IMapperInitializer
     {
         public void InitMappers(IMapperConfigurationExpression cfg)
         {
-            cfg.CreateMap<FavouriteDeltaBroadcast, FavouriteDeltaBroadcastDao>().ReverseMap();
+            cfg.CreateMap<FavouriteDeltaBroadcast, FavouriteDeltaBroadcastDao>()
+                .ForMember(e => e.Voter, opt => opt.MapFrom(x => new Address(x.Voter.ToByteArray())));
+
+            cfg.CreateMap<FavouriteDeltaBroadcastDao, FavouriteDeltaBroadcast>()
+               .ForMember(e => e.Voter, opt => opt.MapFrom(x => new Address(x.Voter).Bytes.ToByteString()));
         }
     }
 }

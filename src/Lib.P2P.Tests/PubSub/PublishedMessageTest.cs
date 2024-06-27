@@ -25,17 +25,18 @@ using System;
 using System.IO;
 using System.Linq;
 using Lib.P2P.PubSub;
-using Lib.P2P.SecureCommunication;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using ProtoBuf;
 
 namespace Lib.P2P.Tests.PubSub
 {
+    [TestClass]
     public sealed class PublishedMessageTest
     {
         private readonly Peer _self = new Peer {Id = "QmXK9VBxaXFuuT29AaPUTgW3jBWZ9JgLVZYdMYTHC6LLAH"};
         private readonly Peer _other = new Peer {Id = "QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ"};
 
-        [Test]
+        [TestMethod]
         public void RoundTrip()
         {
             var a = new PublishedMessage
@@ -50,15 +51,15 @@ namespace Lib.P2P.Tests.PubSub
             ms.Position = 0;
             var b = Serializer.Deserialize<PublishedMessage>(ms);
 
-            Assert.That(a.Topics.ToArray(), Is.EquivalentTo(b.Topics.ToArray()));
-            Assert.That(a.Sender, Is.EqualTo(b.Sender));
-            Assert.That(a.SequenceNumber, Is.EquivalentTo(b.SequenceNumber));
-            Assert.That(a.DataBytes, Is.EquivalentTo(b.DataBytes));
-            Assert.That(a.DataBytes.Length, Is.EqualTo(a.Size));
-            Assert.That(b.DataBytes.Length, Is.EqualTo(b.Size));
+            CollectionAssert.AreEqual(a.Topics.ToArray(), b.Topics.ToArray());
+            Assert.AreEqual(a.Sender, b.Sender);
+            CollectionAssert.AreEqual(a.SequenceNumber, b.SequenceNumber);
+            CollectionAssert.AreEqual(a.DataBytes, b.DataBytes);
+            Assert.AreEqual(a.DataBytes.Length, a.Size);
+            Assert.AreEqual(b.DataBytes.Length, b.Size);
         }
 
-        [Test]
+        [TestMethod]
         public void MessageID_Is_Unique()
         {
             var a = new PublishedMessage
@@ -76,20 +77,21 @@ namespace Lib.P2P.Tests.PubSub
                 DataBytes = new byte[] {0, 1, 0xfe, 0xff}
             };
 
-            Assert.That(a.MessageId, Is.Not.EqualTo(b.MessageId));
+            Assert.AreNotEqual(a.MessageId, b.MessageId);
         }
 
-        [Test]
+        [TestMethod]
+        [ExpectedException(typeof(NotSupportedException))]
         public void CidNotSupported()
         {
-            Assert.That(() => new PublishedMessage().Id, Throws.TypeOf<NotSupportedException>());
+            var _ = new PublishedMessage().Id;
         }
 
-        [Test]
+        [TestMethod]
         public void DataStream()
         {
             var msg = new PublishedMessage {DataBytes = new byte[] {1}};
-            Assert.That(msg.DataStream.ReadByte(), Is.EqualTo(1));
+            Assert.AreEqual(1, msg.DataStream.ReadByte());
         }
     }
 }

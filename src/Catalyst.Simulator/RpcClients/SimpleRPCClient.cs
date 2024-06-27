@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -29,32 +29,29 @@ using System.Threading.Tasks;
 using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.IO.Observers;
+using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Cli;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.FileSystem;
-using Catalyst.Core.Lib.IO.EventLoop;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P;
 using Catalyst.Core.Lib.Rpc.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
-using Catalyst.Core.Modules.Hashing;
 using Catalyst.Core.Modules.KeySigner;
-using Catalyst.Core.Modules.Keystore;
 using Catalyst.Core.Modules.Rpc.Client;
 using Catalyst.Core.Modules.Rpc.Client.IO.Observers;
 using Catalyst.Core.Modules.Rpc.Client.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.IO.EventLoop;
+using Catalyst.Modules.Network.Dotnetty.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
 using Catalyst.Protocol.Cryptography;
-using Catalyst.Protocol.Peer;
 using Catalyst.Simulator.Interfaces;
-using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using Microsoft.Extensions.Caching.Memory;
-using MultiFormats.Registry;
+using MultiFormats;
 using NSubstitute;
 using Serilog;
 
@@ -63,9 +60,9 @@ namespace Catalyst.Simulator.RpcClients
     public class SimpleRpcClient : IRpcClient
     {
         private readonly ILogger _logger;
-        private readonly PeerId _senderPeerId;
-        private PeerId _recipientPeerId;
-        private Abstractions.Rpc.IRpcClient _rpcClient;
+        private readonly MultiAddress _sender;
+        private MultiAddress _recipientPeerId;
+        private IRpcClient _rpcClient;
         private readonly X509Certificate2 _certificate;
         private readonly RpcClientFactory _rpcClientFactory;
 
@@ -78,22 +75,18 @@ namespace Catalyst.Simulator.RpcClients
             _logger = logger;
             _certificate = certificate;
 
-            var fileSystem = new FileSystem();
-
             var consolePasswordReader = new ConsolePasswordReader(userOutput, new ConsoleUserInput());
             var passwordManager = new PasswordManager(consolePasswordReader, passwordRegistry);
 
             var cryptoContext = new FfiWrapper();
 
-            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
-
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.NetworkType.Returns(signingContextProvider.NetworkType);
 
-            var localKeyStore = new LocalKeyStore(passwordManager, cryptoContext, fileSystem, hashProvider, _logger);
-
+            //var localKeyStore = new LocalKeyStore(passwordManager, cryptoContext, Substitute.For<IKeyApi>(), _logger);
+            //localKeyStore
             var keyRegistry = new KeyRegistry();
-            var keySigner = new KeySigner(localKeyStore, cryptoContext, keyRegistry);
+            var keySigner = new KeySigner(cryptoContext, Substitute.For<IKeyApi>(), keyRegistry);
 
             var memoryCacheOptions = new MemoryCacheOptions();
             var memoryCache = new MemoryCache(memoryCacheOptions);
@@ -122,15 +115,17 @@ namespace Catalyst.Simulator.RpcClients
 
             //PeerId for RPC/TCP is currently redundant.
             var publicKey = keyRegistry.GetItemFromRegistry(KeyRegistryTypes.DefaultKey).GetPublicKey().Bytes;
-            _senderPeerId = publicKey.BuildPeerIdFromPublicKey(IPAddress.Any, 1026);
+
+            //todo
+            //_sender = publicKey.BuildPeerIdFromPublicKey(IPAddress.Any, 1026);
         }
 
-        public async Task<bool> ConnectRetryAsync(PeerId peerIdentifier, int retryAttempts = 5)
+        public async Task<bool> ConnectRetryAsync(MultiAddress address, int retryAttempts = 5)
         {
             var retryCountDown = retryAttempts;
             while (retryCountDown > 0)
             {
-                var isConnectionSuccessful = await ConnectAsync(peerIdentifier).ConfigureAwait(false);
+                var isConnectionSuccessful = await ConnectAsync(address).ConfigureAwait(false);
                 if (isConnectionSuccessful)
                 {
                     return true;
@@ -148,53 +143,58 @@ namespace Catalyst.Simulator.RpcClients
             return false;
         }
 
-        public async Task<bool> ConnectAsync(PeerId peerIdentifier)
+        public async Task<bool> ConnectAsync(MultiAddress address)
         {
-            _recipientPeerId = peerIdentifier;
+            _recipientPeerId = address;
 
-            var peerRpcConfig = new RpcClientSettings
-            {
-                HostAddress = _recipientPeerId.IpAddress,
-                Port = (int) _recipientPeerId.Port,
-                PublicKey = _recipientPeerId.PublicKey.KeyToString()
-            };
+            //todo
+            //var peerRpcConfig = new RpcClientSettings
+            //{
+            //    HostAddress = _recipientPeerId.IpAddress,
+            //    Port = (int) _recipientPeerId.Port,
+            //    PublicKey = _recipientPeerId.PublicKey.KeyToString()
+            //};
 
-            _logger.Information($"Connecting to {peerRpcConfig.HostAddress}:{peerRpcConfig.Port}");
+            //_logger.Information($"Connecting to {peerRpcConfig.HostAddress}:{peerRpcConfig.Port}");
 
-            try
-            {
-                _rpcClient =
-                    await _rpcClientFactory.GetClientAsync(_certificate, peerRpcConfig).ConfigureAwait(false);
-                return _rpcClient.Channel.Open;
-            }
-            catch (ConnectException connectionException)
-            {
-                _logger.Error(connectionException, "Could not connect to node");
-            }
-            catch (Exception exception)
-            {
-                _logger.Error(exception, "Error attempting to connect to node");
-            }
+            //try
+            //{
+            //    _rpcClient =
+            //        await _rpcClientFactory.GetClientAsync(_certificate, peerRpcConfig).ConfigureAwait(false);
+            //    return _rpcClient.Channel.Open;
+            //}
+            //catch (ConnectException connectionException)
+            //{
+            //    _logger.Error(connectionException, "Could not connect to node");
+            //}
+            //catch (Exception exception)
+            //{
+            //    _logger.Error(exception, "Error attempting to connect to node");
+            //}
 
             return false;
         }
 
-        public bool IsConnected() { return _rpcClient.Channel.Active; }
+        public bool IsConnected()
+        {
+            return true;
+            //_rpcClient.Channel.Active; 
+        }
 
         public void SendMessage<T>(T message) where T : IMessage
         {
             var protocolMessage =
-                message.ToProtocolMessage(_senderPeerId, CorrelationId.GenerateCorrelationId());
+                message.ToProtocolMessage(_sender, CorrelationId.GenerateCorrelationId());
             var messageDto = new MessageDto(
                 protocolMessage,
                 _recipientPeerId);
 
-            _rpcClient.SendMessage(messageDto);
+            //_rpcClient.SendMessage(messageDto);
         }
 
         public void ReceiveMessage<T>(Action<T> message) where T : IMessage<T>
         {
-            _rpcClient.SubscribeToResponse<T>(message.Invoke);
+            //_rpcClient.SubscribeToResponse<T>(message.Invoke);
         }
     }
 }

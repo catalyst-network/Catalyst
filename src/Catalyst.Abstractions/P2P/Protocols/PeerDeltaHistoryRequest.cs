@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -24,7 +24,7 @@
 using System;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
-using Catalyst.Protocol.Peer;
+using MultiFormats;
 
 namespace Catalyst.Abstractions.P2P.Protocols
 {
@@ -41,6 +41,6 @@ namespace Catalyst.Abstractions.P2P.Protocols
         /// <param name="recipientPeerIdentifier"> The recipient peer identifier </param>
         /// <param name="height"> Delta height to request </param>
         /// <param name="range"> number of deltas requested </param>
-        Task<IPeerDeltaHistoryResponse> DeltaHistoryAsync(PeerId recipientPeerIdentifier, uint height = 1, uint range = 1024);
+        Task<IPeerDeltaHistoryResponse> DeltaHistoryAsync(MultiAddress recipientPeerIdentifier, uint height, uint range);
     }
 }

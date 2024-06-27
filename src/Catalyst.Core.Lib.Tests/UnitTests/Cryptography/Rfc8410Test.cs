@@ -44,11 +44,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
         [SetUp]
         public void Init()
         {
-            var dfsOptions = new DfsOptions(new BlockOptions(), new DiscoveryOptions(), new RepositoryOptions(FileSystem, Constants.DfsDataSubDir), Substitute.For<KeyChainOptions>(), Substitute.For<SwarmOptions>(), Substitute.For<IDnsClient>());
-            _keyStoreService = new KeyStoreService(dfsOptions)
-            {
-                Options = dfsOptions.KeyChain
-            };
+            var keyChain = Substitute.For<KeyChainOptions>();
+            _keyStoreService = new KeyStoreService(keyChain, new KeyFileStore(new RepositoryOptions(FileSystem, Constants.DfsDataSubDir)));
             var securePassword = new SecureString();
 
             "mypassword".ToList().ForEach(c => securePassword.AppendChar(c));
@@ -68,13 +65,13 @@ MC4CAQAwBQYDK2VwBCIEINTuctv5E1hK1bbY8fdp+K06/nwoy/HU++CXqI9EdVhC
             try
             {
                 var priv = (Ed25519PrivateKeyParameters) await _keyStoreService.GetPrivateKeyAsync("alice1");
-                Assert.Equals(priv.IsPrivate, true);
-                Assert.Equals("d4ee72dbf913584ad5b6d8f1f769f8ad3afe7c28cbf1d4fbe097a88f44755842",
+                Assert.True(priv.IsPrivate);
+                Assert.AreEqual("d4ee72dbf913584ad5b6d8f1f769f8ad3afe7c28cbf1d4fbe097a88f44755842",
                     priv.GetEncoded().ToHexString());
 
                 var pub = priv.GeneratePublicKey();
-                Assert.Equals(pub.IsPrivate, false);
-                Assert.Equals("19bf44096984cdfe8541bac167dc3b96c85086aa30b6b6cb0c5c38ad703166e1",
+                Assert.False(pub.IsPrivate);
+                Assert.AreEqual("19bf44096984cdfe8541bac167dc3b96c85086aa30b6b6cb0c5c38ad703166e1",
                     pub.GetEncoded().ToHexString());
             }
             finally
@@ -96,13 +93,13 @@ Z9w7lshQhqowtrbLDFw4rXAxZuE=
             try
             {
                 var priv = (Ed25519PrivateKeyParameters) await _keyStoreService.GetPrivateKeyAsync("alice1");
-                Assert.Equals(priv.IsPrivate, true);
-                Assert.Equals("d4ee72dbf913584ad5b6d8f1f769f8ad3afe7c28cbf1d4fbe097a88f44755842",
+                Assert.True(priv.IsPrivate);
+                Assert.AreEqual("d4ee72dbf913584ad5b6d8f1f769f8ad3afe7c28cbf1d4fbe097a88f44755842",
                     priv.GetEncoded().ToHexString());
 
                 var pub = priv.GeneratePublicKey();
-                Assert.Equals(pub.IsPrivate, false);
-                Assert.Equals("19bf44096984cdfe8541bac167dc3b96c85086aa30b6b6cb0c5c38ad703166e1",
+                Assert.False(pub.IsPrivate);
+                Assert.AreEqual("19bf44096984cdfe8541bac167dc3b96c85086aa30b6b6cb0c5c38ad703166e1",
                     pub.GetEncoded().ToHexString());
             }
             finally

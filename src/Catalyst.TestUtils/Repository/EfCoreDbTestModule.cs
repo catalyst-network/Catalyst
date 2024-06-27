@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -30,7 +30,7 @@ using SharpRepository.Repository;
 
 namespace Catalyst.TestUtils.Repository
 {
-    public sealed class EfCoreDbTestModule : Module
+    public sealed class EfCoreDbTestModule : Autofac.Module
     {
         private readonly string _connectionString;
         public EfCoreDbTestModule(string connectionString) { _connectionString = connectionString; }

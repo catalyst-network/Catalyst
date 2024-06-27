@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -30,9 +30,9 @@ using Nethermind.Core.Crypto;
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers 
 {
     [EthWeb3RequestHandler("eth", "getTransactionByBlockHashAndIndex")]
-    public class EthGetTransactionByBlockHashAndIndex : EthWeb3RequestHandler<Hash256, int, TransactionForRpc>
+    public class EthGetTransactionByBlockHashAndIndex : EthWeb3RequestHandler<Keccak, int, TransactionForRpc>
     {
-        protected override TransactionForRpc Handle(Hash256 deltaHash, int positionIndex, IWeb3EthApi api)
+        protected override TransactionForRpc Handle(Keccak deltaHash, int positionIndex, IWeb3EthApi api)
         {
             var delta = api.GetDeltaWithCid(deltaHash.ToCid());
 

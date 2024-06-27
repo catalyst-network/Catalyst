@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -314,7 +314,11 @@ namespace Lib.P2P
             // Ignore any disposal exceptions.
             try
             {
-                Stream?.DisposeAsync();
+#if NETCOREAPP3_0 || NETCOREAPP3_1
+                await Stream.DisposeAsync().ConfigureAwait(false);
+#else
+                Stream.Dispose();
+#endif
             }
             catch (Exception)
             {
@@ -369,14 +373,14 @@ namespace Lib.P2P
             {
                 return;
             }
-            
+
             _disposedValue = true;
 
             if (!disposing)
             {
                 return;
             }
-            
+
             _log.Debug($"Closing connection to {RemoteAddress}");
             if (Stream != null)
             {

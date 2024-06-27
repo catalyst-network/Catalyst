@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -26,12 +26,13 @@ using System.Linq;
 using Catalyst.Abstractions.P2P.Discovery;
 using Catalyst.Core.Lib.P2P.Discovery;
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.Extensions
 {
     public static class NeighbourExtensions
     {
-        public static INeighbours ToNeighbours(this IEnumerable<PeerId> peerIdentifier)
+        public static INeighbours ToNeighbours(this IEnumerable<MultiAddress> peerIdentifier)
         {
             return new Neighbours(peerIdentifier.Select(p => new Neighbour(p) as INeighbour));
         }

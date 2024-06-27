@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -23,11 +23,11 @@
 
 using System;
 using Catalyst.Abstractions.Cli;
-using Catalyst.Abstractions.Cli.Commands;
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.Rpc;
 using Catalyst.Cli.Commands;
-using Catalyst.Core.Lib.IO.Transport;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.Cli.Commands;
+using Catalyst.Modules.Network.Dotnetty.IO.Transport;
+using Catalyst.Modules.Network.Dotnetty.Rpc;
 using FluentAssertions;
 using Microsoft.Extensions.Configuration;
 using NSubstitute;
@@ -36,7 +36,6 @@ using Serilog;
 
 namespace Catalyst.Cli.Tests.UnitTests
 {
-    [TestFixture]
     public sealed class CommandContextTests
     {
         public CommandContextTests()

@@ -23,11 +23,9 @@
 
 using System;
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.Keystore;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Cryptography;
 using FluentAssertions;
-using Nito.Disposables;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -37,12 +35,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Registry
     {
         private IPrivateKey _privateKey = Substitute.For<IPrivateKey>();
         private KeyRegistry _keyRegistry;
-
-        [TearDown]
-        public void TearDown()
-        {
-            _keyRegistry.Dispose();
-        }
 
         [SetUp]
         public void Init()

@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -36,7 +36,7 @@ namespace Catalyst.Core.Lib.P2P.Discovery
         {
             return string.Join(", ",
                 this.Select(n =>
-                    n.PeerId + "|" + n.DiscoveryPingCorrelationId + "|" + n.StateTypes.Name));
+                    n.Address + "|" + n.DiscoveryPingCorrelationId + "|" + n.StateTypes.Name));
         }
     }
 }

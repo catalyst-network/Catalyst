@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -29,25 +29,25 @@ using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Dfs.Extensions;
-using Catalyst.Protocol.Peer;
+using Catalyst.Core.Modules.Kvm;
 using Catalyst.Protocol.Transaction;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 using Lib.P2P;
 using MultiFormats;
-using Nethermind.Int256;
+using Nethermind.Dirichlet.Numerics;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas.Building
 {
     internal sealed class CandidateBuilderStep : IDeltaBuilderStep
     {
-        private readonly PeerId _producerUniqueId;
+        private readonly MultiAddress _producerUniqueId;
         private readonly IDeterministicRandomFactory _randomFactory;
         private readonly IHashProvider _hashProvider;
         private readonly ILogger _logger;
 
-        public CandidateBuilderStep(PeerId producerUniqueId,
+        public CandidateBuilderStep(MultiAddress producerUniqueId,
             IDeterministicRandomFactory randomFactory,
             IHashProvider hashProvider,
             ILogger logger)
@@ -90,7 +90,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
             context.CoinbaseEntry = new CoinbaseEntry
             {
                 Amount = summedFees.ToUint256ByteString(),
-                ReceiverPublicKey = _producerUniqueId.PublicKey.ToByteString()
+                ReceiverKvmAddress = _producerUniqueId.GetPublicKeyBytes().ToKvmAddressByteString()
             };
             
             byte[] globalLedgerStateUpdate = shuffledEntriesBytes
@@ -106,7 +106,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
                    .ToByteString(),
 
                 // Idj
-                ProducerId = _producerUniqueId,
+                Producer = _producerUniqueId.GetPublicKeyBytes().ToKvmAddressByteString(),
                 PreviousDeltaDfsHash = context.PreviousDeltaHash.ToArray().ToByteString()
             };
             

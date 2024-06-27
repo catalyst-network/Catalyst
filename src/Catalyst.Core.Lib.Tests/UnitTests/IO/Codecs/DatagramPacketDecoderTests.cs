@@ -54,10 +54,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
                 new IPEndPoint(IPAddress.Any, IPEndPoint.MaxPort)
             );
 
-            Assert.Equals(channel.WriteInbound(datagramPacket), true);
+            Assert.True(channel.WriteInbound(datagramPacket));
             var content = channel.ReadInbound<ProtocolMessage>();
-            Assert.Equals(protocolMessageSigned, content);
-            Assert.Equals(channel.Finish(), false);
+            Assert.AreEqual(protocolMessageSigned, content);
+            Assert.False(channel.Finish());
         }
     }
 }

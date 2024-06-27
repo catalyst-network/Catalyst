@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -58,7 +58,7 @@ namespace Catalyst.Core.Lib.Rpc.IO.Messaging.Correlation
         {
             Logger.Verbose("{key} message evicted", (key as ByteString).ToCorrelationId());
             var message = (CorrelatableMessage<ProtocolMessage>) value;
-            _evictionEvent.OnNext(new MessageEvictionEvent<ProtocolMessage>(message, message.Content.PeerId));
+            _evictionEvent.OnNext(new MessageEvictionEvent<ProtocolMessage>(message, message.Content.Address));
         }
 
         protected override void Dispose(bool disposing)

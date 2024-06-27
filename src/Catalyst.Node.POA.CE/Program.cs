@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -25,7 +25,6 @@ using Autofac;
 using Autofac.Core;
 using Catalyst.Abstractions;
 using Catalyst.Abstractions.Cli;
-using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.DAO;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.Types;
@@ -44,20 +43,19 @@ using Catalyst.Core.Modules.Kvm;
 using Catalyst.Core.Modules.Ledger;
 using Catalyst.Core.Modules.Mempool;
 using Catalyst.Core.Modules.P2P.Discovery.Hastings;
-using Catalyst.Core.Modules.Rpc.Server;
 using Catalyst.Core.Modules.Sync;
 using Catalyst.Core.Modules.Web3;
+using Catalyst.Core.Modules.Web3.Options;
+using Catalyst.Modules.Network.LibP2P;
 using Catalyst.Modules.POA.Consensus;
 using Catalyst.Modules.POA.P2P;
-using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Network;
 using CommandLine;
-using MultiFormats;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -65,9 +63,6 @@ namespace Catalyst.Node.POA.CE
 {
     internal class Options
     {
-        [Option("ipfs-password", HelpText = "The password for IPFS.  Defaults to prompting for the password.")]
-        public string IpfsPassword { get; set; }
-
         [Option("ssl-cert-password", HelpText = "The password for ssl cert.  Defaults to prompting for the password.")]
         public string SslCertPassword { get; set; }
 
@@ -77,11 +72,18 @@ namespace Catalyst.Node.POA.CE
         [Option('o', "overwrite-config", HelpText = "Overwrite the data directory configs.")]
         public bool OverwriteConfig { get; set; }
 
+        [Option( "network-type", HelpText = "The network type")]
+        public NetworkType NetworkType { get; set; }
+        
         [Option("network-file", HelpText = "The name of the network file")]
         public string OverrideNetworkFile { get; set; }
 
+
         [Option('r', "reset", HelpText = "Reset the state")]
         public bool Reset { get; set; }
+
+        [Option('u', "uninstall", HelpText = "Uninstall the node after execution")]
+        public bool Uninstall { get; set; }
     }
 
     public static class Program
@@ -115,12 +117,10 @@ namespace Catalyst.Node.POA.CE
                 {typeof(MempoolModule), () => new MempoolModule()},
                 {typeof(ConsensusModule), () => new ConsensusModule()},
                 {typeof(SynchroniserModule), () => new SynchroniserModule()},
-                {typeof(
-                    KvmModule), () => new KvmModule()},
+                {typeof(KvmModule), () => new KvmModule()},
                 {typeof(LedgerModule), () => new LedgerModule()},
                 {typeof(HashingModule), () => new HashingModule()},
                 {typeof(DiscoveryHastingModule), () => new DiscoveryHastingModule()},
-                {typeof(RpcServerModule), () => new RpcServerModule()},
                 {typeof(BulletProofsModule), () => new BulletProofsModule()},
                 {typeof(KeystoreModule), () => new KeystoreModule()},
                 {typeof(KeySignerModule), () => new KeySignerModule()},
@@ -128,10 +128,11 @@ namespace Catalyst.Node.POA.CE
                 {typeof(AuthenticationModule), () => new AuthenticationModule()},
                 {
                     typeof(ApiModule),
-                    () => new ApiModule("http://*:5005", new List<string> {"Catalyst.Core.Modules.Web3", "Catalyst.Core.Modules.Dfs"})
+                    () => new ApiModule(new HttpOptions(new IPEndPoint(IPAddress.Any, 5005)), new HttpsOptions(new IPEndPoint(IPAddress.Any, 2053), "cert.pfx"), new List<string> {"Catalyst.Core.Modules.Web3", "Catalyst.Core.Modules.Dfs"})
                 },
                 {typeof(PoaConsensusModule), () => new PoaConsensusModule()},
-                {typeof(PoaP2PModule), () => new PoaP2PModule()}
+                {typeof(PoaP2PModule), () => new PoaP2PModule()},
+                {typeof(LibP2PNetworkModule), () => new LibP2PNetworkModule()}
             };
 
         public static void RegisterNodeDependencies(ContainerBuilder containerBuilder,
@@ -146,10 +147,6 @@ namespace Catalyst.Node.POA.CE
             // message handlers
             containerBuilder.RegisterAssemblyTypes(typeof(CoreLibProvider).Assembly)
                .AssignableTo<IP2PMessageObserver>().As<IP2PMessageObserver>();
-
-            containerBuilder.RegisterAssemblyTypes(typeof(RpcServerModule).Assembly)
-               .AssignableTo<IRpcRequestObserver>().As<IRpcRequestObserver>()
-               .PublicOnly();
 
             // DAO MapperInitialisers
             containerBuilder.RegisterAssemblyTypes(typeof(CoreLibProvider).Assembly)
@@ -193,15 +190,17 @@ namespace Catalyst.Node.POA.CE
             {
                 await Kernel
                    .WithDataDirectory()
-                   .WithNetworksConfigFile(NetworkType.Devnet, options.OverrideNetworkFile)
+                   .WithNetworkType(options.NetworkType)
+                   .WithNetworksConfigFile(options.OverrideNetworkFile)
                    .WithSerilogConfigFile()
+                   .WithValidatorSetFile()
                    .WithConfigCopier(new PoaConfigCopier())
                    .WithPersistenceConfiguration()
                    .BuildKernel(options.OverwriteConfig)
                    .WithPassword(PasswordRegistryTypes.DefaultNodePassword, options.NodePassword)
-                   .WithPassword(PasswordRegistryTypes.IpfsPassword, options.IpfsPassword)
                    .WithPassword(PasswordRegistryTypes.CertificatePassword, options.SslCertPassword)
                    .Reset(options.Reset)
+                   .Uninstall(options.Uninstall)
                    .StartCustomAsync(CustomBootLogicAsync);
 
                 return 0;

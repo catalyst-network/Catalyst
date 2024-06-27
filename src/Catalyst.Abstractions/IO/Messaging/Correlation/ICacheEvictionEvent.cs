@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -23,12 +23,13 @@
 
 using Catalyst.Protocol.Peer;
 using Google.Protobuf;
+using MultiFormats;
 
 namespace Catalyst.Abstractions.IO.Messaging.Correlation
 {
     public interface ICacheEvictionEvent<out T> where T : IMessage
     {
         T EvictedContent { get; }
-        PeerId PeerId { get; }
+        MultiAddress Address { get; }
     }
 }

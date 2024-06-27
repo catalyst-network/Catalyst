@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -23,7 +23,6 @@
 
 using System;
 using System.Linq;
-using System.Runtime.Intrinsics.Arm;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Hashing;
@@ -59,8 +58,10 @@ namespace Catalyst.Core.Modules.Ledger
     {
         public IAccountRepository Accounts { get; }
         private readonly IDeltaExecutor _deltaExecutor;
-        private readonly IWorldState _stateProvider;
-        private readonly IDb _codeDb;
+        private readonly IStateProvider _stateProvider;
+        private readonly IStorageProvider _storageProvider;
+        private readonly ISnapshotableDb _stateDb;
+        private readonly ISnapshotableDb _codeDb;
         private readonly ITransactionRepository _receipts;
         private readonly IMempool<PublicEntryDao> _mempool;
         private readonly IMapperProvider _mapperProvider;
@@ -83,8 +84,10 @@ namespace Catalyst.Core.Modules.Ledger
         public bool IsSynchonising => Monitor.IsEntered(_synchronisationLock);
 
         public Ledger(IDeltaExecutor deltaExecutor,
-            IWorldState stateProvider,
-            IDb codeDb,
+            IStateProvider stateProvider,
+            IStorageProvider storageProvider,
+            ISnapshotableDb stateDb,
+            ISnapshotableDb codeDb,
             IAccountRepository accounts,
             IDeltaIndexService deltaIndexService,
             ITransactionRepository receipts,
@@ -98,7 +101,9 @@ namespace Catalyst.Core.Modules.Ledger
             Accounts = accounts;
             _deltaExecutor = deltaExecutor;
             _stateProvider = stateProvider;
+            _storageProvider = storageProvider;
 
+            _stateDb = stateDb;
             _codeDb = codeDb;
             _mempool = mempool;
             _mapperProvider = mapperProvider;
@@ -190,6 +195,18 @@ namespace Catalyst.Core.Modules.Ledger
 
         private void UpdateLedgerFromDelta(Cid deltaHash)
         {
+            var stateSnapshot = _stateDb.TakeSnapshot();
+            if (stateSnapshot != -1)
+            {
+                if (_logger.IsEnabled(LogEventLevel.Error))
+                {
+                    _logger.Error("Uncommitted state ({stateSnapshot}) when processing from a branch root {branchStateRoot} starting with delta {deltaHash}",
+                        stateSnapshot,
+                        null,
+                        deltaHash);
+                }
+            }
+
             var snapshotStateRoot = _stateProvider.StateRoot;
 
             try
@@ -212,8 +229,9 @@ namespace Catalyst.Core.Modules.Ledger
                 // add here a receipts tracer or similar, depending on what data needs to be stored for each contract
 
                 _stateProvider.Reset();
+                _storageProvider.Reset();
 
-                _stateProvider.StateRoot = new Hash256(parentDelta.StateRoot?.ToByteArray());
+                _stateProvider.StateRoot = new Keccak(parentDelta.StateRoot?.ToByteArray());
                 _deltaExecutor.Execute(nextDeltaInChain, tracer);
 
                 // store receipts
@@ -222,13 +240,16 @@ namespace Catalyst.Core.Modules.Ledger
                     _receipts.Put(deltaHash, tracer.Receipts.ToArray(), nextDeltaInChain.PublicEntries.ToArray());
                 }
 
+                _stateDb.Commit();
+                _codeDb.Commit();
+
                 _latestKnownDelta = deltaHash;
 
                 WriteLatestKnownDelta(deltaHash);
             }
             catch
             {
-                
+                Restore(stateSnapshot, snapshotStateRoot);
             }
         }
 
@@ -241,13 +262,15 @@ namespace Catalyst.Core.Modules.Ledger
             _synchroniser.UpdateState((ulong)_latestKnownDeltaNumber);
         }
 
-        private void Restore(int stateSnapshot, Hash256 snapshotStateRoot)
+        private void Restore(int stateSnapshot, Keccak snapshotStateRoot)
         {
             if (_logger.IsEnabled(LogEventLevel.Verbose))
             {
                 _logger.Verbose("Reverting deltas {stateRoot}", _stateProvider.StateRoot);
             }
 
+            _stateDb.Restore(stateSnapshot);
+            _storageProvider.Reset();
             _stateProvider.Reset();
             _stateProvider.StateRoot = snapshotStateRoot;
             if (_logger.IsEnabled(LogEventLevel.Verbose))

@@ -32,8 +32,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         public void Defaults()
         {
             var options = new SwarmOptions();
-            Assert.That(options.PrivateNetworkKey, Is.Null);
-            Assert.That(options.MinConnections, Is.EqualTo(8));
+            Assert.Null(options.PrivateNetworkKey);
+            Assert.AreEqual(8, options.MinConnections);
         }
     }
 }

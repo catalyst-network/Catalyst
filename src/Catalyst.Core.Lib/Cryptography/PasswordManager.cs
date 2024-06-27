@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -37,6 +37,12 @@ namespace Catalyst.Core.Lib.Cryptography
         {
             _passwordReader = passwordReader;
             _passwordRegistry = passwordRegistry;
+        }
+
+        /// <inheritdoc />
+        public SecureString PromptPassword(PasswordRegistryTypes passwordType, string promptMessage = null)
+        {
+            return _passwordReader.ReadSecurePassword(promptMessage ?? $"Please enter your {passwordType.Name}");
         }
 
         /// <inheritdoc />

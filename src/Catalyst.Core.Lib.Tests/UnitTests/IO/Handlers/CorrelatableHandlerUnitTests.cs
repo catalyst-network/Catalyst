@@ -23,11 +23,8 @@
 
 using System.Threading.Tasks;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
@@ -35,7 +32,9 @@ using DotNetty.Transport.Channels;
 using Google.Protobuf;
 using NSubstitute;
 using NUnit.Framework;
-using Catalyst.Abstractions.IO.Handlers;
+using Catalyst.Modules.Network.Dotnetty.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.IO.Handlers;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Messaging.Dto;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
 {
@@ -43,12 +42,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
     {
         private readonly IChannelHandlerContext _fakeContext;
         private readonly IMessageCorrelationManager _fakeMessageCorrelationManager;
-
-        [OneTimeTearDown]
-        public void TearDown()
-        {
-            _fakeMessageCorrelationManager.Dispose();
-        }
 
         public CorrelatableHandlerUnitTests()
         {
@@ -60,8 +53,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
         public async Task Does_Process_IMessageDto_Types()
         {
             var protocolMessage =
-                new PingRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("sender"));
-            var messageDto = new MessageDto(protocolMessage, PeerIdHelper.GetPeerId("recipient"));
+                new PingRequest().ToProtocolMessage(MultiAddressHelper.GetAddress("sender"));
+            var messageDto = new MessageDto(protocolMessage, MultiAddressHelper.GetAddress("recipient"));
 
             var correlatableHandler = new CorrelatableHandler<IMessageCorrelationManager>(_fakeMessageCorrelationManager);
 

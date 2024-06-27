@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -23,9 +23,9 @@
 
 using System.Collections.Generic;
 using System.Linq;
-using System.Net;
 using Catalyst.Abstractions.Rpc;
 using Microsoft.Extensions.Configuration;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.Rpc.Client
 {
@@ -34,25 +34,21 @@ namespace Catalyst.Core.Modules.Rpc.Client
         public static IList<IRpcClientConfig> BuildRpcNodeSettingList(IConfigurationRoot config)
         {
             var section = config.GetSection("CatalystCliRpcNodes").GetSection("nodes");
-
+            var children = section.GetChildren().Select(c=>c.GetChildren());
             var nodeList = section.GetChildren().Select(child => new RpcClientSettings
             {
                 NodeId = child.GetSection("nodeId").Value,
-                HostAddress = IPAddress.Parse(child.GetSection("host").Value),
-                Port = int.Parse(child.GetSection("port").Value),
                 PfxFileName = child.GetSection("PfxFileName").Value,
                 SslCertPassword = child.GetSection("SslCertPassword").Value,
-                PublicKey = child.GetSection("PublicKey").Value
+                Address = child.GetSection("Address").Value
             } as IRpcClientConfig).ToList();
 
             return nodeList;
         }
 
+        public MultiAddress Address { get; set; }
         public string NodeId { get; set; }
-        public IPAddress HostAddress { get; set; }
-        public int Port { get; set; }
         public string PfxFileName { get; set; }
         public string SslCertPassword { get; set; }
-        public string PublicKey { get; set; }
     }
 }

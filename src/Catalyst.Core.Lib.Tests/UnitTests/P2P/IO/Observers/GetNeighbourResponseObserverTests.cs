@@ -35,17 +35,17 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using MultiFormats;
+using System.Linq;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 {
     public sealed class GetNeighbourResponseObserverTests : IDisposable
     {
-        private readonly IChannelHandlerContext _fakeContext;
         private readonly GetNeighbourResponseObserver _observer;
 
         public GetNeighbourResponseObserverTests()
         {
-            _fakeContext = Substitute.For<IChannelHandlerContext>();
             _observer = new GetNeighbourResponseObserver(Substitute.For<ILogger>());
         }
 
@@ -56,26 +56,25 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
 
             var peers = new[]
             {
-                PeerIdHelper.GetPeerId(),
-                PeerIdHelper.GetPeerId(),
-                PeerIdHelper.GetPeerId()
+                MultiAddressHelper.GetAddress(),
+                MultiAddressHelper.GetAddress(),
+                MultiAddressHelper.GetAddress()
             };
 
             var peerNeighborsResponse = new PeerNeighborsResponse
             {
                 Peers =
                 {
-                    peers
+                    peers.Select(x=>x.ToString())
                 }
             };
             var protocolMessage =
-                peerNeighborsResponse.ToProtocolMessage(PeerIdHelper.GetPeerId("sender"),
+                peerNeighborsResponse.ToProtocolMessage(MultiAddressHelper.GetAddress("sender"),
                     CorrelationId.GenerateCorrelationId());
 
             var peerNeighborsResponseObserver = Substitute.For<IObserver<IPeerClientMessageDto>>();
 
-            var messageStream = MessageStreamHelper.CreateStreamWithMessage(_fakeContext, testScheduler,
-                protocolMessage);
+            var messageStream = MessageStreamHelper.CreateStreamWithMessage(testScheduler, protocolMessage);
 
             _observer.StartObserving(messageStream);
 
@@ -92,10 +91,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Observers
             }
         }
 
-        private bool test(IMessage msg, PeerId peerId)
+        private bool test(IMessage msg, MultiAddress address)
         {
             var x = (PeerNeighborsResponse) msg;
-            return x.Peers.Contains(peerId);
+            return x.Peers.Contains(address.ToString());
         }
 
         public void Dispose() { _observer?.Dispose(); }

@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -23,23 +23,20 @@
 
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Protocol.Peer;
 using Google.Protobuf;
+using MultiFormats;
 using System.Collections.Generic;
 
 namespace Catalyst.Core.Modules.Sync.Extensions
 {
     public static class PeerClientExtensions
     {
-        public static void SendMessageToPeers(this IPeerClient peerClient, IPeerSettings peerSettings, IMessage message, IEnumerable<PeerId> peers)
+        public static void SendMessageToPeers(this IPeerClient peerClient, IPeerSettings peerSettings, IMessage message, IEnumerable<MultiAddress> peers)
         {
-            var protocolMessage = message.ToProtocolMessage(peerSettings.PeerId);
+            var protocolMessage = message.ToProtocolMessage(peerSettings.Address);
             foreach (var peer in peers)
             {
-                peerClient.SendMessage(new MessageDto(
-                    protocolMessage,
-                    peer));
+                peerClient.SendMessageAsync(protocolMessage, peer);
             }
         }
     }

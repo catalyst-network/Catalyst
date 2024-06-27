@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -23,14 +23,14 @@
 
 using System.IO;
 using System.Threading;
-using Catalyst.Abstractions.Cli.Commands;
-using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Abstractions.Types;
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.FileTransfer;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.Cli.Commands;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.FileTransfer;
+using Catalyst.Modules.Network.Dotnetty.FileTransfer;
+using Catalyst.Modules.Network.Dotnetty.IO.Messaging.Dto;
 using Catalyst.Protocol.Rpc.Node;
 using Serilog;
 
@@ -67,16 +67,16 @@ namespace Catalyst.Cli.Commands
                 request.FileSize = (ulong) fileStream.Length;
             }
 
-            var protocolMessage = request.ToProtocolMessage(SenderPeerId);
+            var protocolMessage = request.ToProtocolMessage(SenderAddress);
             var requestMessage = new MessageDto(
                 protocolMessage,
-                RecipientPeerId
+                RecipientAddress
             );
 
             IUploadFileInformation fileTransfer = new UploadFileTransferInformation(
                 File.Open(options.File, FileMode.Open),
-                SenderPeerId,
-                RecipientPeerId,
+                SenderAddress,
+                RecipientAddress,
                 Target.Channel,
                 requestMessage.CorrelationId);
 

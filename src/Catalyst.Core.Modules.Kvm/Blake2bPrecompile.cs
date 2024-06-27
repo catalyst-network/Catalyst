@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -33,7 +33,7 @@ using Nethermind.Evm.Precompiles;
 
 namespace Catalyst.Core.Modules.Kvm
 {
-    public sealed class Blake2bPrecompiledContract : IPrecompile
+    public sealed class Blake2bPrecompiledContract : IPrecompiledContract
     {
         private readonly IHashProvider _hashProvider;
         
@@ -46,11 +46,11 @@ namespace Catalyst.Core.Modules.Kvm
 
         public long BaseGasCost(IReleaseSpec releaseSpec) { return 20L; }
 
-        public long DataGasCost(in ReadOnlyMemory<byte> inputData, IReleaseSpec releaseSpec) { return 12L * EvmPooledMemory.Div32Ceiling((ulong) inputData.Length); }
+        public long DataGasCost(byte[] inputData, IReleaseSpec releaseSpec) { return 12L * EvmPooledMemory.Div32Ceiling((ulong) inputData.Length); }
 
-        public (ReadOnlyMemory<byte>, bool) Run(in ReadOnlyMemory<byte> inputData, IReleaseSpec releaseSpec)
+        public (byte[], bool) Run(byte[] inputData)
         {
-            return (_hashProvider.ComputeMultiHash(inputData.ToArray()).Digest, true);
+            return (_hashProvider.ComputeMultiHash(inputData).Digest, true);
         }
     }
 }

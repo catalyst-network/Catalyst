@@ -35,7 +35,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         public void Defaults()
         {
             var options = new RepositoryOptions();
-            Assert.That(options.Folder, Is.Not.Null);
+            Assert.NotNull(options.Folder);
         }
 
         [Test]
@@ -53,11 +53,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 
                 Environment.SetEnvironmentVariable("HOME", $"{sep}home1");
                 var options = new RepositoryOptions();
-                Assert.That($"{sep}home1{sep}.catalyst", Is.EqualTo(options.Folder));
+                Assert.AreEqual($"{sep}home1{sep}.catalyst", options.Folder);
 
                 Environment.SetEnvironmentVariable("HOME", $"{sep}home2{sep}");
                 options = new RepositoryOptions();
-                Assert.That($"{sep}home2{sep}.catalyst", Is.EqualTo(options.Folder));
+                Assert.AreEqual($"{sep}home2{sep}.catalyst", options.Folder);
             }
             finally
             {
@@ -84,11 +84,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 
                 Environment.SetEnvironmentVariable("HOMEPATH", $"{sep}home1");
                 var options = new RepositoryOptions();
-                Assert.That($"{sep}home1{sep}.catalyst", Is.EqualTo(options.Folder));
+                Assert.AreEqual($"{sep}home1{sep}.catalyst", options.Folder);
 
                 Environment.SetEnvironmentVariable("HOMEPATH", $"{sep}home2{sep}");
                 options = new RepositoryOptions();
-                Assert.That($"{sep}home2{sep}.catalyst", Is.EqualTo(options.Folder));
+                Assert.AreEqual($"{sep}home2{sep}.catalyst", options.Folder);
             }
             finally
             {
@@ -115,11 +115,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
 
                 Environment.SetEnvironmentVariable("IPFS_PATH", $"{sep}x1");
                 var options = new RepositoryOptions();
-                Assert.That($"{sep}x1", Is.EqualTo(options.Folder));
+                Assert.AreEqual($"{sep}x1", options.Folder);
 
                 Environment.SetEnvironmentVariable("IPFS_PATH", $"{sep}x2{sep}");
                 options = new RepositoryOptions();
-                Assert.That($"{sep}x2{sep}", Is.EqualTo(options.Folder));
+                Assert.AreEqual($"{sep}x2{sep}", options.Folder);
             }
             finally
             {

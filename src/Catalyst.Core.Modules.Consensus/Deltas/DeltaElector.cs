@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -28,6 +28,7 @@ using System.Linq;
 using System.Threading;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Types;
+using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.P2P.ReputationSystem;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Dfs.Extensions;
@@ -36,6 +37,7 @@ using Dawn;
 using Lib.P2P;
 using Microsoft.Extensions.Caching.Memory;
 using Microsoft.Extensions.Primitives;
+using Nethermind.Core;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
@@ -90,16 +92,17 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 Guard.Argument(candidate, nameof(candidate)).NotNull().Require(f => f.IsValid());
 
                 var cid = candidate.Candidate.PreviousDeltaDfsHash.ToByteArray().ToCid();
+                var candidateAddress = new Address(candidate.Voter.ToByteArray());
                 if (!_deltaProducersProvider
                    .GetDeltaProducersFromPreviousDelta(cid)
-                   .Any(p => p.Equals(candidate.VoterId)))
+                   .Any(p => p.Equals(candidateAddress)))
                 {
-                    var reputationChange = new ReputationChange(candidate.VoterId, ReputationEventType.VoterIsNotProducer);
+                    var reputationChange = new ReputationChange(new Address(candidate.Voter.ToByteArray()), ReputationEventType.VoterIsNotProducer);
                     _reputationManager.OnNext(reputationChange);
 
                     _logger.Debug(
                         "Voter {voter} is not a producer for this cycle succeeding {deltaHash} and its vote has been discarded.",
-                        candidate.VoterId, candidate.Candidate.PreviousDeltaDfsHash);
+                        candidate.Voter, candidate.Candidate.PreviousDeltaDfsHash);
                     return;
                 }
 

@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -23,16 +23,17 @@
 
 using System.Linq;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
-using DotNetty.Transport.Channels;
 using Google.Protobuf.WellKnownTypes;
 using Serilog;
+using MultiFormats;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
+using Catalyst.Modules.Network.Dotnetty.Rpc.IO.Observers;
+using DotNetty.Transport.Channels;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
@@ -40,7 +41,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
     ///     The GetPeerInfoRequestObserver
     /// </summary>
     public sealed class GetPeerInfoRequestObserver
-        : RequestObserverBase<GetPeerInfoRequest, GetPeerInfoResponse>,
+        : RpcRequestObserverBase<GetPeerInfoRequest, GetPeerInfoResponse>,
             IRpcRequestObserver
     {
         private readonly IPeerRepository _peerRepository;
@@ -58,26 +59,23 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// </summary>
         /// <param name="getPeerInfoRequest">The request</param>
         /// <param name="channelHandlerContext">The channel handler context</param>
-        /// <param name="senderPeerId">The sender peer identifier</param>
+        /// <param name="sender">The sender peer identifier</param>
         /// <param name="correlationId">The correlationId</param>
         /// <returns>The GetPeerInfoResponse</returns>
         protected override GetPeerInfoResponse HandleRequest(GetPeerInfoRequest getPeerInfoRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(getPeerInfoRequest, nameof(getPeerInfoRequest)).NotNull();
-            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
             Logger.Debug("received message of type GetPeerInfoRequest");
 
-            var ip = getPeerInfoRequest.Ip;
-
-            var peerInfo = _peerRepository.GetPeersByIpAndPublicKey(ip, getPeerInfoRequest.PublicKey)
+            var peerInfo = _peerRepository.GetPeersByAddress(getPeerInfoRequest.Address)
                .Select(x =>
                     new PeerInfo
                     {
-                        PeerId = x.PeerId,
+                        Address = x.Address.ToString(),
                         Reputation = x.Reputation,
                         IsBlacklisted = x.BlackListed,
                         IsUnreachable = x.IsAwolPeer,

@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -24,7 +24,7 @@
 using System.Collections.Generic;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Transaction;
-using Nethermind.Int256;
+using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas.Building
 {

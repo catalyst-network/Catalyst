@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -23,9 +23,9 @@
 
 using System;
 using System.Reactive.Linq;
-using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Abstractions.IO.Transport.Channels;
-using Catalyst.Core.Lib.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.IO.Transport.Channels;
 using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 using NSubstitute;
@@ -34,11 +34,19 @@ namespace Catalyst.TestUtils
 {
     public static class ObservableHelpers
     {
-        public static IObservableChannel MockObservableChannel(IObservable<IObserverDto<ProtocolMessage>> replaySubject)
+        public static IRpcObservableChannel MockRpcObservableChannel(IObservable<IObserverDto<ProtocolMessage>> replaySubject)
         {
             var mockChannel = Substitute.For<IChannel>();
             var mockEventStream = replaySubject.AsObservable();
-            var observableChannel = new ObservableChannel(mockEventStream, mockChannel);
+            var observableChannel = new RpcObservableChannel(mockEventStream, mockChannel);
+            return observableChannel;
+        }
+
+        public static IP2PObservableChannel MockP2PObservableChannel(IObservable<ProtocolMessage> replaySubject)
+        {
+            var mockChannel = Substitute.For<IChannel>();
+            var mockEventStream = replaySubject.AsObservable();
+            var observableChannel = new P2PObservableChannel(mockEventStream, mockChannel);
             return observableChannel;
         }
     }

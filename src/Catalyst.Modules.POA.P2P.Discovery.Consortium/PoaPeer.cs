@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -26,25 +26,12 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Network;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 
 namespace Catalyst.Modules.POA.P2P
 {
     public sealed class PoaPeer
     {
-        public string Ip { get; set; }
-
-        public int Port { get; set; }
-
-        public string PublicKey { get; set; }
-
-        public PeerId ToPeerId()
-        {
-            return new PeerId
-            {
-                PublicKey = PublicKey.KeyToByteString(),
-                Ip = IPAddress.Parse(Ip).To16Bytes().ToByteString(),
-                Port = (uint) Port
-            };
-        }
+        public string Address { set; get; }
     }
 }
