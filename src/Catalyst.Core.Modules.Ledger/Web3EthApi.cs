@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -62,14 +62,14 @@ namespace Catalyst.Core.Modules.Ledger
         public IHashProvider HashProvider { get; }
         public IDfsService DfsService { get; }
         public SyncState SyncState { get; }
-        private readonly PeerId _peerId;
+        private readonly MultiAddress _peerId;
 
         public Web3EthApi(IStateReader stateReader,
             IDeltaResolver deltaResolver,
             IDeltaCache deltaCache,
             IDeltaExecutor executor,
-            // IStorageProvider storageProvider,
-            IWorldState stateProvider,
+            IStorageProvider storageProvider,
+            IStateProvider stateProvider,
             ITransactionRepository receipts,
             ITransactionReceivedEvent transactionReceived,
             IPeerRepository peerRepository,
@@ -83,7 +83,7 @@ namespace Catalyst.Core.Modules.Ledger
             _receipts = receipts;
             _transactionReceived = transactionReceived ?? throw new ArgumentNullException(nameof(transactionReceived));
             HashProvider = hashProvider;
-            _peerId = peerSettings.PeerId;
+            _peerId = peerSettings.Address;
             _mempoolRepository = mempoolRepository;
             PeerRepository = peerRepository;
             _mapperProvider = mapperProvider;
@@ -92,8 +92,7 @@ namespace Catalyst.Core.Modules.Ledger
             DeltaResolver = deltaResolver ?? throw new ArgumentNullException(nameof(deltaResolver));
             DeltaCache = deltaCache ?? throw new ArgumentNullException(nameof(deltaCache));
             Executor = executor ?? throw new ArgumentNullException(nameof(executor));
-            // TODO
-           // StorageProvider = storageProvider ?? throw new ArgumentNullException(nameof(storageProvider));
+            StorageProvider = storageProvider ?? throw new ArgumentNullException(nameof(storageProvider));
             StateProvider = stateProvider ?? throw new ArgumentNullException(nameof(stateProvider));
             DfsService = dfsService;
             SyncState = syncState;
@@ -104,22 +103,21 @@ namespace Catalyst.Core.Modules.Ledger
         public IDeltaCache DeltaCache { get; }
 
         public IDeltaExecutor Executor { get; }
-        // TODO
-        //    public IStorageProvider StorageProvider { get; }
-        public IWorldState StateProvider { get; }
+        public IStorageProvider StorageProvider { get; }
+        public IStateProvider StateProvider { get; }
         public IPeerRepository PeerRepository { get; }
 
 
-        public Hash256 SendTransaction(PublicEntry publicEntry)
+        public Keccak SendTransaction(PublicEntry publicEntry)
         {
             TransactionBroadcast broadcast = new TransactionBroadcast
             {
                 PublicEntry = publicEntry
             };
 
-            _transactionReceived.OnTransactionReceived(broadcast.ToProtocolMessage(_peerId));
+            _transactionReceived.OnTransactionReceived(broadcast.ToProtocolMessage(_peerId), true);
 
-            byte[] kvmAddressBytes = Keccak.Compute(publicEntry.SenderAddress.ToByteArray()).Bytes.ToArray();
+            byte[] kvmAddressBytes = Keccak.Compute(publicEntry.SenderAddress.ToByteArray()).Bytes.AsSpan(12).ToArray();
             string hex = kvmAddressBytes.ToHexString() ?? throw new ArgumentNullException("kvmAddressBytes.ToHexString()");
             publicEntry.SenderAddress = kvmAddressBytes.ToByteString();
 
@@ -136,12 +134,12 @@ namespace Catalyst.Core.Modules.Ledger
             return _mempoolRepository.Service.GetAll().Select(x=>x.ToProtoBuff<PublicEntryDao, PublicEntry>(_mapperProvider));
         }
 
-        public TransactionReceipt FindReceipt(Cid transactionHash)
+        public TransactionReceipt FindReceipt(Keccak transactionHash)
         {
             return _receipts.TryFind(transactionHash, out TransactionReceipt receipt) ? receipt : default;
         }
 
-        public bool FindTransactionData(Cid transactionHash, out Cid deltaHash, out Delta delta, out int index)
+        public bool FindTransactionData(Keccak transactionHash, out Cid deltaHash, out Delta delta, out int index)
         {
             return _receipts.TryFind(transactionHash, out deltaHash, out delta, out index);
         }

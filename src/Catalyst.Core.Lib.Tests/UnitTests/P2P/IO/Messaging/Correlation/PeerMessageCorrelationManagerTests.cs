@@ -36,6 +36,8 @@ using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Peer;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
+using MultiFormats;
+using Nethermind.Core;
 using NSubstitute;
 using NUnit.Framework;
 
@@ -44,7 +46,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Correlation
     public sealed class PeerMessageCorrelationManagerTests : MessageCorrelationManagerTests<IPeerMessageCorrelationManager>
     {
         private TestScheduler _testScheduler;
-        private Dictionary<PeerId, int> _reputationByPeerIdentifier;
+        private Dictionary<Address, int> _reputationByAddress;
 
         [SetUp]
         public void Init()
@@ -60,18 +62,18 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Correlation
                 _testScheduler
             );
 
-            _reputationByPeerIdentifier = PeerIds.ToDictionary(p => p, p => 0);
+            _reputationByAddress = PeerIds.ToDictionary(p => p.GetKvmAddress(), p => 0);
 
             PrepareCacheWithPendingRequests<PingRequest>();
 
             CorrelationManager.ReputationEventStream.Subscribe(change =>
             {
-                if (!_reputationByPeerIdentifier.ContainsKey(change.PeerId))
+                if (!_reputationByAddress.ContainsKey(change.Address))
                 {
                     return;
                 }
-                
-                _reputationByPeerIdentifier[change.PeerId] += change.ReputationEvent.Amount;
+
+                _reputationByAddress[change.Address] += change.ReputationEvent.Amount;
             });
         }
 
@@ -90,7 +92,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Correlation
         [Test]
         public void TryMatchResponseAsync_when_matching_should_increase_reputation()
         {
-            var reputationBefore = _reputationByPeerIdentifier[PeerIds[1]];
+            var reputationBefore = _reputationByAddress[PeerIds[1].GetKvmAddress()];
 
             var responseMatchingIndex1 = new PingResponse().ToProtocolMessage(
                 PeerIds[1],
@@ -101,17 +103,17 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Correlation
 
             _testScheduler.Start();
 
-            var reputationAfter = _reputationByPeerIdentifier[PeerIds[1]];
+            var reputationAfter = _reputationByAddress[PeerIds[1].GetKvmAddress()];
             reputationAfter.Should().BeGreaterThan(reputationBefore);
 
-            _reputationByPeerIdentifier.Where(r => !r.Key.Equals(PeerIds[1]))
+            _reputationByAddress.Where(r => !r.Key.Equals(PeerIds[1].GetKvmAddress()))
                .Select(r => r.Value).Should().AllBeEquivalentTo(0);
         }
 
         [Test]
         public void UncorrelatedMessage_should_decrease_reputation()
         {
-            var reputationBefore = _reputationByPeerIdentifier[PeerIds[1]];
+            var reputationBefore = _reputationByAddress[PeerIds[1].GetKvmAddress()];
             var responseMatchingIndex1 = new PingResponse().ToProtocolMessage(
                 PeerIds[1],
                 CorrelationId.GenerateCorrelationId());
@@ -120,7 +122,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Correlation
 
             _testScheduler.Start();
 
-            var reputationAfter = _reputationByPeerIdentifier[PeerIds[1]];
+            var reputationAfter = _reputationByAddress[PeerIds[1].GetKvmAddress()];
             reputationAfter.Should().BeLessThan(reputationBefore);
         }
 
@@ -134,7 +136,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Correlation
 
                 _testScheduler.Start();
 
-                observer.Received(1).OnNext(Arg.Is<IPeerReputationChange>(c => c.PeerId.Equals(PendingRequests[0].Content.PeerId) 
+                observer.Received(1).OnNext(Arg.Is<IPeerReputationChange>(c => c.Address.Equals(new MultiAddress(PendingRequests[0].Content.Address).GetKvmAddress()) 
                  && c.ReputationEvent.Equals(ReputationEventType.NoResponseReceived)));
             }
         }

@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -30,7 +30,7 @@ using Nethermind.Evm.Precompiles;
 
 namespace Catalyst.Core.Modules.Kvm
 {
-    public sealed class Ed25519VerifyPrecompile : IPrecompile
+    public sealed class Ed25519VerifyPrecompile : IPrecompiledContract
     {
         private readonly ICryptoContext _cryptoContext;
 
@@ -38,21 +38,21 @@ namespace Catalyst.Core.Modules.Kvm
 
         public Address Address { get; } = Address.FromNumber(2 + KatVirtualMachine.CatalystPrecompilesAddressingSpace);
 
-        public long DataGasCost(in ReadOnlyMemory<byte> inputData, IReleaseSpec releaseSpec) { return 0L; }
+        public long DataGasCost(byte[] inputData, IReleaseSpec releaseSpec) { return 0L; }
 
         public long BaseGasCost(IReleaseSpec releaseSpec) { return 3000L; }
 
-        public (ReadOnlyMemory<byte>, bool) Run(in ReadOnlyMemory<byte> inputData, IReleaseSpec spec)
+        public (byte[], bool) Run(byte[] inputData)
         {
             if (inputData.Length != 160)
             {
                 return (Bytes.Empty, false);
             }
 
-            byte[] message = inputData.Slice(0, 32).ToArray();
-            byte[] signatureBytes = inputData.Slice(32, 64).ToArray();
-            byte[] signingContext = inputData.Slice(96, 32).ToArray();
-            byte[] publicKey = inputData.Slice(128, 32).ToArray();
+            byte[] message = inputData.AsSpan().Slice(0, 32).ToArray();
+            byte[] signatureBytes = inputData.AsSpan().Slice(32, 64).ToArray();
+            byte[] signingContext = inputData.AsSpan().Slice(96, 32).ToArray();
+            byte[] publicKey = inputData.AsSpan().Slice(128, 32).ToArray();
 
             ISignature signature = _cryptoContext.GetSignatureFromBytes(signatureBytes, publicKey);
             return _cryptoContext.Verify(signature, message, signingContext)

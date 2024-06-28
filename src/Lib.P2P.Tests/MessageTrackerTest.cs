@@ -22,19 +22,21 @@
 #endregion
 
 using System;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Lib.P2P.Tests
 {
+    [TestClass]
     public class MessageTrackerTest
     {
-        [Test]
+        [TestMethod]
         public void Tracking()
         {
             var tracker = new MessageTracker();
             var now = DateTime.Now;
-            Assert.That(tracker.RecentlySeen("a", now), Is.False);
-            Assert.That(tracker.RecentlySeen("a", now), Is.True);
-            Assert.That(tracker.RecentlySeen("a", now + tracker.Recent), Is.False);
+            Assert.IsFalse(tracker.RecentlySeen("a", now));
+            Assert.IsTrue(tracker.RecentlySeen("a", now));
+            Assert.IsFalse(tracker.RecentlySeen("a", now + tracker.Recent));
         }
     }
 }

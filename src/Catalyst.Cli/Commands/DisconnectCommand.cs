@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -21,10 +21,10 @@
 
 #endregion
 
-using Catalyst.Abstractions.Cli.Commands;
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
-using Catalyst.Core.Lib.Network;
+using Catalyst.Core.Lib.Extensions;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.Cli.Commands;
 using Dawn;
 using Serilog;
 
@@ -40,8 +40,7 @@ namespace Catalyst.Cli.Commands
             var nodeConfig = CommandContext.GetNodeConfig(option.Node);
             Guard.Argument(nodeConfig, nameof(nodeConfig)).NotNull();
 
-            var registryId = CommandContext.SocketClientRegistry.GenerateClientHashCode(
-                EndpointBuilder.BuildNewEndPoint(nodeConfig.HostAddress, nodeConfig.Port));
+            var registryId = CommandContext.SocketClientRegistry.GenerateClientHashCode(nodeConfig.Address.GetIPEndPoint());
 
             var node = CommandContext.SocketClientRegistry.GetClientFromRegistry(registryId);
             Guard.Argument(node, nameof(node)).Require(CommandContext.IsSocketChannelActive(node));

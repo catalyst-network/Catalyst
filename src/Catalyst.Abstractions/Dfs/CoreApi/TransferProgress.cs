@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -37,7 +37,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// <value>
         ///   Typically, a relative file path.
         /// </value>
-        public string? Name;
+        public string Name;
 
         /// <summary>
         ///   The cumuative number of bytes transfered for

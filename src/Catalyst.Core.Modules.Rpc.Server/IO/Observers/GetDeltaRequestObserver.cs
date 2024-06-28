@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -23,20 +23,21 @@
 
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Modules.Dfs.Extensions;
-using Catalyst.Protocol.Peer;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
+using Catalyst.Modules.Network.Dotnetty.Rpc.IO.Observers;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
 using DotNetty.Transport.Channels;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
     public sealed class GetDeltaRequestObserver
-        : RequestObserverBase<GetDeltaRequest, GetDeltaResponse>, IRpcRequestObserver
+        : RpcRequestObserverBase<GetDeltaRequest, GetDeltaResponse>, IRpcRequestObserver
     {
         private readonly IDeltaCache _deltaCache;
 
@@ -49,12 +50,12 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 
         protected override GetDeltaResponse HandleRequest(GetDeltaRequest getDeltaRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(getDeltaRequest, nameof(getDeltaRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
             Logger.Verbose("received message of type GetDeltaRequest:");
             Logger.Verbose("{getDeltaRequest}", getDeltaRequest);
 

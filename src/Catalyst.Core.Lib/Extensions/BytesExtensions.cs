@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -33,30 +33,30 @@ using Google.Protobuf;
 using Lib.P2P;
 using MultiFormats;
 using Nethermind.Core.Crypto;
-using Nethermind.Int256;
+using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Core.Lib.Extensions
 {
     public static class KeccakExtensions
     {
-        public static ByteString ToByteString(this Hash256 keccak)
+        public static ByteString ToByteString(this Keccak keccak)
         {
             return keccak == null ? ByteString.Empty : ByteString.CopyFrom(keccak.Bytes);
         }
         
-        public static Hash256 ToKeccak(this ByteString byteString)
+        public static Keccak ToKeccak(this ByteString byteString)
         {
-            return (byteString == null || byteString.IsEmpty) ? null : new Hash256(byteString.ToByteArray());
+            return (byteString == null || byteString.IsEmpty) ? null : new Keccak(byteString.ToByteArray());
         }
 
-        public static Cid ToCid(this Hash256 keccak)
+        public static Cid ToCid(this Keccak keccak)
         {
             Cid cid = new Cid
             {
                 Version = 1,
                 Encoding = "base32",
                 ContentType = "dag-pb",
-                Hash = new MultiHash("keccak-256", keccak.BytesToArray())
+                Hash = new MultiHash("keccak-256", keccak.Bytes)
             };
 
             return cid;
@@ -81,7 +81,8 @@ namespace Catalyst.Core.Lib.Extensions
 
         public static UInt256 ToUInt256(this ByteString byteString)
         {
-            return byteString.ToUInt256();
+            var bytes = byteString.ToArray();
+            return new UInt256(new BigInteger(bytes));
         }
 
         public static ByteString ToUint256ByteString(this UInt256 uInt256)

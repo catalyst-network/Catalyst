@@ -24,15 +24,11 @@
 using System.Linq;
 using System.Text;
 using Catalyst.Abstractions.Consensus.Deltas;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P.Repository;
-using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Modules.Consensus.IO.Observers;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Core.Modules.Hashing;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels;
@@ -51,17 +47,11 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
     {
         private IDeltaElector _deltaElector;
         private IChannelHandlerContext _fakeChannelContext;
-        private PeerId _voterId;
-        private PeerId _producerId;
+        private MultiAddress _voterId;
+        private MultiAddress _producerId;
         private FavouriteDeltaObserver _favouriteDeltaObserver;
         private byte[] _newHash;
         private byte[] _prevHash;
-
-        [TearDown]
-        public void TearDown()
-        {
-            _favouriteDeltaObserver.Dispose();
-        }
 
         [SetUp]
         public void Init()
@@ -70,13 +60,13 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _deltaElector = Substitute.For<IDeltaElector>();
             _fakeChannelContext = Substitute.For<IChannelHandlerContext>();
             var logger = Substitute.For<ILogger>();
-            _voterId = PeerIdHelper.GetPeerId("favourite delta voter");
-            _producerId = PeerIdHelper.GetPeerId("candidate delta producer");
+            _voterId = MultiAddressHelper.GetAddress("favourite delta voter");
+            _producerId = MultiAddressHelper.GetAddress("candidate delta producer");
 
             var peerRepository = Substitute.For<IPeerRepository>();
-            peerRepository.GetPeersByIpAndPublicKey(Arg.Any<ByteString>(), Arg.Any<ByteString>()).Returns(new List<Peer> { new Peer() });
+            peerRepository.GetPoaPeersByPublicKey(Arg.Any<string>()).Returns(new List<Peer> { new Peer() });
 
-            _favouriteDeltaObserver = new FavouriteDeltaObserver(_deltaElector, new SyncState() { IsSynchronized = true }, peerRepository, hashProvider, logger);
+            _favouriteDeltaObserver = new FavouriteDeltaObserver(_deltaElector, peerRepository, hashProvider, logger);
             _newHash = MultiBase.Decode(hashProvider.ComputeUtf8MultiHash("newHash").ToCid());
             _prevHash = MultiBase.Decode(hashProvider.ComputeUtf8MultiHash("prevHash").ToCid());
         }
@@ -91,7 +81,7 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _deltaElector.Received(1).OnNext(Arg.Is<FavouriteDeltaBroadcast>(c =>
                 c.Candidate.Hash.SequenceEqual(_newHash.ToArray().ToByteString())
              && c.Candidate.PreviousDeltaDfsHash.Equals(_prevHash.ToArray().ToByteString())
-             && c.Candidate.ProducerId.Equals(_producerId)));
+             && c.Candidate.Producer == _producerId.GetKvmAddressByteString()));
         }
 
         [Test]
@@ -118,27 +108,25 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.IO.Observers
             _deltaElector.DidNotReceiveWithAnyArgs().OnNext(default);
         }
 
-        private IObserverDto<ProtocolMessage> PrepareReceivedMessage(byte[] newHash,
+        private ProtocolMessage PrepareReceivedMessage(byte[] newHash,
             byte[] prevHash,
-            PeerId producerId,
-            PeerId voterId)
+            MultiAddress producerId,
+            MultiAddress voterId)
         {
             var candidate = new CandidateDeltaBroadcast
             {
                 Hash = newHash.ToByteString(),
                 PreviousDeltaDfsHash = prevHash.ToByteString(),
-                ProducerId = producerId
+                Producer = producerId.GetKvmAddressByteString()
             };
 
             var favouriteDeltaBroadcast = new FavouriteDeltaBroadcast
             {
                 Candidate = candidate,
-                VoterId = voterId
+                Voter = voterId.GetKvmAddressByteString()
             };
 
-            var receivedMessage = new ObserverDto(_fakeChannelContext,
-                favouriteDeltaBroadcast.ToProtocolMessage(PeerIdHelper.GetPeerId()));
-            return receivedMessage;
+            return favouriteDeltaBroadcast.ToProtocolMessage(MultiAddressHelper.GetAddress());
         }
     }
 }

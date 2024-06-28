@@ -47,7 +47,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.FileSystem
         private sealed class Entity
         {
             public int Number;
-            public string? Value;
+            public string Value;
         }
 
         private readonly Entity _a = new Entity {Number = 1, Value = "a"};
@@ -81,12 +81,12 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.FileSystem
             await store.PutAsync(_b.Number, _b);
 
             var a1 = await store.GetAsync(_a.Number);
-            Assert.Equals(_a.Number, a1.Number);
-            Assert.Equals(_a.Value, a1.Value);
+            Assert.AreEqual(_a.Number, a1.Number);
+            Assert.AreEqual(_a.Value, a1.Value);
 
             var b1 = await store.GetAsync(_b.Number);
-            Assert.Equals(_b.Number, b1.Number);
-            Assert.Equals(_b.Value, b1.Value);
+            Assert.AreEqual(_b.Number, b1.Number);
+            Assert.AreEqual(_b.Value, b1.Value);
         }
 
         [Test]
@@ -95,11 +95,11 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.FileSystem
             var store = Store;
             await store.PutAsync(3, _a);
             var a1 = await store.GetAsync(3);
-            Assert.Equals(_a.Number, a1.Number);
-            Assert.Equals(_a.Value, a1.Value);
+            Assert.AreEqual(_a.Number, a1.Number);
+            Assert.AreEqual(_a.Value, a1.Value);
 
             var a3 = await store.TryGetAsync(42);
-            Assert.That(a3, Is.Null);
+            Assert.Null(a3);
         }
 
         [Test]
@@ -116,10 +116,10 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.FileSystem
         {
             var store = Store;
             await store.PutAsync(4, _a);
-            Assert.That(await store.TryGetAsync(4), Is.Not.Null);
+            Assert.NotNull(await store.TryGetAsync(4));
 
             await store.RemoveAsync(4);
-            Assert.That(await store.TryGetAsync(4), Is.Null);
+            Assert.Null(await store.TryGetAsync(4));
         }
 
         [Test]
@@ -135,8 +135,8 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.FileSystem
             var store = Store;
             await store.PutAsync(6, _a);
             var length = await store.LengthAsync(6);
-            Assert.Equals(length.HasValue, true);
-            Assert.That(length.Value, Is.Not.EqualTo(0));
+            Assert.True(length.HasValue);
+            Assert.AreNotEqual(0, length.Value);
         }
 
         [Test]
@@ -144,7 +144,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.FileSystem
         {
             var store = Store;
             var length = await store.LengthAsync(7);
-            Assert.Equals(length.HasValue, false);
+            Assert.False(length.HasValue);
         }
 
         [Test]
@@ -155,7 +155,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.FileSystem
             await store.PutAsync(9, new Entity {Value = "v1"});
             await store.PutAsync(10, new Entity {Value = "v0"});
             var values = Store.Values.Where(e => e.Value == "v0").ToArray();
-            Assert.Equals(2, values.Length);
+            Assert.AreEqual(2, values.Length);
         }
 
         [Test]
@@ -166,7 +166,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.FileSystem
             await store.PutAsync(12, _a);
             await store.PutAsync(13, _a);
             var names = Store.Names.Where(n => n == 11 || n == 13).ToArray();
-            Assert.Equals(2, names.Length);
+            Assert.AreEqual(2, names.Length);
         }
 
         [Test]
@@ -196,7 +196,7 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.FileSystem
             store.Serialize = BadSerialize;
 
             ExceptionAssert.Throws<Exception>(() => store.PutAsync(_a.Number, _a).Wait());
-            Assert.Equals(store.ExistsAsync(_a.Number).Result, false);
+            Assert.False(store.ExistsAsync(_a.Number).Result);
         }
     }
 }

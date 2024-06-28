@@ -26,13 +26,15 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Lib.P2P.Protocols;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MultiFormats;
 
 namespace Lib.P2P.Tests.Protocols
 {
+    [TestClass]
     public class Identitfy1Test
     {
-        [Test]
+        [TestMethod]
         public async Task RoundTrip()
         {
             var peerA = new Peer
@@ -64,14 +66,14 @@ namespace Lib.P2P.Tests.Protocols
             ms.Position = 0;
             await identify.UpdateRemotePeerAsync(peerB, ms, CancellationToken.None);
 
-            Assert.That(peerA.AgentVersion, Is.EqualTo(peerB.AgentVersion));
-            Assert.That(peerA.Id, Is.EqualTo(peerB.Id));
-            Assert.That(peerA.ProtocolVersion, Is.EqualTo(peerB.ProtocolVersion));
-            Assert.That(peerA.PublicKey, Is.EqualTo(peerB.PublicKey));
-            Assert.That(peerA.Addresses.ToArray(), Is.EquivalentTo(peerB.Addresses.ToArray()));
+            Assert.AreEqual(peerA.AgentVersion, peerB.AgentVersion);
+            Assert.AreEqual(peerA.Id, peerB.Id);
+            Assert.AreEqual(peerA.ProtocolVersion, peerB.ProtocolVersion);
+            Assert.AreEqual(peerA.PublicKey, peerB.PublicKey);
+            CollectionAssert.AreEqual(peerA.Addresses.ToArray(), peerB.Addresses.ToArray());
         }
 
-        [Test]
+        [TestMethod]
         public async Task InvalidPublicKey()
         {
             var peerA = new Peer
@@ -110,7 +112,7 @@ namespace Lib.P2P.Tests.Protocols
             });
         }
 
-        [Test]
+        [TestMethod]
         public async Task MustHavePublicKey()
         {
             var peerA = new Peer

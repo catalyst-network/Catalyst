@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -224,7 +224,7 @@ namespace Lib.P2P.Multiplex
         {
             if (disposing)
             {
-                _ = (Muxer?.RemoveStreamAsync(this));
+                Muxer?.RemoveStreamAsync(this);
 
                 _eos = true;
                 if (_outStream != null)

@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -21,7 +21,6 @@
 
 #endregion
 
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.Wire;
 
 namespace Catalyst.Core.Lib.Util
@@ -29,6 +28,5 @@ namespace Catalyst.Core.Lib.Util
     public static class NullObjects
     {
         public static readonly ProtocolMessage ProtocolMessage = new ProtocolMessage();
-        public static readonly ObserverDto ObserverDto = new ObserverDto(null, new ProtocolMessage());
     }
 }

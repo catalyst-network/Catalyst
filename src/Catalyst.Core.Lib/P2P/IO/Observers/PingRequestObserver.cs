@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -25,15 +25,11 @@ using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Repository;
-using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.IO.Observers;
-using Catalyst.Core.Lib.P2P.Models;
 using Catalyst.Protocol.IPPN;
-using Catalyst.Protocol.Peer;
 using Dawn;
-using DotNetty.Transport.Channels;
+using MultiFormats;
 using Serilog;
-using System;
 
 namespace Catalyst.Core.Lib.P2P.IO.Observers
 {
@@ -41,12 +37,10 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         : RequestObserverBase<PingRequest, PingResponse>,
             IP2PMessageObserver
     {
-        private readonly IPeerRepository _peerRepository;
         public PingRequestObserver(IPeerSettings peerSettings, 
-            IPeerRepository peerRepository,
+            IPeerClient peerClient,
             ILogger logger)
-            : base(logger, peerSettings) {
-            _peerRepository = peerRepository;
+            : base(logger, peerSettings, peerClient) {
         }
         
         /// <summary>
@@ -54,29 +48,15 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
         /// </summary>
         /// <param name="pingRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerId"></param>
+        /// <param name="sender"></param>
         /// <param name="correlationId"></param>
         /// <returns><see cref="PingResponse"/></returns>
         protected override PingResponse HandleRequest(PingRequest pingRequest,
-            IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(pingRequest, nameof(pingRequest)).NotNull();
-            Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
-            
-            Logger.Debug("message content is {0} IP: {1} PeerId: {2}", pingRequest, senderPeerId.Ip, senderPeerId);
-
-            var peer = _peerRepository.Get(senderPeerId);
-            if (peer == null)
-            {
-                _peerRepository.Add(new Peer
-                {
-                    PeerId = senderPeerId,
-                    LastSeen = DateTime.UtcNow
-                });
-            }
+            Guard.Argument(sender, nameof(sender)).NotNull();
 
             return new PingResponse();
         }

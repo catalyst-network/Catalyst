@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -55,12 +55,12 @@ namespace Lib.P2P.Routing
         /// <summary>
         ///  Routing information on peers.
         /// </summary>
-        public RoutingTable RoutingTable;
+        public RoutingTable RoutingTable { private set; get; }
 
         /// <summary>
         ///   Peers that can provide some content.
         /// </summary>
-        public ContentRouter ContentRouter;
+        public ContentRouter ContentRouter { private set; get; }
 
         /// <summary>
         ///   The number of closer peers to return.
@@ -428,8 +428,8 @@ namespace Lib.P2P.Routing
                .Select(p => p.TryToPeer(out var peer) ? peer : (Peer)null)
                .Where(p => p != null)
                .Where(p => p == remotePeer)
-               .Where(p => p.Addresses.Any());
-               //.Where(p => SwarmService.IsAllowed(p));
+               .Where(p => p.Addresses.Any())
+               .Where(p => SwarmService.IsAllowed(p));
             
             foreach (var provider in providers)
             {

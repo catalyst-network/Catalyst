@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -23,29 +23,32 @@
 
 using System;
 using System.Collections.Generic;
+using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Protocol.Transaction;
 using Dawn;
-using Nethermind.Core.Attributes;
 using Serilog;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas.Building
 {
     internal sealed class TransactionRetrieverStep : IDeltaBuilderStep
     {
-        [Todo(Improve.Refactor, "Introduce configuration for delta / voting for size")]
-        private const ulong DeltaGasLimit = 8_000_000;
-
-        [Todo(Improve.Refactor, "Introduce configuration for tx cost")]
-        private const ulong MinTransactionEntryGasLimit = 21_000;
-
         private readonly ILogger _logger;
         private readonly IDeltaTransactionRetriever _retriever;
+        private readonly IDeltaConfig _deltaConfig;
+        private readonly ITransactionConfig _transactionConfig;
 
-        public TransactionRetrieverStep(IDeltaTransactionRetriever retriever, ILogger logger)
+        public TransactionRetrieverStep(IDeltaTransactionRetriever retriever, IDeltaConfig deltaConfig, ITransactionConfig transactionConfig, ILogger logger)
         {
-            _retriever = retriever ?? throw new ArgumentNullException(nameof(retriever));
-            _logger = logger ?? throw new ArgumentNullException(nameof(logger));
+            Guard.Argument(retriever, nameof(retriever)).NotNull();
+            Guard.Argument(deltaConfig, nameof(deltaConfig)).NotNull();
+            Guard.Argument(transactionConfig, nameof(transactionConfig)).NotNull();
+            Guard.Argument(logger, nameof(logger)).NotNull();
+
+            _retriever = retriever;
+            _deltaConfig = deltaConfig;
+            _transactionConfig = transactionConfig;
+            _logger = logger;
         }
 
         public void Execute(DeltaBuilderContext context)
@@ -94,8 +97,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
             for (int i = 0; i < allValidCount; i++)
             {
                 PublicEntry currentItem = validTransactionsForDelta[i];
-                ulong remainingLimit = DeltaGasLimit - totalLimit;
-                if (remainingLimit < MinTransactionEntryGasLimit)
+                ulong remainingLimit = _deltaConfig.DeltaGasLimit - totalLimit;
+                if (remainingLimit < _transactionConfig.MinTransactionEntryGasLimit)
                 {
                     for (int j = i; j < allValidCount; j++)
                     {

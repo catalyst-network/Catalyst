@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -25,10 +25,10 @@ using System;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Core.Lib.Extensions;
+using Nethermind.Dirichlet.Numerics;
 using Nethermind.State;
 using Address = Nethermind.Core.Address;
-// TODO
-/*
+
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
     [EthWeb3RequestHandler("eth", "getStorageAt")]
@@ -53,4 +53,3 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
         }
     }
 }
-*/

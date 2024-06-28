@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -60,15 +60,6 @@ namespace Catalyst.Core.Lib.Cryptography
             if (foundCertificate)
             {
                 return certificate;
-            }
-
-            if (Environment.OSVersion.Platform == PlatformID.Unix)
-            {
-                throw new PlatformNotSupportedException(
-                    "Catalyst network currently doesn't support on the fly creation of self signed certificate. " +
-                    $"Please create a password protected certificate at {pfxFilePath}." +
-                    Environment.NewLine +
-                    "cf. `https://github.com/catalyst-network/Catalyst.Node/wiki/Creating-a-Self-Signed-Certificate` for instructions");
             }
 
             certificate = CreateAndSaveSelfSignedCertificate(pfxFilePath);

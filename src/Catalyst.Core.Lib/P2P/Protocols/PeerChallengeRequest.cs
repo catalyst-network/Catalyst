@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -22,7 +22,6 @@
 #endregion
 
 using System;
-using System.Linq;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
@@ -31,13 +30,11 @@ using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Protocols;
-using Catalyst.Core.Abstractions.Sync;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.IPPN;
-using Catalyst.Protocol.Peer;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.Protocols
@@ -45,7 +42,7 @@ namespace Catalyst.Core.Lib.P2P.Protocols
     public sealed class PeerChallengeRequest : ProtocolRequestBase, IPeerChallengeRequest
     {
         private readonly ILogger _logger;
-        private readonly PeerId _senderIdentifier;
+        private readonly MultiAddress _senderIdentifier;
         private readonly IPeerClient _peerClient;
         private readonly int _ttl;
 
@@ -57,38 +54,33 @@ namespace Catalyst.Core.Lib.P2P.Protocols
             int ttl,
             IScheduler scheduler = null)
             : base(logger,
-                peerSettings.PeerId,
+                peerSettings.Address,
                 new CancellationTokenProvider(ttl),
                 peerClient)
         {
             var observableScheduler = scheduler ?? Scheduler.Default;
             ChallengeResponseMessageStreamer = new ReplaySubject<IPeerChallengeResponse>(1, observableScheduler);
-            _senderIdentifier = peerSettings.PeerId;
+            _senderIdentifier = peerSettings.Address;
             _logger = logger;
             _peerClient = peerClient;
             _ttl = ttl;
         }
 
-        public async Task<bool> ChallengePeerAsync(PeerId recipientPeerId)
+        public async Task<bool> ChallengePeerAsync(MultiAddress recipientAddress)
         {
             try
             {
                 var correlationId = CorrelationId.GenerateCorrelationId();
                 var protocolMessage = new PingRequest().ToProtocolMessage(_senderIdentifier, correlationId);
-                var messageDto = new MessageDto(
-                    protocolMessage,
-                    recipientPeerId
-                );
 
-                _logger.Verbose($"Sending peer challenge request to IP: {recipientPeerId}");
-                _peerClient.SendMessage(messageDto);
+                _logger.Verbose($"Sending peer challenge request to IP: {recipientAddress}");
+                await _peerClient.SendMessageAsync(protocolMessage, recipientAddress).ConfigureAwait(false);
+
                 using (var cancellationTokenSource =
                     new CancellationTokenSource(TimeSpan.FromSeconds(_ttl)))
                 {
                     await ChallengeResponseMessageStreamer
-                       .FirstAsync(a => a != null
-                         && a.PeerId.PublicKey.SequenceEqual(recipientPeerId.PublicKey)
-                         && a.PeerId.Ip.SequenceEqual(recipientPeerId.Ip))
+                       .FirstAsync(a => a != null && a.Address == recipientAddress)
                        .ToTask(cancellationTokenSource.Token)
                        .ConfigureAwait(false);
                 }

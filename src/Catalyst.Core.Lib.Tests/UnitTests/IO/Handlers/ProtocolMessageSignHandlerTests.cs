@@ -22,10 +22,7 @@
 #endregion
 
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Handlers;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Wire;
@@ -36,6 +33,9 @@ using Catalyst.TestUtils.Protocol;
 using DotNetty.Transport.Channels;
 using NSubstitute;
 using NUnit.Framework;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.IO.Handlers;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
 {
@@ -55,8 +55,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
             _signature.SignatureBytes.Returns(ByteUtil.GenerateRandomByteArray(new FfiWrapper().SignatureLength));
             _signature.PublicKeyBytes.Returns(ByteUtil.GenerateRandomByteArray(new FfiWrapper().PublicKeyLength));
 
-            _dto = new MessageDto(new PingRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("sender")),
-                PeerIdHelper.GetPeerId("recipient")
+            _dto = new MessageDto(new PingRequest().ToProtocolMessage(MultiAddressHelper.GetAddress("sender")),
+                MultiAddressHelper.GetAddress("recipient")
             );
         }
 

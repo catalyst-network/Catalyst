@@ -1,14 +1,7 @@
 #region LICENSE
 
-
-
-#endregion
-
-using Org.BouncyCastle.Crypto;
-
-
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -25,6 +18,9 @@ using Org.BouncyCastle.Crypto;
 * You should have received a copy of the GNU General Public License
 * along with Catalyst.Node. If not, see <https://www.gnu.org/licenses/>.
 */
+
+#endregion
+
 namespace MultiFormats.Cryptography
 {
     /// <summary>
@@ -35,7 +31,7 @@ namespace MultiFormats.Cryptography
     /// </remarks>
     internal class BouncyDigest : System.Security.Cryptography.HashAlgorithm
     {
-        private IDigest digest;
+        private Org.BouncyCastle.Crypto.IDigest digest;
 
         /// <summary>
         ///   Wrap the bouncy castle digest.

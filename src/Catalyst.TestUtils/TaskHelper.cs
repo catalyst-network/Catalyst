@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -142,7 +142,7 @@ namespace Catalyst.TestUtils
             watch.Start();
             new Func<Task>(async () => await TaskHelper.WaitForAsyncOrThrowAsync(
                         () => IncreaseAndCheckIfAboveLimit(ref attempts,
-                            (int) (timeout.TotalMilliseconds / waitDelay.TotalMilliseconds) + 1), timeout, waitDelay)
+                            (int)(timeout.TotalMilliseconds / waitDelay.TotalMilliseconds) + 1), timeout, waitDelay)
                    .ConfigureAwait(false)).Should().ThrowAsync<Exception>().WaitAndUnwrapException()
                .And.Message.Should().Contain(nameof(IncreaseAndCheckIfAboveLimit));
             watch.Stop();

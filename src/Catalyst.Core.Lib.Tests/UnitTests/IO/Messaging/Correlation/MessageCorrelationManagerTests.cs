@@ -28,7 +28,6 @@ using System.Linq;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.Util;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
@@ -42,29 +41,25 @@ using Microsoft.Extensions.Primitives;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using MultiFormats;
+using Catalyst.Modules.Network.Dotnetty.IO.Handlers;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Correlation
 {
     public abstract class MessageCorrelationManagerTests<T>
         where T : IMessageCorrelationManager
     {
-        protected readonly PeerId[] PeerIds;
+        protected readonly MultiAddress[] PeerIds;
         protected List<CorrelatableMessage<ProtocolMessage>> PendingRequests;
 
         protected T CorrelationManager;
         protected readonly ILogger SubbedLogger;
         protected readonly IChangeTokenProvider ChangeTokenProvider;
         protected readonly IMemoryCache Cache;
-        private readonly PeerId _senderPeerId;
+        private readonly MultiAddress _sender;
 
         protected readonly Dictionary<ByteString, ICacheEntry> CacheEntriesByRequest
             = new Dictionary<ByteString, ICacheEntry>();
-
-        [OneTimeTearDown]
-        public void TearDown()
-        {
-            Cache.Dispose();
-        }
 
         protected MessageCorrelationManagerTests()
         {
@@ -74,12 +69,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Correlation
             ChangeTokenProvider.GetChangeToken().Returns(changeToken);
             Cache = Substitute.For<IMemoryCache>();
 
-            _senderPeerId = PeerIdHelper.GetPeerId("sender");
+            _sender = MultiAddressHelper.GetAddress("sender");
             PeerIds = new[]
             {
-                PeerIdHelper.GetPeerId("peer1"),
-                PeerIdHelper.GetPeerId("peer2"),
-                PeerIdHelper.GetPeerId("peer3")
+                MultiAddressHelper.GetAddress("peer1"),
+                MultiAddressHelper.GetAddress("peer2"),
+                MultiAddressHelper.GetAddress("peer3")
             };
         }
 
@@ -90,7 +85,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Correlation
         {
             PendingRequests = PeerIds.Select((p, i) => new CorrelatableMessage<ProtocolMessage>
             {
-                Content = new T().ToProtocolMessage(_senderPeerId, CorrelationId.GenerateCorrelationId()),
+                Content = new T().ToProtocolMessage(_sender, CorrelationId.GenerateCorrelationId()),
                 Recipient = p,
                 SentAt = DateTimeOffset.MinValue.Add(TimeSpan.FromMilliseconds(100 * i))
             }).ToList();
@@ -211,7 +206,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Correlation
         {
             var matchingRequest = PendingRequests[2].Content;
             var matchingRequestWithWrongType =
-                new PeerNeighborsResponse().ToProtocolMessage(matchingRequest.PeerId,
+                new PeerNeighborsResponse().ToProtocolMessage(matchingRequest.Address,
                     matchingRequest.CorrelationId.ToCorrelationId());
 
             new Action(() => CorrelationManager.TryMatchResponse(matchingRequestWithWrongType))

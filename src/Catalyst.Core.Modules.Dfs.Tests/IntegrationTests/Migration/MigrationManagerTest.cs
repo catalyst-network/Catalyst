@@ -36,12 +36,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.Migration
     {
         private readonly IDfsService _dfs;
 
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            _dfs.Dispose();
-        }
-
         public MigrationManagerTest()
         {
             _dfs = TestDfs.GetTestDfs();      
@@ -52,7 +46,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.Migration
         {
             var migrator = new MigrationManager(_dfs.Options.Repository);
             var migrations = migrator.Migrations;
-            Assert.That(migrations.Count, Is.Not.EqualTo(0));
+            Assert.AreNotEqual(0, migrations.Count);
         }
 
         [Test]
@@ -70,10 +64,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.Migration
         {
             var migrator = new MigrationManager(_dfs.Options.Repository);
             await migrator.MirgrateToVersionAsync(0);
-            Assert.That(migrator.CurrentVersion, Is.EqualTo(0));
+            Assert.AreEqual(0, migrator.CurrentVersion);
 
             await migrator.MirgrateToVersionAsync(migrator.LatestVersion);
-            Assert.That(migrator.LatestVersion, Is.EqualTo(migrator.CurrentVersion));
+            Assert.AreEqual(migrator.LatestVersion, migrator.CurrentVersion);
         }
     }
 }

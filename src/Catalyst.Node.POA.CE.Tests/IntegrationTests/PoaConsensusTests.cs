@@ -28,7 +28,6 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using Autofac;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Core.Modules.Consensus.Cycle;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
@@ -40,7 +39,7 @@ using NUnit.Framework;
 namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 {
     [TestFixture]
-    [Category(Traits.IntegrationTest)] 
+    [Category(Traits.IntegrationTest)]
     public sealed class PoaConsensusTests : FileSystemBasedTest
     {
         private CancellationTokenSource _endOfTestCancellationSource;
@@ -63,29 +62,14 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
                 var path = Path.Combine(FileSystem.GetCatalystDataDir().FullName, $"producer{i}");
                 fileSystem.GetCatalystDataDir().Returns(new DirectoryInfo(path));
 
-                var privateKey = context.GeneratePrivateKey();
-                var publicKey = privateKey.GetPublicKey();
-                var nodeSettings = PeerSettingsHelper.TestPeerSettings(publicKey.Bytes, 2000 + i);
-                var peerIdentifier = nodeSettings.PeerId;
-                var name = $"producer{i.ToString()}";
-                var dfs = TestDfs.GetTestDfs(fileSystem);
-                return new { index = i, name, privateKey, nodeSettings, peerIdentifier, dfs, fileSystem };
+                return new { index = i, fileSystem };
             }
             ).ToList();
-
-            var peerIdentifiers = poaNodeDetails.Select(n => n.peerIdentifier).ToList();
 
             _nodes = new List<PoaTestNode>();
             foreach (var nodeDetails in poaNodeDetails)
             {
-                nodeDetails.dfs.Options.Discovery.BootstrapPeers = poaNodeDetails.Select(x => x.dfs.LocalPeer.Addresses.First());
-                var node = new PoaTestNode(nodeDetails.name,
-                    nodeDetails.privateKey,
-                    nodeDetails.nodeSettings,
-                    nodeDetails.dfs,
-                    peerIdentifiers.Except(new[] { nodeDetails.peerIdentifier }),
-                    nodeDetails.fileSystem);
-
+                var node = new PoaTestNode(nodeDetails.index, true, nodeDetails.fileSystem);
                 _nodes.Add(node);
             }
         }
@@ -97,8 +81,12 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
             _nodes.AsParallel()
                .ForAll(n =>
                 {
+                    n.PeerActive += (peerAddress) =>
+                    {
+                        _nodes.ForEach(async node => await node.RegisterPeerAddressAsync(peerAddress));
+                    };
+
                     n?.RunAsync(_endOfTestCancellationSource.Token);
-                    n?.Consensus.StartProducing();
                 });
 
             await Task.Delay(Debugger.IsAttached
@@ -123,6 +111,10 @@ namespace Catalyst.Node.POA.CE.Tests.IntegrationTests
 
             _endOfTestCancellationSource.CancelAfter(TimeSpan.FromMinutes(3));
         }
-        
+
+        protected override void Dispose(bool disposing)
+        {
+            base.Dispose(disposing);
+        }
     }
 }

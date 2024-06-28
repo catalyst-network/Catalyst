@@ -106,7 +106,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             var seeds = (await _dfs1.BootstrapApi.ListAsync().ConfigureAwait(false))
                .Select(a => a.PeerId)
                .ToArray();
-            Assert.That(seeds.Length > 0, Is.True, "no seed nodes defined");
+            Assert.True(seeds.Length > 0, "no seed nodes defined");
 
             // Wait for a connection to a seed node.
             var start = DateTime.Now;
@@ -114,7 +114,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             var found = false;
             while (!found)
             {
-                Assert.That(DateTime.Now <= end, Is.True, "timeout");
+                Assert.True(DateTime.Now <= end, "timeout");
                 var peers = await _dfs1.SwarmApi.PeersAsync().ConfigureAwait(false);
                 found = peers.Any(p => seeds.Contains(p.Id));
                 await Task.Delay(100).ConfigureAwait(false);
@@ -136,24 +136,24 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         {
             var peer = _dfs1.LocalPeer;
 
-            Assert.That(_dfs1.IsStarted, Is.False);
+            Assert.False(_dfs1.IsStarted);
             await _dfs1.StartAsync();
-            Assert.That(_dfs1.IsStarted, Is.True);
-            Assert.That(peer.Addresses.Count(), Is.Not.EqualTo(0));
+            Assert.True(_dfs1.IsStarted);
+            Assert.AreNotEqual(0, peer.Addresses.Count());
             await _dfs1.StopAsync();
-            Assert.That(_dfs1.IsStarted, Is.False);
-            Assert.That(peer.Addresses.Count(), Is.EqualTo(0));
+            Assert.False(_dfs1.IsStarted);
+            Assert.AreEqual(0, peer.Addresses.Count());
 
             await _dfs1.StartAsync();
-            Assert.That(peer.Addresses.Count(), Is.Not.EqualTo(0));
+            Assert.AreNotEqual(0, peer.Addresses.Count());
             await _dfs1.StopAsync();
-            Assert.That(peer.Addresses.Count(), Is.EqualTo(0));
+            Assert.AreEqual(0, peer.Addresses.Count());
 
             await _dfs1.StartAsync();
-            Assert.That(peer.Addresses.Count(), Is.Not.EqualTo(0));
+            Assert.AreNotEqual(0, peer.Addresses.Count());
             ExceptionAssert.Throws<Exception>(() => _dfs1.StartAsync().Wait());
             await _dfs1.StopAsync();
-            Assert.That(peer.Addresses.Count(), Is.EqualTo(0));
+            Assert.AreEqual(0, peer.Addresses.Count());
         }
 
         [Test]
@@ -165,14 +165,14 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
             for (int n = 0; n < 3; ++n)
             {
                 await _dfs1.StartAsync();
-                Assert.That(peer1.Addresses.Count(), Is.Not.EqualTo(0));
+                Assert.AreNotEqual(0, peer1.Addresses.Count());
                 await _dfs2.StartAsync();
-                Assert.That(peer2.Addresses.Count(), Is.Not.EqualTo(0));
+                Assert.AreNotEqual(0, peer2.Addresses.Count());
 
                 await _dfs2.StopAsync();
-                Assert.That(peer2.Addresses.Count(), Is.EqualTo(0));
+                Assert.AreEqual(0, peer2.Addresses.Count());
                 await _dfs1.StopAsync();
-                Assert.That(peer1.Addresses.Count(), Is.EqualTo(0));
+                Assert.AreEqual(0, peer1.Addresses.Count());
             }
         }
 
@@ -196,7 +196,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
                 Task.Run(() => _dfs1.LocalPeer)
             };
             var r = await Task.WhenAll(tasks);
-            Assert.That(r[0], Is.EqualTo(r[1]));
+            Assert.AreEqual(r[0], r[1]);
         }
 
         [Test]
@@ -208,7 +208,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
                 Task.Run(() => _dfs1.KeyApi)
             };
             var r = await Task.WhenAll(tasks);
-            Assert.That(r[0], Is.EqualTo(r[1]));
+            Assert.AreEqual(r[0], r[1]);
         }
 
         //todo
@@ -216,7 +216,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         //public async Task KeyChain_GetKey()
         //{
         //    var keyChain = await _dfs1.KeyChainAsync();
-        //    var key = await keyChain.GetPrivateKeyAsync("self");
+        //    var key = await keyChain.GetPrivateKeyAsync(KeyRegistryTypes.DefaultKey);
         //    Assert.NotNull(key);
         //    Assert.True(key.IsPrivate);
         //}

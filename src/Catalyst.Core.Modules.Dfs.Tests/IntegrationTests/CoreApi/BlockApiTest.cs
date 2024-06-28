@@ -43,18 +43,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         private const string Id = "QmPv52ekjS75L4JmHpXVeuJ5uX2ecSfSZo88NSyxwA3rAQ";
         private readonly byte[] _blob = Encoding.UTF8.GetBytes("blorb");
 
-        [TearDown]
-        public void TearDown()
-        {
-            _dfs.Dispose();
-        }
-
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            _dfs.Dispose();
-        }
-
         public BlockApiTest()
         {
             _dfs = TestDfs.GetTestDfs(null, "sha2-256");
@@ -126,7 +114,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             var cid = _dfs.BlockApi.PutAsync(_blob, "raw", "sha2-512").Result;
             Assert.That(
 cid.ToString(),
-                Is.EqualTo(                "bafkrgqelljziv4qfg5mefz36m2y3h6voaralnw6lwb4f53xcnrf4mlsykkn7vt6eno547tw5ygcz62kxrle45wnbmpbofo5tvu57jvuaf7k7e"));
+                Is.EqualTo("bafkrgqelljziv4qfg5mefz36m2y3h6voaralnw6lwb4f53xcnrf4mlsykkn7vt6eno547tw5ygcz62kxrle45wnbmpbofo5tvu57jvuaf7k7e"));
 
             var data = _dfs.BlockApi.GetAsync(cid).Result;
             Assert.That(_blob.Length, Is.EqualTo(data.Size));
@@ -175,7 +163,7 @@ cid.ToString(),
             var cid = _dfs.BlockApi.PutAsync(new MemoryStream(_blob), "raw", "sha2-512").Result;
             Assert.That(
 cid.ToString(),
-                Is.EqualTo(                "bafkrgqelljziv4qfg5mefz36m2y3h6voaralnw6lwb4f53xcnrf4mlsykkn7vt6eno547tw5ygcz62kxrle45wnbmpbofo5tvu57jvuaf7k7e"));
+                Is.EqualTo("bafkrgqelljziv4qfg5mefz36m2y3h6voaralnw6lwb4f53xcnrf4mlsykkn7vt6eno547tw5ygcz62kxrle45wnbmpbofo5tvu57jvuaf7k7e"));
 
             var data = _dfs.BlockApi.GetAsync(cid).Result;
             Assert.That(_blob.Length, Is.EqualTo(data.Size));
@@ -253,7 +241,14 @@ cid.ToString(),
                 var _ = _dfs.BlockApi.RemoveAsync("QmPv52ekjS75L4JmHpXVeuJ5uX2ecSfSZo88NSyxwA3rFF").Result;
             });
         }
-        
+
+        [Test]
+        public async Task Remove_Unknown_OK()
+        {
+            var cid = await _dfs.BlockApi.RemoveAsync("QmPv52ekjS75L4JmHpXVeuJ5uX2ecSfSZo88NSyxwA3rFF", true);
+            Assert.That(cid, Is.Null);
+        }
+
         [Test]
         public async Task Get_Inline_CID()
         {

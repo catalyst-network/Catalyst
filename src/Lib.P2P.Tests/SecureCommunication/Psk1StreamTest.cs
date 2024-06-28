@@ -24,21 +24,23 @@
 using System;
 using System.IO;
 using Lib.P2P.Cryptography;
-using Lib.P2P.PubSub;
 using Lib.P2P.SecureCommunication;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Lib.P2P.Tests.SecureCommunication
 {
+    [TestClass]
     public class Psk1StreamTest
     {
-        [Test]
+        [TestMethod]
+        [ExpectedException(typeof(Exception))]
         public void BadKeyLength()
         {
             var psk = new PreSharedKey();
-            Assert.That(() => new Psk1Stream(Stream.Null, psk), Throws.Exception);
+            var _ = new Psk1Stream(Stream.Null, psk);
         }
 
-        [Test]
+        [TestMethod]
         public void FirstWriteSendsNonce()
         {
             var psk = new PreSharedKey().Generate();
@@ -46,20 +48,20 @@ namespace Lib.P2P.Tests.SecureCommunication
             var insecure = new MemoryStream();
             var secure = new Psk1Stream(insecure, psk);
             secure.WriteByte(0x10);
-            Assert.That(insecure.Length, Is.EqualTo(24 + 1));
+            Assert.AreEqual(24 + 1, insecure.Length);
 
             insecure = new MemoryStream();
             secure = new Psk1Stream(insecure, psk);
             secure.Write(new byte[10], 0, 10);
-            Assert.That(insecure.Length, Is.EqualTo(24 + 10));
+            Assert.AreEqual(24 + 10, insecure.Length);
 
             insecure = new MemoryStream();
             secure = new Psk1Stream(insecure, psk);
             secure.WriteAsync(new byte[12], 0, 12).Wait();
-            Assert.That(insecure.Length, Is.EqualTo(24 + 12));
+            Assert.AreEqual(24 + 12, insecure.Length);
         }
 
-        [Test]
+        [TestMethod]
         public void Roundtrip()
         {
             var psk = new PreSharedKey().Generate();
@@ -75,20 +77,21 @@ namespace Lib.P2P.Tests.SecureCommunication
             insecure.Position = 0;
             secure = new Psk1Stream(insecure, psk);
             secure.Read(plain1, 0, plain1.Length);
-            Assert.That(plain, Is.EquivalentTo(plain1));
+            CollectionAssert.AreEqual(plain, plain1);
 
             insecure.Position = 0;
             secure = new Psk1Stream(insecure, psk);
             secure.ReadAsync(plain2, 0, plain2.Length).Wait();
-            Assert.That(plain, Is.EquivalentTo(plain2));
+            CollectionAssert.AreEqual(plain, plain2);
         }
 
-        [Test]
+        [TestMethod]
+        [ExpectedException(typeof(EndOfStreamException))]
         public void ReadingInvalidNonce()
         {
             var psk = new PreSharedKey().Generate();
             var secure = new Psk1Stream(Stream.Null, psk);
-            Assert.That(() => secure.ReadByte(), Throws.TypeOf<EndOfStreamException>());
+            secure.ReadByte();
         }
     }
 }

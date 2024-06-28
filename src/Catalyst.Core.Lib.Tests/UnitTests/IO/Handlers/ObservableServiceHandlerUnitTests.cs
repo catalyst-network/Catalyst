@@ -22,12 +22,12 @@
 #endregion
 
 using System;
-using Catalyst.Core.Lib.IO.Handlers;
 using DotNetty.Transport.Channels;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using Catalyst.Modules.Network.Dotnetty.IO.Handlers;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
 {
@@ -39,12 +39,6 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
             Log.Logger.ForContext(Arg.Any<Type>()).Returns(Log.Logger);
             _testScheduler = new TestScheduler();
             _observableServiceHandler = new ObservableServiceHandler(_testScheduler);
-        }
-
-        [OneTimeTearDown]
-        public void TearDown()
-        {
-            _observableServiceHandler.Dispose();
         }
 
         private readonly TestScheduler _testScheduler;

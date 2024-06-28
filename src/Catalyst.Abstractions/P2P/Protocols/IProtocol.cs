@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -22,11 +22,12 @@
 #endregion
 
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 
 namespace Catalyst.Abstractions.P2P.Protocols
 {
     public interface IProtocol
     {
-        PeerId PeerId { get; }
+        MultiAddress Address { get; }
     }
 }

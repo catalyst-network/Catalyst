@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -24,8 +24,8 @@
 using System;
 using System.Collections.Generic;
 using Catalyst.Abstractions.P2P.Repository;
-using Catalyst.Protocol.Peer;
 using Lib.P2P;
+using Nethermind.Core;
 
 namespace Catalyst.Core.Modules.Consensus.Deltas
 {
@@ -33,7 +33,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
     {
         public DeltaProducersProvider(IPeerRepository peerRepository) { PeerRepository = peerRepository; }
 
-        public IList<PeerId> GetDeltaProducersFromPreviousDelta(Cid previousDeltaHash)
+        public IList<Address> GetDeltaProducersFromPreviousDelta(Cid previousDeltaHash)
         {
             throw new NotImplementedException();
         }

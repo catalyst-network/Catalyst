@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -26,6 +26,7 @@ using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Peer;
 using Dawn;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.P2P.Protocols
 {
@@ -40,7 +41,7 @@ namespace Catalyst.Core.Lib.P2P.Protocols
         /// </summary>
         /// <param name="peerId"></param>
         /// <param name="deltaCid"></param>
-        public PeerDeltaHistoryResponse(PeerId peerId, ICollection<DeltaIndex> deltaCid) : base(peerId)
+        public PeerDeltaHistoryResponse(MultiAddress address, ICollection<DeltaIndex> deltaCid) : base(address)
         {
             Guard.Argument(deltaCid.Count).InRange(1, 1024);
             DeltaCid = deltaCid;

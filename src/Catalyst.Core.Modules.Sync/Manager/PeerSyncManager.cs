@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -30,13 +30,13 @@ using System.Reactive.Subjects;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cli;
-using Catalyst.Abstractions.Dfs;
+using Catalyst.Abstractions.Dfs.CoreApi;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.P2P.Repository;
 using Catalyst.Abstractions.Sync.Interfaces;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.IPPN;
+using Serilog;
 
 namespace Catalyst.Core.Modules.Sync.Manager
 {
@@ -47,10 +47,9 @@ namespace Catalyst.Core.Modules.Sync.Manager
         private readonly double _threshold;
         private int _minimumPeers;
         private readonly IPeerClient _peerClient;
-        private readonly IPeerRepository _peerRepository;
         private readonly IPeerService _peerService;
         private readonly IUserOutput _userOutput;
-        private readonly IDfsService _dfsService;
+        private readonly ISwarmApi _swarmApi;
         private readonly ReplaySubject<IEnumerable<DeltaIndex>> _scoredDeltaIndexRangeSubject;
 
         private IDisposable _deltaHistorySubscription;
@@ -63,50 +62,53 @@ namespace Catalyst.Core.Modules.Sync.Manager
 
         private readonly IDeltaHeightWatcher _deltaHeightWatcher;
 
+        private readonly ILogger _logger;
+
         public PeerSyncManager(IPeerClient peerClient,
-            IPeerRepository peerRepository,
             IPeerService peerService,
             IUserOutput userOutput,
             IDeltaHeightWatcher deltaHeightWatcher,
-            IDfsService dfsService,
+            ISwarmApi swarmApi,
+            ILogger logger,
             double threshold = 0.5d,
-            int minimumPeers = 2,
+            int minimumPeers = 0,
             IScheduler scheduler = null)
         {
             _peerClient = peerClient;
-            _peerRepository = peerRepository;
             _peerService = peerService;
             _userOutput = userOutput;
             _deltaHeightWatcher = deltaHeightWatcher;
-            _dfsService = dfsService;
+            _swarmApi = swarmApi;
             _scoredDeltaIndexRangeSubject =
                 new ReplaySubject<IEnumerable<DeltaIndex>>(1, scheduler ?? Scheduler.Default);
             ScoredDeltaIndexRange = _scoredDeltaIndexRangeSubject.AsObservable();
 
+            _logger = logger;
             _threshold = threshold;
             _minimumPeers = minimumPeers;
         }
 
-        public bool PeersAvailable()
-        {
-            return _dfsService.SwarmApi.PeersAsync().ConfigureAwait(false).GetAwaiter().GetResult().Count() >= _minimumPeers;
-        }
-
-        public bool ContainsPeerHistory() { return _peerRepository.GetAll().Any(); }
-
         public async Task WaitForPeersAsync(CancellationToken cancellationToken = default)
         {
-            while (!PeersAvailable() && !cancellationToken.IsCancellationRequested)
+            try
             {
-                _userOutput.WriteLine("Waiting for peers..");
-                await Task.Delay(1000, cancellationToken);
+                while (!cancellationToken.IsCancellationRequested)
+                {
+                    var peers = await _swarmApi.PeersAsync().ConfigureAwait(false);
+                    _userOutput.WriteLine($"Peers discovered for Sync: {peers.Count()}");
+                    await Task.Delay(1000, cancellationToken);
+                }
+            }
+            catch (TaskCanceledException)
+            {
+                //Task has been canceled.
             }
         }
 
         public void GetDeltaIndexRangeFromPeers(ulong index, int range)
         {
             var deltaHistoryRequest = new DeltaHistoryRequest
-            { Height = (uint)index, Range = (uint)range };
+            { Height = (uint) index, Range = (uint) range };
 
             _deltaHistoryRanker = new DeltaHistoryRanker(deltaHistoryRequest);
         }
@@ -114,9 +116,9 @@ namespace Catalyst.Core.Modules.Sync.Manager
         public void Start()
         {
             _isRunning = true;
-            _deltaHistorySubscription = _peerService.MessageStream.Where(x => x.Payload?.TypeUrl != null &&
-                    x.Payload.TypeUrl.EndsWith(typeof(DeltaHistoryResponse).ShortenedProtoFullName()))
-               .Select(x => x.Payload.FromProtocolMessage<DeltaHistoryResponse>()).Subscribe(DeltaHistoryOnNext);
+            _deltaHistorySubscription = _peerService.MessageStream.Where(x => x?.TypeUrl != null &&
+                    x.TypeUrl.EndsWith(typeof(DeltaHistoryResponse).ShortenedProtoFullName()))
+               .Select(x => x.FromProtocolMessage<DeltaHistoryResponse>()).Subscribe(DeltaHistoryOnNext);
 
             Task.Factory.StartNew(SyncDeltaIndexes);
         }
@@ -129,7 +131,7 @@ namespace Catalyst.Core.Modules.Sync.Manager
             {
                 if (_deltaHistoryRanker != null)
                 {
-                    var peers = _deltaHeightWatcher.DeltaHeightRanker.GetPeers();
+                    var peers = await _swarmApi.PeersAsync().ConfigureAwait(false);
                     var messageCount = Math.Min(_minimumPeers, 50);
                     var minimumThreshold = messageCount * _threshold;
                     var score = _deltaHistoryRanker.GetHighestScore();
@@ -140,7 +142,9 @@ namespace Catalyst.Core.Modules.Sync.Manager
                         _scoredDeltaIndexRangeSubject.OnNext(deltaIndexes);
                         continue;
                     }
-                    _peerClient.SendMessageToPeers(_deltaHistoryRanker.DeltaHistoryRequest, peers);
+
+                    _logger.Information($"Sync - Requesting delta range {_deltaHistoryRanker.DeltaHistoryRequest.Height} - {_deltaHistoryRanker.DeltaHistoryRequest.Height + _deltaHistoryRanker.DeltaHistoryRequest.Range}");
+                    await _peerClient.SendMessageToPeersAsync(_deltaHistoryRanker.DeltaHistoryRequest, peers.Select(x => x.ConnectedAddress)).ConfigureAwait(false);
                 }
                 await Task.Delay(2000);
             }
@@ -149,21 +153,21 @@ namespace Catalyst.Core.Modules.Sync.Manager
         private void DeltaHistoryOnNext(DeltaHistoryResponse deltaHistoryResponse)
         {
             //First block is always previous block
-            if (deltaHistoryResponse.Result.Count <= 1)
+            if (deltaHistoryResponse.DeltaIndex.Count <= 1)
             {
                 return;
             }
 
             var deltaHistoryRanker = _deltaHistoryRanker;
-            if(deltaHistoryRanker == null)
+            if (deltaHistoryRanker == null)
             {
                 return;
             }
 
-            var startHeight = (int)deltaHistoryResponse.Result.FirstOrDefault()?.Height;
+            var startHeight = (int) deltaHistoryResponse.DeltaIndex.FirstOrDefault()?.Height;
             if (startHeight == deltaHistoryRanker.Height)
             {
-                deltaHistoryRanker.Add(deltaHistoryResponse.Result);
+                deltaHistoryRanker.Add(deltaHistoryResponse.DeltaIndex);
             }
         }
 

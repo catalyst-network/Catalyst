@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -23,12 +23,13 @@
 
 using Catalyst.Protocol.Peer;
 using Lib.P2P;
+using MultiFormats;
 
 namespace Catalyst.Abstractions.P2P.Protocols
 {
     public interface IPeerQueryTipResponse
     {
-        PeerId PeerId { get; }
+        MultiAddress Address { get; }
         Cid DeltaHash { get; }
     }
 }

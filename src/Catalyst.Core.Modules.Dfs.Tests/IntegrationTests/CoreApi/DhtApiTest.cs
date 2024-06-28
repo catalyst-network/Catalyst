@@ -35,12 +35,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         private IDfsService ipfs;
         private MultiHash _locaId;
 
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            ipfs.Dispose();
-        }
-
         public DhtApiTest()
         {
             ipfs = TestDfs.GetTestDfs();

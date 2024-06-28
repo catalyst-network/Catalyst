@@ -52,7 +52,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
                 duplicateSequence[i] = cipherClone.NextInt();
             }
 
-            Assert.Equals(sequence.SequenceEqual(duplicateSequence), true);
+            Assert.True(sequence.SequenceEqual(duplicateSequence));
         }
     }
 }

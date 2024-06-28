@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -30,6 +30,7 @@ using Catalyst.Core.Lib.Config;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.P2P.Discovery;
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
@@ -41,7 +42,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings
         public INeighbours Neighbours { get; private set; }
         public ICorrelationId PnrCorrelationId { get; private set; }
 
-        public PeerId Peer { get; private set; }
+        public MultiAddress Peer { get; private set; }
 
         public static readonly HastingsOriginator Default = new HastingsOriginator(default);
 

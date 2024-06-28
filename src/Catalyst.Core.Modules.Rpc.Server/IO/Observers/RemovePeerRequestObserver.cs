@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -22,15 +22,15 @@
 #endregion
 
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Abstractions.P2P.Repository;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
-using DotNetty.Transport.Channels;
 using Serilog;
+using MultiFormats;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
+using Catalyst.Modules.Network.Dotnetty.Rpc.IO.Observers;
+using DotNetty.Transport.Channels;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
@@ -39,7 +39,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
     /// </summary>
     /// <seealso cref="IRpcRequestObserver" />
     public sealed class RemovePeerRequestObserver
-        : RequestObserverBase<RemovePeerRequest, RemovePeerResponse>,
+        : RpcRequestObserverBase<RemovePeerRequest, RemovePeerResponse>,
             IRpcRequestObserver
     {
         /// <summary>The peer discovery</summary>
@@ -60,21 +60,20 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// </summary>
         /// <param name="removePeerRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerId"></param>
+        /// <param name="sender"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override RemovePeerResponse HandleRequest(RemovePeerRequest removePeerRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(removePeerRequest, nameof(removePeerRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
             Logger.Debug("Received message of type RemovePeerRequest");
 
-            var peerDeletedCount =
-                _peerRepository.DeletePeersByIpAndPublicKey(removePeerRequest.PeerIp, removePeerRequest.PublicKey);
+            var peerDeletedCount = _peerRepository.DeletePeersByAddress(removePeerRequest.Address);
 
             return new RemovePeerResponse
             {

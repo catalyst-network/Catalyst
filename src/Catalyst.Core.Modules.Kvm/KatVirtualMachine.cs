@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -43,13 +43,14 @@ namespace Catalyst.Core.Modules.Kvm
         private readonly ICryptoContext _cryptoContext;
         public const int CatalystPrecompilesAddressingSpace = 0xffff;
 
-        public KatVirtualMachine(IWorldState stateProvider,
-            IBlockhashProvider blockhashProvider,
+        public KatVirtualMachine(IStateProvider stateProvider,
+            IStorageProvider storageProvider,
+            IStateUpdateHashProvider blockhashProvider,
             ISpecProvider specProvider,
             IHashProvider hashProvider,
             ICryptoContext cryptoContext,
             ILogManager logManager)
-            : base(blockhashProvider, specProvider, logManager)
+            : base(stateProvider, storageProvider, blockhashProvider, specProvider, logManager)
         {
             _hashProvider = hashProvider ?? throw new ArgumentNullException(nameof(hashProvider));
             _cryptoContext = cryptoContext ?? throw new ArgumentNullException(nameof(cryptoContext));
@@ -60,17 +61,15 @@ namespace Catalyst.Core.Modules.Kvm
         private void AddCatalystPrecompiledContracts()
         {
             Blake2bPrecompiledContract blake2BPrecompiledContract = new Blake2bPrecompiledContract(new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("blake2b-256")));
-            // TODO
-            // Precompiles[blake2BPrecompiledContract.Address] = blake2BPrecompiledContract;
+            Precompiles[blake2BPrecompiledContract.Address] = blake2BPrecompiledContract;
 
             Ed25519VerifyPrecompile ed25519VerifyPrecompile = new Ed25519VerifyPrecompile(_cryptoContext);
-            // TODO
-            // Precompiles[ed25519VerifyPrecompile.Address] = ed25519VerifyPrecompile;
+            Precompiles[ed25519VerifyPrecompile.Address] = ed25519VerifyPrecompile;
         }
 
-        protected bool IsPrecompile(IWorldState state, Address address, IReleaseSpec releaseSpec)
+        protected override bool IsPrecompiled(Address address, IReleaseSpec releaseSpec)
         {
-            return base.GetCachedCodeInfo(state, address, releaseSpec).IsPrecompile || IsCatalystPrecompiled(address);
+            return base.IsPrecompiled(address, releaseSpec) || IsCatalystPrecompiled(address);
         }
 
         private static bool IsCatalystPrecompiled(Address address)

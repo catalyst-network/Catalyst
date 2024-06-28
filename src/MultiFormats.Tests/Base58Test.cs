@@ -24,49 +24,51 @@
 using System;
 using System.Linq;
 using System.Text;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace MultiFormats.Tests
 {
+    [TestClass]
     public class Base58Test
     {
-        [Test]
+        [TestMethod]
         public void Encode()
         {
-            Assert.That(Base58.Encode(Encoding.UTF8.GetBytes("this is a test")), Is.EqualTo("jo91waLQA1NNeBmZKUF"));
-            Assert.That(Encoding.UTF8.GetBytes("this is a test").ToBase58(), Is.EqualTo("jo91waLQA1NNeBmZKUF"));
+            Assert.AreEqual("jo91waLQA1NNeBmZKUF", Base58.Encode(Encoding.UTF8.GetBytes("this is a test")));
+            Assert.AreEqual("jo91waLQA1NNeBmZKUF", Encoding.UTF8.GetBytes("this is a test").ToBase58());
         }
 
-        [Test]
+        [TestMethod]
         public void Decode()
         {
-            Assert.That(Encoding.UTF8.GetString(Base58.Decode("jo91waLQA1NNeBmZKUF")), Is.EqualTo("this is a test"));
-            Assert.That(Encoding.UTF8.GetString("jo91waLQA1NNeBmZKUF".FromBase58()), Is.EqualTo("this is a test"));
+            Assert.AreEqual("this is a test", Encoding.UTF8.GetString(Base58.Decode("jo91waLQA1NNeBmZKUF")));
+            Assert.AreEqual("this is a test", Encoding.UTF8.GetString("jo91waLQA1NNeBmZKUF".FromBase58()));
         }
 
         /// <summary>
         ///    C# version of base58Test in <see href="https://github.com/ipfs/java-ipfs-api/blob/master/test/org/ipfs/Test.java"/>
         /// </summary>
-        [Test]
+        [TestMethod]
         public void Java()
         {
             var input = "QmPZ9gcCEpqKTo6aq61g2nXGUhM4iCL3ewB6LDXZCtioEB";
             var output = Base58.Decode(input);
             var encoded = Base58.Encode(output);
-            Assert.That(input, Is.EqualTo(encoded));
+            Assert.AreEqual(input, encoded);
         }
 
-        [Test]
+        [TestMethod]
         public void Decode_Bad()
         {
-            ExceptionAssert.Throws<ArgumentException>(() => Base58.Decode("jo91waLQA1NNeBmZKUF=="));
+            ExceptionAssert.Throws<InvalidOperationException>(() => Base58.Decode("jo91waLQA1NNeBmZKUF=="));
         }
 
-        [Test]
+        [TestMethod]
         public void Zero()
         {
-            Assert.That(Base58.Encode(new byte[7]), Is.EqualTo("1111111"));
-            Assert.That(Base58.Decode("1111111").Length, Is.EqualTo(7));
-            Assert.That(Base58.Decode("1111111").All(b => b == 0), Is.True);
+            Assert.AreEqual("1111111", Base58.Encode(new byte[7]));
+            Assert.AreEqual(7, Base58.Decode("1111111").Length);
+            Assert.IsTrue(Base58.Decode("1111111").All(b => b == 0));
         }
     }
 }

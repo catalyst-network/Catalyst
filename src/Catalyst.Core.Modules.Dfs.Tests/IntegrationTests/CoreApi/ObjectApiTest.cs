@@ -37,12 +37,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
     {
         private IDfsService ipfs;
 
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            ipfs.Dispose();
-        }
-
         public ObjectApiTest()
         {
             ipfs = TestDfs.GetTestDfs(null, "sha2-256");

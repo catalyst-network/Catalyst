@@ -21,10 +21,10 @@
 
 #endregion
 
-using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.P2P.IO.Messaging.Broadcast;
+using Catalyst.Modules.Network.Dotnetty.IO.Handlers;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using DotNetty.Transport.Channels.Embedded;
@@ -51,7 +51,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
             var correlationId = CorrelationId.GenerateCorrelationId();
             var fakeMessage =
                 new TransactionBroadcast()
-                   .ToProtocolMessage(PeerIdHelper.GetPeerId("Test"), correlationId);
+                   .ToProtocolMessage(MultiAddressHelper.GetAddress("Test"), correlationId);
             _fakeChannel.WriteInbound(fakeMessage);
             _broadcastManager.Received(1).RemoveSignedBroadcastMessageData(correlationId);
         }

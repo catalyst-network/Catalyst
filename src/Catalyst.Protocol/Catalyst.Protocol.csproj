@@ -2,7 +2,7 @@
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
         <RootNamespace>Catalyst.Protocol</RootNamespace>
-        <Authors>Darren Oliveiro-Priestnall (darren.op@catalystnet.org)</Authors>
+        <Authors>James Kirby (nshcore@protonmail.com)</Authors>
         <SignAssembly>true</SignAssembly>
         <AssemblyOriginatorKeyFile>Catalyst.Protocol.snk</AssemblyOriginatorKeyFile>
         <PublicSign>true</PublicSign>
@@ -14,7 +14,7 @@
     <Import Project="../Common.Projects.props" />
     <ItemGroup>
         <PackageReference Include="Dawn.Guard" Version="1.12.0" />
-        <PackageReference Include="Google.Protobuf" Version="3.27.1" />
+        <PackageReference Include="Google.Protobuf" Version="3.27.2" />
         <PackageReference Include="Grpc.Tools" Version="2.64.0" PrivateAssets="all" IncludeAssets="runtime; build; native; contentfiles; analyzers; buildtransitive" />
         <PackageReference Include="Serilog" Version="4.0.0" />
     </ItemGroup>
@@ -22,6 +22,7 @@
         <ProtoBuf Include="..\..\submodules\Protocol\src\*.proto" Link="Protobuffs\%(Filename)%(Extension)" />
     </ItemGroup>
     <ItemGroup>
+      <ProjectReference Include="..\..\submodules\nethermind\src\Dirichlet\Nethermind.Dirichlet.Numerics\Nethermind.Dirichlet.Numerics.csproj" />
       <ProjectReference Include="..\MultiFormats\MultiFormats.csproj" />
     </ItemGroup>
 </Project>

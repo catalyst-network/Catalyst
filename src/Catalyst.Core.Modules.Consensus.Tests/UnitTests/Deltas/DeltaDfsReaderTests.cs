@@ -50,12 +50,6 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests.Deltas
         private ILogger _logger;
         private IDeltaDfsReader _dfsReader;
 
-        [TearDown]
-        public void TearDown()
-        {
-            _dfsService.Dispose();
-        }
-
         [SetUp]
         public void Init()
         {

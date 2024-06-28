@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -21,15 +21,19 @@
 
 #endregion
 
+using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.Consensus;
 using Catalyst.Abstractions.Consensus.Deltas;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Kvm;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
+using Google.Protobuf;
 using Lib.P2P;
+using MultiFormats;
 using Nethermind.State;
 using Serilog;
 
@@ -41,11 +45,13 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
         private readonly IDeltaTransactionRetriever _transactionRetriever;
         private readonly IDeterministicRandomFactory _randomFactory;
         private readonly IHashProvider _hashProvider;
-        private readonly PeerId _producerUniqueId;
+        private readonly MultiAddress _producerUniqueId;
         private readonly IDeltaCache _deltaCache;
         private readonly IDateTimeProvider _dateTimeProvider;
-        private readonly IWorldState _stateProvider;
+        private readonly IStateProvider _stateProvider;
         private readonly IDeltaExecutor _deltaExecutor;
+        private readonly IDeltaConfig _deltaConfig;
+        private readonly ITransactionConfig _transactionConfig;
         private readonly ILogger _logger;
 
         public DeltaBuilder(IDeltaTransactionRetriever transactionRetriever,
@@ -54,29 +60,35 @@ namespace Catalyst.Core.Modules.Consensus.Deltas.Building
             IPeerSettings peerSettings,
             IDeltaCache deltaCache,
             IDateTimeProvider dateTimeProvider,
-            IWorldState stateProvider,
+            IStateProvider stateProvider,
             IDeltaExecutor deltaExecutor,
+            IDeltaConfig deltaConfig,
+            ITransactionConfig transactionConfig,
             ILogger logger)
         {
             _transactionRetriever = transactionRetriever;
             _randomFactory = randomFactory;
             _hashProvider = hashProvider;
-            _producerUniqueId = peerSettings.PeerId;
+            _producerUniqueId = peerSettings.Address;
             _deltaCache = deltaCache;
             _dateTimeProvider = dateTimeProvider;
             _stateProvider = stateProvider;
             _deltaExecutor = deltaExecutor;
+            _deltaConfig = deltaConfig;
+            _transactionConfig = transactionConfig;
+
             _logger = logger;
 
             PrepareSteps();
         }
 
+        //todo We can DI this later
         private void PrepareSteps()
         {
             _steps = new IDeltaBuilderStep[]
             {
                 new PreviousDeltaResolverStep(_deltaCache, _logger),
-                new TransactionRetrieverStep(_transactionRetriever, _logger),
+                new TransactionRetrieverStep(_transactionRetriever, _deltaConfig, _transactionConfig, _logger),
                 new CandidateBuilderStep(_producerUniqueId, _randomFactory, _hashProvider, _logger),
                 new ProducedDeltaBuilderStep(_dateTimeProvider, _logger),
                 new DeltaStateCalculationStep(_stateProvider, _deltaExecutor, _logger),

@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -23,6 +23,7 @@
 
 using System;
 using System.IO;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Consensus.Deltas;
@@ -30,16 +31,15 @@ using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Options;
 using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
 using Catalyst.Core.Modules.Dfs.Extensions;
 using Catalyst.Protocol.Deltas;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Dawn;
 using Google.Protobuf;
 using Lib.P2P;
+using MultiFormats;
 using Polly;
 using Polly.Retry;
 using Serilog;
@@ -50,24 +50,24 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
     /// <inheritdoc cref="IDisposable" />
     public class DeltaHub : IDeltaHub
     {
-        private readonly IBroadcastManager _broadcastManager;
-        private readonly PeerId _peerId;
+        private readonly MultiAddress _peerId;
         private readonly IDfsService _dfsService;
         private readonly IHashProvider _hashProvider;
+        private readonly IPeerClient _peerClient;
         private readonly ILogger _logger;
 
         protected virtual AsyncRetryPolicy<IFileSystemNode> DfsRetryPolicy { get; }
 
-        public DeltaHub(IBroadcastManager broadcastManager,
+        public DeltaHub(IPeerClient peerClient,
             IPeerSettings peerSettings,
             IDfsService dfsService,
             IHashProvider hashProvider,
             ILogger logger)
         {
-            _broadcastManager = broadcastManager;
-            _peerId = peerSettings.PeerId;
+            _peerId = peerSettings.Address;
             _dfsService = dfsService;
             _hashProvider = hashProvider;
+            _peerClient = peerClient;
             _logger = logger;
 
             DfsRetryPolicy = Polly.Policy<IFileSystemNode>.Handle<Exception>()
@@ -81,7 +81,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             Guard.Argument(candidate, nameof(candidate)).NotNull().Require(c => c.IsValid());
             _logger.Information("Broadcasting candidate delta {0}", candidate);
 
-            if (!candidate.ProducerId.Equals(_peerId))
+            if (!candidate.Producer.SequenceEqual(_peerId.GetKvmAddressByteString()))
             {
                 _logger.Warning($"{nameof(BroadcastCandidate)} " +
                     "should only be called by the producer of a candidate.");
@@ -89,7 +89,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             }
 
             var protocolMessage = candidate.ToProtocolMessage(_peerId, CorrelationId.GenerateCorrelationId());
-            _broadcastManager.BroadcastAsync(protocolMessage).ConfigureAwait(false);
+            _peerClient.BroadcastAsync(protocolMessage).ConfigureAwait(false);
 
             _logger.Debug("Broadcast candidate {0} done.", candidate);
         }
@@ -100,7 +100,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             Guard.Argument(favourite, nameof(favourite)).NotNull().Require(c => c.IsValid());
 
             var protocolMessage = favourite.ToProtocolMessage(_peerId, CorrelationId.GenerateCorrelationId());
-            _broadcastManager.BroadcastAsync(protocolMessage).ConfigureAwait(false);
+            _peerClient.BroadcastAsync(protocolMessage).ConfigureAwait(false);
 
             _logger.Debug("Started broadcasting favourite candidate {0}", favourite);
         }
@@ -152,7 +152,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                     PreviousDeltaDfsHash = previousDeltaHash
                 }.ToProtocolMessage(_peerId, CorrelationId.GenerateCorrelationId());
 
-                await _broadcastManager.BroadcastAsync(newDeltaHashOnDfs).ConfigureAwait(false);
+                await _peerClient.BroadcastAsync(newDeltaHashOnDfs).ConfigureAwait(false);
             }
             catch (Exception exception)
             {
@@ -173,7 +173,7 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 var node = await _dfsService.UnixFsApi.AddAsync(memoryStream, string.Empty,
                         new AddFileOptions { Hash = _hashProvider.HashingAlgorithm.Name }, cancellationToken)
                    .ConfigureAwait(false);
-                
+
                 return node;
             }
         }

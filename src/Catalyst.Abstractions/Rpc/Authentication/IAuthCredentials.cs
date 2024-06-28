@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -28,12 +28,8 @@ namespace Catalyst.Abstractions.Rpc.Authentication
 {
     public interface IAuthCredentials : IAuditable, IDocument
     {
-        /// <summary>Gets or sets the public key.</summary>
-        /// <value>The public key.</value>
-        string PublicKey { get; set; }
-
-        /// <summary>Gets or sets the ip address.</summary>
-        /// <value>The ip address.</value>
-        string IpAddress { get; set; }
+        /// <summary>Gets or sets the address.</summary>
+        /// <value>The multi address.</value>
+        string Address { get; set; }
     }
 }

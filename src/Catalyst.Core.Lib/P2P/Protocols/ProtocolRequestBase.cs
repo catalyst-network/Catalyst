@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -25,6 +25,7 @@ using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Abstractions.Util;
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.Protocols
@@ -38,9 +39,9 @@ namespace Catalyst.Core.Lib.P2P.Protocols
         public bool Disposing { get; protected set; }
         
         protected ProtocolRequestBase(ILogger logger,
-            PeerId senderIdentifier,
+            MultiAddress sender,
             ICancellationTokenProvider cancellationTokenProvider,
-            IPeerClient peerClient) : base(senderIdentifier)
+            IPeerClient peerClient) : base(sender)
         {
             Logger = logger;
             CancellationTokenProvider = cancellationTokenProvider;

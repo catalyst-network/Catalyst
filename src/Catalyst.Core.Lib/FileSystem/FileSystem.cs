@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -39,8 +39,8 @@ namespace Catalyst.Core.Lib.FileSystem
         private readonly RetryPolicy _retryPolicy;
 
         public FileSystem()
-   {
-            _dataDir = System.IO.Path.Combine(GetUserHomeDir(), Constants.CatalystDataDir);
+        {
+            _dataDir = Path.Combine(GetUserHomeDir(), Constants.CatalystDataDir);
             _retryPolicy = Policy.Handle<IOException>()
                .WaitAndRetry(5, i => TimeSpan.FromMilliseconds(500).Multiply(i));
         }
@@ -58,7 +58,7 @@ namespace Catalyst.Core.Lib.FileSystem
         {
             try
             {
-                var fullPath = System.IO.Path.GetFullPath(path);
+                var fullPath = Path.GetFullPath(path);
 
                 var dirInfo = new DirectoryInfo(fullPath);
                 if (!dirInfo.Exists)
@@ -110,12 +110,12 @@ namespace Catalyst.Core.Lib.FileSystem
 
         public bool DataFileExists(string fileName)
         {
-            return File.Exists(System.IO.Path.Combine(GetCatalystDataDir().FullName, fileName));
+            return File.Exists(Path.Combine(GetCatalystDataDir().FullName, fileName));
         }
 
         public bool DataFileExistsInSubDirectory(string fileName, string subDirectory)
         {
-            return File.Exists(System.IO.Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName));
+            return File.Exists(Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName));
         }
         
         public static string GetUserHomeDir()
@@ -125,13 +125,13 @@ namespace Catalyst.Core.Lib.FileSystem
 
         public string ReadTextFromCddFile(string fileName)
         {
-            var path = System.IO.Path.Combine(GetCatalystDataDir().FullName, fileName);
+            var path = Path.Combine(GetCatalystDataDir().FullName, fileName);
             return ReadTextFromFile(path);
         }
 
         public string ReadTextFromCddSubDirectoryFile(string fileName, string subDirectory)
         {
-            var path = System.IO.Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName);
+            var path = Path.Combine(GetCatalystDataDir().FullName, subDirectory, fileName);
             return ReadTextFromFile(path);
         }
 

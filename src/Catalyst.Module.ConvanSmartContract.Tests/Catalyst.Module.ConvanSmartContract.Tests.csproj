@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp3.1</TargetFramework>
+
+    <IsPackable>false</IsPackable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="FluentAssertions" Version="5.10.3" />
+    <PackageReference Include="FluentAssertions.Json" Version="5.5.0" />
+    <PackageReference Include="Microsoft.NET.Test.Sdk" Version="16.5.0" />
+    <PackageReference Include="MSTest.TestAdapter" Version="2.1.0" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.1.0" />
+    <PackageReference Include="coverlet.collector" Version="1.2.0" />
+    <PackageReference Include="NUnit" Version="3.12.0" />
+    <PackageReference Include="NUnit3TestAdapter" Version="3.17.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\submodules\nethermind\src\Nethermind\Nethermind.Consensus.AuRa\Nethermind.Consensus.AuRa.csproj" />
+    <ProjectReference Include="..\..\submodules\nethermind\src\Nethermind\Nethermind.Serialization.Json\Nethermind.Serialization.Json.csproj" />
+    <ProjectReference Include="..\Catalyst.Module.ConvanSmartContract\Catalyst.Module.ConvanSmartContract.csproj" />
+  </ItemGroup>
+
+</Project>

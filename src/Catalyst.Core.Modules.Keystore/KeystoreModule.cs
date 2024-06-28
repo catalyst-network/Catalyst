@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -24,6 +24,7 @@
 using Autofac;
 using Catalyst.Abstractions.Keystore;
 using Catalyst.Core.Lib.Cryptography;
+using Catalyst.Core.Lib.FileSystem;
 
 namespace Catalyst.Core.Modules.Keystore
 {
@@ -31,10 +32,10 @@ namespace Catalyst.Core.Modules.Keystore
     {
         protected override void Load(ContainerBuilder builder)
         {
-            builder.RegisterType<SigningContextProvider>().As<ISigningContextProvider>();
-            builder.RegisterType<LocalKeyStore>().As<IKeyStore>().SingleInstance();
+            builder.RegisterType<SigningContextProvider>().As<ISigningContextProvider>().SingleInstance();
             builder.RegisterType<KeyRegistry>().As<IKeyRegistry>().SingleInstance();
             builder.RegisterType<KeyStoreService>().As<IKeyStoreService>().SingleInstance();
+            builder.RegisterType<KeyFileStore>().As<IStore<string, EncryptedKey>>().SingleInstance();
         }  
     }
 }

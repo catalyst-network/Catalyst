@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -130,7 +130,9 @@ namespace Catalyst.Abstractions.Keystore
 
         Task<IKey> ImportAsync(string name, string pem, char[] password, CancellationToken cancel = default);
         
-        Task<IKey> GetPublicKeyAsync(string self);
+        Task<IKey> GetKeyAsync(string self);
+        Task<string> GetDfsPublicKeyAsync(string name, CancellationToken cancel = default);
+
         Task<AsymmetricKeyParameter> GetPrivateKeyAsync(string self);
         
         Task<byte[]> CreateProtectedDataAsync(string keyName,

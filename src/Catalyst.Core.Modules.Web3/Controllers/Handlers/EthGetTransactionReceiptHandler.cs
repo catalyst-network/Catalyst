@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -26,16 +26,15 @@ using System.Linq;
 using Catalyst.Abstractions.Kvm.Models;
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Abstractions.Ledger.Models;
-using Catalyst.Core.Lib.Extensions;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
     [EthWeb3RequestHandler("eth", "getTransactionReceipt")]
-    public class EthGetTransactionReceiptHandler : EthWeb3RequestHandler<Hash256, ReceiptForRpc>
+    public class EthGetTransactionReceiptHandler : EthWeb3RequestHandler<Keccak, ReceiptForRpc>
     {
-        protected override ReceiptForRpc Handle(Hash256 txHash, IWeb3EthApi api)
+        protected override ReceiptForRpc Handle(Keccak txHash, IWeb3EthApi api)
         {
             if (api == null) throw new ArgumentNullException(nameof(api));
             if (txHash == null)
@@ -43,7 +42,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
                 return null;
             }
             
-            TransactionReceipt receipt = api.FindReceipt(txHash.ToCid());
+            TransactionReceipt receipt = api.FindReceipt(txHash);
             if (receipt == null)
             {
                 return null;

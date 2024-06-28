@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -23,12 +23,16 @@
 
 using System;
 using Autofac;
+using Catalyst.Abstractions.Cli;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Dfs;
 using Catalyst.Abstractions.Dfs.Migration;
 using Catalyst.Abstractions.FileSystem;
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Abstractions.Keystore;
+using Catalyst.Abstractions.Options;
+using Catalyst.Core.Lib;
+using Catalyst.Core.Lib.Cli;
 using Catalyst.Core.Lib.Cryptography;
 using Catalyst.Core.Modules.Dfs;
 using Catalyst.Core.Modules.Dfs.Migration;
@@ -47,7 +51,7 @@ namespace Catalyst.TestUtils
         {
         }
 
-        public static IDfsService GetTestDfs(IFileSystem fileSystem = default, string hashName = "keccak-256")
+        public static IDfsService GetTestDfs(IFileSystem fileSystem = default, string hashName = "keccak-256", string keyType = null)
         {
             var nodeGuid = Guid.NewGuid();
             var containerBuilder = new ContainerBuilder();
@@ -59,6 +63,9 @@ namespace Catalyst.TestUtils
                 fileSystem = testFileSystem.FileSystem;
             }
 
+            containerBuilder.RegisterModule<CoreLibProvider>();
+            containerBuilder.RegisterModule<KeystoreModule>();
+            containerBuilder.RegisterType<ConsoleUserOutput>().As<IUserOutput>();
             containerBuilder.RegisterInstance(new PasswordManager(new TestPasswordReader(), new PasswordRegistry())).As<IPasswordManager>().SingleInstance();
             containerBuilder.RegisterInstance(fileSystem).As<IFileSystem>();
             containerBuilder.RegisterType<MigrationManager>().As<IMigrationManager>();
@@ -66,6 +73,11 @@ namespace Catalyst.TestUtils
             containerBuilder.RegisterInstance(new HashProvider(HashingAlgorithm.GetAlgorithmMetadata(hashName))).As<IHashProvider>();
             containerBuilder.RegisterType<KeyStoreService>().As<IKeyStoreService>().SingleInstance();
             containerBuilder.RegisterModule(new DfsModule());
+            containerBuilder.RegisterType<DiscoveryOptions>().SingleInstance().WithProperty("DisableMdns", true).WithProperty("UsePeerRepository", false);
+            if (keyType != null)
+            {
+                containerBuilder.RegisterType<KeyChainOptions>().SingleInstance().WithProperty("DefaultKeyType", keyType);
+            }
 
             var container = containerBuilder.Build();
             var scope = container.BeginLifetimeScope(nodeGuid);

@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -50,7 +50,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// <value>
         ///   The directory of the <see cref="IBlockRepositoryApi">repository</see>.
         /// </value>
-        public string? RepoPath;
+        public string RepoPath;
 
         /// <summary>
         ///   The version number of the repository.
@@ -58,7 +58,7 @@ namespace Catalyst.Abstractions.Dfs.CoreApi
         /// <value>
         ///  The version number of the <see cref="IBlockRepositoryApi">repository</see>.
         /// </value>
-        public string? Version;
+        public string Version;
 
         /// <summary>
         ///   The maximum number of bytes allowed in the repository.

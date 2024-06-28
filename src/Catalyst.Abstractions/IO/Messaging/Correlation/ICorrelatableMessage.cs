@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -24,13 +24,14 @@
 using System;
 using Catalyst.Protocol.Peer;
 using Google.Protobuf;
+using MultiFormats;
 
 namespace Catalyst.Abstractions.IO.Messaging.Correlation
 {
     public interface ICorrelatableMessage<T> where T : IMessage 
     {
         T Content { get; set; }
-        PeerId Recipient { get; set; }
+        MultiAddress Recipient { get; set; }
         DateTimeOffset SentAt { get; set; }
     }
 }

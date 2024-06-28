@@ -47,8 +47,9 @@ using MultiFormats;
 using MultiFormats.Registry;
 using Google.Protobuf;
 using Google.Protobuf.WellKnownTypes;
+using Nethermind.Dirichlet.Numerics;
 using NUnit.Framework;
-using Nethermind.Int256;
+using Catalyst.Core.Modules.Kvm;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 {
@@ -87,21 +88,20 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         public void ProtocolMessageDao_ProtocolMessage_Should_Be_Convertible()
         {
             var newGuid = Guid.NewGuid();
-            var peerId = PeerIdHelper.GetPeerId("testcontent");
+            var address = MultiAddressHelper.GetAddress("testcontent");
             var original = new ProtocolMessage
             {
                 CorrelationId = newGuid.ToByteString(),
                 TypeUrl = "cleanurl",
                 Value = "somecontent".ToUtf8ByteString(),
-                PeerId = peerId
+                Address = address.ToString()
             };
 
             var messageDao = original.ToDao<ProtocolMessage, ProtocolMessageDao>(_mapperProvider);
 
             messageDao.TypeUrl.Should().Be("cleanurl");
             messageDao.CorrelationId.Should().Be(newGuid.ToString());
-            messageDao.PeerId.Port.Should().Be((ushort) peerId.Port);
-            messageDao.PeerId.Ip.Should().Be(new IPAddress(peerId.Ip.ToByteArray()).MapToIPv6().ToString());
+            messageDao.Address.Should().Be(address.ToString());
 
             var reconverted = messageDao.ToProtoBuff<ProtocolMessageDao, ProtocolMessage>(_mapperProvider);
             reconverted.Should().Be(original);
@@ -121,23 +121,13 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
                     RawBytes = byteRn.ToByteString(),
                     SigningContext = DevNetPeerSigningContext.Instance
                 },
-                PeerId = PeerIdHelper.GetPeerId("test"),
+                Address = MultiAddressHelper.GetAddress("test").ToString(),
                 Code = 74
             };
 
             var errorMessageSignedDao = original.ToDao<ProtocolErrorMessage, ProtocolErrorMessageDao>(_mapperProvider);
             var reconverted =
                 errorMessageSignedDao.ToProtoBuff<ProtocolErrorMessageDao, ProtocolErrorMessage>(_mapperProvider);
-            reconverted.Should().Be(original);
-        }
-
-        [Test]
-        public void PeerIdDao_PeerId_Should_Be_Convertible()
-        {
-            var original = PeerIdHelper.GetPeerId("MyPeerId_Testing");
-
-            var peer = original.ToDao<PeerId, PeerIdDao>(_mapperProvider);
-            var reconverted = peer.ToProtoBuff<PeerIdDao, PeerId>(_mapperProvider);
             reconverted.Should().Be(original);
         }
 
@@ -179,7 +169,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             var original = new CandidateDeltaBroadcast
             {
                 Hash = MultiBase.Decode(hash.ToCid()).ToByteString(),
-                ProducerId = PeerIdHelper.GetPeerId("test"),
+                Producer = MultiAddressHelper.GetAddress("test").GetKvmAddressByteString(),
                 PreviousDeltaDfsHash = MultiBase.Decode(previousHash.ToCid()).ToByteString()
             };
 
@@ -214,8 +204,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
         {
             var original = new FavouriteDeltaBroadcast
             {
-                Candidate = DeltaHelper.GetCandidateDelta(_hashProvider, producerId: PeerIdHelper.GetPeerId("not me")),
-                VoterId = PeerIdHelper.GetPeerId("test")
+                Candidate = DeltaHelper.GetCandidateDelta(_hashProvider, producerId: MultiAddressHelper.GetAddress("not me").GetKvmAddress()),
+                Voter = MultiAddressHelper.GetAddress("test").GetKvmAddressByteString()
             };
 
             var contextDao = original.ToDao<FavouriteDeltaBroadcast, FavouriteDeltaBroadcastDao>(_mapperProvider);
@@ -232,12 +222,12 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
 
             var original = new CoinbaseEntry
             {
-                ReceiverPublicKey = pubKeyBytes.ToByteString(),
+                ReceiverKvmAddress = pubKeyBytes.ToKvmAddressByteString(),
                 Amount = 271314.ToUint256ByteString()
             };
 
             var messageDao = original.ToDao<CoinbaseEntry, CoinbaseEntryDao>(_mapperProvider);
-            messageDao.ReceiverPublicKey.Should().Be(pubKeyBytes.KeyToString());
+            messageDao.ReceiverKvmAddress.Should().Be(pubKeyBytes.ToKvmAddress().ToString());
 
             var reconverted = messageDao.ToProtoBuff<CoinbaseEntryDao, CoinbaseEntry>(_mapperProvider);
             reconverted.Should().Be(original);
@@ -264,7 +254,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.DAO
             var transactionEntryDao = original.ToDao<PublicEntry, PublicEntryDao>(_mapperProvider);
 
             transactionEntryDao.SenderAddress.Should().Be(pubKeyBytes.KeyToString());
-            transactionEntryDao.Amount.Should().Be(8855274.ToString());
+            transactionEntryDao.Amount.Should().Be(8855274.ToUint256ByteString().ToByteArray().ToBase58());
 
             var reconverted = transactionEntryDao.ToProtoBuff<PublicEntryDao, PublicEntry>(_mapperProvider);
             reconverted.Should().Be(original);

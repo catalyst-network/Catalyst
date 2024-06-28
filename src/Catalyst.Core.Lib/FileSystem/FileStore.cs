@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -32,6 +32,15 @@ using Nito.AsyncEx;
 
 namespace Catalyst.Core.Lib.FileSystem
 {
+    public interface IStore<TName, TValue>
+    {
+        Task<TValue> TryGetAsync(TName name, CancellationToken cancel = default);
+        Task<TValue> GetAsync(TName name, CancellationToken cancel = default);
+        Task PutAsync(TName name, TValue value, CancellationToken cancel = default);
+        Task RemoveAsync(TName name, CancellationToken cancel = default);
+        IEnumerable<TValue> Values { get; }
+    }
+
     /// <summary>
     ///     A file based repository for name value pairs.
     /// </summary>
@@ -44,7 +53,7 @@ namespace Catalyst.Core.Lib.FileSystem
     /// <remarks>
     ///     All operations are atomic, a reader/writer lock is used.
     /// </remarks>
-    public class FileStore<TName, TValue>
+    public class FileStore<TName, TValue> : IStore<TName, TValue>
         where TValue : class
     {
         private readonly AsyncReaderWriterLock _storeLock = new AsyncReaderWriterLock();

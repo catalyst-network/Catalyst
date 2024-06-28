@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -26,16 +26,14 @@ using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.P2P.IO;
 using Catalyst.Abstractions.P2P.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P.Protocols;
-using Catalyst.Abstractions.P2P.Repository;
+using Catalyst.Core.Lib.Abstractions.P2P.IO;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Core.Lib.P2P.IO.Messaging.Dto;
 using Catalyst.Core.Lib.P2P.Protocols;
 using Catalyst.Protocol.IPPN;
-using Catalyst.Protocol.Peer;
-using DotNetty.Transport.Channels;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Lib.P2P.IO.Observers
@@ -43,32 +41,29 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
     /// <summary>
     ///     @TODO we inject IPeerChallengeRequest, this class probably shouldnt care about IPeerChallengeRequest,
     ///     IPeerChallengeRequest should consume ResponseMessageSubject, and filter for messages it is concerned with.
-    ///     OnNext(new PeerChallengeResponse(senderPeerId)); would then instantiate PeerChallengeResponse where its consumed not here.
+    ///     OnNext(new PeerChallengeResponse(sender)); would then instantiate PeerChallengeResponse where its consumed not here.
     /// </summary>
     public sealed class PingResponseObserver
         : ResponseObserverBase<PingResponse>,
             IP2PMessageObserver, IPeerClientObservable
     {
-        private readonly IPeerRepository _peerRepository;
         private readonly IPeerChallengeRequest _peerChallengeRequest;
         public ReplaySubject<IPeerClientMessageDto> ResponseMessageSubject { get; }
         public IObservable<IPeerClientMessageDto> MessageStream => ResponseMessageSubject.AsObservable();
         
-        public PingResponseObserver(IPeerChallengeRequest peerChallengeRequest, IPeerRepository peerRepository, ILogger logger)
+        public PingResponseObserver(IPeerChallengeRequest peerChallengeRequest, ILogger logger)
             : base(logger)
         {
             _peerChallengeRequest = peerChallengeRequest;
-            _peerRepository = peerRepository;
             ResponseMessageSubject = new ReplaySubject<IPeerClientMessageDto>(1);
         }
         
         protected override void HandleResponse(PingResponse pingResponse,
-            IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
-            ResponseMessageSubject.OnNext(new PeerClientMessageDto(pingResponse, senderPeerId, correlationId));
-            _peerChallengeRequest.ChallengeResponseMessageStreamer.OnNext(new PeerChallengeResponse(senderPeerId));
+            ResponseMessageSubject.OnNext(new PeerClientMessageDto(pingResponse, sender, correlationId));
+            _peerChallengeRequest.ChallengeResponseMessageStreamer.OnNext(new PeerChallengeResponse(sender));
         }
     }
 }

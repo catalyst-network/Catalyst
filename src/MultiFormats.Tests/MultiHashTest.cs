@@ -26,14 +26,16 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text;
 using Google.Protobuf;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MultiFormats.Registry;
 using Newtonsoft.Json;
 
 namespace MultiFormats.Tests
 {
+    [TestClass]
     public sealed class MultiHashTest
     {
-        [Test]
+        [TestMethod]
         public void HashNames()
         {
             var _ = new MultiHash("sha1", new byte[20]);
@@ -42,7 +44,7 @@ namespace MultiFormats.Tests
             _ = new MultiHash("keccak-512", new byte[64]);
         }
 
-        [Test]
+        [TestMethod]
         public void Unknown_Hash_Name()
         {
             ExceptionAssert.Throws<ArgumentNullException>(() => new MultiHash(null, new byte[0]));
@@ -50,17 +52,17 @@ namespace MultiFormats.Tests
             ExceptionAssert.Throws<ArgumentException>(() => new MultiHash("md5", new byte[0]));
         }
 
-        [Test]
+        [TestMethod]
         public void Write_Null_Stream()
         {
             var mh = new MultiHash("QmPZ9gcCEpqKTo6aq61g2nXGUhM4iCL3ewB6LDXZCtioEB");
-            ExceptionAssert.Throws<ArgumentNullException>(() => mh.Write((CodedOutputStream)null));
+            ExceptionAssert.Throws<ArgumentNullException>(() => mh.Write((CodedOutputStream) null));
         }
 
-        [Test]
+        [TestMethod]
         public void Parsing_Unknown_Hash_Number()
         {
-            HashingAlgorithm? unknown = null;
+            HashingAlgorithm unknown = null;
             EventHandler<UnknownHashingAlgorithmEventArgs> unknownHandler = (s, e) => { unknown = e.Algorithm; };
             var ms = new MemoryStream(new byte[]
             {
@@ -70,16 +72,16 @@ namespace MultiFormats.Tests
             try
             {
                 var mh = new MultiHash(ms);
-                Assert.That(mh.Algorithm.Name, Is.EqualTo("ipfs-1"));
-                Assert.That(mh.Algorithm.ToString(), Is.EqualTo("ipfs-1"));
-                Assert.That(mh.Algorithm.Code, Is.EqualTo(1));
-                Assert.That(mh.Algorithm.DigestSize, Is.EqualTo(2));
-                Assert.That(mh.Digest[0], Is.EqualTo(0xa));
-                Assert.That(mh.Digest[1], Is.EqualTo(0xb));
-                Assert.That(unknown, Is.Not.Null, "unknown handler not called");
-                Assert.That(unknown.Name, Is.EqualTo("ipfs-1"));
-                Assert.That(unknown.Code, Is.EqualTo(1));
-                Assert.That(unknown.DigestSize, Is.EqualTo(2));
+                Assert.AreEqual("ipfs-1", mh.Algorithm.Name);
+                Assert.AreEqual("ipfs-1", mh.Algorithm.ToString());
+                Assert.AreEqual(1, mh.Algorithm.Code);
+                Assert.AreEqual(2, mh.Algorithm.DigestSize);
+                Assert.AreEqual(0xa, mh.Digest[0]);
+                Assert.AreEqual(0xb, mh.Digest[1]);
+                Assert.IsNotNull(unknown, "unknown handler not called");
+                Assert.AreEqual("ipfs-1", unknown.Name);
+                Assert.AreEqual(1, unknown.Code);
+                Assert.AreEqual(2, unknown.DigestSize);
             }
             finally
             {
@@ -88,7 +90,7 @@ namespace MultiFormats.Tests
             }
         }
 
-        [Test]
+        [TestMethod]
         public void Parsing_Wrong_Digest_Size()
         {
             var ms = new MemoryStream(new byte[]
@@ -98,7 +100,7 @@ namespace MultiFormats.Tests
             ExceptionAssert.Throws<InvalidDataException>(() => new MultiHash(ms));
         }
 
-        [Test]
+        [TestMethod]
         public void Invalid_Digest()
         {
             ExceptionAssert.Throws<ArgumentNullException>(() => new MultiHash("sha1", null));
@@ -106,47 +108,44 @@ namespace MultiFormats.Tests
             ExceptionAssert.Throws<ArgumentException>(() => new MultiHash("sha1", new byte[21]));
         }
 
-        [Test]
+        [TestMethod]
         public void Base58_Encode_Decode()
         {
             var mh = new MultiHash("QmPZ9gcCEpqKTo6aq61g2nXGUhM4iCL3ewB6LDXZCtioEB");
-            Assert.That(mh.Algorithm.Name, Is.EqualTo("sha2-256"));
-            Assert.That(mh.Digest.Length, Is.EqualTo(32));
-            Assert.That(mh.ToBase58(), Is.EqualTo("QmPZ9gcCEpqKTo6aq61g2nXGUhM4iCL3ewB6LDXZCtioEB"));
+            Assert.AreEqual("sha2-256", mh.Algorithm.Name);
+            Assert.AreEqual(32, mh.Digest.Length);
+            Assert.AreEqual("QmPZ9gcCEpqKTo6aq61g2nXGUhM4iCL3ewB6LDXZCtioEB", mh.ToBase58());
         }
 
-        [Test]
+        [TestMethod]
         public void Base32_Encode()
         {
             var mh = new MultiHash("QmPZ9gcCEpqKTo6aq61g2nXGUhM4iCL3ewB6LDXZCtioEB");
-            Assert.That(mh.Algorithm.Name, Is.EqualTo("sha2-256"));
-            Assert.That(mh.Digest.Length, Is.EqualTo(32));
-            Assert.That(mh.ToBase32(), Is.EqualTo("ciqbed3k6ya5i3qqwljochwxdrk5exzqilbckapedujenz5b5hj5r3a"));
+            Assert.AreEqual("sha2-256", mh.Algorithm.Name);
+            Assert.AreEqual(32, mh.Digest.Length);
+            Assert.AreEqual("ciqbed3k6ya5i3qqwljochwxdrk5exzqilbckapedujenz5b5hj5r3a", mh.ToBase32());
         }
 
-        [Test]
+        [TestMethod]
         public void Compute_Hash_Array()
         {
             var hello = Encoding.UTF8.GetBytes("Hello, world.");
             var mh = MultiHash.ComputeHash(hello);
-            Assert.That(mh.Algorithm.Name, Is.EqualTo(MultiHash.DefaultAlgorithmName));
-            Assert.That(mh.Digest, Is.Not.Null);
+            Assert.AreEqual(MultiHash.DefaultAlgorithmName, mh.Algorithm.Name);
+            Assert.IsNotNull(mh.Digest);
         }
 
-        [Test]
+        [TestMethod]
         public void Compute_Hash_Stream()
         {
             var hello = new MemoryStream(Encoding.UTF8.GetBytes("Hello, world."));
             hello.Position = 0;
             var mh = MultiHash.ComputeHash(hello);
-            Assert.Multiple(() =>
-            {
-                Assert.That(mh.Algorithm.Name, Is.EqualTo(MultiHash.DefaultAlgorithmName));
-                Assert.That(mh.Digest, Is.Not.Null);
-            });
+            Assert.AreEqual(MultiHash.DefaultAlgorithmName, mh.Algorithm.Name);
+            Assert.IsNotNull(mh.Digest);
         }
 
-        [Test]
+        [TestMethod]
         public void Compute_Not_Implemented_Hash_Array()
         {
             var alg = HashingAlgorithm.Register("not-implemented", 0x0F, 32);
@@ -161,29 +160,29 @@ namespace MultiFormats.Tests
             }
         }
 
-        [Test]
+        [TestMethod]
         public void Matches_Array()
         {
             var hello = Encoding.UTF8.GetBytes("Hello, world.");
             var hello1 = Encoding.UTF8.GetBytes("Hello, world");
             var mh = MultiHash.ComputeHash(hello);
-            Assert.That(mh.Matches(hello), Is.True);
-            Assert.That(mh.Matches(hello1), Is.False);
+            Assert.IsTrue(mh.Matches(hello));
+            Assert.IsFalse(mh.Matches(hello1));
 
             var mh1 = MultiHash.ComputeHash(hello, "sha1");
-            Assert.That(mh1.Matches(hello), Is.True);
-            Assert.That(mh1.Matches(hello1), Is.False);
+            Assert.IsTrue(mh1.Matches(hello));
+            Assert.IsFalse(mh1.Matches(hello1));
 
             var mh2 = MultiHash.ComputeHash(hello, "sha2-512");
-            Assert.That(mh2.Matches(hello), Is.True);
-            Assert.That(mh2.Matches(hello1), Is.False);
+            Assert.IsTrue(mh2.Matches(hello));
+            Assert.IsFalse(mh2.Matches(hello1));
 
             var mh3 = MultiHash.ComputeHash(hello, "keccak-512");
-            Assert.That(mh3.Matches(hello), Is.True);
-            Assert.That(mh3.Matches(hello1), Is.False);
+            Assert.IsTrue(mh3.Matches(hello));
+            Assert.IsFalse(mh3.Matches(hello1));
         }
 
-        [Test]
+        [TestMethod]
         public void Matches_Stream()
         {
             var hello = new MemoryStream(Encoding.UTF8.GetBytes("Hello, world."));
@@ -192,13 +191,13 @@ namespace MultiFormats.Tests
             var mh = MultiHash.ComputeHash(hello);
 
             hello.Position = 0;
-            Assert.That(mh.Matches(hello), Is.True);
+            Assert.IsTrue(mh.Matches(hello));
 
             hello1.Position = 0;
-            Assert.That(mh.Matches(hello1), Is.False);
+            Assert.IsFalse(mh.Matches(hello1));
         }
 
-        [Test]
+        [TestMethod]
         public void Wire_Formats()
         {
             var hashes = new[]
@@ -211,102 +210,102 @@ namespace MultiFormats.Tests
             foreach (var hash in hashes)
             {
                 var mh = new MultiHash(hash);
-                Assert.That(mh.Matches(helloWorld), Is.True, hash);
+                Assert.IsTrue(mh.Matches(helloWorld), hash);
             }
         }
 
-        [Test]
+        [TestMethod]
         public void To_String_Is_Base58_Representation()
         {
             var hash = "QmaozNR7DZHQK1ZcU9p7QdrshMvXqWK6gpu5rmrkPdT3L4";
             var mh = new MultiHash(hash);
-            Assert.That(mh.ToString(), Is.EqualTo(hash));
+            Assert.AreEqual(hash, mh.ToString());
         }
 
-        [Test]
+        [TestMethod]
         public void Implicit_Conversion_From_String()
         {
             var hash = "QmaozNR7DZHQK1ZcU9p7QdrshMvXqWK6gpu5rmrkPdT3L4";
             MultiHash mh = hash;
-            Assert.That(mh, Is.Not.Null);
-            Assert.That(mh, Is.TypeOf(typeof(MultiHash)));
-            Assert.That(mh.ToString(), Is.EqualTo(hash));
+            Assert.IsNotNull(mh);
+            Assert.IsInstanceOfType(mh, typeof(MultiHash));
+            Assert.AreEqual(hash, mh.ToString());
         }
 
-        [Test]
+        [TestMethod]
         public void Value_Equality()
         {
             var a0 = new MultiHash("QmaozNR7DZHQK1ZcU9p7QdrshMvXqWK6gpu5rmrkPdT3L4");
             var a1 = new MultiHash("QmaozNR7DZHQK1ZcU9p7QdrshMvXqWK6gpu5rmrkPdT3L4");
             var b = new MultiHash("QmaozNR7DZHQK1ZcU9p7QdrshMvXqWK6gpu5rmrkPdT3L5");
-            MultiHash? c = null;
-            MultiHash? d = null;
+            MultiHash c = null;
+            MultiHash d = null;
 
-            Assert.That(c == d, Is.True);
-            Assert.That(c == b, Is.False);
-            Assert.That(b == c, Is.False);
+            Assert.IsTrue(c == d);
+            Assert.IsFalse(c == b);
+            Assert.IsFalse(b == c);
 
-            Assert.That(c != d, Is.False);
-            Assert.That(c != b, Is.True);
-            Assert.That(b != c, Is.True);
-
-#pragma warning disable 1718
-            Assert.That(a0 == a0, Is.True);
-            Assert.That(a0 == a1, Is.True);
-            Assert.That(a0 == b, Is.False);
+            Assert.IsFalse(c != d);
+            Assert.IsTrue(c != b);
+            Assert.IsTrue(b != c);
 
 #pragma warning disable 1718
-            Assert.That(a0 != a0, Is.False);
-            Assert.That(a0 != a1, Is.False);
-            Assert.That(a0 != b, Is.True);
+            Assert.IsTrue(a0 == a0);
+            Assert.IsTrue(a0 == a1);
+            Assert.IsFalse(a0 == b);
 
-            Assert.That(a0.Equals(a0), Is.True);
-            Assert.That(a0.Equals(a1), Is.True);
-            Assert.That(a0.Equals(b), Is.False);
+#pragma warning disable 1718
+            Assert.IsFalse(a0 != a0);
+            Assert.IsFalse(a0 != a1);
+            Assert.IsTrue(a0 != b);
 
-            Assert.That(a0, Is.EqualTo(a0));
-            Assert.That(a0, Is.EqualTo(a1));
-            Assert.That(a0, Is.Not.EqualTo(b));
+            Assert.IsTrue(a0.Equals(a0));
+            Assert.IsTrue(a0.Equals(a1));
+            Assert.IsFalse(a0.Equals(b));
 
-            Assert.That(a0, Is.EqualTo(a0));
-            Assert.That(a0, Is.EqualTo(a1));
-            Assert.That(a0, Is.Not.EqualTo(b));
+            Assert.AreEqual(a0, a0);
+            Assert.AreEqual(a0, a1);
+            Assert.AreNotEqual(a0, b);
 
-            Assert.That(a0.GetHashCode(), Is.EqualTo(a0.GetHashCode()));
-            Assert.That(a0.GetHashCode(), Is.EqualTo(a1.GetHashCode()));
-            Assert.That(a0.GetHashCode(), Is.Not.EqualTo(b.GetHashCode()));
+            Assert.AreEqual(a0, a0);
+            Assert.AreEqual(a0, a1);
+            Assert.AreNotEqual(a0, b);
+
+            Assert.AreEqual(a0.GetHashCode(), a0.GetHashCode());
+            Assert.AreEqual(a0.GetHashCode(), a1.GetHashCode());
+            Assert.AreNotEqual(a0.GetHashCode(), b.GetHashCode());
         }
 
-        [Test]
+        [TestMethod]
         public void Varint_Hash_Code_and_Length()
         {
             var concise = "1220f8c3bf62a9aa3e6fc1619c250e48abe7519373d3edf41be62eb5dc45199af2ef"
                .ToHexBuffer();
             var mh = new MultiHash(new MemoryStream(concise, false));
-            Assert.That(mh.Algorithm.Name, Is.EqualTo("sha2-256"));
-            Assert.That(mh.Algorithm.Code, Is.EqualTo(0x12));
-            Assert.That(mh.Algorithm.DigestSize, Is.EqualTo(0x20));
+            Assert.AreEqual("sha2-256", mh.Algorithm.Name);
+            Assert.AreEqual(0x12, mh.Algorithm.Code);
+            Assert.AreEqual(0x20, mh.Algorithm.DigestSize);
 
             var longer = "9200a000f8c3bf62a9aa3e6fc1619c250e48abe7519373d3edf41be62eb5dc45199af2ef"
                .ToHexBuffer();
             mh = new MultiHash(new MemoryStream(longer, false));
-            Assert.That(mh.Algorithm.Name, Is.EqualTo("sha2-256"));
-            Assert.That(mh.Algorithm.Code, Is.EqualTo(0x12));
-            Assert.That(mh.Algorithm.DigestSize, Is.EqualTo(0x20));
+            Assert.AreEqual("sha2-256", mh.Algorithm.Name);
+            Assert.AreEqual(0x12, mh.Algorithm.Code);
+            Assert.AreEqual(0x20, mh.Algorithm.DigestSize);
         }
 
-        [Test]
+        [TestMethod]
         public void Compute_Hash_All_Algorithms()
         {
             foreach (var alg in HashingAlgorithm.All)
                 try
                 {
                     var mh = MultiHash.ComputeHash(new byte[0], alg.Name);
-                    Assert.That(mh, Is.Not.Null, alg.Name);
-                    Assert.That(alg.Code, Is.EqualTo(mh.Algorithm.Code), alg.Name);
-                    Assert.That(alg.Name, Is.EqualTo(mh.Algorithm.Name), alg.Name);
-                    Assert.That(alg.DigestSize, Is.EqualTo(mh.Algorithm.DigestSize), alg.Name);
-                    Assert.That(alg.DigestSize, Is.EqualTo(mh.Digest.Length), alg.Name);
+                    Assert.IsNotNull(mh, alg.Name);
+                    Assert.AreEqual(alg.Code, mh.Algorithm.Code, alg.Name);
+                    Assert.AreEqual(alg.Name, mh.Algorithm.Name, alg.Name);
+                    Assert.AreEqual(alg.DigestSize, mh.Algorithm.DigestSize, alg.Name);
+                    Assert.AreEqual(alg.DigestSize, mh.Digest.Length, alg.Name);
                 }
                 catch (NotImplementedException)
                 {
@@ -314,7 +313,7 @@ namespace MultiFormats.Tests
                 }
         }
 
-        [Test]
+        [TestMethod]
         public void Example()
         {
             var hello = Encoding.UTF8.GetBytes("Hello world");
@@ -329,119 +328,138 @@ namespace MultiFormats.Tests
 
         private sealed class TestVector
         {
-            public string? Algorithm { get; set; }
-            public string? Input { get; set; }
-            public string? Output { get; set; }
+            public string Algorithm { get; set; }
+            public string Input { get; set; }
+            public string Output { get; set; }
             public bool Ignore { get; set; }
         }
 
-        private TestVector[] TestVectors =
+        private TestVector[] TestVectors = 
         {
             // From https://github.com/multiformats/js-multihashing-async/blob/master/test/fixtures/encodes.js
-            new () {
+            new TestVector
+            {
                 Algorithm = "sha1",
                 Input = "beep boop",
                 Output = "11147c8357577f51d4f0a8d393aa1aaafb28863d9421"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "sha2-256",
                 Input = "beep boop",
                 Output = "122090ea688e275d580567325032492b597bc77221c62493e76330b85ddda191ef7c"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "sha2-512",
                 Input = "beep boop",
                 Output =
                     "134014f301f31be243f34c5668937883771fa381002f1aaa5f31b3f78e500b66ff2f4f8ea5e3c9f5a61bd073e2452c480484b02e030fb239315a2577f7ae156af177"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "sha3-512",
                 Input = "beep boop",
                 Output =
                     "1440fae2c9eb19906057f8bf507f0e73ee02bb669d58c3069e7718b89ca4d314cf4fd6f1679019cc46d185c7af34f6c05a307b070e74e9ed5b9c64f86aacc2b90d10"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "sha3-384",
                 Input = "beep boop",
                 Output =
                     "153075a9cff1bcfbe8a7025aa225dd558fb002769d4bf3b67d2aaf180459172208bea989804aefccf060b583e629e5f41e8d"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "sha3-256",
                 Input = "beep boop",
                 Output = "1620828705da60284b39de02e3599d1f39e6c1df001f5dbf63c9ec2d2c91a95a427f"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "sha3-224",
                 Input = "beep boop",
                 Output = "171c0da73a89549018df311c0a63250e008f7be357f93ba4e582aaea32b8"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "shake-128",
                 Input = "beep boop",
-                Output = "18205fe422311f770743c2e0d86bcca092111cbce85487212829739c3c3723776e5a"
+                Output = "18105fe422311f770743c2e0d86bcca09211"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "shake-256",
                 Input = "beep boop",
-                Output = "194059feb5565e4f924baef74708649fed376d63948a862322ed763ecf093b63b38b0955908c099c63dda73ee469c31b1456cec95e325bd868d0ce0c0135f5a54411"
+                Output = "192059feb5565e4f924baef74708649fed376d63948a862322ed763ecf093b63b38b"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "keccak-224",
                 Input = "beep boop",
                 Output = "1a1c2bd72cde2f75e523512999eb7639f17b699efe29bec342f5a0270896"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "keccak-256",
                 Input = "beep boop",
                 Output = "1b20ee6f6b4ce5d754c01203cb3b99294b88615df5999e20d6fe509204fa254a0f97"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "keccak-384",
                 Input = "beep boop",
                 Output =
                     "1c300e2fcca40e861fc425a2503a65f4a4befab7be7f193e57654ca3713e85262b035e54d5ade93f9632b810ab88b04f7d84"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "keccak-512",
                 Input = "beep boop",
                 Output =
                     "1d40e161c54798f78eba3404ac5e7e12d27555b7b810e7fd0db3f25ffa0c785c438331b0fbb6156215f69edf403c642e5280f4521da9bd767296ec81f05100852e78"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "blake2b-512",
                 Input = "beep boop",
                 Output =
                     "c0e402400eac6255ba822373a0948122b8d295008419a8ab27842ee0d70eca39855621463c03ec75ac3610aacfdff89fa989d8d61fc00450148f289eb5b12ad1a954f659"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "blake2b-160",
                 Input = "beep boop",
                 Output = "94e40214fe303247293e54e0a7ea48f9408ca68b36b08442"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "blake2s-256",
                 Input = "beep boop",
                 Output = "e0e402204542eaca484e4311def8af74b546edd7fceb49eeb3cdcfd8a4a72ed0dc81d4c0"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "dbl-sha2-256",
                 Input = "beep boop",
                 Output = "56209cd9115d76945c2455b1450295b05f4edeba2e7286bc24c23e266b48faf578c0"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "identity",
                 Input = "ab",
                 Output = "00026162"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "id",
                 Input = "ab",
                 Output = "00026162"
             },
         };
 
-        [Test]
+        [TestMethod]
         public void CheckMultiHash()
         {
             foreach (var v in TestVectors)
@@ -449,12 +467,11 @@ namespace MultiFormats.Tests
                 if (v.Ignore) continue;
                 var bytes = Encoding.UTF8.GetBytes(v.Input);
                 var mh = MultiHash.ComputeHash(bytes, v.Algorithm);
-                var t = mh.ToArray().ToHexString();
-                Assert.That(v.Output, Is.EqualTo(mh.ToArray().ToHexString()), v.Algorithm);
+                Assert.AreEqual(v.Output, mh.ToArray().ToHexString(), v.Algorithm);
             }
         }
 
-        [Test]
+        [TestMethod]
         public void CheckMultiHash_Stream()
         {
             foreach (var v in TestVectors)
@@ -464,77 +481,74 @@ namespace MultiFormats.Tests
                 using (var ms = new MemoryStream(bytes, false))
                 {
                     var mh = MultiHash.ComputeHash(ms, v.Algorithm);
-                    Assert.That(v.Output, Is.EqualTo(mh.ToArray().ToHexString()), v.Algorithm);
+                    Assert.AreEqual(v.Output, mh.ToArray().ToHexString(), v.Algorithm);
                 }
             }
         }
 
-        [Test]
+        [TestMethod]
         public void IdentityHash()
         {
             var hello = Encoding.UTF8.GetBytes("Hello, world.");
             var mh = MultiHash.ComputeHash(hello);
-            Assert.That(mh.IsIdentityHash, Is.False);
-            Assert.That(hello, Is.Not.EqualTo(mh.Digest));
+            Assert.IsFalse(mh.IsIdentityHash);
+            CollectionAssert.AreNotEqual(hello, mh.Digest);
 
             mh = MultiHash.ComputeHash(hello, "identity");
-            Assert.That(mh.IsIdentityHash, Is.True);
-            Assert.That(hello, Is.EquivalentTo(mh.Digest));
+            Assert.IsTrue(mh.IsIdentityHash);
+            CollectionAssert.AreEqual(hello, mh.Digest);
 
             var mh1 = new MultiHash(mh.ToBase58());
-            Assert.That(mh, Is.EqualTo(mh1));
+            Assert.AreEqual(mh, mh1);
 
             mh = MultiHash.ComputeHash(hello, "id");
-            Assert.That(mh.IsIdentityHash, Is.True);
-            Assert.That(hello, Is.EquivalentTo(mh.Digest));
+            Assert.IsTrue(mh.IsIdentityHash);
+            CollectionAssert.AreEqual(hello, mh.Digest);
 
             mh1 = new MultiHash(mh.ToBase58());
-            Assert.That(mh, Is.EqualTo(mh1));
+            Assert.AreEqual(mh, mh1);
         }
 
-        [Test]
+        [TestMethod]
         public void Binary()
         {
             var mh = new MultiHash("QmPZ9gcCEpqKTo6aq61g2nXGUhM4iCL3ewB6LDXZCtioEB");
-            Assert.That(mh.Algorithm.Name, Is.EqualTo("sha2-256"));
-            Assert.That(mh.Digest.Length, Is.EqualTo(32));
+            Assert.AreEqual("sha2-256", mh.Algorithm.Name);
+            Assert.AreEqual(32, mh.Digest.Length);
 
             var binary = mh.ToArray();
             var mh1 = new MultiHash(binary);
-            Assert.That(mh.Algorithm.Name, Is.EqualTo(mh1.Algorithm.Name));
-            Assert.That(mh.Digest, Is.EquivalentTo(mh1.Digest));
+            Assert.AreEqual(mh.Algorithm.Name, mh1.Algorithm.Name);
+            CollectionAssert.AreEqual(mh.Digest, mh1.Digest);
         }
 
-        [Test]
+        [TestMethod]
         public void JsonSerialization()
         {
             var a = new MultiHash("QmPZ9gcCEpqKTo6aq61g2nXGUhM4iCL3ewB6LDXZCtioEB");
             var json = JsonConvert.SerializeObject(a);
-            Assert.That(json, Is.EqualTo($"\"{a}\""));
+            Assert.AreEqual($"\"{a}\"", json);
             var b = JsonConvert.DeserializeObject<MultiHash>(json);
-            Assert.That(a, Is.EqualTo(b));
-
+            Assert.AreEqual(a, b);
+            
             json = JsonConvert.SerializeObject(null);
             b = JsonConvert.DeserializeObject<MultiHash>(json);
-            Assert.That(b, Is.Null);
+            Assert.IsNull(b);
         }
 
-        [Test]
+        [TestMethod]
         public void CodeToName()
         {
-            Assert.That(MultiHash.GetHashAlgorithmName(0x13), Is.EqualTo("sha2-512"));
+            Assert.AreEqual("sha2-512", MultiHash.GetHashAlgorithmName(0x13));
             ExceptionAssert.Throws<KeyNotFoundException>(
                 () => MultiHash.GetHashAlgorithmName(0xbadbad));
         }
 
-        [Test]
+        [TestMethod]
         public void GetAlgorithmByName()
         {
-            Assert.Multiple(() =>
-            {
-                Assert.That(MultiHash.GetHashAlgorithm(), Is.Not.Null);
-                Assert.That(MultiHash.GetHashAlgorithm("sha2-512"), Is.Not.Null);
-            });
+            Assert.IsNotNull(MultiHash.GetHashAlgorithm());
+            Assert.IsNotNull(MultiHash.GetHashAlgorithm("sha2-512"));
             var _ = ExceptionAssert.Throws<KeyNotFoundException>(() =>
             {
                 var _ = MultiHash.GetHashAlgorithm("unknown");

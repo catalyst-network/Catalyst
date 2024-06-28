@@ -23,13 +23,15 @@
 
 using System;
 using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MultiFormats.Registry;
 
 namespace MultiFormats.Tests.Registry
 {
+    [TestClass]
     public class MultiBaseAlgorithmTest
     {
-        [Test]
+        [TestMethod]
         public void Bad_Name()
         {
             ExceptionAssert.Throws<ArgumentNullException>(() => MultiBaseAlgorithm.Register(null, '?'));
@@ -37,22 +39,22 @@ namespace MultiFormats.Tests.Registry
             ExceptionAssert.Throws<ArgumentNullException>(() => MultiBaseAlgorithm.Register("   ", '?'));
         }
 
-        [Test]
+        [TestMethod]
         public void Name_Already_Exists()
         {
             ExceptionAssert.Throws<ArgumentException>(() => MultiBaseAlgorithm.Register("base58btc", 'z'));
         }
 
-        [Test]
+        [TestMethod]
         public void Code_Already_Exists()
         {
             ExceptionAssert.Throws<ArgumentException>(() => MultiBaseAlgorithm.Register("base58btc-x", 'z'));
         }
 
-        [Test]
-        public void Algorithms_Are_Enumerable() { Assert.That(MultiBaseAlgorithm.All.Count(), Is.Not.EqualTo(0)); }
+        [TestMethod]
+        public void Algorithms_Are_Enumerable() { Assert.AreNotEqual(0, MultiBaseAlgorithm.All.Count()); }
 
-        [Test]
+        [TestMethod]
         public void Roundtrip_All_Algorithms()
         {
             var bytes = new byte[]
@@ -63,17 +65,17 @@ namespace MultiFormats.Tests.Registry
             foreach (var alg in MultiBaseAlgorithm.All)
             {
                 var s = alg.Encode(bytes);
-                Assert.That(bytes, Is.EquivalentTo(alg.Decode(s)), alg.Name);
+                CollectionAssert.AreEqual(bytes, alg.Decode(s), alg.Name);
             }
         }
 
-        [Test]
+        [TestMethod]
         public void Name_Is_Also_ToString()
         {
-            foreach (var alg in MultiBaseAlgorithm.All) Assert.That(alg.Name, Is.EqualTo(alg.ToString()));
+            foreach (var alg in MultiBaseAlgorithm.All) Assert.AreEqual(alg.Name, alg.ToString());
         }
 
-        [Test]
+        [TestMethod]
         public void Known_But_NYI()
         {
             var alg = MultiBaseAlgorithm.Register("nyi", 'n');

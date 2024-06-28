@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -21,20 +21,20 @@
 
 #endregion
 
-using Catalyst.Protocol.Peer;
 using Catalyst.Simulator.Interfaces;
+using MultiFormats;
 
 namespace Catalyst.Simulator
 {
     public class ClientRpcInfo
     {
-        public ClientRpcInfo(PeerId peerIdentifier, IRpcClient rpcClient)
+        public ClientRpcInfo(MultiAddress address, IRpcClient rpcClient)
         {
-            PeerId = peerIdentifier;
+            Address = address;
             RpcClient = rpcClient;
         }
 
-        public PeerId PeerId { get; }
+        public MultiAddress Address { get; }
         public IRpcClient RpcClient { get; }
     }
 }

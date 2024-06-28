@@ -44,6 +44,8 @@ using Catalyst.TestUtils;
 using Microsoft.Extensions.Caching.Memory;
 using NSubstitute;
 using Serilog;
+using MultiFormats;
+using Catalyst.Core.Lib.Abstractions.P2P.IO;
 
 namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
 {
@@ -51,19 +53,19 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
     {
         private bool _autoStart;
         private int _burnIn;
-        private ICancellationTokenProvider? _cancellationProvider;
-        private IHastingsCareTaker? _careTaker;
-        private IHastingsOriginator? _currentState;
-        private IDns? _dnsClient;
+        private ICancellationTokenProvider _cancellationProvider;
+        private IHastingsCareTaker _careTaker;
+        private IHastingsOriginator _currentState;
+        private IDns _dnsClient;
         private int _hasValidCandidatesCheckMillisecondsFrequency;
-        private ILogger? _logger;
-        private IPeerClient? _peerClient;
-        private IPeerMessageCorrelationManager? _peerCorrelationManager;
-        private IPeerRepository? _peerRepository;
-        private IPeerSettings? _peerSettings;
-        private IScheduler? _scheduler;
+        private ILogger _logger;
+        private IPeerClient _peerClient;
+        private IPeerMessageCorrelationManager _peerCorrelationManager;
+        private IPeerRepository _peerRepository;
+        private IPeerSettings _peerSettings;
+        private IScheduler _scheduler;
         private int _timeout;
-        public IList<IPeerClientObservable>? PeerClientObservables;
+        public IList<IPeerClientObservable> PeerClientObservables;
 
         public void Dispose()
         {
@@ -187,7 +189,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
             switch (type.Name)
             {
                 case nameof(PingResponseObserver):
-                    return new PingResponseObserver(Substitute.For<IPeerChallengeRequest>(), Substitute.For<IPeerRepository>(), logger);
+                    return new PingResponseObserver(Substitute.For<IPeerChallengeRequest>(), logger);
 
                 case nameof(GetNeighbourResponseObserver):
                     return new GetNeighbourResponseObserver(logger);
@@ -211,7 +213,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
 
         public DiscoveryTestBuilder WithCurrentStep(IHastingsMemento currentStep = default,
             bool mock = false,
-            PeerId peer = default,
+            MultiAddress peer = default,
             INeighbours neighbours = default)
         {
             if (_careTaker == null)
@@ -230,7 +232,7 @@ namespace Catalyst.Core.Modules.P2P.Discovery.Hastings.Tests.UnitTests
 
         public DiscoveryTestBuilder WithStepProposal(IHastingsOriginator stateCandidate = default,
             bool mock = false,
-            PeerId peer = default,
+            MultiAddress peer = default,
             INeighbours neighbours = default,
             ICorrelationId expectedPnr = default)
         {

@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -21,6 +21,7 @@
 
 #endregion
 
+using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Validators;
 using Catalyst.Protocol.Transaction;
@@ -33,20 +34,32 @@ namespace Catalyst.Core.Lib.Validators
     {
         private readonly ILogger _logger;
         private readonly ICryptoContext _cryptoContext;
+        private readonly ITransactionConfig _transactionConfig;
 
-        public TransactionValidator(ILogger logger,
-            ICryptoContext cryptoContext)
+        public TransactionValidator(ICryptoContext cryptoContext,
+            ITransactionConfig transactionConfig,
+            ILogger logger)
         {
             _cryptoContext = cryptoContext;
+            _transactionConfig = transactionConfig;
             _logger = logger;
         }
 
         public bool ValidateTransaction(PublicEntry transaction)
         {
-            // will add more checks
+            if (!ValidateMinimumGasLimit(transaction))
+            {
+                return false;
+            }
+
             return ValidateTransactionSignature(transaction);
         }
         
+        private bool ValidateMinimumGasLimit(PublicEntry transaction)
+        {
+            return transaction.GasLimit >= _transactionConfig.MinTransactionEntryGasLimit;
+        }
+
         private bool ValidateTransactionSignature(PublicEntry transaction)
         {
             if (transaction.Signature.RawBytes == ByteString.Empty)

@@ -23,8 +23,6 @@
 
 using System.Threading.Tasks;
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Abstractions.P2P.IO.Messaging.Broadcast;
-using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Protocol.Cryptography;
@@ -38,6 +36,8 @@ using NSubstitute;
 using NSubstitute.ReceivedExtensions;
 using Serilog;
 using NUnit.Framework;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.P2P.IO.Messaging.Broadcast;
+using Catalyst.Modules.Network.Dotnetty.IO.Handlers;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
 {
@@ -62,7 +62,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.IO.Messaging.Broadcast
 
             _signingContext = DevNetPeerSigningContext.Instance;
 
-            var peerId = PeerIdHelper.GetPeerId("Test");
+            var peerId = MultiAddressHelper.GetAddress("Test");
             var innerMessage = new TransactionBroadcast();
             _broadcastMessageSigned = innerMessage
                .ToSignedProtocolMessage(peerId, fakeSignature, _signingContext)

@@ -22,9 +22,9 @@
 #endregion
 
 using Catalyst.Abstractions.Cryptography;
-using Catalyst.Core.Lib.IO.Handlers;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Cryptography.BulletProofs;
+using Catalyst.Modules.Network.Dotnetty.IO.Handlers;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Wire;
@@ -53,7 +53,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Handlers
 
             var signatureBytes = ByteUtil.GenerateRandomByteArray(new FfiWrapper().SignatureLength);
             var publicKeyBytes = ByteUtil.GenerateRandomByteArray(new FfiWrapper().PublicKeyLength);
-            var peerId = PeerIdHelper.GetPeerId(publicKeyBytes);
+            var peerId = MultiAddressHelper.GetAddress(publicKeyBytes);
 
             _protocolMessageSigned = new PingRequest()
                .ToSignedProtocolMessage(peerId, signatureBytes, _signingContext)

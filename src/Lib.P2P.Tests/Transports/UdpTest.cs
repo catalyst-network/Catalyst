@@ -28,13 +28,15 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Lib.P2P.Transports;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MultiFormats;
 
 namespace Lib.P2P.Tests.Transports
 {
+    [TestClass]
     public class UdpTest
     {
-        [Test]
+        [TestMethod]
         public void Connect_Missing_UDP_Port()
         {
             var udp = new Udp();
@@ -48,7 +50,7 @@ namespace Lib.P2P.Tests.Transports
             });
         }
 
-        [Test]
+        [TestMethod]
         public void Connect_Missing_IP_Address()
         {
             var udp = new Udp();
@@ -58,7 +60,7 @@ namespace Lib.P2P.Tests.Transports
             });
         }
 
-        [Test]
+        [TestMethod]
         public void Connect_Cancelled()
         {
             var udp = new Udp();
@@ -70,8 +72,8 @@ namespace Lib.P2P.Tests.Transports
             });
         }
 
-        [Test]
-        [Ignore("Pause")]
+        [TestMethod]
+        [Ignore]
         public async Task Listen()
         {
             var udp = new Udp();
@@ -80,19 +82,19 @@ namespace Lib.P2P.Tests.Transports
 
             void Handler(Stream stream, MultiAddress local, MultiAddress remote)
             {
-                Assert.That(stream, Is.Not.Null);
+                Assert.IsNotNull(stream);
                 connected = true;
             }
 
             try
             {
                 var listenerAddress = udp.Listen("/ip4/127.0.0.1", Handler, cs.Token);
-                Assert.That(listenerAddress.Protocols.Any(p => p.Name == "udp"), Is.True);
+                Assert.IsTrue(listenerAddress.Protocols.Any(p => p.Name == "udp"));
                 await using (var stream = await udp.ConnectAsync(listenerAddress, cs.Token))
                 {
                     await Task.Delay(50, cs.Token);
-                    Assert.That(stream, Is.Not.Null);
-                    Assert.That(connected, Is.True);
+                    Assert.IsNotNull(stream);
+                    Assert.IsTrue(connected);
                 }
             }
             finally
@@ -101,7 +103,7 @@ namespace Lib.P2P.Tests.Transports
             }
         }
 
-        [Test]
+        [TestMethod]
         [Ignore("Sometimes fails")]
         public async Task NetworkTimeProtocol()
         {
@@ -117,19 +119,19 @@ namespace Lib.P2P.Tests.Transports
                 await time.WriteAsync(ntpData, 0, ntpData.Length, cs.Token);
                 await time.FlushAsync(cs.Token);
                 await time.ReadAsync(ntpData, 0, ntpData.Length, cs.Token);
-                Assert.That(ntpData[0], Is.Not.EqualTo(0x1B));
+                Assert.AreNotEqual(0x1B, ntpData[0]);
 
                 Array.Clear(ntpData, 0, ntpData.Length);
                 ntpData[0] = 0x1B;
                 await time.WriteAsync(ntpData, 0, ntpData.Length, cs.Token);
                 await time.FlushAsync(cs.Token);
                 await time.ReadAsync(ntpData, 0, ntpData.Length, cs.Token);
-                Assert.That(ntpData[0], Is.Not.EqualTo(0x1B));
+                Assert.AreNotEqual(0x1B, ntpData[0]);
             }
         }
 
-        [Test]
-        [Ignore("Pause")]
+        [TestMethod]
+        [Ignore]
         public async Task SendReceive()
         {
             var cs = new CancellationTokenSource(TimeSpan.FromSeconds(30));
@@ -141,7 +143,7 @@ namespace Lib.P2P.Tests.Transports
                 {
                     var bytes = new byte[5];
                     await stream.ReadAsync(bytes, 0, bytes.Length, cs.Token);
-                    Assert.Equals("hello", Encoding.UTF8.GetString(bytes));
+                    Assert.AreEqual("hello", Encoding.UTF8.GetString(bytes));
                 }
             }
         }

@@ -24,13 +24,15 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MultiFormats.Registry;
 
 namespace MultiFormats.Tests
 {
+    [TestClass]
     public class MultiBaseTest
     {
-        [Test]
+        [TestMethod]
         public void Codec()
         {
             var bytes = new byte[]
@@ -39,11 +41,11 @@ namespace MultiFormats.Tests
             };
             var bytes1 = MultiBase.Decode(MultiBase.Encode(bytes));
             var bytes2 = MultiBase.Decode(MultiBase.Encode(bytes, "base16"));
-            Assert.That(bytes, Is.EquivalentTo(bytes1));
-            Assert.That(bytes, Is.EquivalentTo(bytes2));
+            CollectionAssert.AreEqual(bytes, bytes1);
+            CollectionAssert.AreEqual(bytes, bytes2);
         }
 
-        [Test]
+        [TestMethod]
         public void Encode_Unknown_Algorithm()
         {
             var bytes = new byte[]
@@ -53,13 +55,13 @@ namespace MultiFormats.Tests
             ExceptionAssert.Throws<KeyNotFoundException>(() => MultiBase.Encode(bytes, "unknown"));
         }
 
-        [Test]
+        [TestMethod]
         public void Encode_Null_Data_Not_Allowed()
         {
             ExceptionAssert.Throws<ArgumentNullException>(() => MultiBase.Encode(null));
         }
 
-        [Test]
+        [TestMethod]
         public void Decode_Bad_Formats()
         {
             ExceptionAssert.Throws<ArgumentNullException>(() => MultiBase.Decode(null));
@@ -74,134 +76,159 @@ namespace MultiFormats.Tests
 
         private sealed class TestVector
         {
-            public string? Algorithm { get; set; }
-            public string? Input { get; set; }
-            public string? Output { get; set; }
+            public string Algorithm { get; set; }
+            public string Input { get; set; }
+            public string Output { get; set; }
         }
 
         private TestVector[] TestVectors =
         {
-            new() {
+            new TestVector
+            {
                 Algorithm = "base16",
                 Input = "yes mani !",
                 Output = "f796573206d616e692021"
             },
-            new() {
+            new TestVector
+            {
                 Algorithm = "base32",
                 Input = "yes mani !",
                 Output = "bpfsxgidnmfxgsibb"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "base32pad",
                 Input = "yes mani !",
                 Output = "cpfsxgidnmfxgsibb"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "base32",
                 Input = "f",
                 Output = "bmy"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "base32pad",
                 Input = "f",
                 Output = "cmy======"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "base32hex",
                 Input = "f",
                 Output = "vco"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "base32hexpad",
                 Input = "f",
                 Output = "tco======"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "base64pad",
                 Input = "f",
                 Output = "MZg=="
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "base64",
                 Input = "f",
                 Output = "mZg"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "base64",
                 Input = "\u00f7\u00ef\u00ff",
                 Output = "mw7fDr8O/"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "base64url",
                 Input = "\u00f7\u00ef\u00ff",
                 Output = "uw7fDr8O_"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "base64url",
                 Input = "f",
                 Output = "uZg"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "base64url",
                 Input = "fo",
                 Output = "uZm8"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "base64url",
                 Input = "foo",
                 Output = "uZm9v"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "BASE16",
                 Input = "yes mani !",
                 Output = "F796573206D616E692021"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "BASE32",
                 Input = "yes mani !",
                 Output = "BPFSXGIDNMFXGSIBB"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "BASE32PAD",
                 Input = "yes mani !",
                 Output = "CPFSXGIDNMFXGSIBB"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "BASE32",
                 Input = "f",
                 Output = "BMY"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "BASE32PAD",
                 Input = "f",
                 Output = "CMY======"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "BASE32HEX",
                 Input = "f",
                 Output = "VCO"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "BASE32HEXPAD",
                 Input = "f",
                 Output = "TCO======"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "base32z",
                 Input = "Decentralize everything!!",
                 Output = "het1sg3mqqt3gn5djxj11y3msci3817depfzgqejb"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "base32z",
                 Input = "yes mani !",
                 Output = "hxf1zgedpcfzg1ebb"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "base32z",
                 Input = "hello world",
                 Output = "hpb1sa5dxrb5s6hucco"
             },
-            new () {
+            new TestVector
+            {
                 Algorithm = "base32z",
                 Input = "\x00\x00yes mani !",
                 Output = "hyyy813murbssn5ujryoo"
@@ -211,33 +238,30 @@ namespace MultiFormats.Tests
         /// <summary>
         ///   Test vectors from various sources.
         /// </summary>
-        [Test]
+        [TestMethod]
         public void CheckMultiBase()
         {
             foreach (var v in TestVectors)
             {
-                if (v.Input != null)
-                {
                 var bytes = Encoding.UTF8.GetBytes(v.Input);
                 var s = MultiBase.Encode(bytes, v.Algorithm);
-                Assert.That(v.Output, Is.EqualTo(s));
-                Assert.That(bytes, Is.EquivalentTo(MultiBase.Decode(s)));
-                }
+                Assert.AreEqual(v.Output, s);
+                CollectionAssert.AreEqual(bytes, MultiBase.Decode(s));
             }
         }
 
-        [Test]
+        [TestMethod]
         public void EmptyData()
         {
             var empty = new byte[0];
             foreach (var alg in MultiBaseAlgorithm.All)
             {
                 var s = MultiBase.Encode(empty, alg.Name);
-                Assert.That(empty, Is.EquivalentTo(MultiBase.Decode(s)), alg.Name);
+                CollectionAssert.AreEqual(empty, MultiBase.Decode(s), alg.Name);
             }
         }
 
-        [Test]
+        [TestMethod]
         public void Invalid_Encoded_String()
         {
             foreach (var alg in MultiBaseAlgorithm.All)

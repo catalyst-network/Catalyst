@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Threading.Tasks;
 
 namespace Catalyst.Abstractions.Consensus.Cycle
 {
@@ -29,7 +30,7 @@ namespace Catalyst.Abstractions.Consensus.Cycle
     /// Use this service to get notification about the different events happening during the
     /// delta production cycles.
     /// </summary>
-    public interface ICycleEventsProvider
+    public interface ICycleEventsProvider : IDisposable
     {
         /// <summary>
         /// Configuration object holding the duration of the different phases in the cycle.
@@ -46,6 +47,12 @@ namespace Catalyst.Abstractions.Consensus.Cycle
         /// </summary>
         /// <returns>A TimeSpan representing the time to wait until next delta production cycle starts.</returns>
         TimeSpan GetTimeSpanUntilNextCycleStart();
+
+        /// <summary>
+        /// Starts the event cycle provider.
+        /// </summary>
+        /// <returns>A Task represending the corresponding async method.</returns>
+        Task StartAsync();
 
         /// <summary>
         /// Terminate the emission of state changes events on the <see cref="PhaseChanges"/> stream

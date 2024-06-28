@@ -23,46 +23,48 @@
 
 using System.IO;
 using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using MultiFormats;
 
 namespace Lib.P2P.Tests
 {
+    [TestClass]
     public class ConnectionManagerTest
     {
-        private readonly MultiHash aId = "QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb";
-        private readonly MultiHash bId = "QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCM1h";
+        private MultiHash aId = "QmXFX2P5ammdmXQgfqGkfswtEVFsZUJ5KeHRXQYCTdiTAb";
+        private MultiHash bId = "QmdpwjdB94eNm2Lcvp9JqoCxswo3AKQqjLuNZyLixmCM1h";
 
-        [Test]
+        [TestMethod]
         public void IsConnected()
         {
             var manager = new ConnectionManager();
             var peer = new Peer {Id = aId};
             var connection = new PeerConnection {RemotePeer = peer, Stream = Stream.Null};
 
-            Assert.That(manager.IsConnected(peer), Is.False);
+            Assert.IsFalse(manager.IsConnected(peer));
             manager.Add(connection);
-            Assert.That(manager.IsConnected(peer), Is.True);
+            Assert.IsTrue(manager.IsConnected(peer));
         }
 
-        [Test]
+        [TestMethod]
         public void IsConnected_NotActive()
         {
             var manager = new ConnectionManager();
             var peer = new Peer {Id = aId};
             var connection = new PeerConnection {RemotePeer = peer, Stream = Stream.Null};
 
-            Assert.That(manager.IsConnected(peer), Is.False);
+            Assert.IsFalse(manager.IsConnected(peer));
 
             manager.Add(connection);
-            Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(manager.Connections.Count(), Is.EqualTo(1));
+            Assert.IsTrue(manager.IsConnected(peer));
+            Assert.AreEqual(1, manager.Connections.Count());
 
             connection.Stream = null;
-            Assert.That(manager.IsConnected(peer), Is.False);
-            Assert.That(manager.Connections.Count(), Is.EqualTo(0));
+            Assert.IsFalse(manager.IsConnected(peer));
+            Assert.AreEqual(0, manager.Connections.Count());
         }
 
-        [Test]
+        [TestMethod]
         public void Add_Duplicate()
         {
             var manager = new ConnectionManager();
@@ -70,42 +72,42 @@ namespace Lib.P2P.Tests
             var a = new PeerConnection {RemotePeer = peer, Stream = Stream.Null};
             var b = new PeerConnection {RemotePeer = peer, Stream = Stream.Null};
 
-            Assert.That(a, Is.EqualTo(manager.Add(a)));
-            Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(manager.Connections.Count(), Is.EqualTo(1));
-            Assert.That(a.Stream, Is.Not.Null);
+            Assert.AreSame(a, manager.Add(a));
+            Assert.IsTrue(manager.IsConnected(peer));
+            Assert.AreEqual(1, manager.Connections.Count());
+            Assert.IsNotNull(a.Stream);
 
-            Assert.That(manager.Add(b), Is.EqualTo(b));
-            Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(manager.Connections.Count(), Is.EqualTo(2));
-            Assert.That(a.Stream, Is.Not.Null);
-            Assert.That(b.Stream, Is.Not.Null);
+            Assert.AreSame(b, manager.Add(b));
+            Assert.IsTrue(manager.IsConnected(peer));
+            Assert.AreEqual(2, manager.Connections.Count());
+            Assert.IsNotNull(a.Stream);
+            Assert.IsNotNull(b.Stream);
 
             manager.Clear();
-            Assert.That(manager.Connections.Count(), Is.EqualTo(0));
-            Assert.That(a.Stream, Is.Null);
-            Assert.That(b.Stream, Is.Null);
+            Assert.AreEqual(0, manager.Connections.Count());
+            Assert.IsNull(a.Stream);
+            Assert.IsNull(b.Stream);
         }
 
-        [Test]
+        [TestMethod]
         public void Add_Duplicate_SameConnection()
         {
             var manager = new ConnectionManager();
             var peer = new Peer {Id = aId};
             var a = new PeerConnection {RemotePeer = peer, Stream = Stream.Null};
 
-            Assert.That(a, Is.EqualTo(manager.Add(a)));
-            Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(manager.Connections.Count(), Is.EqualTo(1));
-            Assert.That(a.Stream, Is.Not.Null);
+            Assert.AreSame(a, manager.Add(a));
+            Assert.IsTrue(manager.IsConnected(peer));
+            Assert.AreEqual(1, manager.Connections.Count());
+            Assert.IsNotNull(a.Stream);
 
-            Assert.That(manager.Add(a), Is.EqualTo(a));
-            Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(manager.Connections.Count(), Is.EqualTo(1));
-            Assert.That(a.Stream, Is.Not.Null);
+            Assert.AreSame(a, manager.Add(a));
+            Assert.IsTrue(manager.IsConnected(peer));
+            Assert.AreEqual(1, manager.Connections.Count());
+            Assert.IsNotNull(a.Stream);
         }
 
-        [Test]
+        [TestMethod]
         public void Add_Duplicate_PeerConnectedAddress()
         {
             var address = "/ip6/::1/tcp/4007";
@@ -115,21 +117,21 @@ namespace Lib.P2P.Tests
             var a = new PeerConnection {RemotePeer = peer, RemoteAddress = address, Stream = Stream.Null};
             var b = new PeerConnection {RemotePeer = peer, RemoteAddress = address, Stream = Stream.Null};
 
-            Assert.That(a, Is.EqualTo(manager.Add(a)));
-            Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(manager.Connections.Count(), Is.EqualTo(1));
-            Assert.That(a.Stream, Is.Not.Null);
-            Assert.That(peer.ConnectedAddress.ToString(), Is.EqualTo(address));
+            Assert.AreSame(a, manager.Add(a));
+            Assert.IsTrue(manager.IsConnected(peer));
+            Assert.AreEqual(1, manager.Connections.Count());
+            Assert.IsNotNull(a.Stream);
+            Assert.AreEqual(address, peer.ConnectedAddress);
 
-            Assert.That(manager.Add(b), Is.EqualTo(b));
-            Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(manager.Connections.Count(), Is.EqualTo(2));
-            Assert.That(a.Stream, Is.Not.Null);
-            Assert.That(b.Stream, Is.Not.Null);
-            Assert.That(peer.ConnectedAddress.ToString(), Is.EqualTo(address));
+            Assert.AreSame(b, manager.Add(b));
+            Assert.IsTrue(manager.IsConnected(peer));
+            Assert.AreEqual(2, manager.Connections.Count());
+            Assert.IsNotNull(a.Stream);
+            Assert.IsNotNull(b.Stream);
+            Assert.AreEqual(address, peer.ConnectedAddress);
         }
 
-        [Test]
+        [TestMethod]
         public void Maintains_PeerConnectedAddress()
         {
             var address1 = "/ip4/127.0.0.1/tcp/4007";
@@ -140,35 +142,35 @@ namespace Lib.P2P.Tests
             var a = new PeerConnection {RemotePeer = peer, RemoteAddress = address1, Stream = Stream.Null};
             var b = new PeerConnection {RemotePeer = peer, RemoteAddress = address2, Stream = Stream.Null};
 
-            Assert.That(a, Is.EqualTo(manager.Add(a)));
-            Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(manager.Connections.Count(), Is.EqualTo(1));
-            Assert.That(a.Stream, Is.Not.Null);
-            Assert.That(peer.ConnectedAddress.ToString(), Is.EqualTo(address1));
+            Assert.AreSame(a, manager.Add(a));
+            Assert.IsTrue(manager.IsConnected(peer));
+            Assert.AreEqual(1, manager.Connections.Count());
+            Assert.IsNotNull(a.Stream);
+            Assert.AreEqual(address1, peer.ConnectedAddress);
 
-            Assert.That(manager.Add(b), Is.EqualTo(b));
-            Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(manager.Connections.Count(), Is.EqualTo(2));
-            Assert.That(a.Stream, Is.Not.Null);
-            Assert.That(b.Stream, Is.Not.Null);
-            Assert.That(peer.ConnectedAddress.ToString(), Is.EqualTo(address1));
+            Assert.AreSame(b, manager.Add(b));
+            Assert.IsTrue(manager.IsConnected(peer));
+            Assert.AreEqual(2, manager.Connections.Count());
+            Assert.IsNotNull(a.Stream);
+            Assert.IsNotNull(b.Stream);
+            Assert.AreEqual(address1, peer.ConnectedAddress);
 
-            Assert.That(manager.Remove(a), Is.True);
-            Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(manager.Connections.Count(), Is.EqualTo(1));
-            Assert.That(a.Stream, Is.Null);
-            Assert.That(b.Stream, Is.Not.Null);
-            Assert.That(peer.ConnectedAddress.ToString(), Is.EqualTo(address2));
+            Assert.IsTrue(manager.Remove(a));
+            Assert.IsTrue(manager.IsConnected(peer));
+            Assert.AreEqual(1, manager.Connections.Count());
+            Assert.IsNull(a.Stream);
+            Assert.IsNotNull(b.Stream);
+            Assert.AreEqual(address2, peer.ConnectedAddress);
 
-            Assert.That(manager.Remove(b), Is.True);
-            Assert.That(manager.IsConnected(peer), Is.False);
-            Assert.That(manager.Connections.Count(), Is.EqualTo(0));
-            Assert.That(a.Stream, Is.Null);
-            Assert.That(b.Stream, Is.Null);
-            Assert.That(peer.ConnectedAddress, Is.Null);
+            Assert.IsTrue(manager.Remove(b));
+            Assert.IsFalse(manager.IsConnected(peer));
+            Assert.AreEqual(0, manager.Connections.Count());
+            Assert.IsNull(a.Stream);
+            Assert.IsNull(b.Stream);
+            Assert.IsNull(peer.ConnectedAddress);
         }
 
-        [Test]
+        [TestMethod]
         public void Add_Duplicate_ExistingIsDead()
         {
             var address = "/ip6/::1/tcp/4007";
@@ -178,22 +180,22 @@ namespace Lib.P2P.Tests
             var a = new PeerConnection {RemotePeer = peer, RemoteAddress = address, Stream = Stream.Null};
             var b = new PeerConnection {RemotePeer = peer, RemoteAddress = address, Stream = Stream.Null};
 
-            Assert.That(a, Is.EqualTo(manager.Add(a)));
-            Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(manager.Connections.Count(), Is.EqualTo(1));
-            Assert.That(a.Stream, Is.Not.Null);
-            Assert.That(peer.ConnectedAddress.ToString(), Is.EqualTo(address));
+            Assert.AreSame(a, manager.Add(a));
+            Assert.IsTrue(manager.IsConnected(peer));
+            Assert.AreEqual(1, manager.Connections.Count());
+            Assert.IsNotNull(a.Stream);
+            Assert.AreEqual(address, peer.ConnectedAddress);
 
             a.Stream = null;
-            Assert.That(b, Is.EqualTo(manager.Add(b)));
-            Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(manager.Connections.Count(), Is.EqualTo(1));
-            Assert.That(a.Stream, Is.Null);
-            Assert.That(b.Stream, Is.Not.Null);
-            Assert.That(peer.ConnectedAddress.ToString(), Is.EqualTo(address));
+            Assert.AreSame(b, manager.Add(b));
+            Assert.IsTrue(manager.IsConnected(peer));
+            Assert.AreEqual(1, manager.Connections.Count());
+            Assert.IsNull(a.Stream);
+            Assert.IsNotNull(b.Stream);
+            Assert.AreEqual(address, peer.ConnectedAddress);
         }
 
-        [Test]
+        [TestMethod]
         public void Add_NotActive()
         {
             var manager = new ConnectionManager();
@@ -201,22 +203,22 @@ namespace Lib.P2P.Tests
             var a = new PeerConnection {RemotePeer = peer, Stream = Stream.Null};
             var b = new PeerConnection {RemotePeer = peer, Stream = Stream.Null};
 
-            Assert.That(a, Is.EqualTo(manager.Add(a)));
-            Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(manager.Connections.Count(), Is.EqualTo(1));
-            Assert.That(a.Stream, Is.Not.Null);
+            Assert.AreSame(a, manager.Add(a));
+            Assert.IsTrue(manager.IsConnected(peer));
+            Assert.AreEqual(1, manager.Connections.Count());
+            Assert.IsNotNull(a.Stream);
             a.Stream = null;
 
-            Assert.That(b, Is.EqualTo(manager.Add(b)));
-            Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(manager.Connections.Count(), Is.EqualTo(1));
-            Assert.That(a.Stream, Is.Null);
-            Assert.That(b.Stream, Is.Not.Null);
+            Assert.AreSame(b, manager.Add(b));
+            Assert.IsTrue(manager.IsConnected(peer));
+            Assert.AreEqual(1, manager.Connections.Count());
+            Assert.IsNull(a.Stream);
+            Assert.IsNotNull(b.Stream);
 
-            Assert.That(b, Is.EqualTo(manager.Connections.First()));
+            Assert.AreSame(b, manager.Connections.First());
         }
 
-        [Test]
+        [TestMethod]
         public void Remove_Connection()
         {
             var manager = new ConnectionManager();
@@ -224,17 +226,17 @@ namespace Lib.P2P.Tests
             var a = new PeerConnection {RemotePeer = peer, Stream = Stream.Null};
 
             manager.Add(a);
-            Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(manager.Connections.Count(), Is.EqualTo(1));
-            Assert.That(a.Stream, Is.Not.Null);
+            Assert.IsTrue(manager.IsConnected(peer));
+            Assert.AreEqual(1, manager.Connections.Count());
+            Assert.IsNotNull(a.Stream);
 
-            Assert.That(manager.Remove(a), Is.True);
-            Assert.That(manager.IsConnected(peer), Is.False);
-            Assert.That(manager.Connections.Count(), Is.EqualTo(0));
-            Assert.That(a.Stream, Is.Null);
+            Assert.IsTrue(manager.Remove(a));
+            Assert.IsFalse(manager.IsConnected(peer));
+            Assert.AreEqual(0, manager.Connections.Count());
+            Assert.IsNull(a.Stream);
         }
 
-        [Test]
+        [TestMethod]
         public void Remove_PeerId()
         {
             var manager = new ConnectionManager();
@@ -242,30 +244,30 @@ namespace Lib.P2P.Tests
             var a = new PeerConnection {RemotePeer = peer, Stream = Stream.Null};
 
             manager.Add(a);
-            Assert.That(manager.IsConnected(peer), Is.True);
-            Assert.That(manager.Connections.Count(), Is.EqualTo(1));
-            Assert.That(a.Stream, Is.Not.Null);
+            Assert.IsTrue(manager.IsConnected(peer));
+            Assert.AreEqual(1, manager.Connections.Count());
+            Assert.IsNotNull(a.Stream);
 
-            Assert.That(manager.Remove(peer.Id), Is.True);
-            Assert.That(manager.IsConnected(peer),Is.False);
-            Assert.That(manager.Connections.Count(), Is.EqualTo(0));
-            Assert.That(a.Stream, Is.Null);
+            Assert.IsTrue(manager.Remove(peer.Id));
+            Assert.IsFalse(manager.IsConnected(peer));
+            Assert.AreEqual(0, manager.Connections.Count());
+            Assert.IsNull(a.Stream);
         }
 
-        [Test]
+        [TestMethod]
         public void Remove_DoesNotExist()
         {
             var manager = new ConnectionManager();
             var peer = new Peer {Id = aId};
             var a = new PeerConnection {RemotePeer = peer, Stream = Stream.Null};
 
-            Assert.That(manager.Remove(a), Is.False);
-            Assert.That(manager.IsConnected(peer), Is.False);
-            Assert.That(manager.Connections.Count(), Is.EqualTo(0));
-            Assert.That(a.Stream, Is.Null);
+            Assert.IsFalse(manager.Remove(a));
+            Assert.IsFalse(manager.IsConnected(peer));
+            Assert.AreEqual(0, manager.Connections.Count());
+            Assert.IsNull(a.Stream);
         }
 
-        [Test]
+        [TestMethod]
         public void Clear()
         {
             var manager = new ConnectionManager();
@@ -274,23 +276,23 @@ namespace Lib.P2P.Tests
             var a = new PeerConnection {RemotePeer = peerA, Stream = Stream.Null};
             var b = new PeerConnection {RemotePeer = peerB, Stream = Stream.Null};
 
-            Assert.That(a, Is.EqualTo(manager.Add(a)));
-            Assert.That(b, Is.EqualTo(manager.Add(b)));
-            Assert.That(manager.IsConnected(peerA), Is.True);
-            Assert.That(manager.IsConnected(peerB), Is.True);
-            Assert.That(manager.Connections.Count(), Is.EqualTo(2));
-            Assert.That(a.Stream, Is.Not.Null);
-            Assert.That(b.Stream, Is.Not.Null);
+            Assert.AreSame(a, manager.Add(a));
+            Assert.AreSame(b, manager.Add(b));
+            Assert.IsTrue(manager.IsConnected(peerA));
+            Assert.IsTrue(manager.IsConnected(peerB));
+            Assert.AreEqual(2, manager.Connections.Count());
+            Assert.IsNotNull(a.Stream);
+            Assert.IsNotNull(b.Stream);
 
             manager.Clear();
-            Assert.That(manager.IsConnected(peerA), Is.False);
-            Assert.That(manager.IsConnected(peerB), Is.False);
-            Assert.That(manager.Connections.Count(), Is.EqualTo(0));
-            Assert.That(a.Stream, Is.Null);
-            Assert.That(b.Stream, Is.Null);
+            Assert.IsFalse(manager.IsConnected(peerA));
+            Assert.IsFalse(manager.IsConnected(peerB));
+            Assert.AreEqual(0, manager.Connections.Count());
+            Assert.IsNull(a.Stream);
+            Assert.IsNull(b.Stream);
         }
 
-        [Test]
+        [TestMethod]
         public void PeerDisconnectedEvent_RemovingPeer()
         {
             var gotEvent = false;
@@ -301,10 +303,10 @@ namespace Lib.P2P.Tests
             manager.Add(a);
 
             manager.Remove(peerA.Id);
-            Assert.That(gotEvent, Is.True);
+            Assert.IsTrue(gotEvent);
         }
 
-        [Test]
+        [TestMethod]
         public void PeerDisconnectedEvent_RemovingConnection()
         {
             var gotEvent = 0;
@@ -315,10 +317,10 @@ namespace Lib.P2P.Tests
             manager.Add(a);
 
             manager.Remove(a);
-            Assert.That(gotEvent, Is.EqualTo(1));
+            Assert.AreEqual(1, gotEvent);
         }
 
-        [Test]
+        [TestMethod]
         public void PeerDisconnectedEvent_ConnectionClose()
         {
             var gotEvent = 0;
@@ -328,7 +330,7 @@ namespace Lib.P2P.Tests
             var a = new PeerConnection {RemotePeer = peerA, Stream = Stream.Null};
             manager.Add(a);
             a.Dispose();
-            Assert.That(gotEvent, Is.EqualTo(1));
+            Assert.AreEqual(1, gotEvent);
         }
     }
 }

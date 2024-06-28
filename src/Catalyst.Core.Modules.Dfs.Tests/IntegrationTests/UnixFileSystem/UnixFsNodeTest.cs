@@ -40,14 +40,14 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.UnixFileSystem
                 DagSize = 16
             };
             var link = node.ToLink("foo");
-            Assert.That(node.Id, Is.EqualTo(link.Id));
-            Assert.That(node.DagSize, Is.EqualTo(link.Size));
-            Assert.That(link.Name, Is.EqualTo("foo"));
+            Assert.AreEqual(node.Id, link.Id);
+            Assert.AreEqual(node.DagSize, link.Size);
+            Assert.AreEqual("foo", link.Name);
 
             link = node.ToLink();
-            Assert.That(node.Id, Is.EqualTo(link.Id));
-            Assert.That(node.DagSize, Is.EqualTo(link.Size));
-            Assert.That(link.Name, Is.EqualTo("bar"));
+            Assert.AreEqual(node.Id, link.Id);
+            Assert.AreEqual(node.DagSize, link.Size);
+            Assert.AreEqual("bar", link.Name);
         }
     }
 }

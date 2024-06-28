@@ -85,7 +85,7 @@
 //
 //             var passwordManager = Substitute.For<IPasswordManager>();
 //             passwordManager
-//                .RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.IpfsPassword, Arg.Any<string>())
+//                .RetrieveOrPromptAndAddPasswordToRegistry(PasswordRegistryTypes.DefaultNodePassword, Arg.Any<string>())
 //                .Returns(TestPasswordReader.BuildSecureStringPassword("abcd"));
 //
 //             var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
@@ -97,7 +97,7 @@
 //        
 //         public async Task Cancel_File_Transfer()
 //         {
-//             var sender = PeerIdHelper.GetPeerId("sender");
+//             var sender = MultiAddressHelper.GetAddress("sender");
 //
 //             IDownloadFileInformation fileTransferInformation = new DownloadFileTransferInformation(
 //                 sender,
@@ -137,10 +137,10 @@
 //         private async Task AddFileToDfs(long byteSize)
 //         {
 //             var fakeNode = Substitute.For<IRpcClient>();
-//             var sender = PeerIdHelper.GetPeerId("sender");
-//             var recipient = PeerIdHelper.GetPeerId("recipient");
-//             var senderPeerId = sender;
-//             var peerSettings = senderPeerId.ToSubstitutedPeerSettings();
+//             var sender = MultiAddressHelper.GetAddress("sender");
+//             var recipient = MultiAddressHelper.GetAddress("recipient");
+//             var sender = sender;
+//             var peerSettings = sender.ToSubstitutedPeerSettings();
 //             var recipientPeerId = recipient;
 //             var fileToTransfer = FileHelper.CreateRandomTempFile(byteSize);
 //             var addFileToDfsRequestHandler =
@@ -168,7 +168,7 @@
 //
 //             using (var fs = File.Open(fileToTransfer, FileMode.Open))
 //             {
-//                 var fileUploadInformation = new UploadFileTransferInformation(fs, senderPeerId, recipientPeerId,
+//                 var fileUploadInformation = new UploadFileTransferInformation(fs, sender, recipientPeerId,
 //                     fakeNode.Channel, uniqueFileKey);
 //                 for (uint i = 0; i < fileTransferInformation.MaxChunk; i++)
 //                 {

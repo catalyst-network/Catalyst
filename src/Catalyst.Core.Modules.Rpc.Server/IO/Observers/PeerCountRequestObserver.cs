@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -27,11 +27,13 @@ using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Abstractions.P2P.Repository;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using Dawn;
-using DotNetty.Transport.Channels;
 using Serilog;
+using MultiFormats;
+using Catalyst.Modules.Network.Dotnetty.Rpc.IO.Observers;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
+using DotNetty.Transport.Channels;
 
 namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
 {
@@ -40,7 +42,7 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
     /// </summary>
     /// <seealso cref="IRpcRequestObserver" />
     public sealed class PeerCountRequestObserver
-        : RequestObserverBase<GetPeerCountRequest, GetPeerCountResponse>,
+        : RpcRequestObserverBase<GetPeerCountRequest, GetPeerCountResponse>,
             IRpcRequestObserver
     {
         /// <summary>The peer discovery</summary>
@@ -62,17 +64,17 @@ namespace Catalyst.Core.Modules.Rpc.Server.IO.Observers
         /// </summary>
         /// <param name="getPeerCountRequest"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerId"></param>
+        /// <param name="sender"></param>
         /// <param name="correlationId"></param>
         /// <returns></returns>
         protected override GetPeerCountResponse HandleRequest(GetPeerCountRequest getPeerCountRequest,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             Guard.Argument(getPeerCountRequest, nameof(getPeerCountRequest)).NotNull();
             Guard.Argument(channelHandlerContext, nameof(channelHandlerContext)).NotNull();
-            Guard.Argument(senderPeerId, nameof(senderPeerId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
             var peerCount = _peerRepository.GetAll().Count();
 
             return new GetPeerCountResponse

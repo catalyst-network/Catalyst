@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -28,8 +28,7 @@ using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Core.Lib.IO.Observers;
 using Catalyst.Protocol.IPPN;
-using Catalyst.Protocol.Peer;
-using DotNetty.Transport.Channels;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.TestUtils
@@ -41,11 +40,10 @@ namespace Catalyst.TestUtils
         private int _counter;
         public int Counter => _counter;
 
-        public FailingRequestObserver(ILogger logger, IPeerSettings peerSettings) : base(logger, peerSettings) { }
+        public FailingRequestObserver(ILogger logger, IPeerSettings peerSettings, IPeerClient peerClient) : base(logger, peerSettings, peerClient) { }
 
         protected override PeerNeighborsResponse HandleRequest(PeerNeighborsRequest messageDto,
-            IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerId,
+            MultiAddress sender,
             ICorrelationId correlationId)
         {
             var count = Interlocked.Increment(ref _counter);
@@ -54,7 +52,7 @@ namespace Catalyst.TestUtils
                 throw new ArgumentException("something went wrong handling the request");
             }
 
-            return new PeerNeighborsResponse {Peers = {PeerIdHelper.GetPeerId()}};
+            return new PeerNeighborsResponse {Peers = {MultiAddressHelper.GetAddress().ToString()}};
         }
     }
 }

@@ -24,24 +24,26 @@
 using System.IO;
 using System.Threading.Tasks;
 using Lib.P2P.Protocols;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Lib.P2P.Tests.Protocols
 {
+    [TestClass]
     public class MessageTest
     {
-        [Test]
+        [TestMethod]
         public async Task Encoding()
         {
             var ms = new MemoryStream();
             await Message.WriteAsync("a", ms);
             var buf = ms.ToArray();
-            Assert.That(buf.Length, Is.EqualTo(3));
-            Assert.That(buf[0], Is.EqualTo(2));
-            Assert.That(buf[1], Is.EqualTo((byte)'a'));
-            Assert.That(buf[2], Is.EqualTo((byte)'\n'));
+            Assert.AreEqual(3, buf.Length);
+            Assert.AreEqual(2, buf[0]);
+            Assert.AreEqual((byte) 'a', buf[1]);
+            Assert.AreEqual((byte) '\n', buf[2]);
         }
 
-        [Test]
+        [TestMethod]
         public async Task RoundTrip()
         {
             var msg = "/foobar/0.42.0";
@@ -49,7 +51,7 @@ namespace Lib.P2P.Tests.Protocols
             await Message.WriteAsync(msg, ms);
             ms.Position = 0;
             var result = await Message.ReadStringAsync(ms);
-            Assert.That(msg, Is.EqualTo(result));
+            Assert.AreEqual(msg, result);
         }
     }
 }

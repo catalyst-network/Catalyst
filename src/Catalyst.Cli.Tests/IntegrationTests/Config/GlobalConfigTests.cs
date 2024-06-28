@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -26,7 +26,6 @@ using System.IO;
 using System.Linq;
 using Autofac;
 using Catalyst.Abstractions.Cli;
-using Catalyst.Abstractions.Cli.Commands;
 using Catalyst.Cli.Commands;
 using Catalyst.Core.Lib;
 using Catalyst.Core.Lib.Cli;
@@ -35,6 +34,7 @@ using Catalyst.Core.Modules.Cryptography.BulletProofs;
 using Catalyst.Core.Modules.KeySigner;
 using Catalyst.Core.Modules.Keystore;
 using Catalyst.Core.Modules.Rpc.Client;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.Cli.Commands;
 using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
 using NUnit.Framework;

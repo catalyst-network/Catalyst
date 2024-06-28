@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -21,16 +21,15 @@
 
 #endregion
 
-using System.Net;
 using Microsoft.Extensions.Configuration;
+using MultiFormats;
 
 namespace Catalyst.Abstractions.Rpc
 {
     public interface IRpcServerSettings
     {
-        int Port { get; }
         string PfxFileName { get; }
-        IPAddress BindAddress { get; }
+        MultiAddress Address { get; }
         IConfigurationRoot NodeConfig { get; }
     }
 }

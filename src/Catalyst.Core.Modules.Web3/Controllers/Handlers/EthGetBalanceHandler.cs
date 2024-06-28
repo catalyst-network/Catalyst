@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -24,9 +24,9 @@
 using Catalyst.Abstractions.Ledger;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Deltas;
-using Address = Nethermind.Core.Address;
-using Nethermind.Int256;
 using Nethermind.Core;
+using Nethermind.Dirichlet.Numerics;
+using Address = Nethermind.Core.Address;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
 {
@@ -37,16 +37,7 @@ namespace Catalyst.Core.Modules.Web3.Controllers.Handlers
         {
             Delta delta = api.GetLatestDeltaWithCid().Delta;
             var stateRoot = delta.StateRoot.ToKeccak();
-            AccountStruct accStruct;
-            bool bResult = api.StateReader.TryGetAccount(stateRoot, address, out accStruct);
-            if (bResult)
-            {
-                return accStruct.Balance;
-            }
-            else
-            {
-                return 0;
-            }
+            return api.StateReader.GetBalance(stateRoot, address);
         }
     }
 }

@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -23,36 +23,36 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Reactive.Concurrency;
 using System.Reactive.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.IO.EventLoop;
 using Catalyst.Abstractions.IO.Handlers;
-using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Rpc.Authentication;
 using Catalyst.Abstractions.Rpc.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.IO.Codecs;
-using Catalyst.Core.Lib.IO.Handlers;
-using Catalyst.Core.Lib.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.EventLoop;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.IO.Codecs;
+using Catalyst.Modules.Network.Dotnetty.IO.Handlers;
+using Catalyst.Modules.Network.Dotnetty.IO.Transport.Channels;
 using Catalyst.Protocol.Cryptography;
 using Catalyst.Protocol.Wire;
 using DotNetty.Codecs.Protobuf;
 using DotNetty.Transport.Channels;
+using MultiFormats;
 
 namespace Catalyst.Core.Modules.Rpc.Server.Transport.Channels
 {
-    public class RpcServerChannelFactory : TcpServerChannelFactory
+    public class RpcServerChannelFactory : TcpServerChannelFactory<IObserverDto<ProtocolMessage>>
     {
         private readonly IRpcMessageCorrelationManager _correlationManger;
         private readonly IAuthenticationStrategy _authenticationStrategy;
         private readonly IKeySigner _keySigner;
         private readonly IPeerIdValidator _peerIdValidator;
-        private readonly IObservableServiceHandler _observableServiceHandler;
+        private readonly IObservableServiceHandler<IObserverDto<ProtocolMessage>> _observableServiceHandler;
         private readonly SigningContext _signingContext;
 
         protected override Func<List<IChannelHandler>> HandlerGenerationFunction
@@ -102,24 +102,22 @@ namespace Catalyst.Core.Modules.Rpc.Server.Transport.Channels
             _keySigner = keySigner;
             _peerIdValidator = peerIdValidator;
             _signingContext = new SigningContext {NetworkType = peerSettings.NetworkType, SignatureType = SignatureType.ProtocolRpc};
-            _observableServiceHandler = new ObservableServiceHandler(observableScheduler);
+            _observableServiceHandler = new RpcObservableServiceHandler(observableScheduler);
         }
 
         /// <param name="handlerEventLoopGroupFactory"></param>
         /// <param name="targetPort"></param>
         /// <param name="certificate">Local TLS certificate</param>
         /// <param name="targetAddress"></param>
-        public override async Task<IObservableChannel> BuildChannelAsync(IEventLoopGroupFactory handlerEventLoopGroupFactory,
-            IPAddress targetAddress,
-            int targetPort,
+        public override async Task<IObservableChannel<IObserverDto<ProtocolMessage>>> BuildChannelAsync(IEventLoopGroupFactory handlerEventLoopGroupFactory,
+            MultiAddress address,
             X509Certificate2 certificate = null)
         {
-            var channel = await BootstrapAsync(handlerEventLoopGroupFactory, targetAddress, targetPort, certificate).ConfigureAwait(false);
+            var channel = await BootstrapAsync(handlerEventLoopGroupFactory, address, certificate).ConfigureAwait(false);
 
             var messageStream = _observableServiceHandler.MessageStream;
 
-            return new ObservableChannel(messageStream
-             ?? Observable.Never<IObserverDto<ProtocolMessage>>(), channel);
+            return new ObservableChannel<IObserverDto<ProtocolMessage>>(messageStream ?? Observable.Never<IObserverDto<ProtocolMessage>>(), channel);
         }
     }
 }

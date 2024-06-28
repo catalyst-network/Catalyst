@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -25,8 +25,8 @@ using System;
 using System.Linq;
 using System.Threading.Tasks;
 using Autofac;
-using Catalyst.Abstractions.FileTransfer;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.FileTransfer;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
 using FluentAssertions;

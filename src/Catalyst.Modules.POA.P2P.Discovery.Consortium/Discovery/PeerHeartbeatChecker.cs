@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -70,10 +70,10 @@ namespace Catalyst.Modules.POA.P2P.Discovery
             {
                 Task.Run(async () =>
                 {
-                    var result = await _peerChallengeRequest.ChallengePeerAsync(peer.PeerId);
+                    var result = await _peerChallengeRequest.ChallengePeerAsync(peer.Address);
                     var counterValue = _nonResponsivePeerMap.GetOrAdd(peer.DocumentId, 0);
                     _logger.Verbose(
-                        $"Heartbeat result: {result.ToString()} Peer: {peer.PeerId} Non-Responsive Counter: {counterValue}");
+                        $"Heartbeat result: {result.ToString()} Peer: {peer.Address} Non-Responsive Counter: {counterValue}");
                     if (!result)
                     {
                         // @TODO touch last seen on peer
@@ -89,7 +89,7 @@ namespace Catalyst.Modules.POA.P2P.Discovery
                                 _nonResponsivePeerMap.TryRemove(peer.DocumentId, out _);
                             }
                             _logger.Verbose(
-                                $"Peer reached maximum non-responsive count: {peer.PeerId}. Evicted from repository");
+                                $"Peer reached maximum non-responsive count: {peer.Address}. Evicted from repository");
                         }
                     }
                     else

@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -23,55 +23,52 @@
 
 using System;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.Types;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Dawn;
-using DotNetty.Transport.Channels;
 using Google.Protobuf;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.Core.Lib.IO.Observers
 {
-    public abstract class RequestObserverBase<TProtoReq, TProtoRes> : MessageObserverBase, IRequestMessageObserver
+    public abstract class RequestObserverBase<TProtoReq, TProtoRes> : MessageObserverBase<ProtocolMessage>, IRequestMessageObserver<ProtocolMessage>
         where TProtoReq : IMessage<TProtoReq> where TProtoRes : IMessage<TProtoRes>
     {
+        private static Func<ProtocolMessage, bool> FilterExpression = m => m?.TypeUrl != null && m.TypeUrl == typeof(TProtoReq).ShortenedProtoFullName();
+
         public IPeerSettings PeerSettings { get; }
 
-        protected RequestObserverBase(ILogger logger, IPeerSettings peerSettings) : base(logger, typeof(TProtoReq).ShortenedProtoFullName())
+        private readonly IPeerClient _peerClient;
+
+        protected RequestObserverBase(ILogger logger, IPeerSettings peerSettings, IPeerClient peerClient) : base(logger, FilterExpression)
         {
             Guard.Argument(typeof(TProtoReq), nameof(TProtoReq)).Require(t => t.IsRequestType(),
                 t => $"{nameof(TProtoReq)} is not of type {MessageTypes.Request.Name}");
             PeerSettings = peerSettings;
-            logger.Verbose("{interface} instantiated", nameof(IRequestMessageObserver));
+            _peerClient = peerClient;
+            logger.Verbose("{interface} instantiated", nameof(IRequestMessageObserver<TProtoReq>));
         }
 
-        protected abstract TProtoRes HandleRequest(TProtoReq messageDto, IChannelHandlerContext channelHandlerContext, PeerId senderPeerId, ICorrelationId correlationId);
+        protected abstract TProtoRes HandleRequest(TProtoReq message, MultiAddress sender, ICorrelationId correlationId);
 
-        public override void OnNext(IObserverDto<ProtocolMessage> messageDto)
+        public override void OnNext(ProtocolMessage message)
         {
             Logger.Verbose("Pre Handle Message Called");
 
             try
             {
-                var correlationId = messageDto.Payload.CorrelationId.ToCorrelationId();
-                var recipientPeerId = messageDto.Payload.PeerId;
+                var correlationId = message.CorrelationId.ToCorrelationId();
+                var recipientAddress = new MultiAddress(message.Address);
 
-                var response = HandleRequest(messageDto.Payload.FromProtocolMessage<TProtoReq>(),
-                    messageDto.Context,
-                    recipientPeerId,
+                var response = HandleRequest(message.FromProtocolMessage<TProtoReq>(),
+                    recipientAddress,
                     correlationId);
 
-                var responseDto = new MessageDto(
-                    response.ToProtocolMessage(PeerSettings.PeerId, correlationId),
-                    recipientPeerId);
-
-                messageDto.Context.Channel?.WriteAndFlushAsync(responseDto).ConfigureAwait(false).GetAwaiter().GetResult();
+                _peerClient.SendMessageAsync(response.ToProtocolMessage(PeerSettings.Address, correlationId), recipientAddress);
             }
             catch (Exception exception)
             {

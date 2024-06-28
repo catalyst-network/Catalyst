@@ -35,12 +35,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
     {
         private IDfsService ipfs;
 
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            ipfs.Dispose();
-        }
-
         public BlockRepositoryApiTest()
         {
             ipfs = TestDfs.GetTestDfs();    
@@ -76,7 +70,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         {
             var versions = await ipfs.BlockRepositoryApi.VersionAsync();
             Assert.That(versions, Is.Not.Null);
-         
+
             // Assert.True(versions.ContainsKey("Version"));
             // Assert.True(versions.ContainsKey("Repo"));
         }

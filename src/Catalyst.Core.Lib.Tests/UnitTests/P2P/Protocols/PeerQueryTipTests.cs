@@ -23,7 +23,6 @@
 
 using System;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.P2P;
 using Catalyst.Abstractions.P2P.Protocols;
 using Catalyst.Core.Lib.P2P.Protocols;
@@ -36,21 +35,14 @@ using NSubstitute;
 using Serilog;
 using NUnit.Framework;
 
-
 namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
 {
     public sealed class PeerQueryTipTests : SelfAwareTestBase
     {
         private IPeerQueryTipRequest _peerQueryTipRequest;
         private IPeerSettings _testSettings;
+        private MultiAddress _recipientAddress;
         private CancellationTokenProvider _cancellationProvider;
-
-        [TearDown]
-        public void TearDown()
-        {
-            _cancellationProvider.Dispose();
-            _peerQueryTipRequest.Dispose();
-        }
 
         [SetUp]
         public void Init()
@@ -59,6 +51,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
 
             var subbedPeerClient = Substitute.For<IPeerClient>();
             _testSettings = PeerSettingsHelper.TestPeerSettings();
+            _recipientAddress = _testSettings.Address;
+
             _cancellationProvider = new CancellationTokenProvider(TimeSpan.FromSeconds(10));
 
             _peerQueryTipRequest = new PeerQueryTipRequestRequest(
@@ -72,31 +66,26 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
         [Test]
         public async Task Can_Query_Expected_Peer()
         {
-            var recipientPeerId = PeerIdHelper.GetPeerId();
-            await _peerQueryTipRequest.QueryPeerTipAsync(recipientPeerId).ConfigureAwait(false);
-            var expectedDto = Substitute.For<IMessageDto<ProtocolMessage>>();
-            expectedDto.RecipientPeerIdentifier.Returns(recipientPeerId);
-            expectedDto.SenderPeerIdentifier.Returns(_testSettings.PeerId);
-            _peerQueryTipRequest.PeerClient.ReceivedWithAnyArgs(1).SendMessage(Arg.Is(expectedDto));
+            await _peerQueryTipRequest.QueryPeerTipAsync(_recipientAddress).ConfigureAwait(false);
+            await _peerQueryTipRequest.PeerClient.ReceivedWithAnyArgs(1).SendMessageAsync(Arg.Is<ProtocolMessage>(x => x.Address == _testSettings.Address), Arg.Is(_recipientAddress));
         }
 
         [Test]
         public async Task Can_Receive_Query_Response_On_Observer()
         {
-            var recipientPeerId = PeerIdHelper.GetPeerId();
-            var tipQueryResponse = new PeerQueryTipResponse(PeerIdHelper.GetPeerId(),
+            var tipQueryResponse = new PeerQueryTipResponse(_recipientAddress,
                 MultiHash.ComputeHash(ByteUtil.GenerateRandomByteArray(32))
             );
 
             _peerQueryTipRequest.QueryTipResponseMessageStreamer.OnNext(tipQueryResponse);
-            var response = await _peerQueryTipRequest.QueryPeerTipAsync(recipientPeerId).ConfigureAwait(false);
+            var response = await _peerQueryTipRequest.QueryPeerTipAsync(_recipientAddress).ConfigureAwait(false);
             response.Should().BeTrue();
         }
 
         [Test]
         public async Task No_Response_Timeout_And_Returns_False()
         {
-            var recipientPeerId = PeerIdHelper.GetPeerId();
+            var recipientPeerId = MultiAddressHelper.GetAddress();
             _cancellationProvider.CancellationTokenSource.Cancel();
             var response = await _peerQueryTipRequest.QueryPeerTipAsync(recipientPeerId).ConfigureAwait(false);
             response.Should().BeFalse();
@@ -105,7 +94,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.P2P.Protocols
         [Test]
         public async Task Exception_During_Query_Returns_Null()
         {
-            var recipientPeerId = PeerIdHelper.GetPeerId();
+            var recipientPeerId = MultiAddressHelper.GetAddress();
             _cancellationProvider.Dispose(); //do summet nasty to force exception
             var response = await _peerQueryTipRequest.QueryPeerTipAsync(recipientPeerId).ConfigureAwait(false);
             response.Should().BeFalse();

@@ -22,10 +22,14 @@
 #endregion
 
 using Autofac;
+using Catalyst.Abstractions.Config;
 using Catalyst.Abstractions.P2P;
+using Catalyst.Core.Lib.Config;
+using Catalyst.Core.Modules.Dfs;
 using Catalyst.Protocol.Network;
 using Catalyst.TestUtils;
 using FluentAssertions;
+using NSubstitute;
 using NUnit.Framework;
 
 namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
@@ -44,6 +48,12 @@ namespace Catalyst.Core.Lib.Tests.IntegrationTests.P2P
         public void CanResolveIPeerSettings()
         {
             ContainerProvider.ConfigureContainerBuilder();
+            
+            var networkTypeProvider = Substitute.For<INetworkTypeProvider>();
+            networkTypeProvider.NetworkType.Returns(NetworkType.Devnet);
+            ContainerProvider.ContainerBuilder.RegisterInstance(networkTypeProvider).As<INetworkTypeProvider>();            
+            
+            ContainerProvider.ContainerBuilder.RegisterModule(new DfsModule());
 
             using (var scope = ContainerProvider.Container.BeginLifetimeScope(CurrentTestName))
             {

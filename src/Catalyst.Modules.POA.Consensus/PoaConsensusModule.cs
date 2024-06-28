@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -27,7 +27,7 @@ using Catalyst.Modules.POA.Consensus.Deltas;
 
 namespace Catalyst.Modules.POA.Consensus
 {
-    public class PoaConsensusModule : Module
+    public class PoaConsensusModule : Autofac.Module
     {
         protected override void Load(ContainerBuilder builder)
         {

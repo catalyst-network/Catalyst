@@ -23,6 +23,7 @@
 
 using System;
 using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Catalyst.KBucket
 {
@@ -31,7 +32,7 @@ namespace Catalyst.KBucket
     /// </summary>
     internal static class ExceptionAssert
     {
-        public static T? Throws<T>(Action action, string expectedMessage) where T : Exception
+        public static T Throws<T>(Action action, string expectedMessage = null) where T : Exception
         {
             try
             {
@@ -43,7 +44,7 @@ namespace Catalyst.KBucket
                 if (match != null)
                 {
                     if (expectedMessage != null)
-                        Assert.That(expectedMessage, Is.EqualTo(match.Message), "Wrong exception message.");
+                        Assert.AreEqual(expectedMessage, match.Message, "Wrong exception message.");
                     return match;
                 }
 
@@ -52,15 +53,17 @@ namespace Catalyst.KBucket
             catch (T e)
             {
                 if (expectedMessage != null)
-                    Assert.Equals(expectedMessage, e.Message);
+                    Assert.AreEqual(expectedMessage, e.Message);
                 return e;
             }
+
+            Assert.Fail("Exception of type {0} should be thrown.", typeof(T));
 
             //  The compiler doesn't know that Assert.Fail will always throw an exception
             return null;
         }
 
-        public static Exception? Throws(Action action, string expectedMessage)
+        public static Exception Throws(Action action, string expectedMessage = null)
         {
             return Throws<Exception>(action, expectedMessage);
         }

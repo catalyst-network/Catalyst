@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -22,7 +22,6 @@
 #endregion
 
 using Catalyst.Abstractions.IO.Events;
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Abstractions.IO.Observers;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Observers;
@@ -43,12 +42,12 @@ namespace Catalyst.Core.Lib.P2P.IO.Observers
             _transactionReceivedEvent = transactionReceivedEvent;
         }
 
-        public override void HandleBroadcast(IObserverDto<ProtocolMessage> messageDto)
+        public override void HandleBroadcast(ProtocolMessage message)
         {
             Logger.Debug("received broadcast");
 
-            var deserialised = messageDto.Payload.FromProtocolMessage<TransactionBroadcast>();
-            _transactionReceivedEvent.OnTransactionReceived(messageDto.Payload);
+            var deserialised = message.FromProtocolMessage<TransactionBroadcast>();
+            _transactionReceivedEvent.OnTransactionReceived(message, false);
 
             Logger.Debug("transaction signature is {0}", deserialised.PublicEntry.Signature);
         }

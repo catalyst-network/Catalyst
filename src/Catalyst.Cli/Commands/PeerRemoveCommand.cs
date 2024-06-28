@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -21,12 +21,10 @@
 
 #endregion
 
-using Catalyst.Abstractions.Cli.Commands;
 using Catalyst.Cli.CommandTypes;
 using Catalyst.Cli.Options;
-using Catalyst.Core.Lib.Extensions;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.Cli.Commands;
 using Catalyst.Protocol.Rpc.Node;
-using Google.Protobuf;
 using Serilog;
 
 namespace Catalyst.Cli.Commands
@@ -40,10 +38,7 @@ namespace Catalyst.Cli.Commands
         {
             return new RemovePeerRequest
             {
-                PeerIp = option.Ip.ToUtf8ByteString(),
-                PublicKey = string.IsNullOrEmpty(option.PublicKey)
-                    ? ByteString.Empty
-                    : option.PublicKey.ToUtf8ByteString()
+                Address = option.Address
             };
         }
     }

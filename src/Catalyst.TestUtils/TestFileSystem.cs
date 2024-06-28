@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -74,7 +74,7 @@ namespace Catalyst.TestUtils
         }
 
         public bool DataFileExists(string fileName) { return _fileSystem.DataFileExists(fileName); }
-        
+
         public string ReadTextFromCddSubDirectoryFile(string fileName, string subDirectory)
         {
             var content = _retryPolicy.Execute(() => _fileSystem.ReadTextFromCddSubDirectoryFile(fileName, subDirectory));

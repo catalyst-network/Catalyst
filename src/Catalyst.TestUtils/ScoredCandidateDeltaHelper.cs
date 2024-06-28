@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -23,9 +23,9 @@
 
 using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Modules.Consensus.Deltas;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Lib.P2P;
+using Nethermind.Core;
 
 namespace Catalyst.TestUtils
 {
@@ -42,7 +42,7 @@ namespace Catalyst.TestUtils
         public static ScoredCandidateDelta GetScoredCandidateDelta(IHashProvider hashProvider,
             Cid previousDeltaHash = null,
             Cid hash = null,
-            PeerId producerId = null,
+            Address producerId = null,
             int score = 0)
         {
             var candidateDelta = DeltaHelper.GetCandidateDelta(hashProvider, hash: hash, producerId: producerId,

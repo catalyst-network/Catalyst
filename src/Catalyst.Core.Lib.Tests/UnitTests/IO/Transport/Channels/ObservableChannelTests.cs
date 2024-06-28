@@ -25,8 +25,7 @@ using System;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Core.Lib.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.IO.Transport.Channels;
 using Catalyst.Protocol.Wire;
 using DotNetty.Transport.Channels;
 using FluentAssertions;
@@ -40,19 +39,19 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport.Channels
         public ObservableChannelTests()
         {
             _channel = Substitute.For<IChannel>();
-            var messageSubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1);
+            var messageSubject = new ReplaySubject<ProtocolMessage>(1);
             _messageStream = messageSubject.AsObservable();
-            _observableChannel = new ObservableChannel(_messageStream, _channel);
+            _observableChannel = new ObservableChannel<ProtocolMessage>(_messageStream, _channel);
         }
 
         private readonly IChannel _channel;
-        private readonly IObservable<IObserverDto<ProtocolMessage>> _messageStream;
-        private readonly ObservableChannel _observableChannel;
+        private readonly IObservable<ProtocolMessage> _messageStream;
+        private readonly ObservableChannel<ProtocolMessage> _observableChannel;
 
         [Test]
         public void MessageStream_Should_Not_Be_Null()
         {
-            Assert.Throws<ArgumentNullException>(() => new ObservableChannel(null, _channel));
+            Assert.Throws<ArgumentNullException>(() => new ObservableChannel<ProtocolMessage>(null, _channel));
         }
 
         [Test]

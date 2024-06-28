@@ -27,9 +27,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Lib.P2P.PubSub;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Lib.P2P.Tests.PubSub
 {
+    [TestClass]
     public class NotificationServiceTest
     {
         private Peer self = new Peer
@@ -40,19 +42,19 @@ namespace Lib.P2P.Tests.PubSub
                 "CAASXjBcMA0GCSqGSIb3DQEBAQUAA0sAMEgCQQCC5r4nQBtnd9qgjnG8fBN5+gnqIeWEIcUFUdCG4su/vrbQ1py8XGKNUBuDjkyTv25Gd3hlrtNJV3eOKZVSL8ePAgMBAAE="
         };
 
-        private Peer other1 = new Peer {Id = "QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ"};
-        private Peer other2 = new Peer {Id = "QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvUJ"};
+        private Peer other1 = new Peer { Id = "QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvuJ" };
+        private Peer other2 = new Peer { Id = "QmaCpDMGvV2BGHeYERUEnRQAwe3N8SzbUtfsmvsqQLuvUJ" };
 
-        [Test]
+        [TestMethod]
         public async Task MessageID_Increments()
         {
-            var ns = new PubSubService {LocalPeer = self};
+            var ns = new PubSubService(self, new[] { new LoopbackRouter() });
             await ns.StartAsync();
             try
             {
                 var a = ns.CreateMessage("topic", new byte[0]);
                 var b = ns.CreateMessage("topic", new byte[0]);
-                Assert.That(string.Compare(b.MessageId, a.MessageId, StringComparison.Ordinal) > 0, Is.True);
+                Assert.IsTrue(string.Compare(b.MessageId, a.MessageId, StringComparison.Ordinal) > 0);
             }
             finally
             {
@@ -60,18 +62,18 @@ namespace Lib.P2P.Tests.PubSub
             }
         }
 
-        [Test]
+        [TestMethod]
         public async Task Publish()
         {
-            var ns = new PubSubService {LocalPeer = self};
+            var ns = new PubSubService(self, new[] { new LoopbackRouter() });
             await ns.StartAsync();
             try
             {
                 await ns.PublishAsync("topic", "foo");
-                await ns.PublishAsync("topic", new byte[] {1, 2, 3});
-                await ns.PublishAsync("topic", new MemoryStream(new byte[] {1, 2, 3}));
-                Assert.That(ns.MesssagesPublished, Is.EqualTo(3ul));
-                Assert.That(ns.MesssagesReceived, Is.EqualTo(3ul));
+                await ns.PublishAsync("topic", new byte[] { 1, 2, 3 });
+                await ns.PublishAsync("topic", new MemoryStream(new byte[] { 1, 2, 3 }));
+                Assert.AreEqual(3ul, ns.MesssagesPublished);
+                Assert.AreEqual(3ul, ns.MesssagesReceived);
             }
             finally
             {
@@ -79,10 +81,10 @@ namespace Lib.P2P.Tests.PubSub
             }
         }
 
-        [Test]
+        [TestMethod]
         public async Task Topics()
         {
-            var ns = new PubSubService {LocalPeer = self};
+            var ns = new PubSubService(self, new[] { new LoopbackRouter() });
             await ns.StartAsync();
             try
             {
@@ -96,18 +98,18 @@ namespace Lib.P2P.Tests.PubSub
                 await ns.SubscribeAsync(topicB, msg => { }, csB.Token);
 
                 var topics = (await ns.SubscribedTopicsAsync(csA.Token)).ToArray();
-                Assert.That(topics.Length, Is.EqualTo(2));
-                Assert.That(topics, Contains.Item(topicA));
-                Assert.That(topics, Contains.Item(topicB));
+                Assert.AreEqual(2, topics.Length);
+                CollectionAssert.Contains(topics, topicA);
+                CollectionAssert.Contains(topics, topicB);
 
                 csA.Cancel();
                 topics = (await ns.SubscribedTopicsAsync(csA.Token)).ToArray();
-                Assert.That(topics.Length, Is.EqualTo(1));
-                Assert.That(topics, Contains.Item(topicB));
+                Assert.AreEqual(1, topics.Length);
+                CollectionAssert.Contains(topics, topicB);
 
                 csB.Cancel();
                 topics = (await ns.SubscribedTopicsAsync(csA.Token)).ToArray();
-                Assert.That(topics.Length, Is.EqualTo(0));
+                Assert.AreEqual(0, topics.Length);
             }
             finally
             {
@@ -115,10 +117,10 @@ namespace Lib.P2P.Tests.PubSub
             }
         }
 
-        [Test]
+        [TestMethod]
         public async Task Subscribe()
         {
-            var ns = new PubSubService {LocalPeer = self};
+            var ns = new PubSubService(self, new[] { new LoopbackRouter() });
             await ns.StartAsync();
             try
             {
@@ -129,7 +131,7 @@ namespace Lib.P2P.Tests.PubSub
                 await ns.SubscribeAsync(topic, msg => { ++messageCount; }, cs.Token);
 
                 await ns.PublishAsync(topic, "", cs.Token);
-                Assert.That(messageCount, Is.EqualTo(2));
+                Assert.AreEqual(2, messageCount);
             }
             finally
             {
@@ -137,10 +139,10 @@ namespace Lib.P2P.Tests.PubSub
             }
         }
 
-        [Test]
+        [TestMethod]
         public async Task Subscribe_HandlerExceptionIsIgnored()
         {
-            var ns = new PubSubService {LocalPeer = self};
+            var ns = new PubSubService(self, new[] { new LoopbackRouter() });
             await ns.StartAsync();
             try
             {
@@ -154,7 +156,7 @@ namespace Lib.P2P.Tests.PubSub
                 }, cs.Token);
 
                 await ns.PublishAsync(topic, "", cs.Token);
-                Assert.That(messageCount, Is.EqualTo(1));
+                Assert.AreEqual(1, messageCount);
             }
             finally
             {
@@ -162,10 +164,10 @@ namespace Lib.P2P.Tests.PubSub
             }
         }
 
-        [Test]
+        [TestMethod]
         public async Task DuplicateMessagesAreIgnored()
         {
-            var ns = new PubSubService {LocalPeer = self};
+            var ns = new PubSubService(self, new[] { new LoopbackRouter() });
             ns.Routers.Add(new LoopbackRouter());
             await ns.StartAsync();
             try
@@ -176,9 +178,9 @@ namespace Lib.P2P.Tests.PubSub
                 await ns.SubscribeAsync(topic, msg => { ++messageCount; }, cs.Token);
 
                 await ns.PublishAsync(topic, "", cs.Token);
-                Assert.That(messageCount, Is.EqualTo(1));
-                Assert.That(ns.MesssagesReceived, Is.EqualTo(2ul));
-                Assert.That(ns.DuplicateMesssagesReceived, Is.EqualTo(1ul));
+                Assert.AreEqual(1, messageCount);
+                Assert.AreEqual(2ul, ns.MesssagesReceived);
+                Assert.AreEqual(1ul, ns.DuplicateMesssagesReceived);
             }
             finally
             {
@@ -186,13 +188,13 @@ namespace Lib.P2P.Tests.PubSub
             }
         }
 
-        [Test]
+        [TestMethod]
         public async Task SubscribedPeers_ForTopic()
         {
             var topic1 = Guid.NewGuid().ToString();
             var topic2 = Guid.NewGuid().ToString();
-            var ns = new PubSubService {LocalPeer = self};
-            var router = new FloodRouter() {SwarmService = new SwarmService()};
+            var router = new FloodRouter(new SwarmService(self));
+            var ns = new PubSubService(self, new[] { router });
             router.RemoteTopics.AddInterest(topic1, other1);
             router.RemoteTopics.AddInterest(topic2, other2);
             ns.Routers.Add(router);
@@ -200,12 +202,12 @@ namespace Lib.P2P.Tests.PubSub
             try
             {
                 var peers = (await ns.PeersAsync(topic1)).ToArray();
-                Assert.That(peers.Length, Is.EqualTo(1));
-                Assert.That(other1, Is.EqualTo(peers[0]));
+                Assert.AreEqual(1, peers.Length);
+                Assert.AreEqual(other1, peers[0]);
 
                 peers = (await ns.PeersAsync(topic2)).ToArray();
-                Assert.That(peers.Length, Is.EqualTo(1));
-                Assert.That(other2, Is.EqualTo(peers[0]));
+                Assert.AreEqual(1, peers.Length);
+                Assert.AreEqual(other2, peers[0]);
             }
             finally
             {
@@ -213,13 +215,13 @@ namespace Lib.P2P.Tests.PubSub
             }
         }
 
-        [Test]
+        [TestMethod]
         public async Task SubscribedPeers_AllTopics()
         {
             var topic1 = Guid.NewGuid().ToString();
             var topic2 = Guid.NewGuid().ToString();
-            var ns = new PubSubService {LocalPeer = self};
-            var router = new FloodRouter {SwarmService = new SwarmService()};
+            var router = new FloodRouter(new SwarmService(self));
+            var ns = new PubSubService(self, new[] { router });
             router.RemoteTopics.AddInterest(topic1, other1);
             router.RemoteTopics.AddInterest(topic2, other2);
             ns.Routers.Add(router);
@@ -227,7 +229,7 @@ namespace Lib.P2P.Tests.PubSub
             try
             {
                 var peers = (await ns.PeersAsync()).ToArray();
-                Assert.That(peers.Length, Is.EqualTo(2));
+                Assert.AreEqual(2, peers.Length);
             }
             finally
             {

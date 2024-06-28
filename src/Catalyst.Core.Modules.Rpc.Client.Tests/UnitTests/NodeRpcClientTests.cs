@@ -22,23 +22,15 @@
 #endregion
 
 using System.Collections.Generic;
-using System.Net;
 using System.Reactive.Linq;
 using System.Reactive.Subjects;
 using System.Security.Cryptography.X509Certificates;
 using System.Threading.Tasks;
-using Catalyst.Abstractions.IO.EventLoop;
-using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Abstractions.IO.Observers;
-using Catalyst.Abstractions.IO.Transport.Channels;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.IO.Messaging.Correlation;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
-using Catalyst.Core.Lib.IO.Transport.Channels;
 using Catalyst.Core.Lib.Rpc.IO.Exceptions;
 using Catalyst.Core.Modules.Rpc.Client.IO.Observers;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.Rpc.Node;
 using Catalyst.TestUtils;
@@ -48,6 +40,13 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using MultiFormats;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.EventLoop;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.IO.Transport.Channels;
+using Catalyst.Modules.Network.Dotnetty.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.IO.Observers;
 
 namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
 {
@@ -57,41 +56,33 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
         {
             _testScheduler = new TestScheduler();
             _logger = Substitute.For<ILogger>();
-            _peerIdentifier = PeerIdHelper.GetPeerId("Test");
+            _peerIdentifier = MultiAddressHelper.GetAddress("Test");
             _channelHandlerContext = Substitute.For<IChannelHandlerContext>();
 
-            _channelFactory = Substitute.For<ITcpClientChannelFactory>();
+            _channelFactory = Substitute.For<ITcpClientChannelFactory<IObserverDto<ProtocolMessage>>>();
             _clientEventLoopGroupFactory = Substitute.For<ITcpClientEventLoopGroupFactory>();
 
             _mockSocketReplySubject = new ReplaySubject<IObserverDto<ProtocolMessage>>(1, _testScheduler);
             var mockChannel = Substitute.For<IChannel>();
             var mockEventStream = _mockSocketReplySubject.AsObservable();
-            var observableChannel = new ObservableChannel(mockEventStream, mockChannel);
+            var observableChannel = new RpcObservableChannel(mockEventStream, mockChannel);
 
-            _channelFactory.BuildChannelAsync(_clientEventLoopGroupFactory, Arg.Any<IPAddress>(), Arg.Any<int>(),
+            _channelFactory.BuildChannelAsync(_clientEventLoopGroupFactory, Arg.Any<MultiAddress>(),
                 Arg.Any<X509Certificate2>()).Returns(observableChannel);
 
             _rpcClientConfig = Substitute.For<IRpcClientConfig>();
-            _rpcClientConfig.HostAddress = IPAddress.Any;
             _rpcClientConfig.NodeId = "0";
             _rpcClientConfig.PfxFileName = "pfx";
-            _rpcClientConfig.Port = 9000;
-        }
-
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            _clientEventLoopGroupFactory.Dispose();
-            _mockSocketReplySubject.Dispose();
+            _rpcClientConfig.Address = new MultiAddress("/ip4/127.0.0.1/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdwu2yu3QMzKa2BDkb5C5pcuhtrH1G9HHbztbbxA8tGmf4");
         }
 
         private readonly ILogger _logger;
 
         private readonly TestScheduler _testScheduler;
 
-        private readonly PeerId _peerIdentifier;
+        private readonly MultiAddress _peerIdentifier;
 
-        private readonly ITcpClientChannelFactory _channelFactory;
+        private readonly ITcpClientChannelFactory<IObserverDto<ProtocolMessage>> _channelFactory;
 
         private readonly ITcpClientEventLoopGroupFactory _clientEventLoopGroupFactory;
 
@@ -126,7 +117,7 @@ namespace Catalyst.Core.Modules.Rpc.Client.Tests.UnitTests
             var nodeRpcClientFactory = new RpcClientFactory(_channelFactory, _clientEventLoopGroupFactory,
                 new List<IRpcResponseObserver> { new GetVersionResponseObserver(_logger) });
             var nodeRpcClient = await nodeRpcClientFactory.GetClientAsync(null, _rpcClientConfig);
-            VersionResponse? returnedVersionResponse = null;
+            VersionResponse returnedVersionResponse = null;
             var targetVersionResponse = new VersionResponse { Version = "1.2.3.4" };
             var protocolMessage =
                 targetVersionResponse.ToProtocolMessage(_peerIdentifier, CorrelationId.GenerateCorrelationId());

@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -25,6 +25,7 @@ using System;
 using System.Reactive.Subjects;
 using System.Threading.Tasks;
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 
 namespace Catalyst.Abstractions.P2P.Protocols
 {
@@ -39,7 +40,7 @@ namespace Catalyst.Abstractions.P2P.Protocols
         /// <param name="recipientPeerIdentifier">The recipient peer identifier.
         /// PeerId holds the chunks we want to validate.</param>
         /// <returns>bool true means valid and false means not valid</returns>
-        Task<bool> QueryPeerTipAsync(PeerId recipientPeerIdentifier);
+        Task<bool> QueryPeerTipAsync(MultiAddress recipientPeerIdentifier);
 
         ReplaySubject<IPeerQueryTipResponse> QueryTipResponseMessageStreamer { get; }
     }

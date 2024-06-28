@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -36,10 +36,11 @@ namespace Catalyst.TestUtils
     {
         public static IPeerSettings TestPeerSettings(byte[] publicKey = default, int port = 42069)
         {
-            var finalPublicKey = publicKey ?? ByteUtil.GenerateRandomByteArray(new FfiWrapper().PublicKeyLength);
+            var peerId = MultiAddressHelper.GetAddress(publicKey);
+            var finalPublicKey = peerId.GetPublicKey();
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.NetworkType.Returns(NetworkType.Devnet);
-            peerSettings.PublicKey.Returns(finalPublicKey.KeyToString());
+            peerSettings.PublicKey.Returns(finalPublicKey);
             peerSettings.Port.Returns(port);
             peerSettings.PayoutAddress.Returns("my_pay_out_address");
             peerSettings.BindAddress.Returns(IPAddress.Loopback);
@@ -51,7 +52,8 @@ namespace Catalyst.TestUtils
                 "seed4.catalystnetwork.io",
                 "seed5.catalystnetwork.io"
             });
-            peerSettings.PeerId.Returns(finalPublicKey.BuildPeerIdFromPublicKey(IPAddress.Loopback, port));
+
+            peerSettings.Address.Returns(peerId);
             return peerSettings;
         }
     }

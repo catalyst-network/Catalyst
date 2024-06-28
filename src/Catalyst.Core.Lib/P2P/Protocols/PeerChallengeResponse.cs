@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -22,13 +22,13 @@
 #endregion
 
 using Catalyst.Abstractions.P2P.Protocols;
-using Catalyst.Protocol.Peer;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.P2P.Protocols
 {
     public sealed class PeerChallengeResponse : ProtocolResponseBase, IPeerChallengeResponse
     {
-        public PeerChallengeResponse(PeerId peerId) : base(peerId)
+        public PeerChallengeResponse(MultiAddress address) : base(address)
         {
             // @TODO touch last seen of peers
         }

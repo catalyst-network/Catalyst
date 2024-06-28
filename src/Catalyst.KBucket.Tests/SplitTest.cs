@@ -23,49 +23,51 @@
 
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Catalyst.KBucket
 {
     /// <summary>
     ///   From https://github.com/tristanls/k-bucket/blob/master/test/split.js
     /// </summary>
+    [TestClass]
     public class SplitTest
     {
-        [Test]
+        [TestMethod]
         public void OneContactDoesNotSplit()
         {
             var kBucket = new KBucket<Contact>
             {
                 new Contact("a")
             };
-            Assert.That(kBucket.Root.Left, Is.Null);
-            Assert.That(kBucket.Root.Right, Is.Null);
-            Assert.That(kBucket.Root.Contacts, Is.Not.Null);
+            Assert.IsNull(kBucket.Root.Left);
+            Assert.IsNull(kBucket.Root.Right);
+            Assert.IsNotNull(kBucket.Root.Contacts);
         }
 
-        [Test]
+        [TestMethod]
         public void MaxContactsPerNodeDoesNotSplit()
         {
             var kBucket = new KBucket<Contact>();
             for (var i = 0; i < kBucket.ContactsPerBucket; ++i) kBucket.Add(new Contact(i));
 
-            Assert.That(kBucket.Root.Left, Is.Null);
-            Assert.That(kBucket.Root.Right, Is.Null);
-            Assert.That(kBucket.Root.Contacts, Is.Not.Null);
+            Assert.IsNull(kBucket.Root.Left);
+            Assert.IsNull(kBucket.Root.Right);
+            Assert.IsNotNull(kBucket.Root.Contacts);
         }
 
-        [Test]
+        [TestMethod]
         public void MaxContactsPerNodePlusOneDoetSplit()
         {
             var kBucket = new KBucket<Contact>();
             for (var i = 0; i < kBucket.ContactsPerBucket + 1; ++i) kBucket.Add(new Contact(i));
 
-            Assert.That(kBucket.Root.Left, Is.Not.Null);
-            Assert.That(kBucket.Root.Right, Is.Not.Null);
-            Assert.That(kBucket.Root.Contacts, Is.Null);
+            Assert.IsNotNull(kBucket.Root.Left);
+            Assert.IsNotNull(kBucket.Root.Right);
+            Assert.IsNull(kBucket.Root.Contacts);
         }
 
-        [Test]
+        [TestMethod]
         public void SplitNodesContainsAllContacts()
         {
             var kBucket = new KBucket<Contact>
@@ -80,10 +82,10 @@ namespace Catalyst.KBucket
                 kBucket.Add(contact);
             }
 
-            foreach (var contact in contacts) Assert.That(kBucket.Contains(contact), Is.True);
+            foreach (var contact in contacts) Assert.IsTrue(kBucket.Contains(contact));
         }
 
-        [Test]
+        [TestMethod]
         public void FarAway()
         {
             var kBucket = new KBucket<Contact>
@@ -107,11 +109,11 @@ namespace Catalyst.KBucket
             }
             else
             {
-                Assert.That(dontSplit, Is.EqualTo(node.DontSplit));
+                Assert.AreEqual(dontSplit, node.DontSplit);
             }
         }
 
-        [Test]
+        [TestMethod]
         public void PingEvent()
         {
             var kBucket = new KBucket<Contact>
@@ -127,7 +129,7 @@ namespace Catalyst.KBucket
             };
 
             for (var i = 0; i < 0x255; ++i) kBucket.Add(new Contact((byte) i));
-            Assert.That(pings, Is.Not.EqualTo(0));
+            Assert.AreNotEqual(0, pings);
         }
     }
 }

@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -24,9 +24,9 @@
 using System;
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Core.Lib.Rpc.IO;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Rpc.Node;
 using DotNetty.Transport.Channels;
+using MultiFormats;
 using Serilog;
 
 namespace Catalyst.TestUtils
@@ -44,11 +44,11 @@ namespace Catalyst.TestUtils
         /// </summary>
         /// <param name="testResponse"></param>
         /// <param name="channelHandlerContext"></param>
-        /// <param name="senderPeerIdentifier"></param>
+        /// <param name="senderentifier"></param>
         /// <param name="correlationId"></param>
         protected override void HandleResponse(VersionResponse testResponse,
             IChannelHandlerContext channelHandlerContext,
-            PeerId senderPeerIdentifier,
+            MultiAddress address,
             ICorrelationId correlationId)
         {
             /* Empty method as this is a Stub class for testing base */

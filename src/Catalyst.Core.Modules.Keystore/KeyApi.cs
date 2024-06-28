@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -60,12 +60,20 @@ namespace Catalyst.Core.Modules.Keystore
             return await _keyStoreService.ImportAsync(name, pem, password, cancel).ConfigureAwait(false);   
         }
 
-        public async Task<IKey> GetPublicKeyAsync(string publicKeyName)
+        public async Task<IKey> GetKeyAsync(string keyName)
         {
-            return await _keyStoreService.FindKeyByNameAsync(publicKeyName).ConfigureAwait(false);
+            return await _keyStoreService.FindKeyByNameAsync(keyName).ConfigureAwait(false);
         }
 
-        public async Task<AsymmetricKeyParameter> GetPrivateKeyAsync(string privateKeyName) => await _keyStoreService.GetPrivateKeyAsync(privateKeyName).ConfigureAwait(false);
+        public async Task<string> GetDfsPublicKeyAsync(string name, CancellationToken cancel = default)
+        {
+            return await _keyStoreService.GetDfsPublicKeyAsync(name, cancel).ConfigureAwait(false);
+        }
+
+        public async Task<AsymmetricKeyParameter> GetPrivateKeyAsync(string privateKeyName)
+        {
+            return await _keyStoreService.GetPrivateKeyAsync(privateKeyName).ConfigureAwait(false);
+        }
 
         public async Task<byte[]> CreateProtectedDataAsync(string keyName,
             byte[] plainText,

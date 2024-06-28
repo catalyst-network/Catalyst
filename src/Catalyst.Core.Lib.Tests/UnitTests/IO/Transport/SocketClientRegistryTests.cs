@@ -27,11 +27,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Reactive.Linq;
-using Catalyst.Abstractions.IO.Transport;
-using Catalyst.Abstractions.P2P;
-using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Lib.IO.Events;
-using Catalyst.Core.Lib.IO.Transport;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport;
+using Catalyst.Modules.Network.Dotnetty.IO.Transport;
+using Catalyst.Modules.Network.Dotnetty.Rpc;
 using FluentAssertions;
 using Microsoft.Reactive.Testing;
 using NSubstitute;
@@ -132,31 +131,24 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Transport
         }
 
         [Test]
-        public void Can_init_peer_client_registry()
-        {
-            var socketRegistry = new SocketClientRegistry<IPeerClient>();
-            Assert.Equals(socketRegistry.GetRegistryType(), typeof(IPeerClient).Name);
-        }
-
-        [Test]
         public void Can_init_rcp_client_registry()
         {
             var socketRegistry = new SocketClientRegistry<IRpcClient>();
-            Assert.Equals(socketRegistry.GetRegistryType(), typeof(IRpcClient).Name);
+            Assert.AreEqual(socketRegistry.GetRegistryType(), typeof(IRpcClient).Name);
         }
 
         [Test]
         public void Can_init_tcp_client_registry()
         {
             var socketRegistry = new SocketClientRegistry<ITcpClient>();
-            Assert.Equals(socketRegistry.GetRegistryType(), typeof(ITcpClient).Name);
+            Assert.AreEqual(socketRegistry.GetRegistryType(), typeof(ITcpClient).Name);
         }
 
         [Test]
         public void Can_init_udp_client_registry()
         {
             var socketRegistry = new SocketClientRegistry<IUdpClient>();
-            Assert.Equals(socketRegistry.GetRegistryType(), typeof(IUdpClient).Name);
+            Assert.AreEqual(socketRegistry.GetRegistryType(), typeof(IUdpClient).Name);
         }
 
         [Test]

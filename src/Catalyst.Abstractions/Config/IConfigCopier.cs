@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -37,9 +37,9 @@ namespace Catalyst.Abstractions.Config
         /// <param name="overwrite">Should config existing config files be overwritten by default?</param>
         /// <param name="overrideNetworkFile"></param>
         void RunConfigStartUp(string dataDir, 
-            NetworkType networkType = NetworkType.Devnet, 
-            string? sourceFolder = null, 
+            NetworkType networkType, 
+            string sourceFolder = null, 
             bool overwrite = false, 
-            string? overrideNetworkFile = null);
+            string overrideNetworkFile = null);
     }
 }

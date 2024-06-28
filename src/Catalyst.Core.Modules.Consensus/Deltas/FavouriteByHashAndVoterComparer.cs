@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -22,6 +22,7 @@
 #endregion
 
 using System.Collections.Generic;
+using System.Text;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
@@ -56,16 +57,16 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
                 return candidateHashComparison;
             }
 
-            return ByteUtil.ByteListComparer.Default.Compare(
-                x.VoterId?.ToByteArray(),
-                y.VoterId?.ToByteArray());
+            var voterIdXBytes = x.Voter.ToByteArray();
+            var voterIdYBytes = y.Voter.ToByteArray();
+            return ByteUtil.ByteListComparer.Default.Compare(voterIdXBytes, voterIdYBytes);
         }
 
         private static int CompareCandidateHash(CandidateDeltaBroadcast x, CandidateDeltaBroadcast y)
         {
             var xByteArray = x?.Hash?.ToByteArray();
             var yByteArray = y?.Hash?.ToByteArray();
-            return 
+            return
                 ByteUtil.ByteListMinSizeComparer.Default.Compare(
                     xByteArray,
                     yByteArray);
@@ -88,8 +89,8 @@ namespace Catalyst.Core.Modules.Consensus.Deltas
             unchecked
             {
                 var candidateHash = favourite.Candidate?.Hash == null ? 0 : favourite.Candidate.Hash.GetHashCode();
-                var voterIdHash = favourite.VoterId == null ? 0 : favourite.VoterId.GetHashCode();
-                return (candidateHash * 397) ^ voterIdHash;
+                var voterHash = favourite.Voter == null ? 0 : favourite.Voter.GetHashCode();
+                return (candidateHash * 397) ^ voterHash;
             }
         }
     }

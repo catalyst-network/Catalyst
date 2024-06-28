@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -25,8 +25,8 @@ using System;
 using Catalyst.Abstractions.Lib.Util;
 using Catalyst.Abstractions.P2P.Models;
 using Catalyst.Abstractions.Service.Attributes;
-using Catalyst.Protocol.Peer;
-using Google.Protobuf;
+using MultiFormats;
+using Nethermind.Core;
 using SharpRepository.Repository;
 
 namespace Catalyst.Core.Lib.P2P.Models
@@ -35,11 +35,15 @@ namespace Catalyst.Core.Lib.P2P.Models
     public sealed class Peer : IPeer
     {
         [RepositoryPrimaryKey(Order = 1)]
-        public string DocumentId => PeerId.ToByteString().ToBase64();
-        
-        /// <inheritdoc />
-        public PeerId? PeerId { get; set; }
+        public string DocumentId => Address.ToString();
 
+        /// <inheritdoc />
+        public MultiAddress Address { get; set; }
+
+        /// <inheritdoc />
+        public Address KvmAddress { get; set; }
+
+        /// <inheritdoc />
         public bool IsPoaNode { set; get; }
 
         /// <inheritdoc />

@@ -46,11 +46,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
         public void Init()
         {
             Setup(TestContext.CurrentContext);
-            var dfsOptions = new DfsOptions(Substitute.For<BlockOptions>(), Substitute.For<DiscoveryOptions>(), new RepositoryOptions(FileSystem, Constants.DfsDataSubDir), Substitute.For<KeyChainOptions>(), Substitute.For<SwarmOptions>(), Substitute.For<IDnsClient>());
-            _keyStoreService = new KeyStoreService(dfsOptions)
-            {
-                Options = dfsOptions.KeyChain
-            };
+            var keyChain = Substitute.For<KeyChainOptions>();
+            _keyStoreService = new KeyStoreService(keyChain, new KeyFileStore(new RepositoryOptions(FileSystem, Constants.DfsDataSubDir)));
             var securePassword = new SecureString();
 
             "mypassword".ToList().ForEach(c => securePassword.AppendChar(c));
@@ -66,10 +63,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
             try
             {
                 var cert = await _keyStoreService.CreateBcCertificateAsync(key.Name);
-                Assert.Equals($"CN={key.Id},OU=keystore,O=ipfs", cert.SubjectDN.ToString());
+                Assert.AreEqual($"CN={key.Id},OU=keystore,O=ipfs", cert.SubjectDN.ToString());
                 var ski = new SubjectKeyIdentifierStructure(
                     cert.GetExtensionValue(X509Extensions.SubjectKeyIdentifier));
-                Assert.Equals(key.Id.ToBase58(), ski.GetKeyIdentifier().ToBase58());
+                Assert.AreEqual(key.Id.ToBase58(), ski.GetKeyIdentifier().ToBase58());
             }
             finally
             {
@@ -84,10 +81,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
             try
             {
                 var cert = await _keyStoreService.CreateBcCertificateAsync("alice");
-                Assert.Equals($"CN={key.Id},OU=keystore,O=ipfs", cert.SubjectDN.ToString());
+                Assert.AreEqual($"CN={key.Id},OU=keystore,O=ipfs", cert.SubjectDN.ToString());
                 var ski = new SubjectKeyIdentifierStructure(
                     cert.GetExtensionValue(X509Extensions.SubjectKeyIdentifier));
-                Assert.Equals(key.Id.ToBase58(), ski.GetKeyIdentifier().ToBase58());
+                Assert.AreEqual(key.Id.ToBase58(), ski.GetKeyIdentifier().ToBase58());
             }
             finally
             {
@@ -102,10 +99,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Cryptography
             try
             {
                 var cert = await _keyStoreService.CreateBcCertificateAsync("alice");
-                Assert.Equals($"CN={key.Id},OU=keystore,O=ipfs", cert.SubjectDN.ToString());
+                Assert.AreEqual($"CN={key.Id},OU=keystore,O=ipfs", cert.SubjectDN.ToString());
                 var ski = new SubjectKeyIdentifierStructure(
                     cert.GetExtensionValue(X509Extensions.SubjectKeyIdentifier));
-                Assert.Equals(key.Id.ToBase58(), ski.GetKeyIdentifier().ToBase58());
+                Assert.AreEqual(key.Id.ToBase58(), ski.GetKeyIdentifier().ToBase58());
             }
             finally
             {

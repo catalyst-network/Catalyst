@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -27,16 +27,17 @@ using System.Net;
 using System.Reactive.Concurrency;
 using System.Security.Cryptography.X509Certificates;
 using Catalyst.Abstractions.Cli;
-using Catalyst.Abstractions.Cli.Commands;
-using Catalyst.Abstractions.Cli.CommandTypes;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.Hashing;
-using Catalyst.Abstractions.IO.Messaging.Dto;
-using Catalyst.Abstractions.IO.Transport;
 using Catalyst.Abstractions.Rpc;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Transport;
 using Catalyst.Core.Modules.Hashing;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.Cli.Commands;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.Cli.CommandTypes;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Transport;
+using Catalyst.Modules.Network.Dotnetty.IO.Transport;
+using Catalyst.Modules.Network.Dotnetty.Rpc;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
 using Google.Protobuf;
@@ -64,8 +65,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Helpers
             commandContext.RpcClientFactory.Returns(nodeRpcClientFactory);
             commandContext.CertificateStore.Returns(certificateStore);
 
-            commandContext.PeerId.Returns(
-                "hv6vvbt2u567syz5labuqnfabsc3zobfwekl4cy3c574n6vkj7sq".BuildPeerIdFromBase32Key(IPAddress.Any, 9010));
+            commandContext.Address.Returns("/ip4/192.168.0.181/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdwu2yu3QMzKa2BDkb5C5pcuhtrH1G9HHbztbbxA8tGmf4");
 
             var nodeRpcClient = MockNodeRpcClient();
             MockRpcNodeConfig(commandContext);
@@ -88,8 +88,8 @@ namespace Catalyst.Cli.Tests.UnitTests.Helpers
 
             IHashProvider hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
             var deltaMultiHash = hashProvider.ComputeUtf8MultiHash("previous");
-            commandContext.PeerId.Returns(
-                PeerIdHelper.GetPeerId(deltaMultiHash.Digest, IPAddress.Any, 9010));
+            commandContext.Address.Returns(
+                MultiAddressHelper.GetAddress(deltaMultiHash.Digest, IPAddress.Any, 9010));
 
             return commandContext;
         }
@@ -98,9 +98,7 @@ namespace Catalyst.Cli.Tests.UnitTests.Helpers
         {
             var rpcNodeConfig = Substitute.For<IRpcClientConfig>();
             rpcNodeConfig.NodeId = "test";
-            rpcNodeConfig.HostAddress = IPAddress.Any;
-            rpcNodeConfig.PublicKey = "hv6vvbt2u567syz5labuqnfabsc3zobfwekl4cy3c574n6vkj7sq";
-            rpcNodeConfig.Port = 9000;
+            rpcNodeConfig.Address = "/ip4/192.168.0.181/tcp/4001/ipfs/18n3naE9kBZoVvgYMV6saMZdwu2yu3QMzKa2BDkb5C5pcuhtrH1G9HHbztbbxA8tGmf4";
             commandContext.GetNodeConfig(Arg.Any<string>()).Returns(rpcNodeConfig);
             return rpcNodeConfig;
         }

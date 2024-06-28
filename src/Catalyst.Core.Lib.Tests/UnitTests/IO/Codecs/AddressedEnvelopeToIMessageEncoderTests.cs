@@ -22,8 +22,8 @@
 #endregion
 
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Codecs;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.IO.Codecs;
+using Catalyst.Modules.Network.Dotnetty.IO.Messaging.Dto;
 using Catalyst.Protocol.IPPN;
 using Catalyst.Protocol.Wire;
 using Catalyst.TestUtils;
@@ -46,8 +46,8 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Codecs
         public void Can_Encode_Signed_Message_Dto_To_Protocol_Message_Signed()
         {
             var messageDto = new SignedMessageDto(
-                new PingRequest().ToProtocolMessage(PeerIdHelper.GetPeerId("TestSender")),
-                PeerIdHelper.GetPeerId("Test"));
+                new PingRequest().ToProtocolMessage(MultiAddressHelper.GetAddress("TestSender")),
+                MultiAddressHelper.GetAddress("Test"));
 
             _testChannel.WriteOutbound(messageDto);
             var outboundMessages = _testChannel.OutboundMessages.ToArray();

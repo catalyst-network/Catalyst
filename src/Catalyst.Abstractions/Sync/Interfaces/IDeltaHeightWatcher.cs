@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -22,6 +22,7 @@
 #endregion
 
 using System;
+using System.Threading;
 using System.Threading.Tasks;
 using Catalyst.Protocol.Deltas;
 
@@ -31,6 +32,8 @@ namespace Catalyst.Abstractions.Sync.Interfaces
     {
         IDeltaHeightRanker DeltaHeightRanker { get; }
         DeltaIndex LatestDeltaHash { get; }
+        Task<DeltaIndex> WaitForDeltaIndexAsync(TimeSpan timeout);
+        Task<DeltaIndex> WaitForDeltaIndexAsync(TimeSpan timeout, CancellationToken cancellationToken);
         Task<DeltaIndex> GetHighestDeltaIndexAsync();
         void Start();
         void Stop();

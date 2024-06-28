@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -31,6 +31,20 @@ namespace Catalyst.Abstractions.Cryptography
     /// </summary>
     public interface IPasswordManager
     {
+        /// <summary>
+        /// Prompt the user for a password.
+        /// </summary>
+        /// <param name="passwordType">The type of password.</param>
+        /// <param name="promptMessage">A message providing some context to the user,
+        /// for instance which password is being requested.</param>
+        /// <returns>The password read and returned as a <c>SecureString</c></returns>
+        /// <remarks>Once the password has been use, it is recommended to dispose of it.
+        /// <seealso>
+        ///     <cref>https://docs.microsoft.com/en-us/dotnet/api/system.security.securestring?view=netcore-2.2</cref>
+        /// </seealso>
+        /// </remarks>
+        SecureString PromptPassword(PasswordRegistryTypes passwordType, string promptMessage = null);
+
         /// <summary>
         /// Try to retrieve a password from the registry, if not found, prompt the
         /// user for it.

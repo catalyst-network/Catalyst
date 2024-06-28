@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -24,6 +24,7 @@
 using Catalyst.Core.Lib.Extensions;
 using Google.Protobuf;
 using MultiFormats;
+using System;
 
 namespace Catalyst.Core.Lib.Util
 {
@@ -32,12 +33,12 @@ namespace Catalyst.Core.Lib.Util
     {
         public static string KeyToString(this byte[] keyAsBytes)
         {
-            return Base32.ToBase32(keyAsBytes).ToLowerInvariant(); ///@TODO get from hashlib
+            return keyAsBytes.ToBase58();
         }
 
         public static byte[] KeyToBytes(this string keyAsString)
         {
-            return keyAsString.FromBase32();
+            return keyAsString.FromBase58();
         }
 
         public static ByteString KeyToByteString(this string keyAsString)

@@ -35,6 +35,7 @@ using Microsoft.Reactive.Testing;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
+using MultiFormats;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
 {
@@ -48,8 +49,7 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Observers
             public FailingResponseObserver(ILogger logger) : base(logger) { }
 
             protected override void HandleResponse(GetPeerCountResponse messageDto,
-                IChannelHandlerContext channelHandlerContext,
-                PeerId senderPeerIdentifier,
+                MultiAddress sender,
                 ICorrelationId correlationId)
             {
                 var count = Interlocked.Increment(ref _counter);

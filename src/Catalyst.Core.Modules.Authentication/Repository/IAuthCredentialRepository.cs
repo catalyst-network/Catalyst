@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -23,6 +23,7 @@
 
 using Catalyst.Core.Modules.Authentication.Models;
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 using System;
 
 namespace Catalyst.Core.Modules.Authentication.Repository
@@ -30,6 +31,6 @@ namespace Catalyst.Core.Modules.Authentication.Repository
     public interface IAuthCredentialRepository : IDisposable
     {
         void Add(AuthCredentials authCredentials);
-        bool TryFind(PeerId peerIdentifier, out AuthCredentials authCredentials);
+        bool TryFind(MultiAddress Addressentifier, out AuthCredentials authCredentials);
     }
 }

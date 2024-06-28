@@ -21,15 +21,15 @@
 
 #endregion
 
-using Catalyst.Abstractions.IO.Messaging.Dto;
 using Catalyst.Core.Lib.Extensions;
-using Catalyst.Core.Lib.IO.Messaging.Dto;
 using Catalyst.Protocol.Wire;
 using Catalyst.Protocol.IPPN;
 using Catalyst.TestUtils;
 using FluentAssertions;
 using Google.Protobuf;
 using NUnit.Framework;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.IO.Messaging.Dto;
+using Catalyst.Modules.Network.Dotnetty.IO.Messaging.Dto;
 
 namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Dto
 {
@@ -40,20 +40,20 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.IO.Messaging.Dto
         public MessageDtoTests()
         {
             var pingRequest = new PingRequest();
-            _messageDto = new MessageDto(pingRequest.ToProtocolMessage(PeerIdHelper.GetPeerId("Sender_Key")),
-                PeerIdHelper.GetPeerId("Recipient_Key")
+            _messageDto = new MessageDto(pingRequest.ToProtocolMessage(MultiAddressHelper.GetAddress("Sender_Key")),
+                MultiAddressHelper.GetAddress("Recipient_Key")
             );
         }
 
         [Test]
         public void CanInitMessageDtoCorrectly()
         {
-            Assert.That(_messageDto, Is.Null);
+            Assert.NotNull(_messageDto);
 
             _messageDto.Should().BeOfType<MessageDto>();
             _messageDto.Content.Should().NotBeNull().And.BeAssignableTo(typeof(IMessage<ProtocolMessage>));
-            _messageDto.RecipientPeerIdentifier.Should().NotBeNull();
-            _messageDto.SenderPeerIdentifier.Should().NotBeNull();
+            _messageDto.Recipient.Should().NotBeNull();
+            _messageDto.Sender.Should().NotBeNull();
         }
     }
 }

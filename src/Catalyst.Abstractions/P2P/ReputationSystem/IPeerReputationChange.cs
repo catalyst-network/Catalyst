@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -22,13 +22,13 @@
 #endregion
 
 using Catalyst.Abstractions.Config;
-using Catalyst.Protocol.Peer;
+using Nethermind.Core;
 
 namespace Catalyst.Abstractions.P2P.ReputationSystem
 {
     public interface IPeerReputationChange
     {
-        PeerId PeerId { get; }
+        Address Address { get; }
         IReputationEvents ReputationEvent { get; }
     }
 }

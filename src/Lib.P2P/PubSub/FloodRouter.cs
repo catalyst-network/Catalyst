@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -65,7 +65,12 @@ namespace Lib.P2P.PubSub
         /// <summary>
         ///   Provides access to other peers.
         /// </summary>
-        public SwarmService SwarmService { get; set; }
+        public ISwarmService SwarmService { get; set; }
+
+        public FloodRouter(ISwarmService swarmService)
+        {
+            SwarmService = swarmService;
+        }
 
         /// <inheritdoc />
         public Task StartAsync()

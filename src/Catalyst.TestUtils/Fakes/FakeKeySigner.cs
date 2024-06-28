@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -25,6 +25,7 @@ using System;
 using Catalyst.Abstractions.Cryptography;
 using Catalyst.Abstractions.KeySigner;
 using Catalyst.Abstractions.Keystore;
+using Catalyst.Abstractions.Types;
 using Catalyst.Protocol.Cryptography;
 
 namespace Catalyst.TestUtils.Fakes
@@ -34,7 +35,6 @@ namespace Catalyst.TestUtils.Fakes
     /// </summary>
     public abstract class FakeKeySigner : IKeySigner
     {
-        public abstract IKeyStore KeyStore { get; }
         public abstract ICryptoContext CryptoContext { get; }
         
         // The reimplemented span-based method
@@ -44,5 +44,9 @@ namespace Catalyst.TestUtils.Fakes
         // The reimplemented span-based method
         bool IKeySigner.Verify(ISignature signature, ReadOnlySpan<byte> data, SigningContext signingContext) => Verify(signature, data.ToArray(), signingContext);
         public abstract bool Verify(ISignature signature, byte[] data, SigningContext signingContext);
+
+        public abstract IPrivateKey GetPrivateKey(KeyRegistryTypes keyIdentifier);
+
+        public abstract IPublicKey GetPublicKey(KeyRegistryTypes keyIdentifier);
     }
 }

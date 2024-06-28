@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -23,9 +23,9 @@
 
 using System;
 using System.Reflection;
-using Catalyst.Abstractions.Cli.Commands;
-using Catalyst.Abstractions.Cli.CommandTypes;
 using Catalyst.Abstractions.Cli.Options;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.Cli.Commands;
+using Catalyst.Modules.Network.Dotnetty.Abstractions.Cli.CommandTypes;
 using CommandLine;
 using Serilog;
 

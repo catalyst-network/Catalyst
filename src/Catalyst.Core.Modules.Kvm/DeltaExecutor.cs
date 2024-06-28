@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -30,21 +30,18 @@ using Catalyst.Core.Lib.Extensions;
 using Catalyst.Protocol.Deltas;
 using Catalyst.Protocol.Transaction;
 using Google.Protobuf;
-using Google.Protobuf.WellKnownTypes;
 using Nethermind.Core;
 using Nethermind.Core.Attributes;
 using Nethermind.Core.Crypto;
 using Nethermind.Core.Extensions;
 using Nethermind.Core.Specs;
+using Nethermind.Dirichlet.Numerics;
 using Nethermind.Evm;
-using Nethermind.Evm.CodeAnalysis;
 using Nethermind.Evm.Precompiles;
 using Nethermind.Evm.Tracing;
-using Nethermind.Int256;
 using Nethermind.State;
 using Serilog;
 using Serilog.Events;
-using static Nethermind.Evm.VirtualMachine;
 
 namespace Catalyst.Core.Modules.Kvm
 {
@@ -59,7 +56,8 @@ namespace Catalyst.Core.Modules.Kvm
         private readonly ICryptoContext _cryptoContext;
         private readonly ILogger _logger;
         private readonly ISpecProvider _specProvider;
-        private readonly IWorldState _stateProvider;
+        private readonly IStateProvider _stateProvider;
+        private readonly IStorageProvider _storageProvider;
         private readonly IKvm _virtualMachine;
 
         /// <summary>
@@ -69,11 +67,13 @@ namespace Catalyst.Core.Modules.Kvm
         /// </summary>
         /// <param name="specProvider">The network upgrade spec - defines the virtual machine version.</param>
         /// <param name="stateProvider">Access to accounts.</param>
+        /// <param name="storageProvider">Access to accounts' storage.</param>
         /// <param name="virtualMachine">A virtual machine to execute the code on.</param>
         /// <param name="cryptoContext">Support for crypto operations.</param>
         /// <param name="logger">Logger for the execution details.</param>
         public DeltaExecutor(ISpecProvider specProvider,
-            IWorldState stateProvider,
+            IStateProvider stateProvider,
+            IStorageProvider storageProvider,
             IKvm virtualMachine,
             ICryptoContext cryptoContext,
             ILogger logger)
@@ -83,6 +83,7 @@ namespace Catalyst.Core.Modules.Kvm
             _virtualMachine = virtualMachine;
             _cryptoContext = cryptoContext;
             _stateProvider = stateProvider;
+            _storageProvider = storageProvider;
         }
 
         [Todo("Wider work needed to split calls and execution properly")]
@@ -127,36 +128,27 @@ namespace Catalyst.Core.Modules.Kvm
         }
 
         [Todo(Improve.MissingFunctionality, "We need to agree on delta to state mapping details")]
-        private BlockHeader ToStateUpdate(Delta delta)
+        private StateUpdate ToStateUpdate(Delta delta)
         {
-            BlockHeader result = new BlockHeader
-            (
-                // TODO
-                parentHash: new Hash256(delta.GetHashCode().ToHexString()),
-                // TODO
-                unclesHash: Keccak.OfAnEmptySequenceRlp,
+            var result = new StateUpdate
+            {
+                Difficulty = 1,
+                Number = 1,
+                Timestamp = (UInt256) delta.TimeStamp.Seconds,
+                GasLimit = (long) delta.GasLimit,
                 /* here we can read coinbase entries from the delta
                    but we need to decide how to split fees and which one to pick for the KVM */
-                beneficiary: Address.Zero,
-                difficulty: 1,
-                // TODO
-                number: 0L,
-                gasLimit: (long)delta.GasLimit,
-                timestamp: (ulong)delta.TimeStamp.Seconds,
-                extraData: Array.Empty<byte>(),
-                blobGasUsed: 0L,
-                excessBlobGas: 0L,
-                // TODO
-                parentBeaconBlockRoot: new Hash256(delta.PreviousDeltaDfsHash.GetHashCode().ToHexString())
-            );
+                GasBeneficiary = Address.Zero,
+                GasUsed = 0L
+            };
 
             return result;
         }
 
-        private static void QuickFail(PublicEntry entry, ExecutionEnvironment env, BlockHeader stateUpdate, ITxTracer txTracer)
+        private static void QuickFail(PublicEntry entry, ExecutionEnvironment env, ITxTracer txTracer)
         {
             // here we need to propagate back to Delta
-            stateUpdate.GasUsed += (long) entry.GasLimit;
+            env.CurrentBlock.GasUsed += (long) entry.GasLimit;
             if (txTracer.IsTracingReceipt)
             {
                 txTracer.MarkAsFailed(env.ExecutingAccount, (long) entry.GasLimit, Bytes.Empty, "invalid");
@@ -166,29 +158,28 @@ namespace Catalyst.Core.Modules.Kvm
         private void Execute(Delta delta, ITxTracer txTracer, bool readOnly)
         {
             var stateUpdate = ToStateUpdate(delta);
-            ForkActivation fa = new ForkActivation(stateUpdate.Number, stateUpdate.Timestamp);
 
             // revert state if any fails (take snapshot)
             foreach (var publicEntry in delta.PublicEntries)
             {
-                Execute(publicEntry, stateUpdate, fa, txTracer);
+                Execute(publicEntry, stateUpdate, txTracer);
             }
             
-            var spec = _specProvider.GetSpec(fa);
-
-            _stateProvider.Commit(spec);
-            _stateProvider.Commit(spec, txTracer.IsTracingState ? txTracer : null, false );
+            var spec = _specProvider.GetSpec(stateUpdate.Number);
+            _storageProvider.Commit(txTracer.IsTracingState ? txTracer : null);
+            _stateProvider.Commit(spec, txTracer.IsTracingState ? txTracer : null);
             
             _stateProvider.RecalculateStateRoot();
             if (!readOnly)
             {
-                if (new Hash256(delta.StateRoot.ToByteArray()) != _stateProvider.StateRoot)
+                if (new Keccak(delta.StateRoot.ToByteArray()) != _stateProvider.StateRoot)
                 {
-                    if (_logger.IsEnabled(LogEventLevel.Error)) _logger.Error("Invalid delta state root - found {found} and should be {shouldBe}", _stateProvider.StateRoot, new Hash256(delta.StateRoot.ToByteArray()));
+                    if (_logger.IsEnabled(LogEventLevel.Error)) _logger.Error("Invalid delta state root - found {found} and should be {shouldBe}", _stateProvider.StateRoot, new Keccak(delta.StateRoot.ToByteArray()));
                 }
-
+                
                 // compare state roots
-                _stateProvider.CommitTree(stateUpdate.Number);
+                _storageProvider.CommitTrees();
+                _stateProvider.CommitTree();
             }
             else
             {
@@ -196,6 +187,7 @@ namespace Catalyst.Core.Modules.Kvm
                 delta.StateRoot = _stateProvider.StateRoot.ToByteString(); 
                 if (_logger.IsEnabled(LogEventLevel.Debug)) _logger.Debug($"Setting candidate delta {delta.DeltaNumber} root to {delta.StateRoot.ToKeccak()}");
                 _stateProvider.Reset();
+                _storageProvider.Reset();
             }
         }
 
@@ -221,13 +213,14 @@ namespace Catalyst.Core.Modules.Kvm
         /// <param name="readOnly">Defines whether the state should be reverted after the execution.</param>
         /// <exception cref="TransactionCollisionException">Thrown when deployment address already has some code.</exception>
         /// <exception cref="OutOfGasException">Thrown when not enough gas is available for deposit.</exception>
-        private void Execute(PublicEntry entry, BlockHeader stateUpdate, ForkActivation fa, ITxTracer txTracer)
+        private void Execute(PublicEntry entry, StateUpdate stateUpdate, ITxTracer txTracer)
         {
-            var spec = _specProvider.GetSpec(fa);
+            var spec = _specProvider.GetSpec(stateUpdate.Number);
 
             var (sender, recipient) = ExtractSenderAndRecipient(entry);
-            var isPrecompile = recipient.IsPrecompile(spec);
-            var env = PrepareEnv(entry, sender, recipient, stateUpdate, isPrecompile, spec);
+            var isPrecompile = recipient.IsPrecompiled(spec);
+
+            var env = PrepareEnv(entry, sender, recipient, stateUpdate, isPrecompile);
 
             var gasLimit = entry.GasLimit;
             var intrinsicGas = CalculateIntrinsicGas(entry, spec);
@@ -237,40 +230,40 @@ namespace Catalyst.Core.Modules.Kvm
                 _logger.Verbose("Executing entry {entry}", entry);
             }
 
-            if (!ValidateSender(entry, env, stateUpdate, sender, txTracer))
+            if (!ValidateSender(entry, env, txTracer))
             {
                 return;
             }
 
-            if (!ValidateIntrinsicGas(entry, env, intrinsicGas, stateUpdate, txTracer))
+            if (!ValidateIntrinsicGas(entry, env, intrinsicGas, txTracer))
             {
                 return;
             }
 
-            if (!ValidateDeltaGasLimit(entry, env, stateUpdate, txTracer))
+            if (!ValidateDeltaGasLimit(entry, env, txTracer))
             {
                 return;
             }
 
-            if (!_stateProvider.AccountExists(sender))
+            if (!_stateProvider.AccountExists(env.Sender))
             {
-                if (entry.GasPrice.ToUInt256() == UInt256.Zero)
+                if (env.GasPrice == UInt256.Zero)
                 {
-                    _stateProvider.CreateAccount(sender, UInt256.Zero);
+                    _stateProvider.CreateAccount(env.Sender, UInt256.Zero);
                 }
             }
 
-            if (!ValidateSenderBalance(entry, env, intrinsicGas, stateUpdate, txTracer))
+            if (!ValidateSenderBalance(entry, env, intrinsicGas, txTracer))
             {
                 return;
             }
 
-            if (!ValidateNonce(entry, env, stateUpdate, txTracer))
+            if (!ValidateNonce(entry, env, txTracer))
             {
                 return;
             }
 
-            InitEntryExecution(env, gasLimit, spec, sender, fa, entry, txTracer);
+            InitEntryExecution(env, gasLimit, spec, txTracer);
 
             // we prepare two fields to track the amount of gas spent / left
             var unspentGas = gasLimit - intrinsicGas;
@@ -278,6 +271,7 @@ namespace Catalyst.Core.Modules.Kvm
 
             // the snapshots are needed to revert the subroutine state changes in case of an VM exception
             var stateSnapshot = _stateProvider.TakeSnapshot();
+            var storageSnapshot = _storageProvider.TakeSnapshot();
 
             // we subtract value from sender
             // it will be added to recipient at the later stage (inside the VM)
@@ -289,12 +283,12 @@ namespace Catalyst.Core.Modules.Kvm
 
             try
             {
-                if (entry.IsValidDeploymentEntry) PrepareContractAccount(env.CodeSource, spec);
+                if (entry.IsValidDeploymentEntry) PrepareContractAccount(env.CodeSource);
 
-                var executionType = entry.IsValidDeploymentEntry ? ExecutionType.CREATE : ExecutionType.CALL;
-                using (var state = new EvmState((long) unspentGas, env, executionType, true, stateSnapshot, false))
+                var executionType = entry.IsValidDeploymentEntry ? ExecutionType.Create : ExecutionType.Call;
+                using (var state = new VmState((long) unspentGas, env, executionType, isPrecompile, true, false))
                 {
-                    substate = _virtualMachine.Run<IsTracing>(state, _stateProvider, txTracer);
+                    substate = _virtualMachine.Run(state, txTracer);
                     unspentGas = (ulong) state.GasAvailable;
                 }
 
@@ -306,19 +300,20 @@ namespace Catalyst.Core.Modules.Kvm
                     }
 
                     _stateProvider.Restore(stateSnapshot);
+                    _storageProvider.Restore(storageSnapshot);
                 }
                 else
                 {
                     if (entry.IsValidDeploymentEntry)
                     {
-                        DeployCode(env, substate, ref unspentGas, spec, sender);
+                        DeployCode(env, substate, ref unspentGas, spec);
                     }
 
                     DestroyAccounts(substate);
                     statusCode = StatusCode.Success;
                 }
 
-                spentGas = Refund(gasLimit, unspentGas, substate, env, spec, sender, entry);
+                spentGas = Refund(gasLimit, unspentGas, substate, env, spec);
             }
             catch (Exception ex) when (ex is EvmException || ex is OverflowException)
             {
@@ -328,6 +323,7 @@ namespace Catalyst.Core.Modules.Kvm
                 }
 
                 _stateProvider.Restore(stateSnapshot);
+                _storageProvider.Restore(storageSnapshot);
             }
 
             if (_logger.IsEnabled(LogEventLevel.Verbose))
@@ -342,11 +338,11 @@ namespace Catalyst.Core.Modules.Kvm
             {
                 if (!_stateProvider.AccountExists(gasBeneficiary))
                 {
-                    _stateProvider.CreateAccount(gasBeneficiary, new UInt256((ulong)(spentGas * entry.GasPrice.ToUInt256())));
+                    _stateProvider.CreateAccount(gasBeneficiary, spentGas * env.GasPrice);
                 }
                 else
                 {
-                    _stateProvider.AddToBalance(gasBeneficiary, spentGas * new UInt256((ulong)(entry.GasPrice.ToUInt256())), spec);
+                    _stateProvider.AddToBalance(gasBeneficiary, spentGas * env.GasPrice, spec);
                 }
             }
 
@@ -355,7 +351,7 @@ namespace Catalyst.Core.Modules.Kvm
                 if (statusCode == StatusCode.Failure)
                 {
                     txTracer.MarkAsFailed(env.CodeSource, (long) spentGas,
-                        (substate?.ShouldRevert ?? false ? substate.Output : Bytes.Empty).ToArray(), substate?.Error);
+                        substate?.ShouldRevert ?? false ? substate.Output : Bytes.Empty, substate?.Error);
                 }
                 else
                 {
@@ -364,8 +360,8 @@ namespace Catalyst.Core.Modules.Kvm
                         throw new InvalidOperationException("Substate should not be null after a successful VM run.");
                     }
 
-//                    txTracer.MarkAsSuccess(env.CodeSource, (long) spentGas, substate.Output,
-//                        substate.Logs.Any() ? substate.Logs.ToArray() : LogEntry.EmptyLogs);
+                    txTracer.MarkAsSuccess(env.CodeSource, (long) spentGas, substate.Output,
+                        substate.Logs.Any() ? substate.Logs.ToArray() : LogEntry.EmptyLogs);
                 }
             }
         }
@@ -391,8 +387,7 @@ namespace Catalyst.Core.Modules.Kvm
         private void DeployCode(ExecutionEnvironment env,
             TransactionSubstate substate,
             ref ulong unspentGas,
-            IReleaseSpec spec,
-            Address sender)
+            IReleaseSpec spec)
         {
             var codeDepositGasCost = (ulong) CodeDepositHandler.CalculateCost(substate.Output.Length, spec);
             if (unspentGas < codeDepositGasCost && spec.IsEip2Enabled)
@@ -405,7 +400,8 @@ namespace Catalyst.Core.Modules.Kvm
                 return;
             }
 
-            _stateProvider.InsertCode(sender, substate.Output, spec, false);
+            var codeHash = _stateProvider.UpdateCode(substate.Output);
+            _stateProvider.UpdateCodeHash(env.CodeSource, codeHash, spec);
             unspentGas -= codeDepositGasCost;
         }
 
@@ -424,54 +420,49 @@ namespace Catalyst.Core.Modules.Kvm
         private ExecutionEnvironment PrepareEnv(PublicEntry entry,
             Address sender,
             Address recipient,
-            BlockHeader stateUpdate,
-            bool isPrecompile,
-            IReleaseSpec spec)
+            StateUpdate stateUpdate,
+            bool isPrecompile)
         {
             var value = entry.Amount.ToUInt256();
             var machineCode = entry.IsValidDeploymentEntry ? entry.Data.ToByteArray() : null;
             var data = entry.IsValidDeploymentEntry ? null : entry.Data.ToByteArray();
 
-            // TODO
-            TxExecutionContext executionContext = new TxExecutionContext();
-
-            var env = new ExecutionEnvironment(
-                codeInfo: isPrecompile
-                    ? new CodeInfo(machineCode)
+            var env = new ExecutionEnvironment
+            {
+                Value = value,
+                TransferValue = value,
+                Sender = sender,
+                CodeSource = recipient,
+                ExecutingAccount = recipient,
+                CurrentBlock = stateUpdate,
+                GasPrice = entry.GasPrice.ToUInt256(),
+                InputData = data ?? new byte[0],
+                CodeInfo = isPrecompile
+                    ? new CodeInfo(recipient)
                     : machineCode == null
-                        ? _virtualMachine.GetCachedCodeInfo(_stateProvider, sender, spec)
+                        ? _virtualMachine.GetCachedCodeInfo(recipient)
                         : new CodeInfo(machineCode),
-                executingAccount: recipient,
-                caller: sender,
-                codeSource: recipient,
-                inputData: data ?? Array.Empty<byte>(),
-                txExecutionContext: executionContext,
-                // TODO
-                transferValue:1, // value
-                // TODO
-                value: 1 // value
-                )
-            ;
+                Originator = sender
+            };
             return env;
         }
 
-        private bool ValidateDeltaGasLimit(PublicEntry entry, ExecutionEnvironment env, BlockHeader stateUpdate, ITxTracer txTracer)
+        private bool ValidateDeltaGasLimit(PublicEntry entry, ExecutionEnvironment env, ITxTracer txTracer)
         {
-            if (entry.GasLimit <= (ulong) (stateUpdate.GasLimit - stateUpdate.GasUsed))
+            if (entry.GasLimit <= (ulong) (env.CurrentBlock.GasLimit - env.CurrentBlock.GasUsed))
             {
                 return true;
             }
 
             TraceLogInvalidTx(entry,
-                $"BLOCK_GAS_LIMIT_EXCEEDED {entry.GasLimit.ToString()} > {stateUpdate.GasLimit.ToString()} - {stateUpdate.GasUsed.ToString()}");
-            QuickFail(entry, env, stateUpdate, txTracer);
+                $"BLOCK_GAS_LIMIT_EXCEEDED {entry.GasLimit.ToString()} > {env.CurrentBlock.GasLimit.ToString()} - {env.CurrentBlock.GasUsed.ToString()}");
+            QuickFail(entry, env, txTracer);
             return false;
         }
 
         private bool ValidateIntrinsicGas(PublicEntry entry,
             ExecutionEnvironment env,
             ulong intrinsicGas,
-            BlockHeader stateUpdate,
             ITxTracer txTracer)
         {
             if (_logger.IsEnabled(LogEventLevel.Verbose))
@@ -486,50 +477,49 @@ namespace Catalyst.Core.Modules.Kvm
 
             TraceLogInvalidTx(entry,
                 $"GAS_LIMIT_BELOW_INTRINSIC_GAS {entry.GasLimit.ToString()} < {intrinsicGas.ToString()}");
-            QuickFail(entry, env, stateUpdate, txTracer);
+            QuickFail(entry, env, txTracer);
             return false;
         }
 
-        private bool ValidateSender(PublicEntry entry, ExecutionEnvironment env, BlockHeader stateUpdate, Address sender, ITxTracer txTracer)
+        private bool ValidateSender(PublicEntry entry, ExecutionEnvironment env, ITxTracer txTracer)
         {
-            if (sender != null)
+            if (env.Sender != null)
             {
                 return true;
             }
 
             TraceLogInvalidTx(entry, "SENDER_NOT_SPECIFIED");
-            QuickFail(entry, env, stateUpdate, txTracer);
+            QuickFail(entry, env, txTracer);
             return false;
         }
 
-        private bool ValidateNonce(PublicEntry entry, ExecutionEnvironment env, BlockHeader stateUpdate, ITxTracer txTracer)
+        private bool ValidateNonce(PublicEntry entry, ExecutionEnvironment env, ITxTracer txTracer)
         {
-            if (entry.Nonce == _stateProvider.GetNonce(entry.SenderAddress.ToAddress()))
+            if (entry.Nonce == _stateProvider.GetNonce(env.Sender))
             {
                 return true;
             }
 
             TraceLogInvalidTx(entry,
-                $"WRONG_TRANSACTION_NONCE: {entry.Nonce.ToString()} (expected {_stateProvider.GetNonce(entry.SenderAddress.ToAddress()).ToString()})");
-            QuickFail(entry, env, stateUpdate, txTracer);
+                $"WRONG_TRANSACTION_NONCE: {entry.Nonce.ToString()} (expected {_stateProvider.GetNonce(env.Sender).ToString()})");
+            QuickFail(entry, env, txTracer);
             return false;
         }
 
         private bool ValidateSenderBalance(PublicEntry entry,
             ExecutionEnvironment env,
             ulong intrinsicGas,
-            BlockHeader stateUpdate,
             ITxTracer txTracer)
         {
-            var senderBalance = _stateProvider.GetBalance(entry.SenderAddress.ToAddress());
-            if (intrinsicGas * (ulong)entry.GasPrice.ToUInt256() + env.Value <= senderBalance)
+            var senderBalance = _stateProvider.GetBalance(env.Sender);
+            if (intrinsicGas * env.GasPrice + env.Value <= senderBalance)
             {
                 return true;
             }
 
             TraceLogInvalidTx(entry,
-                $"INSUFFICIENT_SENDER_BALANCE: ({entry.SenderAddress.ToAddress()})_BALANCE = {senderBalance.ToString()}");
-            QuickFail(entry, env, stateUpdate, txTracer);
+                $"INSUFFICIENT_SENDER_BALANCE: ({env.Sender})_BALANCE = {senderBalance.ToString()}");
+            QuickFail(entry, env, txTracer);
             return false;
         }
 
@@ -538,11 +528,11 @@ namespace Catalyst.Core.Modules.Kvm
         /// </summary>
         /// <param name="recipient">Contract address.</param>
         /// <exception cref="TransactionCollisionException">Thrown when the address is already in use</exception>
-        private void PrepareContractAccount(Address recipient, IReleaseSpec spec)
+        private void PrepareContractAccount(Address recipient)
         {
             if (!_stateProvider.AccountExists(recipient)) return;
 
-            var addressHasCode = (_virtualMachine.GetCachedCodeInfo(_stateProvider, recipient, spec)?.MachineCode.Length ?? 0) != 0;
+            var addressHasCode = (_virtualMachine.GetCachedCodeInfo(recipient)?.MachineCode?.Length ?? 0) != 0;
             var addressWasUsed = _stateProvider.GetNonce(recipient) != 0;
             if (addressHasCode || addressWasUsed)
             {
@@ -557,17 +547,17 @@ namespace Catalyst.Core.Modules.Kvm
             _stateProvider.UpdateStorageRoot(recipient, Keccak.EmptyTreeHash);
         }
 
-        private void InitEntryExecution(ExecutionEnvironment env, ulong gasLimit, IReleaseSpec spec, Address sender, ForkActivation fa, PublicEntry entry, ITxTracer txTracer)
+        private void InitEntryExecution(ExecutionEnvironment env, ulong gasLimit, IReleaseSpec spec, ITxTracer txTracer)
         {
             // first we increment nonce on the executing account
-            _stateProvider.IncrementNonce(sender);
+            _stateProvider.IncrementNonce(env.Sender);
 
             // then we subtract money from the sender's account to pay for gas - this will be paid
             // even if the entry execution fails
-            _stateProvider.SubtractFromBalance(sender, gasLimit * (ulong)entry.GasPrice.ToUInt256(), spec);
+            _stateProvider.SubtractFromBalance(env.Sender, gasLimit * env.GasPrice, spec);
 
             // we commit the nonce and gas payment
-            _stateProvider.Commit(_specProvider.GetSpec(fa),
+            _stateProvider.Commit(_specProvider.GetSpec(env.CurrentBlock.Number),
                 txTracer.IsTracingState ? txTracer : null);
         }
 
@@ -591,9 +581,7 @@ namespace Catalyst.Core.Modules.Kvm
             ulong unspentGas,
             TransactionSubstate substate,
             ExecutionEnvironment env,
-            IReleaseSpec spec,
-            Address sender,
-            PublicEntry entry)
+            IReleaseSpec spec)
         {
             var spentGas = gasLimit;
             if (substate.IsError)
@@ -604,15 +592,15 @@ namespace Catalyst.Core.Modules.Kvm
             spentGas -= unspentGas;
             var refund = substate.ShouldRevert
                 ? 0
-                : Math.Min(spentGas / 2UL, (ulong) (substate.Refund + substate.DestroyList.Count() * RefundOf.Destroy(false)));
+                : Math.Min(spentGas / 2UL, (ulong) (substate.Refund + substate.DestroyList.Count * RefundOf.Destroy));
 
             if (_logger.IsEnabled(LogEventLevel.Verbose))
             {
                 _logger.Verbose("Refunding unused gas of {unspent} and refund of {refund}", unspentGas, refund);
             }
 
-            var refundValue = (unspentGas + refund) * (ulong)entry.GasPrice.ToUInt256();
-            _stateProvider.AddToBalance(sender, refundValue, spec);
+            var refundValue = (unspentGas + refund) * env.GasPrice;
+            _stateProvider.AddToBalance(env.Sender, refundValue, spec);
             spentGas -= refund;
 
             return spentGas;

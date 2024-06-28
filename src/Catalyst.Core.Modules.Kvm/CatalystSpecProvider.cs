@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -22,9 +22,7 @@
 #endregion
 
 using Catalyst.Abstractions.Types;
-using MongoDB.Driver;
 using Nethermind.Core.Specs;
-using Nethermind.Int256;
 
 namespace Catalyst.Core.Modules.Kvm
 {
@@ -32,23 +30,9 @@ namespace Catalyst.Core.Modules.Kvm
     {
         public IReleaseSpec GenesisSpec => CatalystGenesisSpec.Instance;
         public IReleaseSpec GetSpec(long blockNumber) { return GenesisSpec; }
-        public ForkActivation? MergeBlockNumber { get; } // TODO
-        public ulong TimestampFork { get; } // TODO
-        public UInt256? TerminalTotalDifficulty { get; } // TODO
-        public ulong NetworkId { get; } // TODO
-        public ulong ChainId => (ulong)NetworkTypes.Dev.Id; // @TODO should we not be using protocol.common.network?
-        public ForkActivation[] TransitionActivations { get; } // TODO
 
-        public IReleaseSpec GetSpec(ForkActivation forkActivation)
-        {
-            return null; // TODO
-        }
         public long? DaoBlockNumber => null;
+        public int ChainId => NetworkTypes.Dev.Id; // @TODO should we not be using protocol.common.network?
         public long[] TransitionBlocks { get; } = {0};
-
-        public void UpdateMergeTransitionInfo(long? blockNumber, UInt256? terminalTotalDifficulty = null)
-        {
-            // TODO
-        }
     }
 }

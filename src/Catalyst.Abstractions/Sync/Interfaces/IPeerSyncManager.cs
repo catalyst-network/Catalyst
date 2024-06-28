@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -32,8 +32,6 @@ namespace Catalyst.Abstractions.Sync.Interfaces
     public interface IPeerSyncManager : IDisposable
     {
         IObservable<IEnumerable<DeltaIndex>> ScoredDeltaIndexRange { get; }
-        bool PeersAvailable();
-        bool ContainsPeerHistory();
         void GetDeltaIndexRangeFromPeers(ulong index, int range);
         Task WaitForPeersAsync(CancellationToken cancellationToken = default);
         void Start();

@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -25,7 +25,8 @@ using System.Collections.Generic;
 using Lib.P2P;
 using Nethermind.Core;
 using Nethermind.Core.Crypto;
-using Nethermind.Int256;
+
+using Nethermind.Dirichlet.Numerics;
 using Nethermind.Serialization.Json;
 using Newtonsoft.Json;
 
@@ -35,71 +36,71 @@ namespace Catalyst.Abstractions.Kvm.Models
     public class BlockForRpc
     {
         [JsonConverter(typeof(AddressConverter))]
-        public Address? Author { get; set; }
+        public Address Author { get; set; }
         
         [JsonConverter(typeof(UInt256Converter))]
-        public UInt256? Difficulty { get; set; }
+        public UInt256 Difficulty { get; set; }
         
         [JsonConverter(typeof(ByteArrayConverter))]
-        public byte[]? ExtraData { get; set; }
+        public byte[] ExtraData { get; set; }
         
         [JsonConverter(typeof(LongConverter))]
-        public long? GasLimit { get; set; }
+        public long GasLimit { get; set; }
         
         [JsonConverter(typeof(LongConverter))]
-        public long? GasUsed { get; set; }
+        public long GasUsed { get; set; }
 
         [JsonConverter(typeof(CidJsonConverter))]
-        public Cid? Hash { get; set; }
+        public Cid Hash { get; set; }
         
         [JsonConverter(typeof(BloomConverter))]
-        public Bloom? LogsBloom { get; set; }
+        public Bloom LogsBloom { get; set; }
         
         [JsonConverter(typeof(AddressConverter))]
-        public Address? Miner { get; set; }
+        public Address Miner { get; set; }
         
-        [JsonConverter(typeof(CidJsonConverter))]
-        public Hash256? MixHash { get; set; }
+        [JsonConverter(typeof(KeccakConverter))]
+        public Keccak MixHash { get; set; }
         
         [JsonConverter(typeof(ByteArrayConverter))]
-        public byte[]? Nonce { get; set; }
+        public byte[] Nonce { get; set; }
         
         [JsonConverter(typeof(LongConverter))]
-        public long? Number { get; set; }
+        public long Number { get; set; }
 
         [JsonConverter(typeof(CidJsonConverter))]
-        public Cid? ParentHash { get; set; }
+        public Cid ParentHash { get; set; }
         
-        [JsonConverter(typeof(CidJsonConverter))]
-        public Hash256? ReceiptsRoot { get; set; }
+        [JsonConverter(typeof(KeccakConverter))]
+        public Keccak ReceiptsRoot { get; set; }
         
-        [JsonConverter(typeof(CidJsonConverter))]
-        public Hash256? Sha3Uncles { get; set; }
+        [JsonConverter(typeof(KeccakConverter))]
+        public Keccak Sha3Uncles { get; set; }
         
         [JsonConverter(typeof(ByteArrayConverter))]
-        public byte[]? Signature { get; set; }
+        public byte[] Signature { get; set; }
         
         [JsonConverter(typeof(LongConverter))]
-        public long? Size { get; set; }
+        public long Size { get; set; }
         
-        [JsonConverter(typeof(CidJsonConverter))]
-        public Hash256? StateRoot { get; set; }
+        [JsonConverter(typeof(KeccakConverter))]
+        public Keccak StateRoot { get; set; }
         
         [JsonConverter(typeof(NullableLongConverter))]
         public long? Step { get; set; }
         
         [JsonConverter(typeof(UInt256Converter))]
-        public UInt256? TotalDifficulty { get; set; }
+        public UInt256 TotalDifficulty { get; set; }
         
         [JsonConverter(typeof(UInt256Converter))]
-        public UInt256? Timestamp { get; set; }
+        public UInt256 Timestamp { get; set; }
         
-        public IEnumerable<object>? Transactions { get; set; }
+        public IEnumerable<object> Transactions { get; set; }
         
-        [JsonConverter(typeof(CidJsonConverter))]
-        public Hash256? TransactionsRoot { get; set; }
+        [JsonConverter(typeof(KeccakConverter))]
+        public Keccak TransactionsRoot { get; set; }
         
-        [JsonProperty(ItemConverterType = typeof(CidJsonConverter))]
-        public IEnumerable<Hash256>? Uncles { get; set; }
+        [JsonProperty(ItemConverterType = typeof(KeccakConverter))]
+        public IEnumerable<Keccak> Uncles { get; set; }
     }
 }

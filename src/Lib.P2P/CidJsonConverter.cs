@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -21,10 +21,8 @@
 
 #endregion
 
-using MultiFormats;
 using System;
-using System.Text.Json;
-using System.Text.Json.Serialization;
+using Newtonsoft.Json;
 
 namespace Lib.P2P
 {
@@ -36,21 +34,32 @@ namespace Lib.P2P
         /// <remarks>
         ///   The JSON is just a single string value.
         /// </remarks>
-        private sealed class CidJsonConverter : JsonConverter<object>
+        public class CidJsonConverter : JsonConverter
         {
-            public override object Read(
-            ref Utf8JsonReader reader,
-            Type typeToConvert,
-            JsonSerializerOptions options) =>
-            reader.TokenType == JsonTokenType.Null
-                ? default
-                : Decode(reader.GetBytesFromBase64().ToString());
+            /// <inheritdoc />
+            public override bool CanConvert(Type objectType) { return true; }
 
-            public override void Write(
-                Utf8JsonWriter writer,
-                object value,
-                JsonSerializerOptions options) =>
-                writer.WriteStringValue((value as Cid)?.ToString());
+            /// <inheritdoc />
+            public override bool CanRead => true;
+
+            /// <inheritdoc />
+            public override bool CanWrite => true;
+
+            /// <inheritdoc />
+            public override void WriteJson(JsonWriter writer, object value, JsonSerializer serializer)
+            {
+                var cid = value as Cid;
+                writer.WriteValue(cid?.Encode());
+            }
+
+            /// <inheritdoc />
+            public override object ReadJson(JsonReader reader,
+                Type objectType,
+                object existingValue,
+                JsonSerializer serializer)
+            {
+                return !(reader.Value is string s) ? null : Decode(s);
+            }
         }
     }
 }

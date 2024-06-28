@@ -41,12 +41,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
     {
         private readonly IDfsService _dfs;
 
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            _dfs.Dispose();
-        }
-
         public PinApiTest()
         {
             _dfs = TestDfs.GetTestDfs();

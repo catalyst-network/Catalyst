@@ -39,7 +39,9 @@ using MultiFormats.Registry;
 using NSubstitute;
 using Serilog;
 using NUnit.Framework;
-
+using Catalyst.Abstractions.Keystore;
+using Catalyst.Abstractions.Options;
+using Catalyst.Core.Lib.FileSystem;
 
 namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
 {
@@ -52,23 +54,22 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
         {
             this.Setup(TestContext.CurrentContext);
 
-            var logger = Substitute.For<ILogger>();
-
-            var passwordManager = Substitute.For<IPasswordManager>();
-
             var cryptoContext = new FfiWrapper();
 
             var peerSettings = Substitute.For<IPeerSettings>();
             peerSettings.NetworkType.Returns(NetworkType.Devnet);
 
-            var hashProvider = new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256"));
-
-            var keystore = new LocalKeyStore(passwordManager, cryptoContext, FileSystem, hashProvider,
-                logger);
-
             var keyRegistry = new KeyRegistry();
 
-            _keySigner = new KeySigner(keystore, cryptoContext, keyRegistry);
+            var inMemoryStore = new InMemoryStore<string, EncryptedKey>();
+            var keyStoreService = new KeyStoreService(new KeyChainOptions { DefaultKeyType = "ed25519" }, inMemoryStore);
+            var keyApi = new KeyApi(keyStoreService);
+
+            var secureString = TestPasswordReader.BuildSecureStringPassword("password");
+            keyApi.SetPassphraseAsync(secureString).GetAwaiter().GetResult();
+            keyApi.CreateAsync("self", "ed25519", 0).GetAwaiter().GetResult();
+
+            _keySigner = new KeySigner(cryptoContext, keyApi, keyRegistry);
         }
 
         private IKeySigner _keySigner;
@@ -77,7 +78,7 @@ namespace Catalyst.Core.Modules.KeySigner.Tests.IntegrationTests
         {
             var json =
                 @"""{""crypto"":{""cipher"":""aes-128-ctr"",""ciphertext"":""58e1617da38fc002816268967fea4d8d2f1dd51c8b638de5265bf06d781226a5""
-                            ,""cipherparams"":{""Iv"":""45f6c68c2ac3ad38f02aea8f3c928d2c""},""kdf"":""scrypt"",""mac"":""00bec3c8eb4988e9603105066cf297d7
+                            ,""cipherparams"":{""iv"":""45f6c68c2ac3ad38f02aea8f3c928d2c""},""kdf"":""scrypt"",""mac"":""00bec3c8eb4988e9603105066cf297d7
                             4b67745ac5f7d749989344cfa4ee4b71"",""kdfparams"":{""n"":""262144,""r"":""1,""p"":""8,""dklen"":32,""salt"":""2a03d9840dec04e0
                             1538df649f61958be4015a97f14b765ec0a46feed88cc5f4""}},""id"":""b4b82bc3-a495-49cd-b3bc-e022f936e6ff"",""address"":""987080731d
                             e5a56833d2edc37458a53e3fec68cd"",""version"":3}";

@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -46,10 +46,10 @@ namespace Catalyst.Simulator.Simulations
         private async Task<bool> ConnectAsync(ClientRpcInfo clientRpcInfo)
         {
             var isConnectionSuccessful = await clientRpcInfo.RpcClient
-               .ConnectRetryAsync(clientRpcInfo.PeerId).ConfigureAwait(false);
+               .ConnectRetryAsync(clientRpcInfo.Address).ConfigureAwait(false);
             if (!isConnectionSuccessful)
             {
-                _userOutput.WriteLine($"Could not connect to node: {clientRpcInfo.PeerId.Ip}:{clientRpcInfo.PeerId.Port}");
+                //_userOutput.WriteLine($"Could not connect to node: {clientRpcInfo.Address.Ip}:{clientRpcInfo.Address.Port}");
                 return false;
             }
 

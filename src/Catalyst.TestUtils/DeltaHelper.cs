@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -26,21 +26,22 @@ using Catalyst.Abstractions.Hashing;
 using Catalyst.Core.Lib.Extensions;
 using Catalyst.Core.Lib.Util;
 using Catalyst.Core.Modules.Dfs.Extensions;
+using Catalyst.Core.Modules.Kvm;
 using Catalyst.Protocol.Deltas;
-using Catalyst.Protocol.Peer;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf.WellKnownTypes;
 using Lib.P2P;
 using MultiFormats;
+using Nethermind.Core;
 
 namespace Catalyst.TestUtils
 {
     public static class DeltaHelper
     {
         public static Delta GetDelta(IHashProvider hashProvider,
-            Cid? previousDeltaHash = null,
-            byte[]? merkleRoot = default,
-            byte[]? merklePoda = default,
+            Cid previousDeltaHash = null,
+            byte[] merkleRoot = default,
+            byte[] merklePoda = default,
             DateTime? timestamp = default)
         {
             var previousHash = previousDeltaHash ??
@@ -62,38 +63,38 @@ namespace Catalyst.TestUtils
         }
 
         public static CandidateDeltaBroadcast GetCandidateDelta(IHashProvider hashProvider,
-            Cid? previousDeltaHash = null,
-            Cid? hash = null,
-            PeerId? producerId = null)
+            Cid previousDeltaHash = null,
+            Cid hash = null,
+            Address producerId = null)
         {
             var candidateHash = hash ??
                 hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).ToCid();
             var previousHash = previousDeltaHash ??
                 hashProvider.ComputeMultiHash(ByteUtil.GenerateRandomByteArray(32)).ToCid();
             var producer = producerId
-             ?? PeerIdHelper.GetPeerId(ByteUtil.GenerateRandomByteArray(32));
+             ?? MultiAddressHelper.GetAddress(ByteUtil.GenerateRandomByteArray(32)).GetPublicKeyBytes().ToKvmAddress();
 
             return new CandidateDeltaBroadcast
             {
                 Hash = MultiBase.Decode(candidateHash).ToByteString(),
                 PreviousDeltaDfsHash = MultiBase.Decode(previousHash).ToByteString(),
-                ProducerId = producer
+                Producer = producer.Bytes.ToByteString()
             };
         }
 
         public static FavouriteDeltaBroadcast GetFavouriteDelta(IHashProvider hashProvider,
-            Cid? previousDeltaHash = null,
-            Cid? hash = null,
-            PeerId? producerId = null,
-            PeerId? voterId = null)
+            Cid previousDeltaHash = null,
+            Cid hash = null,
+            Address producerId = null,
+            Address voterId = null)
         {
             var candidate = GetCandidateDelta(hashProvider, previousDeltaHash, hash, producerId);
-            var voter = voterId ?? PeerIdHelper.GetPeerId();
+            var voter = voterId ?? MultiAddressHelper.GetAddress().GetPublicKeyBytes().ToKvmAddress();
 
             return new FavouriteDeltaBroadcast
             {
                 Candidate = candidate,
-                VoterId = voter
+                Voter = voter.Bytes.ToByteString()
             };
         }
     }

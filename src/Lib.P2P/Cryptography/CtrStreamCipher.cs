@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -77,7 +77,7 @@ namespace Lib.P2P.Cryptography
         /// </param>
         /// <example>
         /// var encrypt = new CtrStreamCipher(new AesEngine());
-        /// var p = new ParametersWithIV(new KeyParameter(key), Iv);
+        /// var p = new ParametersWithIV(new KeyParameter(key), iv);
         /// encrypt.Init(true, p);
         /// </example>
         public void Init(bool forEncryption, ICipherParameters parameters)
@@ -117,8 +117,7 @@ namespace Lib.P2P.Cryptography
             _byteCount = 0;
             Arrays.Fill(_counter, 0);
             Array.Copy(_iv, 0, _counter, 0, _iv.Length);
-            // TNA TODO
- //           _cipher.Reset();
+            _cipher.Reset();
         }
 
         /// <inheritdoc />
@@ -163,11 +162,6 @@ namespace Lib.P2P.Cryptography
             }
             
             return rv;
-        }
-
-        public void ProcessBytes(ReadOnlySpan<byte> input, Span<byte> output)
-        {
-            throw new NotImplementedException();
         }
     }
 }

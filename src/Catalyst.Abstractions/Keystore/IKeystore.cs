@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -32,7 +32,7 @@ namespace Catalyst.Abstractions.Keystore
     {
         IPrivateKey KeyStoreDecrypt(KeyRegistryTypes keyIdentifier);
 
-        Task<IPrivateKey> KeyStoreGenerateAsync(NetworkType networkType, KeyRegistryTypes keyIdentifier);
+        Task<IPrivateKey> KeyStoreGenerateAsync(KeyRegistryTypes keyIdentifier);
 
         Task KeyStoreEncryptAsync(IPrivateKey privateKey, NetworkType networkType, KeyRegistryTypes keyIdentifier);
     }

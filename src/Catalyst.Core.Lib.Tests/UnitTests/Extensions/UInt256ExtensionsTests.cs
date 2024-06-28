@@ -23,7 +23,7 @@
 
 using Catalyst.Core.Lib.Extensions;
 using FluentAssertions;
-using Nethermind.Int256;
+using Nethermind.Dirichlet.Numerics;
 using NUnit.Framework;
 using System.Collections.Generic;
 
@@ -52,10 +52,10 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Extensions
             var bytesString = x.ToUint256ByteString();
             var xAgain = bytesString.ToUInt256();
 
-            xAgain.u0.Should().Be(x.u0);
-            xAgain.u1.Should().Be(x.u1);
-            xAgain.u2.Should().Be(x.u2);
-            xAgain.u3.Should().Be(x.u3);
+            xAgain.S0.Should().Be(x.S0);
+            xAgain.S1.Should().Be(x.S1);
+            xAgain.S2.Should().Be(x.S2);
+            xAgain.S3.Should().Be(x.S3);
         }
     }
 }

@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -24,13 +24,14 @@
 using Catalyst.Abstractions.IO.Messaging.Correlation;
 using Catalyst.Abstractions.Types;
 using Catalyst.Protocol.Peer;
+using MultiFormats;
 
 namespace Catalyst.Abstractions.P2P.Discovery
 {
     public interface INeighbour
     {
         NeighbourStateTypes StateTypes { get; set; }
-        PeerId PeerId { get; }
+        MultiAddress Address { get; }
         ICorrelationId DiscoveryPingCorrelationId { get; }
     }
 }

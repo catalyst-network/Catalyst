@@ -26,9 +26,11 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Lib.P2P.PubSub;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace Lib.P2P.Tests.PubSub
 {
+    [TestClass]
     public class FloodRouterTest
     {
         private Peer self = new Peer
@@ -55,43 +57,41 @@ namespace Lib.P2P.Tests.PubSub
                 "CAASpgIwggEiMA0GCSqGSIb3DQEBAQUAA4IBDwAwggEKAoIBAQC8s23axzV5S/fUoJ1+MT9fH1SzlDwqwdKoIirYAmvHnv6dyoaC7gMeHDJIc2gNnrvpdAoXyPxBS2Oysv/iHzseVi2kYvyU9pD5ZtiorzpV5oOXMfIfgGygXbiIk/DVQWD6Sq8flHY8ht+z69h9JL+Dj/aMfEzY5RoznJkikumoCn7QI6zvPZd9OPd7OyqcCZ31RThtIxrFd0YkHN+VV9pCq4iBfhMt8Ocy0RS/yrqaGE4PX2VsjExBmShEFnTFlhy0Mh4QhBLLquQH0aQEk2s5mZtwh7bKeW84zC0zIGWzcHrwVsHb+Z2/IXDTWNIlNGc/cCV7vAM1EgK1oQVf04NLAgMBAAE=",
         };
 
-        [Test]
+        [TestMethod]
         public void Defaults()
         {
-            var router = new FloodRouter();
-            Assert.That(router.ToString(), Is.EqualTo("/floodsub/1.0.0"));
+            var router = new FloodRouter(new SwarmService(self));
+            Assert.AreEqual("/floodsub/1.0.0", router.ToString());
         }
 
-        [Test]
+        [TestMethod]
         public void RemoteSubscriptions()
         {
-            var router = new FloodRouter();
+            var router = new FloodRouter(new SwarmService(self));
 
-            var sub = new Subscription {Topic = "topic", Subscribe = true};
+            var sub = new Subscription { Topic = "topic", Subscribe = true };
             router.ProcessSubscription(sub, other);
-            Assert.That(router.RemoteTopics.GetPeers("topic").Count(), Is.EqualTo(1));
+            Assert.AreEqual(1, router.RemoteTopics.GetPeers("topic").Count());
 
-            var can = new Subscription {Topic = "topic", Subscribe = false};
+            var can = new Subscription { Topic = "topic", Subscribe = false };
             router.ProcessSubscription(can, other);
-            Assert.That(router.RemoteTopics.GetPeers("topic").Count(), Is.EqualTo(0));
+            Assert.AreEqual(0, router.RemoteTopics.GetPeers("topic").Count());
         }
 
-        [Test]
+        [TestMethod]
         public async Task Sends_Hello_OnConnect()
         {
             var topic = Guid.NewGuid().ToString();
 
-            var swarm1 = new SwarmService {LocalPeer = self};
-            var router1 = new FloodRouter {SwarmService = swarm1};
-            var ns1 = new PubSubService {LocalPeer = self};
-            ns1.Routers.Add(router1);
+            var swarm1 = new SwarmService(self);
+            var router1 = new FloodRouter(swarm1);
+            var ns1 = new PubSubService(self, new[] { router1 });
             await swarm1.StartAsync();
             await ns1.StartAsync();
 
-            var swarm2 = new SwarmService {LocalPeer = other};
-            var router2 = new FloodRouter {SwarmService = swarm2};
-            var ns2 = new PubSubService {LocalPeer = other};
-            ns2.Routers.Add(router2);
+            var swarm2 = new SwarmService(other);
+            var router2 = new FloodRouter(swarm2);
+            var ns2 = new PubSubService(other, new[] { router2 });
             await swarm2.StartAsync();
             await ns2.StartAsync();
 
@@ -112,12 +112,12 @@ namespace Lib.P2P.Tests.PubSub
                     {
                         Assert.Fail("timeout");
                     }
-                    
+
                     await Task.Delay(100, cs.Token);
                     peers = (await ns2.PeersAsync(topic, cs.Token)).ToArray();
                 }
 
-                Assert.That(peers, Contains.Item(self));
+                CollectionAssert.Contains(peers, self);
             }
             finally
             {
@@ -129,22 +129,20 @@ namespace Lib.P2P.Tests.PubSub
             }
         }
 
-        [Test]
+        [TestMethod]
         public async Task Sends_NewSubscription()
         {
             var topic = Guid.NewGuid().ToString();
 
-            var swarm1 = new SwarmService {LocalPeer = self};
-            var router1 = new FloodRouter {SwarmService = swarm1};
-            var ns1 = new PubSubService {LocalPeer = self};
-            ns1.Routers.Add(router1);
+            var swarm1 = new SwarmService(self);
+            var router1 = new FloodRouter(swarm1);
+            var ns1 = new PubSubService(self, new[] { router1 });
             await swarm1.StartAsync();
             await ns1.StartAsync();
 
-            var swarm2 = new SwarmService {LocalPeer = other};
-            var router2 = new FloodRouter {SwarmService = swarm2};
-            var ns2 = new PubSubService {LocalPeer = other};
-            ns2.Routers.Add(router2);
+            var swarm2 = new SwarmService(other);
+            var router2 = new FloodRouter(swarm2);
+            var ns2 = new PubSubService(other, new[] { router2 });
             await swarm2.StartAsync();
             await ns2.StartAsync();
 
@@ -165,12 +163,12 @@ namespace Lib.P2P.Tests.PubSub
                     {
                         Assert.Fail("timeout");
                     }
-                    
+
                     await Task.Delay(100, cs.Token);
                     peers = (await ns2.PeersAsync(topic, cs.Token)).ToArray();
                 }
 
-                Assert.That(peers, Contains.Item(self));
+                CollectionAssert.Contains(peers, self);
             }
             finally
             {
@@ -182,22 +180,20 @@ namespace Lib.P2P.Tests.PubSub
             }
         }
 
-        [Test]
+        [TestMethod]
         public async Task Sends_CancelledSubscription()
         {
             var topic = Guid.NewGuid().ToString();
 
-            var swarm1 = new SwarmService {LocalPeer = self};
-            var router1 = new FloodRouter {SwarmService = swarm1};
-            var ns1 = new PubSubService {LocalPeer = self};
-            ns1.Routers.Add(router1);
+            var swarm1 = new SwarmService(self);
+            var router1 = new FloodRouter(swarm1);
+            var ns1 = new PubSubService(self, new[] { router1 });
             await swarm1.StartAsync();
             await ns1.StartAsync();
 
-            var swarm2 = new SwarmService {LocalPeer = other};
-            var router2 = new FloodRouter {SwarmService = swarm2};
-            var ns2 = new PubSubService {LocalPeer = other};
-            ns2.Routers.Add(router2);
+            var swarm2 = new SwarmService(other);
+            var router2 = new FloodRouter(swarm2);
+            var ns2 = new PubSubService(other, new[] { router2 });
             await swarm2.StartAsync();
             await ns2.StartAsync();
 
@@ -218,12 +214,12 @@ namespace Lib.P2P.Tests.PubSub
                     {
                         Assert.Fail("timeout");
                     }
-                    
+
                     await Task.Delay(100, cs.Token);
                     peers = (await ns2.PeersAsync(topic, cs.Token)).ToArray();
                 }
 
-                Assert.That(peers, Contains.Item(self));
+                CollectionAssert.Contains(peers, self);
 
                 cs.Cancel();
                 peers = new Peer[0];
@@ -234,7 +230,7 @@ namespace Lib.P2P.Tests.PubSub
                     {
                         Assert.Fail("timeout");
                     }
-                    
+
                     await Task.Delay(100, cs.Token);
                     peers = (await ns2.PeersAsync(topic, cs.Token)).ToArray();
                 }
@@ -249,29 +245,26 @@ namespace Lib.P2P.Tests.PubSub
             }
         }
 
-        [Test]
+        [TestMethod]
         public async Task Relays_PublishedMessage()
         {
             var topic = Guid.NewGuid().ToString();
 
-            var swarm1 = new SwarmService {LocalPeer = self};
-            var router1 = new FloodRouter {SwarmService = swarm1};
-            var ns1 = new PubSubService {LocalPeer = self};
-            ns1.Routers.Add(router1);
+            var swarm1 = new SwarmService(self);
+            var router1 = new FloodRouter(swarm1);
+            var ns1 = new PubSubService(self, new[] { router1 });
             await swarm1.StartAsync();
             await ns1.StartAsync();
 
-            var swarm2 = new SwarmService {LocalPeer = other};
-            var router2 = new FloodRouter {SwarmService = swarm2};
-            var ns2 = new PubSubService {LocalPeer = other};
-            ns2.Routers.Add(router2);
+            var swarm2 = new SwarmService(other);
+            var router2 = new FloodRouter(swarm2);
+            var ns2 = new PubSubService(other, new[] { router2 });
             await swarm2.StartAsync();
             await ns2.StartAsync();
 
-            var swarm3 = new SwarmService {LocalPeer = other1};
-            var router3 = new FloodRouter {SwarmService = swarm3};
-            var ns3 = new PubSubService {LocalPeer = other1};
-            ns3.Routers.Add(router3);
+            var swarm3 = new SwarmService(other1);
+            var router3 = new FloodRouter(swarm3);
+            var ns3 = new PubSubService(other1, new[] { router3 });
             await swarm3.StartAsync();
             await ns3.StartAsync();
 
@@ -297,14 +290,14 @@ namespace Lib.P2P.Tests.PubSub
                     {
                         Assert.Fail("timeout");
                     }
-                    
+
                     await Task.Delay(100, cs.Token);
                     peers = (await ns2.PeersAsync(topic, cs.Token)).ToArray();
                 }
 
-                Assert.That(peers, Contains.Item(other1));
+                CollectionAssert.Contains(peers, other1);
 
-                await ns1.PublishAsync(topic, new byte[] {1}, cs.Token);
+                await ns1.PublishAsync(topic, new byte[] { 1 }, cs.Token);
                 endTime = DateTime.Now.AddSeconds(3);
                 while (lastMessage2 == null || lastMessage3 == null)
                 {
@@ -312,19 +305,19 @@ namespace Lib.P2P.Tests.PubSub
                     {
                         Assert.Fail("timeout");
                     }
-                    
+
                     await Task.Delay(100, cs.Token);
                 }
 
-                Assert.That(lastMessage2, Is.Not.Null);
-                Assert.That(self, Is.EqualTo(lastMessage2.Sender));
-                Assert.That(new byte[] {1}, Is.EquivalentTo(lastMessage2.DataBytes));
-                Assert.That(lastMessage2.Topics.ToArray(), Contains.Item(topic));
+                Assert.IsNotNull(lastMessage2);
+                Assert.AreEqual(self, lastMessage2.Sender);
+                CollectionAssert.AreEqual(new byte[] { 1 }, lastMessage2.DataBytes);
+                CollectionAssert.Contains(lastMessage2.Topics.ToArray(), topic);
 
-                Assert.That(lastMessage3, Is.Not.Null);
-                Assert.That(self, Is.EqualTo(lastMessage3.Sender));
-                Assert.That(new byte[] {1}, Is.EquivalentTo(lastMessage3.DataBytes));
-                Assert.That(lastMessage3.Topics.ToArray(), Contains.Item(topic));
+                Assert.IsNotNull(lastMessage3);
+                Assert.AreEqual(self, lastMessage3.Sender);
+                CollectionAssert.AreEqual(new byte[] { 1 }, lastMessage3.DataBytes);
+                CollectionAssert.Contains(lastMessage3.Topics.ToArray(), topic);
             }
             finally
             {

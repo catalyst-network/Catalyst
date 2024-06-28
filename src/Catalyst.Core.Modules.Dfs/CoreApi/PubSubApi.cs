@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -36,7 +36,7 @@ namespace Catalyst.Core.Modules.Dfs.CoreApi
     {
         private readonly IPubSubService _pubSubService;
 
-        public PubSubApi(PubSubService pubSubService)
+        public PubSubApi(IPubSubService pubSubService)
         {
             _pubSubService = pubSubService;
         }

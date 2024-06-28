@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -35,6 +35,7 @@ using Catalyst.Protocol.Wire;
 using Dawn;
 using Google.Protobuf;
 using Google.Protobuf.Reflection;
+using MultiFormats;
 using Type = System.Type;
 
 namespace Catalyst.Core.Lib.Extensions
@@ -140,11 +141,11 @@ namespace Catalyst.Core.Lib.Extensions
         }
 
         public static ProtocolMessage ToProtocolMessage(this IMessage protobufObject,
-            PeerId senderId,
+            MultiAddress sender,
             ICorrelationId correlationId = default)
         {
             var typeUrl = protobufObject.Descriptor.ShortenedFullName();
-            Guard.Argument(senderId, nameof(senderId)).NotNull();
+            Guard.Argument(sender, nameof(sender)).NotNull();
 
             if (typeUrl.EndsWith(MessageTypes.Response.Name))
             {
@@ -153,7 +154,7 @@ namespace Catalyst.Core.Lib.Extensions
 
             return new ProtocolMessage
             {
-                PeerId = senderId,
+                Address = sender.ToString(),
                 CorrelationId = (correlationId?.Id ?? CorrelationId.GenerateCorrelationId().Id).ToByteString(),
                 TypeUrl = typeUrl,
                 Value = protobufObject.ToByteString()

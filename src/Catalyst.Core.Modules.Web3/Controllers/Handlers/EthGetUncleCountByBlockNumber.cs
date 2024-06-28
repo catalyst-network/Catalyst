@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -22,7 +22,7 @@
 #endregion
 
 using Catalyst.Abstractions.Ledger;
-using Nethermind.Int256;
+using Nethermind.Dirichlet.Numerics;
 
 namespace Catalyst.Core.Modules.Web3.Controllers.Handlers 
 {

@@ -38,12 +38,6 @@ namespace Catalyst.Core.Modules.Consensus.Tests.UnitTests
     {
         private readonly IContainer _container;
 
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            _container.Dispose();
-        }
-
         public HashingTests()
         {
             var builder = new ContainerBuilder();

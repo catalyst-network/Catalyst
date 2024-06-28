@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -75,7 +75,8 @@ namespace Catalyst.Cli
                    .WithConfigCopier(new CliConfigCopier())
                    .WithConfigurationFile(CliConstants.ShellNodesConfigFile)
                    .WithConfigurationFile(CliConstants.ShellConfigFile)
-                   .WithNetworksConfigFile(NetworkType.Devnet, options.OverrideNetworkFile)
+                   .WithNetworkType(NetworkType.Testnet)
+                   .WithNetworksConfigFile(options.OverrideNetworkFile)
                    .BuildKernel()
                    .StartCustomAsync(StartCliAsync);
 

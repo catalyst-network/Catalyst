@@ -138,7 +138,7 @@ namespace Catalyst.Node.POA.CE.Tests.UnitTests.Config
         internal class TestConfigCopier : ConfigCopier
         {
             protected override IEnumerable<string> RequiredConfigFiles(NetworkType network,
-                string? overrideNetworkFile = null)
+                string overrideNetworkFile = null)
             {
                 return new List<string>(GetExpectedFileList(network));
             }

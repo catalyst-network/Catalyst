@@ -39,12 +39,6 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         private const string Blob64 = "YmxvcmI"; // base 64 encoded with no padding
         private readonly IDfsService _dfs;
 
-        [OneTimeTearDown]
-        public void OneTimeTearDown()
-        {
-            _dfs.Dispose();
-        }
-
         public DagApiTest()
         {
             _dfs = TestDfs.GetTestDfs(null, "sha2-256");
@@ -57,7 +51,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             Assert.That(cid.ToString(), Is.EqualTo("bafkreiaxnnnb7qz2focittuqq3ya25q7rcv3bqynnczfzako47346wosmu"));
 
             var dag = await _dfs.DagApi.GetAsync(cid);
-            Assert.That((string) dag["data"], Is.EqualTo(Blob64));
+            Assert.That((string)dag["data"], Is.EqualTo(Blob64));
         }
 
         private sealed class Name
@@ -79,7 +73,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             Assert.That(actual, Is.Not.Null);
             Assert.That(expected["a"], Is.EqualTo(actual["a"]));
 
-            var value = (string) await _dfs.DagApi.GetAsync(expectedId + "/a");
+            var value = (string)await _dfs.DagApi.GetAsync(expectedId + "/a");
             Assert.That(expected["a"].ToString(), Is.EqualTo(value));
         }
 
@@ -95,7 +89,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             Assert.That(expected.First, Is.EqualTo(actual.First));
             Assert.That(expected.Last, Is.EqualTo(actual.Last));
 
-            var value = (string) await _dfs.DagApi.GetAsync(id.Encode() + "/Last");
+            var value = (string)await _dfs.DagApi.GetAsync(id.Encode() + "/Last");
             Assert.That(expected.Last, Is.EqualTo(value));
         }
 
@@ -117,7 +111,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             Assert.That(expected.First, Is.EqualTo(actual.First));
             Assert.That(expected.Last, Is.EqualTo(actual.Last));
 
-            var value = (string) await _dfs.DagApi.GetAsync(id.Encode() + "/Last");
+            var value = (string)await _dfs.DagApi.GetAsync(id.Encode() + "/Last");
             Assert.That(expected.Last, Is.EqualTo(value));
         }
 
@@ -133,7 +127,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             Assert.That(expected.First, Is.EqualTo(actual.First));
             Assert.That(expected.Last, Is.EqualTo(actual.Last));
 
-            var value = (string) await _dfs.DagApi.GetAsync(id.Encode() + "/Last");
+            var value = (string)await _dfs.DagApi.GetAsync(id.Encode() + "/Last");
             Assert.That(expected.Last, Is.EqualTo(value));
         }
 
@@ -145,7 +139,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             Assert.That(id.Encode(), Is.EqualTo("bafkreif2pall7dybz7vecqka3zo24irdwabwdi4wc55jznaq75q7eaavvu"));
 
             var actual = await _dfs.DagApi.GetAsync(id);
-            Assert.That(Convert.ToBase64String(data), Is.EqualTo((string) actual["data"]));
+            Assert.That(Convert.ToBase64String(data), Is.EqualTo((string)actual["data"]));
         }
 
         // // https://github.com/ipfs/interface-ipfs-core/blob/master/SPEC/DAG.md
@@ -157,7 +151,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         //         "zBwWX9ecx5F4X54WAjmFLErnBT6ByfNxStr5ovowTL7AhaUR98RWvXPS1V3HqV1qs3r5Ec5ocv7eCdbqYQREXNUfYNuKG";
         //     var obj = new {simple = "object"};
         //     var cid = await ipfs.Dag.PutAsync(obj, multiHash: "sha3-512");
-        //     Assert.That((string) expected, Is.EqualTo((string) cid));
+        //     Assert.AreEqual((string) expected, (string) cid);
         // }
     }
 }

@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -25,7 +25,6 @@ using AutoMapper;
 using Catalyst.Abstractions.DAO;
 using Catalyst.Core.Lib.DAO.Converters;
 using Catalyst.Core.Lib.DAO.Cryptography;
-using Catalyst.Core.Lib.DAO.Peer;
 using Catalyst.Protocol.Wire;
 using Google.Protobuf;
 
@@ -33,7 +32,7 @@ namespace Catalyst.Core.Lib.DAO
 {
     public class ProtocolMessageDao : DaoBase
     {
-        public PeerIdDao PeerId { get; set; }
+        public string Address { get; set; }
         public string CorrelationId { get; set; }
         public string TypeUrl { get; set; }
         public string Value { get; set; }

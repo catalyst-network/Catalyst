@@ -33,34 +33,34 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
         [Test]
         public void Parsing_Examples()
         {
-            Assert.Equals(TimeSpan.FromMilliseconds(300), Duration.Parse("300ms"));
-            Assert.Equals(TimeSpan.FromHours(-1.5), Duration.Parse("-1.5h"));
-            Assert.Equals(new TimeSpan(2, 45, 0), Duration.Parse("2h45m"));
-            Assert.Equals(new TimeSpan(0, 1, 0) + TimeSpan.FromSeconds(4.483878032),
+            Assert.AreEqual(TimeSpan.FromMilliseconds(300), Duration.Parse("300ms"));
+            Assert.AreEqual(TimeSpan.FromHours(-1.5), Duration.Parse("-1.5h"));
+            Assert.AreEqual(new TimeSpan(2, 45, 0), Duration.Parse("2h45m"));
+            Assert.AreEqual(new TimeSpan(0, 1, 0) + TimeSpan.FromSeconds(4.483878032),
                 Duration.Parse("1m4.483878032s"));
         }
 
         [Test]
         public void Parsing_Zero()
         {
-            Assert.Equals(TimeSpan.Zero, Duration.Parse("0s"));
-            Assert.Equals(TimeSpan.Zero, Duration.Parse("0µs"));
-            Assert.Equals(TimeSpan.Zero, Duration.Parse("0ns"));
-            Assert.Equals(TimeSpan.Zero, Duration.Parse("n/a"));
-            Assert.Equals(TimeSpan.Zero, Duration.Parse("unknown"));
-            Assert.Equals(TimeSpan.Zero, Duration.Parse(""));
+            Assert.AreEqual(TimeSpan.Zero, Duration.Parse("0s"));
+            Assert.AreEqual(TimeSpan.Zero, Duration.Parse("0µs"));
+            Assert.AreEqual(TimeSpan.Zero, Duration.Parse("0ns"));
+            Assert.AreEqual(TimeSpan.Zero, Duration.Parse("n/a"));
+            Assert.AreEqual(TimeSpan.Zero, Duration.Parse("unknown"));
+            Assert.AreEqual(TimeSpan.Zero, Duration.Parse(""));
         }
 
         [Test]
-        public void Parsing_Negative() { Assert.Equals(TimeSpan.FromHours(-2), Duration.Parse("-1.5h30m")); }
+        public void Parsing_Negative() { Assert.AreEqual(TimeSpan.FromHours(-2), Duration.Parse("-1.5h30m")); }
 
         [Test]
         public void Parsing_Submilliseconds()
         {
-            // Note: Equals of TimeSpan is 100ns, e.g. 1 tick.
-            Assert.Equals(TimeSpan.FromTicks(2), Duration.Parse("200ns"));
-            Assert.Equals(TimeSpan.FromTicks(2000), Duration.Parse("200us"));
-            Assert.Equals(TimeSpan.FromTicks(2000), Duration.Parse("200µs"));
+            // Note: resolution of TimeSpan is 100ns, e.g. 1 tick.
+            Assert.AreEqual(TimeSpan.FromTicks(2), Duration.Parse("200ns"));
+            Assert.AreEqual(TimeSpan.FromTicks(2000), Duration.Parse("200us"));
+            Assert.AreEqual(TimeSpan.FromTicks(2000), Duration.Parse("200µs"));
         }
 
         [Test]
@@ -93,23 +93,23 @@ namespace Catalyst.Core.Lib.Tests.UnitTests.Utils
         [Test]
         public void Stringify()
         {
-            Assert.Equals("0s", Duration.Stringify(TimeSpan.Zero));
-            Assert.Equals("n/a", Duration.Stringify(TimeSpan.Zero, "n/a"));
+            Assert.AreEqual("0s", Duration.Stringify(TimeSpan.Zero));
+            Assert.AreEqual("n/a", Duration.Stringify(TimeSpan.Zero, "n/a"));
 
-            Assert.Equals("2h", Duration.Stringify(new TimeSpan(2, 0, 0)));
-            Assert.Equals("3m", Duration.Stringify(new TimeSpan(0, 3, 0)));
-            Assert.Equals("4s", Duration.Stringify(new TimeSpan(0, 0, 4)));
-            Assert.Equals("5ms", Duration.Stringify(new TimeSpan(0, 0, 0, 0, 5)));
-            Assert.Equals("2h4s", Duration.Stringify(new TimeSpan(2, 0, 4)));
-            Assert.Equals("26h3m4s5ms", Duration.Stringify(new TimeSpan(1, 2, 3, 4, 5)));
+            Assert.AreEqual("2h", Duration.Stringify(new TimeSpan(2, 0, 0)));
+            Assert.AreEqual("3m", Duration.Stringify(new TimeSpan(0, 3, 0)));
+            Assert.AreEqual("4s", Duration.Stringify(new TimeSpan(0, 0, 4)));
+            Assert.AreEqual("5ms", Duration.Stringify(new TimeSpan(0, 0, 0, 0, 5)));
+            Assert.AreEqual("2h4s", Duration.Stringify(new TimeSpan(2, 0, 4)));
+            Assert.AreEqual("26h3m4s5ms", Duration.Stringify(new TimeSpan(1, 2, 3, 4, 5)));
 
-            Assert.Equals("-48h", Duration.Stringify(TimeSpan.FromDays(-2)));
-            Assert.Equals("-2h", Duration.Stringify(TimeSpan.FromHours(-2)));
-            Assert.Equals("-1h30m", Duration.Stringify(TimeSpan.FromHours(-1.5)));
+            Assert.AreEqual("-48h", Duration.Stringify(TimeSpan.FromDays(-2)));
+            Assert.AreEqual("-2h", Duration.Stringify(TimeSpan.FromHours(-2)));
+            Assert.AreEqual("-1h30m", Duration.Stringify(TimeSpan.FromHours(-1.5)));
 
-            Assert.Equals("200ns", Duration.Stringify(TimeSpan.FromTicks(2)));
-            Assert.Equals("200us", Duration.Stringify(TimeSpan.FromTicks(2000)));
-            Assert.Equals("200us300ns", Duration.Stringify(TimeSpan.FromTicks(2003)));
+            Assert.AreEqual("200ns", Duration.Stringify(TimeSpan.FromTicks(2)));
+            Assert.AreEqual("200us", Duration.Stringify(TimeSpan.FromTicks(2000)));
+            Assert.AreEqual("200us300ns", Duration.Stringify(TimeSpan.FromTicks(2003)));
         }
     }
 }

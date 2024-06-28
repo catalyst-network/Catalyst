@@ -49,15 +49,9 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         [SetUp]
         public void Init()
         {
-            ipfs = TestDfs.GetTestDfs(null, "sha2-256");
+            ipfs = TestDfs.GetTestDfs(null, "sha2-256", "rsa");
         }
-
-        [TearDown]
-        public void TearDown()
-        {
-            ipfs.Dispose();
-        }
-
+        
         [Test]
         public async Task AddText()
         {
@@ -227,7 +221,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             stopWatch.Start();
             var node = ipfs.UnixFsApi.AddFileAsync(path).Result;
             stopWatch.Stop();
-            
+
             // _testOutputHelper.WriteLine("Add file took {0} seconds.", stopWatch.Elapsed.TotalSeconds);
 
             Assert.That(node.Id.ToString(), Is.EqualTo("QmeZkAUfUFPq5YWGBan2ZYNd9k59DD1xW62pGJrU3C6JRo"));
@@ -994,10 +988,11 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
             };
             foreach (var cid in cids)
             {
-                using var cts = new CancellationTokenSource(3000);
-
-                var got = await ipfs.UnixFsApi.ReadAllTextAsync(cid, cts.Token);
-                Assert.That(got, Is.EqualTo(text));
+                using (var cts = new CancellationTokenSource(3000))
+                {
+                    var got = await ipfs.UnixFsApi.ReadAllTextAsync(cid, cts.Token);
+                    Assert.That(got, Is.EqualTo(text));
+                }
             }
         }
 

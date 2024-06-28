@@ -1,7 +1,7 @@
 #region LICENSE
 
 /**
-* Copyright (c) 2024 Catalyst Network
+* Copyright (c) 2019 Catalyst Network
 *
 * This file is part of Catalyst.Node <https://github.com/catalyst-network/Catalyst.Node>
 *
@@ -31,7 +31,6 @@ using NUnit.Framework;
 
 namespace Catalyst.Cli.Tests.UnitTests.Commands.Request
 {
-    [TestFixture]
     public sealed class GetPeerReputationRequestTests
     {
         [Test]
@@ -41,10 +40,10 @@ namespace Catalyst.Cli.Tests.UnitTests.Commands.Request
             var commandContext = TestCommandHelpers.GenerateCliRequestCommandContext();
             var connectedNode = commandContext.GetConnectedNode(null);
             var command = new PeerReputationCommand(commandContext, Substitute.For<ILogger>());
+            var address = "/ip4/127.0.0.1/tcp/42066/ipfs/18n3naE9kBZoVvgYMV6saMZdwu2yu3QMzKa2BDkb5C5pcuhtrH1G9HHbztbbxA8tGmf4";
 
             //Act
-            TestCommandHelpers.GenerateRequest(commandContext, command, "-n", "node1", "-i", "10.1.1.1", "-p",
-                "public key");
+            TestCommandHelpers.GenerateRequest(commandContext, command, "-n", "node1", "-a", address);
 
             //Assert
             var requestSent = TestCommandHelpers.GetRequest<GetPeerReputationRequest>(connectedNode);
