@@ -46,7 +46,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.UnitTests
                 new HashProvider(HashingAlgorithm.GetAlgorithmMetadata("keccak-256")),
                 new FfiWrapper(), 
                 LimboLogs.Instance);
-            Assert.NotNull(virtualMachine);
+            Assert.That(virtualMachine, Is.Not.Null);
         }
     }
 }

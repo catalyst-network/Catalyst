@@ -32,8 +32,8 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests
         public void Defaults()
         {
             var options = new DiscoveryOptions();
-            Assert.Null(options.BootstrapPeers);
-            Assert.False(options.DisableMdns);
+            Assert.That(options.BootstrapPeers, Is.Null);
+            Assert.That(options.DisableMdns, Is.False);
         }
     }
 }

@@ -96,7 +96,7 @@ namespace Catalyst.Node.POA.CE.Tests.UnitTests.Config
             var peerSettings = new PeerSettings(configRoot, peer, config, networkTypeProvider);
 
             peerSettings.Should().NotBeNull();
-            peerSettings.NetworkType.Should().NotBeNull();
+            peerSettings.NetworkType.Should().NotBe(null);
             peerSettings.Port.Should().BeInRange(1025, 65535);
             peerSettings.BindAddress.Should().BeOfType<IPAddress>();
             peerSettings.PublicKey.Should().NotBeNullOrWhiteSpace();

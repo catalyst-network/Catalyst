@@ -40,7 +40,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.CoreApi
         }
         
         [Test]
-        public void Exists() { Assert.NotNull(_dfs.StatsApi); }
+        public void Exists() { Assert.That(_dfs.StatsApi, Is.Not.Null); }
 
         [Test]
         public async Task SmokeTest()

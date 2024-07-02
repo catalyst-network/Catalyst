@@ -37,10 +37,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.LinkedData
             var data = new byte[0];
 
             var cbor = formatter.Deserialise(data);
-            Assert.AreEqual(data, cbor["data"].GetByteString());
+            Assert.That(data, Is.EqualTo(cbor["data"].GetByteString()));
 
             var data1 = formatter.Serialize(cbor);
-            Assert.AreEqual(data, data1);
+            Assert.That(data, Is.EqualTo(data1));
         }
 
         [Test]
@@ -49,10 +49,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.LinkedData
             var data = Encoding.UTF8.GetBytes("abc");
 
             var cbor = formatter.Deserialise(data);
-            Assert.AreEqual(data, cbor["data"].GetByteString());
+            Assert.That(data, Is.EqualTo(cbor["data"].GetByteString()));
 
             var data1 = formatter.Serialize(cbor);
-            Assert.AreEqual(data, data1);
+            Assert.That(data, Is.EqualTo(data1));
         }
     }
 }

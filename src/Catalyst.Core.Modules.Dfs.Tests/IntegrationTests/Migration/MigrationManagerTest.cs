@@ -46,7 +46,7 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.Migration
         {
             var migrator = new MigrationManager(_dfs.Options.Repository);
             var migrations = migrator.Migrations;
-            Assert.AreNotEqual(0, migrations.Count);
+            Assert.That(migrations.Count, Is.Not.EqualTo(0));
         }
 
         [Test]
@@ -64,10 +64,10 @@ namespace Catalyst.Core.Modules.Dfs.Tests.IntegrationTests.Migration
         {
             var migrator = new MigrationManager(_dfs.Options.Repository);
             await migrator.MirgrateToVersionAsync(0);
-            Assert.AreEqual(0, migrator.CurrentVersion);
+            Assert.That(migrator.CurrentVersion, Is.EqualTo(0));
 
             await migrator.MirgrateToVersionAsync(migrator.LatestVersion);
-            Assert.AreEqual(migrator.LatestVersion, migrator.CurrentVersion);
+            Assert.That(migrator.LatestVersion, Is.EqualTo(migrator.CurrentVersion));
         }
     }
 }

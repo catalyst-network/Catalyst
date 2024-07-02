@@ -225,7 +225,7 @@ namespace Catalyst.Core.Modules.Kvm.Tests.IntegrationTests
             FfiWrapper cryptoContext = new FfiWrapper();
             IPrivateKey signingPrivateKey = cryptoContext.GeneratePrivateKey();
             IPrivateKey otherPrivateKey = cryptoContext.GeneratePrivateKey();
-            Assert.AreNotEqual(signingPrivateKey, otherPrivateKey);
+            Assert.That(signingPrivateKey, Is.EqualTo(otherPrivateKey));
 
             var byteCode = PrepareEd25519PrecompileCall(hashProvider, cryptoContext, signingPrivateKey, otherPrivateKey);
 
